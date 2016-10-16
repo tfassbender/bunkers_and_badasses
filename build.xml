@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BunkersAndBadasses" default="build_jars" basedir=".">
+
+	<property name="version.mayor">1</property>
+	<property name="version.minor">0</property>
+	<property name="version.patch">0</property>
+
+	<property name="version">V${version.mayor}.${version.minor}.${version.patch}</property>
+
+	<property name="project_name_client">Bunkers_And_Badasses</property>
+	<property name="project_name_server">Bunkers_And_Badasses_Server</property>
+
+	<property name="mainClassServer">net.jfabricationgames.bunkers_and_badasses.login.LoginServerMain</property>
+	<property name="mainClassClient">net.jfabricationgames.bunkers_and_badasses.login.LoginClientMain</property>
+
+	<property name="src">src/</property>
+	<property name="build">build/</property>
+	<property name="dist">dist/</property>
+	<property name="images">net/jfabricationgames/bunkers_and_badasses/images/**/*.*</property>
+
+	<property name="path_elem_jfg_toolbox">JFabricationGamesToolbox V1.0.5.jar</property>
+	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.0.1.jar</property>
+	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
+	<property name="path_elem_jfg_server">JFGServerV1.0.jar</property>
+	<property name="path_elem_miglayout">miglayout15-swing.jar</property>
+	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin</property>
+
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="compile_src" depends="init">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath>
+				<pathelement path="${path_elem_jfg_toolbox}" />
+				<pathelement path="${path_elem_jfg_database_login}" />
+				<pathelement path="${path_elem_jfg_jdbc_connector}" />
+				<pathelement path="${path_elem_jfg_server}" />
+				<pathelement path="${path_elem_miglayout}" />
+				<pathelement path="${path_elem_mysql_connector}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="build_jars">
+		<antcall target="build_jar_client" />
+		<antcall target="build_jar_server" />
+	</target>
+
+	<target name="build_jar_client" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_client}_${version}.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassClient}" />
+			</manifest>
+			<fileset dir="${src}">
+				<include name="${images}" />
+			</fileset>
+			<zipgroupfileset dir="." includes="*.jar" />
+		</jar>
+	</target>
+
+	<target name="build_jar_server" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_server}_${version}.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassServer}" />
+			</manifest>
+			<!--<fileset dir="${src}">
+				<include name="${images}" />
+			</fileset>-->
+			<zipgroupfileset dir="." includes="*.jar" />
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+</project>
