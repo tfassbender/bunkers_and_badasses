@@ -23,6 +23,8 @@ public class LoginClientMain extends JFrame {
 	
 	public static ImageLoader imageLoader;
 	
+	private JFGDatabaseLoginClient client;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -40,7 +42,7 @@ public class LoginClientMain extends JFrame {
 	public LoginClientMain() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginClientMain.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		//create a new client to login
-		JFGDatabaseLoginClient client = new JFGDatabaseLoginClient(LoginServerMain.SERVER_URL, LoginServerMain.SERVER_PORT);
+		client = new JFGDatabaseLoginClient(LoginServerMain.SERVER_URL, LoginServerMain.SERVER_PORT);
 		
 		//create a new ImageLoader for the login panels
 		imageLoader = new ImageLoader();
@@ -81,5 +83,9 @@ public class LoginClientMain extends JFrame {
 	}
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public JFGDatabaseLoginClient getClient() {
+		return client;
 	}
 }

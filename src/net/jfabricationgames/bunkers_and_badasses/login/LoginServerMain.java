@@ -34,8 +34,8 @@ public class LoginServerMain {
 		JFGDatabaseLoginServerInterpreter.LOGIN_SQL = "SELECT passwd FROM bunkers_and_badasses.login WHERE username = '%user';";
 		JFGDatabaseLoginServerInterpreter.SIGN_UP_SQL = "INSERT INTO bunkers_and_badasses.login VALUES (0, '%user', '%pass');";
 		//create a new interpreter
-		JFGServerInterpreter interpreter = new JFGDatabaseLoginServerInterpreter();
 		server = new JFGLoginServer(SERVER_PORT);
+		JFGServerInterpreter interpreter = new JFGDatabaseLoginServerInterpreter(server);
 		server.setInterpreterFactory(interpreter);
 		//start the server
 		try {

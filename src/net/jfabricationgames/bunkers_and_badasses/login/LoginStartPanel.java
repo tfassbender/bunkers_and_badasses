@@ -21,7 +21,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class LoginStartPanel extends JPanel {
 	
-
 	private static final long serialVersionUID = 8609984790780328814L;
 	
 	private JTextField textField;
