@@ -42,13 +42,13 @@ public class LoginStartPanel extends JPanel {
 		lblJfgDatabaseLogin.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		add(lblJfgDatabaseLogin, "cell 1 0 2 1,alignx center");
 		
-		ImagePanel panel_2 = new ImagePanel(LoginClientMain.imageLoader.loadImage("login/arschgaul_2.png"));
+		ImagePanel panel_2 = new ImagePanel(LoginClientMain.getImageLoader().loadImage("login/arschgaul_2.png"));
 		panel_2.setAdaptSizeKeepProportion(true);
 		panel_2.setCentered(true);
 		panel_2.setBackground(Color.GRAY);
 		add(panel_2, "cell 0 0 1 6,grow");
 		
-		ImagePanel panel_3 = new ImagePanel(LoginClientMain.imageLoader.loadImage("login/tina_1.png"));
+		ImagePanel panel_3 = new ImagePanel(LoginClientMain.getImageLoader().loadImage("login/tina_1.png"));
 		panel_3.setAdaptSizeKeepProportion(true);
 		panel_3.setCentered(true);
 		panel_3.setBackground(Color.GRAY);
@@ -118,7 +118,7 @@ public class LoginStartPanel extends JPanel {
 		lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
 		add(lblError, "cell 1 5 2 1,alignx center");
 		
-		ImagePanel panel_1 = new ImagePanel(LoginClientMain.imageLoader.loadImage("jfg/headline.png"));
+		ImagePanel panel_1 = new ImagePanel(LoginClientMain.getImageLoader().loadImage("jfg/headline.png"));
 		panel_1.setAdaptSizeKeepProportion(true);
 		panel_1.setCentered(true);
 		panel_1.setBackground(Color.GRAY);
@@ -139,7 +139,7 @@ public class LoginStartPanel extends JPanel {
 					if (textField.getText() != null && passwordField.getPassword().length > 0) {
 						if (client.login(textField.getText(), new String(passwordField.getPassword()))) {
 							lblError.setText("Login Successfull");
-							//TODO after successful login open the game frame
+							//TODO after successful login open the main menu
 						}
 						else {
 							lblError.setText("Wrong Username or Password");

@@ -1,4 +1,4 @@
-package net.jfabricationgames.bunkers_and_badasses.login;
+package net.jfabricationgames.bunkers_and_badasses.server;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import net.jfabricationgames.jfgserver.server.JFGLoginServer;
  * 
  * The game is started when the user is logged in.
  */
-public class LoginServerMain {
+public class ServerMain {
 	
 	/**
 	 * The servers port number and URL (also used in the client main)
@@ -22,13 +22,13 @@ public class LoginServerMain {
 	private JFGLoginServer server;
 	
 	public static void main(String [] args) {
-		new LoginServerMain();
+		new ServerMain();
 	}
 	
 	/**
 	 * Create a new JFGLoginServer that is connected to the JFG database to login the users of Bunkers and Badasses 
 	 */
-	public LoginServerMain() {
+	public ServerMain() {
 		//Tell the server interpreter how to reach the login data
 		JFGDatabaseLoginServerInterpreter.CHECK_NAME_SQL = "SELECT username FROM bunkers_and_badasses.login WHERE username = '%user';";
 		JFGDatabaseLoginServerInterpreter.LOGIN_SQL = "SELECT passwd FROM bunkers_and_badasses.login WHERE username = '%user';";

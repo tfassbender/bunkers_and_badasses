@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
+import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
 import java.awt.Toolkit;
 
@@ -21,7 +22,7 @@ public class LoginClientMain extends JFrame {
 	
 	private String username;
 	
-	public static ImageLoader imageLoader;
+	private static ImageLoader imageLoader;
 	
 	private JFGDatabaseLoginClient client;
 	
@@ -42,7 +43,7 @@ public class LoginClientMain extends JFrame {
 	public LoginClientMain() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginClientMain.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		//create a new client to login
-		client = new JFGDatabaseLoginClient(LoginServerMain.SERVER_URL, LoginServerMain.SERVER_PORT);
+		client = new JFGDatabaseLoginClient(ServerMain.SERVER_URL, ServerMain.SERVER_PORT);
 		
 		//create a new ImageLoader for the login panels
 		imageLoader = new ImageLoader();
@@ -87,5 +88,9 @@ public class LoginClientMain extends JFrame {
 	
 	public JFGDatabaseLoginClient getClient() {
 		return client;
+	}
+	
+	public static ImageLoader getImageLoader() {
+		return imageLoader;
 	}
 }

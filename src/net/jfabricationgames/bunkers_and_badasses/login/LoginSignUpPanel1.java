@@ -41,13 +41,13 @@ public class LoginSignUpPanel1 extends JPanel {
 		lblSignUp.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		add(lblSignUp, "cell 1 0 2 1,alignx center");
 		
-		ImagePanel panel_1 = new ImagePanel(LoginClientMain.imageLoader.loadImage("login/claptrap_2.png"));
+		ImagePanel panel_1 = new ImagePanel(LoginClientMain.getImageLoader().loadImage("login/claptrap_2.png"));
 		panel_1.setAdaptSizeKeepProportion(true);
 		panel_1.setCentered(true);
 		panel_1.setBackground(Color.GRAY);
 		add(panel_1, "cell 0 0 1 5,grow");
 		
-		ImagePanel panel_2 = new ImagePanel(LoginClientMain.imageLoader.loadImage("login/mr_torgue_1.png"));
+		ImagePanel panel_2 = new ImagePanel(LoginClientMain.getImageLoader().loadImage("login/mr_torgue_1.png"));
 		panel_2.setAdaptSizeKeepProportion(true);
 		panel_2.setCentered(true);
 		panel_2.setBackground(Color.GRAY);
@@ -113,7 +113,7 @@ public class LoginSignUpPanel1 extends JPanel {
 		btnNext.setEnabled(false);
 		add(btnNext, "cell 2 5 2 1,alignx right,aligny bottom");
 		
-		ImagePanel panel = new ImagePanel(LoginClientMain.imageLoader.loadImage("jfg/headline.png"));
+		ImagePanel panel = new ImagePanel(LoginClientMain.getImageLoader().loadImage("jfg/headline.png"));
 		panel.setAdaptSizeKeepProportion(true);
 		panel.setCentered(true);
 		panel.setBackground(Color.GRAY);
