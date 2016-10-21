@@ -14,7 +14,8 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 		GAME_CREATION_REQUEST,
 		GAME_CREATION_ANSWER,
 		DYNAMIC_CONTENT_REQUEST,
-		DYNAMIC_CONTENT_ANSWER;
+		DYNAMIC_CONTENT_ANSWER,
+		USERLIST_UPDATE;
 	}
 	
 	private static final long serialVersionUID = 3573152800545735135L;
@@ -29,6 +30,8 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	private boolean joining;
 	private String dynamicContentRequest;
 	private String dynamicContentAnswer;
+	private List usersOnline;
+	private List usersInGame;
 	
 	public MainMenuMessage() {
 		
@@ -103,5 +106,19 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setDynamicContentAnswer(String dynamicContentAnswer) {
 		this.dynamicContentAnswer = dynamicContentAnswer;
+	}
+	
+	public List getUsersOnline() {
+		return usersOnline;
+	}
+	public void setUsersOnline(List usersOnline) {
+		this.usersOnline = usersOnline;
+	}
+	
+	public List getUsersInGame() {
+		return usersInGame;
+	}
+	public void setUsersInGame(List usersInGame) {
+		this.usersInGame = usersInGame;
 	}
 }

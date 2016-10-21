@@ -54,23 +54,30 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	}
 	
 	private void interpreteMainMenuMessage(MainMenuMessage message, JFGConnection connection) {
-		//TODO
 		switch (message.getMessageType()) {
 			case DYNAMIC_CONTENT_ANSWER:
+				//do nothing here because the server only sends the answers
 				break;
 			case DYNAMIC_CONTENT_REQUEST:
+				//TODO load the content and send it back to the client
 				break;
 			case GAME_CREATION_ANSWER:
+				//TODO send the answer to the player that created the game (MainMenuMessage.toPlayer)
 				break;
 			case GAME_CREATION_REQUEST:
+				//TODO send the request to all players that are invited (MainMenuMessage.invitedPlayers)
 				break;
 			case PASSWORD_UPDATE:
+				//TODO update the password of the player (MainMenuMessage.lastUsername)
 				break;
 			case PASSWORD_USERNAME_UPDATE:
+				//TODO update the user name of the player (MainMenuMessage.lastUsername)
 				break;
 			case USERNAME_UPDATE:
+				//TODO update the password and user name of the player (MainMenuMessage.lastUsername)
 				break;
-			default:
+			case USERLIST_UPDATE:
+				//do nothing here because the server only sends the updates
 				break;
 		}
 	}
