@@ -24,6 +24,7 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	private String lastUsername;
 	private String password;
 	private Object player;
+	private Object toPlayer;
 	private List invitedPlayers;
 	private boolean joining;
 	private String dynamicContentRequest;
@@ -66,6 +67,14 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setPlayer(Object player) {
 		this.player = player;
+	}
+	
+	public Object getToPlayer() {
+		return toPlayer;
+	}
+
+	public void setToPlayer(Object toPlayer) {
+		this.toPlayer = toPlayer;
 	}
 	
 	public List getInvitedPlayers() {

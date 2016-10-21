@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
+import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 import net.jfabricationgames.jfgserver.interpreter.JFGServerInterpreter;
@@ -25,7 +26,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	@Override
 	public void interpreteServerMessage(JFGServerMessage message, JFGConnection connection) {
-		if (message instanceof ChatMessage) {
+		if (message instanceof JFGDatabaseLoginMessage) {
+			loginInterpreter.interpreteServerMessage(message, connection);
+		}
+		else if (message instanceof ChatMessage) {
 			interpreteChatMessage((ChatMessage) message, connection);
 		}
 		else if (message instanceof MainMenuMessage) {
