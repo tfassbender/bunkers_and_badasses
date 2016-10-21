@@ -11,4 +11,8 @@ public class ChatPanel extends JPanel {
 	public ChatPanel(ChatClient client) {
 		this.client = client;
 	}
+	
+	public void receiveMessage(String message) {
+		//TODO
+	}
 }
