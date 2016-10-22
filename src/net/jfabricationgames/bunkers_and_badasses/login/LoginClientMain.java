@@ -2,15 +2,17 @@ package net.jfabricationgames.bunkers_and_badasses.login;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
-import java.awt.Toolkit;
 
 public class LoginClientMain extends JFrame {
 	
@@ -41,6 +43,14 @@ public class LoginClientMain extends JFrame {
 	}
 	
 	public LoginClientMain() {
+		//set default look and feel
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	    }
+	    catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+	       //e.printStackTrace();
+	    }
+		//set the icon
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginClientMain.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		//create a new client to login
 		client = new JFGDatabaseLoginClient(ServerMain.SERVER_URL, ServerMain.SERVER_PORT);

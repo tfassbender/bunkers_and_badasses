@@ -9,6 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import net.jfabricationgames.jfgserver.client.JFGClient;
+import java.awt.Color;
+import java.awt.Toolkit;
+import net.miginfocom.swing.MigLayout;
 
 public class GameRequestDialog extends JDialog {
 	
@@ -19,25 +22,31 @@ public class GameRequestDialog extends JDialog {
 	private JFGClient client;
 	
 	public GameRequestDialog(JFGClient client) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+		setTitle("Bunkers and Badasses - Spiel Einladung");
 		this.client = client;
 		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setLayout(new FlowLayout());
+		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new MigLayout("", "[]", "[]"));
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.setBackground(Color.GRAY);
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.setBackground(Color.GRAY);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
