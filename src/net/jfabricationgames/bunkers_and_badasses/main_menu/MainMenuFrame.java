@@ -3,11 +3,16 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
@@ -21,11 +26,6 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class MainMenuFrame extends JFrame {
 	
@@ -84,6 +84,7 @@ public class MainMenuFrame extends JFrame {
 		JMenuItem mntmProfilEinstellungen = new JMenuItem("Profil Einstellungen");
 		mntmProfilEinstellungen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//TODO implement the real (non-test) version
 				new AccountSettingsDialog(client, MainMenuFrame.this).setVisible(true);
 			}
 		});
@@ -101,12 +102,26 @@ public class MainMenuFrame extends JFrame {
 		menuBar.add(mnSpiel);
 		
 		JMenuItem mntmSpielErstellen = new JMenuItem("Spiel Erstellen");
-		mntmSpielErstellen.setEnabled(false);
+		mntmSpielErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO implement the real (non-test) version
+				new GameCreationDialog(client, MainMenuFrame.this).setVisible(true);
+			}
+		});
 		mnSpiel.add(mntmSpielErstellen);
 		
 		JMenuItem mntmSpielLaden = new JMenuItem("Spiel Laden");
 		mntmSpielLaden.setEnabled(false);
 		mnSpiel.add(mntmSpielLaden);
+		
+		JMenuItem mntmSpielEinladungAnzeigen = new JMenuItem("Spiel Einladung anzeigen");
+		mntmSpielEinladungAnzeigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO remove after tests
+				new GameRequestDialog(client, MainMenuFrame.this, new Object(), null).setVisible(true);
+			}
+		});
+		mnSpiel.add(mntmSpielEinladungAnzeigen);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
@@ -188,6 +203,10 @@ public class MainMenuFrame extends JFrame {
 		panel_buttons.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
 		JButton btnSpielErstellen = new JButton("Spiel Erstellen");
+		btnSpielErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnSpielErstellen.setBackground(Color.GRAY);
 		panel_buttons.add(btnSpielErstellen, "cell 0 0,alignx center,aligny center");
 	}

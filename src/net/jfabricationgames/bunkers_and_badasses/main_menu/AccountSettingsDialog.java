@@ -2,7 +2,6 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 
@@ -19,6 +18,8 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AccountSettingsDialog extends JDialog {
 	
@@ -104,6 +105,10 @@ public class AccountSettingsDialog extends JDialog {
 			buttonPane.setLayout(new MigLayout("", "[][85px]", "[23px]"));
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+					}
+				});
 				okButton.setBackground(Color.GRAY);
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton, "cell 0 0");
@@ -111,6 +116,10 @@ public class AccountSettingsDialog extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Abbrechen");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+					}
+				});
 				cancelButton.setBackground(Color.GRAY);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton, "cell 1 0");
