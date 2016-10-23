@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
@@ -28,7 +29,7 @@ public class GameRequestDialog extends JDialog {
 	
 	private JFGClient client;
 	
-	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, Object invitingUser, List invitedUsers) {
+	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers) {
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Spiel Einladung");

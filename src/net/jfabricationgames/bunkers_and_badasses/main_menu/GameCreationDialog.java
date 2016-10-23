@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -16,10 +18,9 @@ import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class GameCreationDialog extends JDialog {
 	
@@ -58,7 +59,7 @@ public class GameCreationDialog extends JDialog {
 			scrollPane.setBackground(Color.GRAY);
 			contentPanel.add(scrollPane, "cell 0 3,grow");
 			{
-				JList list = new JList();
+				JList<User> list = new JList<User>();
 				list.setBackground(Color.LIGHT_GRAY);
 				scrollPane.setViewportView(list);
 			}
@@ -107,7 +108,7 @@ public class GameCreationDialog extends JDialog {
 	private void sendGameRequest(List players) {
 		//TODO
 	}
-	public void receiveClientAnswer(Object user, boolean joining) {
+	public void receiveClientAnswer(User user, boolean joining) {
 		//TODO
 	}
 }

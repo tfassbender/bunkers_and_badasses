@@ -24,6 +24,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
@@ -33,8 +34,8 @@ public class MainMenuFrame extends JFrame {
 	
 	private MainMenuDynamicLoader dynamicLoader;
 	private JFGClient client;
-	private List playersOnline;
-	private List playersInGame;
+	private List<User> playersOnline;
+	private List<User> playersInGame;
 	
 	private static ImageLoader imageLoader;
 	
@@ -118,7 +119,7 @@ public class MainMenuFrame extends JFrame {
 		mntmSpielEinladungAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO remove after tests
-				new GameRequestDialog(client, MainMenuFrame.this, new Object(), null).setVisible(true);
+				new GameRequestDialog(client, MainMenuFrame.this, new User("user"), null).setVisible(true);
 			}
 		});
 		mnSpiel.add(mntmSpielEinladungAnzeigen);
@@ -225,7 +226,7 @@ public class MainMenuFrame extends JFrame {
 	private void showAccountSettings() {
 		//TODO
 	}
-	private void showGameRequest(Object startingPlayer, List invitedPlayers) {
+	private void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
 		//TODO
 	}
 }

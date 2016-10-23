@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import java.util.List;
 
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
@@ -24,14 +25,13 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	private String username;
 	private String lastUsername;
 	private String password;
-	private Object player;
-	private Object toPlayer;
-	private List invitedPlayers;
+	private User player;
+	private User toPlayer;
+	private List<User> invitedPlayers;
 	private boolean joining;
 	private String dynamicContentRequest;
 	private String dynamicContentAnswer;
-	private List usersOnline;
-	private List usersInGame;
+	private List<User> users;
 	
 	public MainMenuMessage() {
 		
@@ -65,25 +65,25 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 		this.password = password;
 	}
 	
-	public Object getPlayer() {
+	public User getPlayer() {
 		return player;
 	}
-	public void setPlayer(Object player) {
+	public void setPlayer(User player) {
 		this.player = player;
 	}
 	
-	public Object getToPlayer() {
+	public User getToPlayer() {
 		return toPlayer;
 	}
 
-	public void setToPlayer(Object toPlayer) {
+	public void setToPlayer(User toPlayer) {
 		this.toPlayer = toPlayer;
 	}
 	
-	public List getInvitedPlayers() {
+	public List<User> getInvitedPlayers() {
 		return invitedPlayers;
 	}
-	public void setInvitedPlayers(List invitedPlayers) {
+	public void setInvitedPlayers(List<User> invitedPlayers) {
 		this.invitedPlayers = invitedPlayers;
 	}
 	
@@ -108,17 +108,10 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 		this.dynamicContentAnswer = dynamicContentAnswer;
 	}
 	
-	public List getUsersOnline() {
-		return usersOnline;
+	public List<User> getUsers() {
+		return users;
 	}
-	public void setUsersOnline(List usersOnline) {
-		this.usersOnline = usersOnline;
-	}
-	
-	public List getUsersInGame() {
-		return usersInGame;
-	}
-	public void setUsersInGame(List usersInGame) {
-		this.usersInGame = usersInGame;
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 }
