@@ -16,6 +16,7 @@ import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 public class BunkersAndBadassesServer extends JFGLoginServer {
 	
 	private Map<User, JFGConnection> userMap;
+	private Map<JFGConnection, User> connectionMap;
 	
 	private List<User> allUsers;
 	
@@ -27,8 +28,46 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	@Override
 	public void acceptLogin(JFGConnection connection) {
 		super.acceptLogin(connection);
-		//TODO get the user name and map it to the connection
-		//TODO when the user name is found send a message to all clients to update the user list
+		connection.sendMessage(new ServerNameRequest());
+	}
+	
+	public void mapConnection(String username, JFGConnection connection) {
+		User user = null;
+		for (User u : allUsers) {
+			if (u.getUsername().equals(username)) {
+				user = u;
+			}
+		}
+		if (user == null) {
+			throw new IllegalArgumentException("The user (" + username + ") doesn't exist or is unknown.");
+		}
+		user.setOnline(true);
+		userMap.put(user, connection);
+		connectionMap.put(connection, user);
+		
+		sendUserUpdate();
+	}
+	
+	public void logout(JFGConnection connection) {
+		User user = connectionMap.get(connection);
+		user.setInGame(false);
+		user.setOnline(false);
+		
+		connectionMap.remove(connection);
+		userMap.remove(user);
+		
+		closeConnection(connection);
+		
+		sendUserUpdate();
+	}
+	
+	private void sendUserUpdate() {
+		UserUpdateMessage update = new UserUpdateMessage(allUsers);
+		for (JFGConnection con : getConnections()) {
+			if (isLoggedIn(con)) {
+				con.sendMessage(update);
+			}
+		}
 	}
 	
 	private void loadUsers() {

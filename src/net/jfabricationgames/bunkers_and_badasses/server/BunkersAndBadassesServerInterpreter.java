@@ -29,28 +29,25 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		if (message instanceof JFGDatabaseLoginMessage) {
 			loginInterpreter.interpreteServerMessage(message, connection);
 		}
-		else if (message instanceof ChatMessage) {
-			interpreteChatMessage((ChatMessage) message, connection);
+		else if (message instanceof ServerNameRequest) {
+			interpreteServerNameRequest((ServerNameRequest) message, connection);
 		}
 		else if (message instanceof MainMenuMessage) {
 			interpreteMainMenuMessage((MainMenuMessage) message, connection);
 		}
+		else if (message instanceof ChatMessage) {
+			interpreteChatMessage((ChatMessage) message, connection);
+		}
+		else if (message instanceof UserLogoutMessage) {
+			interpreteUserLogoutMessage((UserLogoutMessage) message, connection);
+		}
+		else if (message instanceof ServerPingMessage) {
+			//TODO react on ping (user still connected)
+		}
 	}
 	
-	private void interpreteChatMessage(ChatMessage message, JFGConnection connection) {
-		if (connection.getGroup() != null) {
-			//broadcast to all users of the group
-			connection.getGroup().sendMessage(message, connection);
-		}
-		else {
-			//broadcast to all users that are not in a group
-			List<JFGConnection> con = connection.getServer().getConnections();
-			for (JFGConnection c : con) {
-				if (c.getGroup() == null && !c.equals(connection)) {
-					c.sendMessage(message);
-				}
-			}
-		}
+	private void interpreteServerNameRequest(ServerNameRequest message, JFGConnection connection) {
+		((BunkersAndBadassesServer) connection.getServer()).mapConnection(message.getUsername(), connection);
 	}
 	
 	private void interpreteMainMenuMessage(MainMenuMessage message, JFGConnection connection) {
@@ -80,5 +77,25 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				//do nothing here because the server only sends the updates
 				break;
 		}
+	}
+	
+	private void interpreteChatMessage(ChatMessage message, JFGConnection connection) {
+		if (connection.getGroup() != null) {
+			//broadcast to all users of the group
+			connection.getGroup().sendMessage(message, connection);
+		}
+		else {
+			//broadcast to all users that are not in a group
+			List<JFGConnection> con = connection.getServer().getConnections();
+			for (JFGConnection c : con) {
+				if (c.getGroup() == null && !c.equals(connection)) {
+					c.sendMessage(message);
+				}
+			}
+		}
+	}
+	
+	private void interpreteUserLogoutMessage(UserLogoutMessage message, JFGConnection connection) {
+		((BunkersAndBadassesServer) connection.getServer()).logout(connection);
 	}
 }
