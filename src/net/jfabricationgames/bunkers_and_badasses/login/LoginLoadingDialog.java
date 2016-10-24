@@ -14,6 +14,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuFrame;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import java.awt.Toolkit;
 
 public class LoginLoadingDialog extends JDialog {
 	
@@ -24,9 +25,12 @@ public class LoginLoadingDialog extends JDialog {
 	private JFGClient client;
 	
 	public LoginLoadingDialog(JFGClient client) {
+		setUndecorated(true);
+		setTitle("Bunkers And Badasses - Verbindungsaufbau");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginLoadingDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		this.client = client;
 		
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 550, 200);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
@@ -47,7 +51,7 @@ public class LoginLoadingDialog extends JDialog {
 			}
 			{
 				JLabel lblVerbindungZumServer = new JLabel("Verbindung zum Server wird aufgebaut...");
-				lblVerbindungZumServer.setFont(new Font("Dialog", Font.BOLD, 16));
+				lblVerbindungZumServer.setFont(new Font("Tahoma", Font.BOLD, 16));
 				panel.add(lblVerbindungZumServer, "cell 0 2,alignx center");
 			}
 		}

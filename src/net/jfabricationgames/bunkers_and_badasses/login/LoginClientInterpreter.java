@@ -1,7 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.login;
 
-import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerNameRequest;
+import net.jfabricationgames.bunkers_and_badasses.server.UserUpdateMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClientInterpreter;
 import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
@@ -29,13 +29,11 @@ public class LoginClientInterpreter implements JFGClientInterpreter {
 			ServerNameRequest answer = new ServerNameRequest(loginMain.getUsername());
 			client.sendMessage(answer);
 		}
-		else if (message instanceof MainMenuMessage) {
-			MainMenuMessage menuMessage = (MainMenuMessage) message;
-			if (menuMessage.getMessageType().equals(MainMenuMessage.MessageType.USERLIST_UPDATE)) {
-				//the server has received the name request and has answered the user list
-				UserManager.setUsers(menuMessage.getUsers());
-				loginLoadingDialog.startMainMenu();
-			}
+		else if (message instanceof UserUpdateMessage) {
+			UserUpdateMessage updateMessage = (UserUpdateMessage) message;
+			//the server has received the name request and has answered the user list
+			UserManager.setUsers(updateMessage.getUsers());
+			loginLoadingDialog.startMainMenu();
 		}
 	}
 	
