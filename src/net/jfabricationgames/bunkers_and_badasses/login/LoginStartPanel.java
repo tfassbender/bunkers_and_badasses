@@ -27,6 +27,8 @@ public class LoginStartPanel extends JPanel {
 	private JPasswordField passwordField;
 	private JLabel lblError;
 	
+	private LoginClientMain loginClientMain;
+	
 	private JFGDatabaseLoginClient client;
 	
 	private boolean loggingIn = false;
@@ -34,6 +36,7 @@ public class LoginStartPanel extends JPanel {
 	public LoginStartPanel(LoginClientMain superFrame, JFGDatabaseLoginClient client) {
 		setBackground(Color.GRAY);
 		this.client = client;
+		this.loginClientMain = superFrame;
 		
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new MigLayout("", "[50px,grow][][150px][50px,grow]", "[][20px][][][][grow][40px]"));
@@ -137,9 +140,10 @@ public class LoginStartPanel extends JPanel {
 				@Override
 				public void run() {
 					if (textField.getText() != null && passwordField.getPassword().length > 0) {
+						loginClientMain.setUsername(textField.getText());
 						if (client.login(textField.getText(), new String(passwordField.getPassword()))) {
 							lblError.setText("Login Successfull");
-							//TODO after successful login open the main menu
+							loginClientMain.startLoginLoadingDialog();
 						}
 						else {
 							lblError.setText("Wrong Username or Password");

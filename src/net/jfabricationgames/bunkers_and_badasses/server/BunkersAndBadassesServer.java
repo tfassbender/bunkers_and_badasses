@@ -28,6 +28,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	@Override
 	public void acceptLogin(JFGConnection connection) {
 		super.acceptLogin(connection);
+		System.out.println("accepted login");
 		connection.sendMessage(new ServerNameRequest());
 	}
 	
@@ -45,6 +46,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		userMap.put(user, connection);
 		connectionMap.put(connection, user);
 		
+		System.out.println("updated map");
 		sendUserUpdate();
 	}
 	
@@ -62,10 +64,12 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	}
 	
 	private void sendUserUpdate() {
+		System.out.println("sending user update");
 		UserUpdateMessage update = new UserUpdateMessage(allUsers);
 		for (JFGConnection con : getConnections()) {
 			if (isLoggedIn(con)) {
 				con.sendMessage(update);
+				System.out.println("update to: " + connectionMap.get(con).getUsername());
 			}
 		}
 	}

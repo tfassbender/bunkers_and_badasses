@@ -13,13 +13,13 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
+import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClientInterpreter;
 
 public class LoginClientMain extends JFrame {
 	
 	private static final long serialVersionUID = 7230985013444319496L;
 	
 	private JPanel[] panels;
-	
 	private JPanel contentPane;
 	
 	private String username;
@@ -27,6 +27,8 @@ public class LoginClientMain extends JFrame {
 	private static ImageLoader imageLoader;
 	
 	private JFGDatabaseLoginClient client;
+	
+	private LoginLoadingDialog loginLoadingDialog;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -50,10 +52,15 @@ public class LoginClientMain extends JFrame {
 	    catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 	       //e.printStackTrace();
 	    }
+		
 		//set the icon
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginClientMain.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		//create a new client to login
+		
+		//create a new client to login and change the interpreter to a bunkers and badasses login interpreter
 		client = new JFGDatabaseLoginClient(ServerMain.SERVER_URL, ServerMain.SERVER_PORT);
+		JFGDatabaseLoginClientInterpreter loginInterpreter = (JFGDatabaseLoginClientInterpreter) client.getClient().getClientInterpreter();
+		LoginClientInterpreter interpreter = new LoginClientInterpreter(loginInterpreter, this);
+		client.getClient().setClientInterpreter(interpreter);
 		
 		//create a new ImageLoader for the login panels
 		imageLoader = new ImageLoader();
@@ -87,6 +94,13 @@ public class LoginClientMain extends JFrame {
 		contentPane.add(panels[panel], BorderLayout.CENTER);
 		revalidate();
 		repaint();
+	}
+	
+	public void startLoginLoadingDialog() {
+		loginLoadingDialog = new LoginLoadingDialog(client.getClient());
+		((LoginClientInterpreter) client.getClient().getClientInterpreter()).setLoginLoadingDialog(loginLoadingDialog);
+		loginLoadingDialog.setVisible(true);
+		dispose();
 	}
 	
 	public String getUsername() {

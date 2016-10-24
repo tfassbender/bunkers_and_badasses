@@ -3,7 +3,6 @@ package net.jfabricationgames.bunkers_and_badasses.server;
 import java.io.IOException;
 
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
-import net.jfabricationgames.jfgserver.interpreter.JFGServerInterpreter;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 /**
@@ -19,7 +18,7 @@ public class ServerMain {
 	public static final int SERVER_PORT = 4715;
 	public static final String SERVER_URL = "jfabricationgames.ddns.net";
 	
-	private JFGLoginServer server;
+	private BunkersAndBadassesServer server;
 	
 	public static void main(String [] args) {
 		new ServerMain();
@@ -34,8 +33,9 @@ public class ServerMain {
 		JFGDatabaseLoginServerInterpreter.LOGIN_SQL = "SELECT passwd FROM bunkers_and_badasses.login WHERE username = '%user';";
 		JFGDatabaseLoginServerInterpreter.SIGN_UP_SQL = "INSERT INTO bunkers_and_badasses.login VALUES (0, '%user', '%pass');";
 		//create a new interpreter
-		server = new JFGLoginServer(SERVER_PORT);
-		JFGServerInterpreter interpreter = new JFGDatabaseLoginServerInterpreter(server);
+		server = new BunkersAndBadassesServer(SERVER_PORT);
+		JFGDatabaseLoginServerInterpreter loginInterpreter = new JFGDatabaseLoginServerInterpreter(server);
+		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter);
 		server.setInterpreterFactory(interpreter);
 		//start the server
 		try {
