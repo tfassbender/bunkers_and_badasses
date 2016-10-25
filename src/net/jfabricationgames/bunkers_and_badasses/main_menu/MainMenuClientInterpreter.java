@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.server.UserUpdateMessage;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
@@ -61,6 +62,10 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	
 	private void interpreteUserUpdateMessage(UserUpdateMessage message, JFGClient client) {
 		UserManager.setUsers(message.getUsers());
+		System.out.println("received user update:");
+		for (User u : message.getUsers()) {
+			System.out.println(u.getUsername() + " " + u.isOnline());
+		}
 		mainMenu.updateUserList();
 	}
 	

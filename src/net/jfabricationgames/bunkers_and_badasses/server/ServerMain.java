@@ -35,7 +35,7 @@ public class ServerMain {
 		//create a new interpreter
 		server = new BunkersAndBadassesServer(SERVER_PORT);
 		JFGDatabaseLoginServerInterpreter loginInterpreter = new JFGDatabaseLoginServerInterpreter(server);
-		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter);
+		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter, server);
 		server.setInterpreterFactory(interpreter);
 		//start the server
 		try {

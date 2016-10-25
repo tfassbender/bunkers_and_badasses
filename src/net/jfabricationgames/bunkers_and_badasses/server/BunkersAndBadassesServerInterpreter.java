@@ -8,8 +8,10 @@ import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
+import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessageType;
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 import net.jfabricationgames.jfgserver.interpreter.JFGServerInterpreter;
@@ -19,13 +21,16 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private JFGDatabaseLoginServerInterpreter loginInterpreter;
 	
-	public BunkersAndBadassesServerInterpreter(JFGDatabaseLoginServerInterpreter loginInterpreter) {
+	private BunkersAndBadassesServer server;
+	
+	public BunkersAndBadassesServerInterpreter(JFGDatabaseLoginServerInterpreter loginInterpreter, BunkersAndBadassesServer server) {
 		this.loginInterpreter = loginInterpreter;
+		this.server = server;
 	}
 	
 	@Override
 	public JFGServerInterpreter getInstance() {
-		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter);
+		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter, server);
 		return interpreter;
 	}
 	
@@ -33,6 +38,14 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	public void interpreteServerMessage(JFGServerMessage message, JFGConnection connection) {
 		if (message instanceof JFGDatabaseLoginMessage) {
 			loginInterpreter.interpreteServerMessage(message, connection);
+			//if the user signs up add him to the user list
+			JFGDatabaseLoginMessage loginMessage = (JFGDatabaseLoginMessage) message;
+			if (loginMessage.getMessageType().equals(JFGDatabaseLoginMessageType.SIGN_UP)) {
+				User user = new User(loginMessage.getUsername());
+				if (!server.getUsers().contains(user)) {
+					server.getUsers().add(user);
+				}
+			}
 		}
 		else if (message instanceof ServerNameRequest) {
 			interpreteServerNameRequest((ServerNameRequest) message, connection);

@@ -19,6 +19,16 @@ public class User implements Serializable {
 		return username;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof User) {
+			return username.equals(((User) obj).getUsername());
+		}
+		else {
+			return super.equals(obj);
+		}
+	}
+	
 	public String getUsername() {
 		return username;
 	}

@@ -9,12 +9,13 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
@@ -42,12 +43,11 @@ public class MainMenuFrame extends JFrame {
 	
 	private JPanel contentPane;
 	private JPanel panel_dynamic_content;
-	private JPanel panel_player_list;
 	private JPanel panel_buttons;
 	
 	private ChatPanel panel_chat;
 	private ChatClient chatClient;
-	private JLabel lblPlayers;
+	private JTextArea txtrPlayers;
 	
 	public MainMenuFrame(JFGClient client) {
 		this.client = client;
@@ -167,16 +167,16 @@ public class MainMenuFrame extends JFrame {
 		panel.setLayout(new MigLayout("", "[47px,grow]", "[39px,grow]"));
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panel.add(scrollPane_1, "cell 0 0,grow");
 		scrollPane_1.setBackground(Color.GRAY);
 		
-		panel_player_list = new JPanel();
-		panel_player_list.setBackground(Color.LIGHT_GRAY);
-		scrollPane_1.setViewportView(panel_player_list);
-		panel_player_list.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		lblPlayers = new JLabel("");
-		panel_player_list.add(lblPlayers, "cell 0 0");
+		txtrPlayers = new JTextArea();
+		txtrPlayers.setEditable(false);
+		txtrPlayers.setWrapStyleWord(true);
+		txtrPlayers.setLineWrap(true);
+		txtrPlayers.setBackground(Color.LIGHT_GRAY);
+		scrollPane_1.setViewportView(txtrPlayers);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBackground(Color.GRAY);
@@ -208,28 +208,28 @@ public class MainMenuFrame extends JFrame {
 		StringBuilder inGameUsers = new StringBuilder();
 		StringBuilder onlineUsers = new StringBuilder();
 		StringBuilder offlineUsers = new StringBuilder();
-		inGameUsers.append("<html>");
 		for (User user : UserManager.getUsers()) {
 			if (user.isInGame()) {
-				inGameUsers.append("[in game]  ");
+				inGameUsers.append("[in game] ");
 				inGameUsers.append(user.getUsername());
-				inGameUsers.append("</br>");
+				inGameUsers.append("\n");
 			}
 			else if (user.isOnline()) {
-				onlineUsers.append("[online]   ");
+				onlineUsers.append("[online] ");
 				onlineUsers.append(user.getUsername());
-				onlineUsers.append("</br>");
+				onlineUsers.append("\n");
 			}
 			else {
 				offlineUsers.append("[offline] ");
 				offlineUsers.append(user.getUsername());
-				offlineUsers.append("</br>");
+				offlineUsers.append("\n");
 			}
 		}
 		inGameUsers.append(onlineUsers.toString());
+		inGameUsers.append("\n");
 		inGameUsers.append(offlineUsers.toString());
-		inGameUsers.append("</html>");
-		lblPlayers.setText(inGameUsers.toString());
+		inGameUsers.append("\n");
+		txtrPlayers.setText(inGameUsers.toString());
 		revalidate();
 		repaint();
 	}
