@@ -25,6 +25,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
@@ -46,20 +47,14 @@ public class MainMenuFrame extends JFrame {
 	
 	private ChatPanel panel_chat;
 	private ChatClient chatClient;
-	
-	/**
-	 * Only for test cases.
-	 */
-	public static void main(String[] args) {
-		new MainMenuFrame(null).setVisible(true);
-	}
+	private JLabel lblPlayers;
 	
 	public MainMenuFrame(JFGClient client) {
 		this.client = client;
 		
 		dynamicLoader = new MainMenuDynamicLoader(client);
 		chatClient = new ChatClient(client);
-		MainMenuClientInterpreter interpreter = new MainMenuClientInterpreter(chatClient, dynamicLoader);
+		MainMenuClientInterpreter interpreter = new MainMenuClientInterpreter(chatClient, dynamicLoader, this);
 		client.setClientInterpreter(interpreter);
 		
 		try {
@@ -150,12 +145,10 @@ public class MainMenuFrame extends JFrame {
 		panel_content.add(panel_img_1, "cell 0 2,grow");
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBorder(null);
 		scrollPane.setBackground(Color.GRAY);
 		panel_content.add(scrollPane, "cell 1 2,grow");
 		
 		panel_dynamic_content = new JPanel();
-		panel_dynamic_content.setBorder(null);
 		panel_dynamic_content.setBackground(Color.GRAY);
 		scrollPane.setViewportView(panel_dynamic_content);
 		panel_dynamic_content.setLayout(new MigLayout("", "[grow]", "[grow]"));
@@ -175,31 +168,26 @@ public class MainMenuFrame extends JFrame {
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		panel.add(scrollPane_1, "cell 0 0,grow");
-		scrollPane_1.setBorder(null);
 		scrollPane_1.setBackground(Color.GRAY);
 		
 		panel_player_list = new JPanel();
-		panel_player_list.setBorder(null);
 		panel_player_list.setBackground(Color.LIGHT_GRAY);
 		scrollPane_1.setViewportView(panel_player_list);
-		panel_player_list.setLayout(new MigLayout("", "[]", "[]"));
+		panel_player_list.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JLabel lblPlayers = new JLabel("");
+		lblPlayers = new JLabel("");
 		panel_player_list.add(lblPlayers, "cell 0 0");
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBorder(null);
 		scrollPane_2.setBackground(Color.GRAY);
 		panel_content.add(scrollPane_2, "cell 0 3 3 2,grow");
 		
 		panel_chat = new ChatPanel(chatClient);
-		panel_chat.setBorder(null);
 		chatClient.setChatPanel(panel_chat);
 		panel_chat.setBackground(Color.GRAY);
 		scrollPane_2.setViewportView(panel_chat);
 		
 		panel_buttons = new JPanel();
-		panel_buttons.setBorder(null);
 		panel_buttons.setBackground(Color.GRAY);
 		panel_content.add(panel_buttons, "cell 3 4,grow");
 		panel_buttons.setLayout(new MigLayout("", "[grow]", "[grow]"));
@@ -212,14 +200,38 @@ public class MainMenuFrame extends JFrame {
 		});
 		btnSpielErstellen.setBackground(Color.GRAY);
 		panel_buttons.add(btnSpielErstellen, "cell 0 0,alignx center,aligny center");
+		
+		updateUserList();
 	}
 	
-	public static ImageLoader getImageLoader() {
-		return imageLoader;
-	}
-	
-	public JFGClient getClient() {
-		return client;
+	public void updateUserList() {
+		StringBuilder inGameUsers = new StringBuilder();
+		StringBuilder onlineUsers = new StringBuilder();
+		StringBuilder offlineUsers = new StringBuilder();
+		inGameUsers.append("<html>");
+		for (User user : UserManager.getUsers()) {
+			if (user.isInGame()) {
+				inGameUsers.append("[in game]  ");
+				inGameUsers.append(user.getUsername());
+				inGameUsers.append("</br>");
+			}
+			else if (user.isOnline()) {
+				onlineUsers.append("[online]   ");
+				onlineUsers.append(user.getUsername());
+				onlineUsers.append("</br>");
+			}
+			else {
+				offlineUsers.append("[offline] ");
+				offlineUsers.append(user.getUsername());
+				offlineUsers.append("</br>");
+			}
+		}
+		inGameUsers.append(onlineUsers.toString());
+		inGameUsers.append(offlineUsers.toString());
+		inGameUsers.append("</html>");
+		lblPlayers.setText(inGameUsers.toString());
+		revalidate();
+		repaint();
 	}
 	
 	private void startGameCreationDialog() {
@@ -232,5 +244,13 @@ public class MainMenuFrame extends JFrame {
 	private void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
 		//TODO implement the real (non-test) version
 		new GameRequestDialog(client, MainMenuFrame.this, new User("user"), null).setVisible(true);
+	}
+	
+	public static ImageLoader getImageLoader() {
+		return imageLoader;
+	}
+	
+	public JFGClient getClient() {
+		return client;
 	}
 }
