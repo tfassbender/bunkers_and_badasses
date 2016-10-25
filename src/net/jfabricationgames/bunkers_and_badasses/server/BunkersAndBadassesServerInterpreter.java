@@ -1,9 +1,14 @@
 package net.jfabricationgames.bunkers_and_badasses.server;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
+import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
@@ -56,7 +61,8 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				//do nothing here because the server only sends the answers
 				break;
 			case DYNAMIC_CONTENT_REQUEST:
-				//TODO load the content and send it back to the client
+				MainMenuMessage dynamicContent = createDynamicContentAnswer();
+				connection.sendMessage(dynamicContent);
 				break;
 			case GAME_CREATION_ANSWER:
 				//TODO send the answer to the player that created the game (MainMenuMessage.toPlayer)
@@ -73,10 +79,48 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			case USERNAME_UPDATE:
 				//TODO update the password and user name of the player (MainMenuMessage.lastUsername)
 				break;
-			case USERLIST_UPDATE:
-				//do nothing here because the server only sends the updates
-				break;
 		}
+	}
+	private MainMenuMessage createDynamicContentAnswer() {
+		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
+		Statement statement = null;
+		ResultSet result = null;
+		MainMenuMessage message = new MainMenuMessage();
+		message.setMessageType(MainMenuMessage.MessageType.DYNAMIC_CONTENT_ANSWER);
+		try {
+			statement = connection.createStatement();
+			result = statement.executeQuery("SELECT content, priority FROM bunkers_and_badasses.main_menu_dynamic_content WHERE display = 'true' ORDER BY priority");
+			StringBuilder sb = new StringBuilder();
+			while (result.next()) {
+				sb.append(result.getString(1));
+				sb.append("<br><br><br>\n");
+			}
+			message.setDynamicContentAnswer(sb.toString());
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			try {
+				result.close();
+			}
+			catch (SQLException e) {
+				;
+			}
+			try {
+				statement.close();
+			}
+			catch (SQLException e) {
+				;
+			}
+			try {
+				connection.close();
+			}
+			catch (SQLException e) {
+				;
+			}
+		}
+		return message;
 	}
 	
 	private void interpreteChatMessage(ChatMessage message, JFGConnection connection) {

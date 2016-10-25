@@ -34,8 +34,8 @@ public class MainMenuFrame extends JFrame {
 	
 	private MainMenuDynamicLoader dynamicLoader;
 	private JFGClient client;
-	private List<User> playersOnline;
-	private List<User> playersInGame;
+	//private List<User> playersOnline;
+	//private List<User> playersInGame;
 	
 	private static ImageLoader imageLoader;
 	
@@ -43,8 +43,8 @@ public class MainMenuFrame extends JFrame {
 	private JPanel panel_dynamic_content;
 	private JPanel panel_player_list;
 	private JPanel panel_buttons;
-	private ChatPanel panel_chat;
 	
+	private ChatPanel panel_chat;
 	private ChatClient chatClient;
 	
 	/**
@@ -56,7 +56,11 @@ public class MainMenuFrame extends JFrame {
 	
 	public MainMenuFrame(JFGClient client) {
 		this.client = client;
+		
+		dynamicLoader = new MainMenuDynamicLoader(client);
 		chatClient = new ChatClient(client);
+		MainMenuClientInterpreter interpreter = new MainMenuClientInterpreter(chatClient, dynamicLoader);
+		client.setClientInterpreter(interpreter);
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -85,8 +89,7 @@ public class MainMenuFrame extends JFrame {
 		JMenuItem mntmProfilEinstellungen = new JMenuItem("Profil Einstellungen");
 		mntmProfilEinstellungen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO implement the real (non-test) version
-				new AccountSettingsDialog(client, MainMenuFrame.this).setVisible(true);
+				showAccountSettings();
 			}
 		});
 		mnProfil.add(mntmProfilEinstellungen);
@@ -105,8 +108,7 @@ public class MainMenuFrame extends JFrame {
 		JMenuItem mntmSpielErstellen = new JMenuItem("Spiel Erstellen");
 		mntmSpielErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO implement the real (non-test) version
-				new GameCreationDialog(client, MainMenuFrame.this).setVisible(true);
+				startGameCreationDialog();
 			}
 		});
 		mnSpiel.add(mntmSpielErstellen);
@@ -119,7 +121,7 @@ public class MainMenuFrame extends JFrame {
 		mntmSpielEinladungAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO remove after tests
-				new GameRequestDialog(client, MainMenuFrame.this, new User("user"), null).setVisible(true);
+				showGameRequest(null, null);
 			}
 		});
 		mnSpiel.add(mntmSpielEinladungAnzeigen);
@@ -158,8 +160,7 @@ public class MainMenuFrame extends JFrame {
 		scrollPane.setViewportView(panel_dynamic_content);
 		panel_dynamic_content.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JLabel lblDynamiccontent = new JLabel("");
-		panel_dynamic_content.add(lblDynamiccontent, "cell 0 0");
+		dynamicLoader.addDynamicContent(panel_dynamic_content);
 		
 		ImagePanel panel_img_2 = new ImagePanel(imageLoader.loadImage("login/arschgaul_2.png"));
 		panel_img_2.setBackground(Color.GRAY);
@@ -206,6 +207,7 @@ public class MainMenuFrame extends JFrame {
 		JButton btnSpielErstellen = new JButton("Spiel Erstellen");
 		btnSpielErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				startGameCreationDialog();
 			}
 		});
 		btnSpielErstellen.setBackground(Color.GRAY);
@@ -221,12 +223,14 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	private void startGameCreationDialog() {
-		//TODO
+		//TODO implement the real (non-test) version
+		new GameCreationDialog(client, MainMenuFrame.this).setVisible(true);
 	}
 	private void showAccountSettings() {
-		//TODO
+		new AccountSettingsDialog(client, MainMenuFrame.this).setVisible(true);
 	}
 	private void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
-		//TODO
+		//TODO implement the real (non-test) version
+		new GameRequestDialog(client, MainMenuFrame.this, new User("user"), null).setVisible(true);
 	}
 }
