@@ -65,6 +65,12 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	}
 	
 	private void sendUserUpdate() {
+		/*List<User> users = new ArrayList<User>();
+		for (User u : allUsers) {
+			User tmp = new User(u.getUsername());
+			tmp.setOnline(u.isOnline());
+			users.add(tmp);
+		}*/
 		UserUpdateMessage update = new UserUpdateMessage(allUsers);
 		for (JFGConnection con : getConnections()) {
 			if (isLoggedIn(con)) {
@@ -72,6 +78,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				for (User u : update.getUsers()) {
 					System.out.println(u.getUsername() + " " + u.isOnline());
 				}
+				con.resetOutput();
 				con.sendMessage(update);
 			}
 		}
