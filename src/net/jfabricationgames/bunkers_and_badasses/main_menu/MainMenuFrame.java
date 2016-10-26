@@ -42,7 +42,6 @@ public class MainMenuFrame extends JFrame {
 	private static ImageLoader imageLoader;
 	
 	private JPanel contentPane;
-	private JPanel panel_dynamic_content;
 	private JPanel panel_buttons;
 	
 	private ChatPanel panel_chat;
@@ -130,7 +129,7 @@ public class MainMenuFrame extends JFrame {
 		JPanel panel_content = new JPanel();
 		panel_content.setBackground(Color.GRAY);
 		contentPane.add(panel_content, "cell 0 0,grow");
-		panel_content.setLayout(new MigLayout("", "[200px,grow][400px,grow][200px,grow][300px,grow]", "[60px:n:60px][grow][250px,grow][200px,grow][100px,grow]"));
+		panel_content.setLayout(new MigLayout("", "[100px:150px:200px,grow][400px,grow][100px:150px:200px,grow][250px:300px,grow]", "[60px:n:60px][::25px][250px,grow][200px,grow][100px]"));
 		
 		ImagePanel panel_headline = new ImagePanel(imageLoader.loadImage("jfg/headline.png"));
 		panel_headline.setCentered(true);
@@ -145,15 +144,18 @@ public class MainMenuFrame extends JFrame {
 		panel_content.add(panel_img_1, "cell 0 2,grow");
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setBackground(Color.GRAY);
 		panel_content.add(scrollPane, "cell 1 2,grow");
 		
-		panel_dynamic_content = new JPanel();
-		panel_dynamic_content.setBackground(Color.GRAY);
-		scrollPane.setViewportView(panel_dynamic_content);
-		panel_dynamic_content.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		JTextArea txtrDynamicContent = new JTextArea();
+		txtrDynamicContent.setBackground(Color.LIGHT_GRAY);
+		txtrDynamicContent.setEditable(false);
+		txtrDynamicContent.setWrapStyleWord(true);
+		txtrDynamicContent.setLineWrap(true);
+		scrollPane.setViewportView(txtrDynamicContent);
 		
-		dynamicLoader.addDynamicContent(panel_dynamic_content);
+		dynamicLoader.addDynamicContent(txtrDynamicContent);
 		
 		ImagePanel panel_img_2 = new ImagePanel(imageLoader.loadImage("login/arschgaul_2.png"));
 		panel_img_2.setBackground(Color.GRAY);

@@ -21,6 +21,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextArea;
 
 public class GameCreationDialog extends JDialog {
 	
@@ -36,14 +37,14 @@ public class GameCreationDialog extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameCreationDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		this.client = client;
 		
-		setBounds(100, 100, 325, 400);
+		setBounds(100, 100, 350, 500);
 		setLocationRelativeTo(callingFrame);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[grow][200px,grow]", "[][10px][][grow][25px:n:25px][]"));
+		contentPanel.setLayout(new MigLayout("", "[grow][200px,grow]", "[][10px][][200px,grow][10px][][100px,grow][25px:n:25px][]"));
 		{
 			JLabel lblSpielErstellen = new JLabel("Spiel Erstellen");
 			lblSpielErstellen.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -65,20 +66,35 @@ public class GameCreationDialog extends JDialog {
 			}
 		}
 		{
-			ImagePanel panel = new ImagePanel(MainMenuFrame.getImageLoader().loadImage("main_menu/marcus_1.png"));
+			ImagePanel panel = new ImagePanel(MainMenuFrame.getImageLoader().loadImage("login/moxxi_1.png"));
 			panel.setCentered(true);
 			panel.setAdaptSizeKeepProportion(true);
 			panel.setBackground(Color.GRAY);
-			contentPanel.add(panel, "cell 1 3,grow");
+			contentPanel.add(panel, "cell 1 3 1 4,grow");
+		}
+		{
+			JLabel lblAntworten = new JLabel("Antworten:");
+			lblAntworten.setFont(new Font("Tahoma", Font.BOLD, 16));
+			contentPanel.add(lblAntworten, "cell 0 5");
+		}
+		{
+			JScrollPane scrollPane = new JScrollPane();
+			contentPanel.add(scrollPane, "cell 0 6,grow");
+			{
+				JTextArea txtrAnswers = new JTextArea();
+				txtrAnswers.setEditable(false);
+				txtrAnswers.setBackground(Color.LIGHT_GRAY);
+				scrollPane.setViewportView(txtrAnswers);
+			}
 		}
 		{
 			JLabel lblError = new JLabel("");
 			lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
-			contentPanel.add(lblError, "cell 0 4,alignx center");
+			contentPanel.add(lblError, "cell 0 7 2 1,alignx center");
 		}
 		{
 			JPanel buttonPane = new JPanel();
-			contentPanel.add(buttonPane, "cell 0 5 2 1,alignx center");
+			contentPanel.add(buttonPane, "cell 0 8 2 1,alignx center");
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{

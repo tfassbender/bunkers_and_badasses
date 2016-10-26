@@ -1,7 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import net.jfabricationgames.jfgserver.client.JFGClient;
 
@@ -15,7 +14,7 @@ public class MainMenuDynamicLoader {
 		this.client = client;
 	}
 	
-	public void addDynamicContent(JPanel component) {
+	public void addDynamicContent(JTextArea textArea) {
 		Thread dynamicComponentThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -26,7 +25,7 @@ public class MainMenuDynamicLoader {
 					while (dynamicContent == null) {
 						Thread.sleep(100);
 					}
-					addMessageContent(dynamicContent, component);
+					textArea.setText(dynamicContent.getDynamicContentAnswer());
 					dynamicContent = null;
 				}
 				catch (InterruptedException ie) {
@@ -37,11 +36,11 @@ public class MainMenuDynamicLoader {
 		dynamicComponentThread.start();
 	}
 	
-	private void addMessageContent(MainMenuMessage content, JPanel component) {
+	/*private void addMessageContent(MainMenuMessage content, JPanel component) {
 		component.removeAll();
 		JLabel lblDynamiccontent = new JLabel(content.getDynamicContentAnswer());
 		component.add(lblDynamiccontent, "cell 0 0");
-	}
+	}*/
 	
 	public void receiveDynamicContent(MainMenuMessage dynamicContent) {
 		this.dynamicContent = dynamicContent;
