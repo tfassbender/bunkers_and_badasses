@@ -1,6 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.chat;
 
 import javax.swing.JPanel;
+
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -57,10 +59,12 @@ public class ChatPanel extends JPanel {
 	}
 	
 	private void sendMessage() {
+		String message = UserManager.getUsername() + ": " + textField.getText();
 		if (textField.getText() != null && !textField.getText().equals("")) {
-			//TODO find user name
-			client.sendMessage("<username>: " + textField.getText());
+			client.sendMessage(message);
 		}
+		txtrChatpanel.append(message + "\n");
+		textField.setText("");
 	}
 	
 	public void receiveMessage(String message) {

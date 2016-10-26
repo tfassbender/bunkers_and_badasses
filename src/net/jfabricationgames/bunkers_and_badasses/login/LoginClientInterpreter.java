@@ -34,6 +34,8 @@ public class LoginClientInterpreter implements JFGClientInterpreter {
 			//the server has received the name request and has answered the user list
 			UserManager.setUsers(updateMessage.getUsers());
 			loginLoadingDialog.startMainMenu();
+			//store the user name in the UserManager
+			UserManager.setUsername(loginMain.getUsername());
 		}
 	}
 	

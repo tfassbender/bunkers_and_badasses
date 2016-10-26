@@ -37,15 +37,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	@Override
 	public void interpreteServerMessage(JFGServerMessage message, JFGConnection connection) {
 		if (message instanceof JFGDatabaseLoginMessage) {
-			loginInterpreter.interpreteServerMessage(message, connection);
-			//if the user signs up add him to the user list
-			JFGDatabaseLoginMessage loginMessage = (JFGDatabaseLoginMessage) message;
-			if (loginMessage.getMessageType().equals(JFGDatabaseLoginMessageType.SIGN_UP)) {
-				User user = new User(loginMessage.getUsername());
-				if (!server.getUsers().contains(user)) {
-					server.getUsers().add(user);
-				}
-			}
+			interpreteDatabaseLoginMessage((JFGDatabaseLoginMessage) message, connection);
 		}
 		else if (message instanceof ServerNameRequest) {
 			interpreteServerNameRequest((ServerNameRequest) message, connection);
@@ -61,6 +53,18 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		}
 		else if (message instanceof ServerPingMessage) {
 			//TODO react on ping (user still connected)
+		}
+	}
+	
+	private void interpreteDatabaseLoginMessage(JFGDatabaseLoginMessage message, JFGConnection connection) {
+		loginInterpreter.interpreteServerMessage(message, connection);
+		//if the user signs up add him to the user list
+		JFGDatabaseLoginMessage loginMessage = (JFGDatabaseLoginMessage) message;
+		if (loginMessage.getMessageType().equals(JFGDatabaseLoginMessageType.SIGN_UP)) {
+			User user = new User(loginMessage.getUsername());
+			if (!server.getUsers().contains(user)) {
+				server.getUsers().add(user);
+			}
 		}
 	}
 	
@@ -102,12 +106,15 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		message.setMessageType(MainMenuMessage.MessageType.DYNAMIC_CONTENT_ANSWER);
 		try {
 			statement = connection.createStatement();
-			result = statement.executeQuery("SELECT content, priority FROM bunkers_and_badasses.main_menu_dynamic_content WHERE display = 'true' ORDER BY priority");
+			result = statement.executeQuery("SELECT content, priority FROM bunkers_and_badasses.main_menu_dynamic_content WHERE display = true ORDER BY priority");
 			StringBuilder sb = new StringBuilder();
+			//sb.append("<html>");
 			while (result.next()) {
 				sb.append(result.getString(1));
-				sb.append("<br><br><br>\n");
+				sb.append("\n");
+				//sb.append("<br><br><br>");
 			}
+			//sb.append("</html>");
 			message.setDynamicContentAnswer(sb.toString());
 		}
 		catch (SQLException sqle) {
