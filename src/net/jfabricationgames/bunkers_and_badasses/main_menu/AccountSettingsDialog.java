@@ -20,6 +20,8 @@ import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class AccountSettingsDialog extends JDialog {
 	
@@ -27,10 +29,13 @@ public class AccountSettingsDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	
-	private JFGClient client;
 	private JTextField txtUsername;
 	private JPasswordField pwdPassword;
 	private JPasswordField pwdConfirm;
+	
+	private JFGClient client;
+	private JCheckBox chckbxPassword;
+	private JCheckBox chckbxName;
 	
 	public AccountSettingsDialog(JFGClient client, MainMenuFrame callingFrame) {
 		setResizable(false);
@@ -52,7 +57,17 @@ public class AccountSettingsDialog extends JDialog {
 			contentPanel.add(lblAendern, "cell 0 0 4 1,alignx center");
 		}
 		{
-			JCheckBox chckbxName = new JCheckBox("Name");
+			chckbxName = new JCheckBox("Name");
+			chckbxName.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent arg0) {
+					if (chckbxName.isSelected()) {
+						txtUsername.setEnabled(true);
+					}
+					else {
+						txtUsername.setEnabled(false);
+					}
+				}
+			});
 			chckbxName.setBackground(Color.GRAY);
 			contentPanel.add(chckbxName, "cell 1 2");
 		}
@@ -71,7 +86,19 @@ public class AccountSettingsDialog extends JDialog {
 			contentPanel.add(panel_img_1, "cell 3 1 1 6,grow");
 		}
 		{
-			JCheckBox chckbxPassword = new JCheckBox("Password");
+			chckbxPassword = new JCheckBox("Password");
+			chckbxPassword.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					if (chckbxPassword.isSelected()) {
+						pwdPassword.setEnabled(true);
+						pwdConfirm.setEnabled(true);
+					}
+					else {
+						pwdPassword.setEnabled(false);
+						pwdPassword.setEnabled(false);
+					}
+				}
+			});
 			chckbxPassword.setBackground(Color.GRAY);
 			contentPanel.add(chckbxPassword, "cell 1 3");
 		}
@@ -107,6 +134,7 @@ public class AccountSettingsDialog extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						sendUpdate();
 					}
 				});
 				okButton.setBackground(Color.GRAY);
@@ -118,11 +146,30 @@ public class AccountSettingsDialog extends JDialog {
 				JButton cancelButton = new JButton("Abbrechen");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						dispose();
 					}
 				});
 				cancelButton.setBackground(Color.GRAY);
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton, "cell 1 0");
+			}
+		}
+	}
+	
+	private void sendUpdate() {
+		if (chckbxName.isSelected()) {
+			if (chckbxPassword.isSelected()) {
+				if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword())) {
+					updateAll(txtUsername.getText(), new String(pwdPassword.getPassword()));
+				}
+			}
+			else {
+				updateUsername(txtUsername.getText());
+			}
+		}
+		else if (chckbxPassword.isSelected()) {
+			if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword())) {
+				updatePassword(txtUsername.getText());
 			}
 		}
 	}

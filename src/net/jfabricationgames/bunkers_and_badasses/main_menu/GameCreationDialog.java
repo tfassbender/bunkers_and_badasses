@@ -105,7 +105,7 @@ public class GameCreationDialog extends JDialog {
 		}
 	}
 	
-	private void sendGameRequest(List players) {
+	private void sendGameRequest(List<User> players) {
 		//TODO
 	}
 	public void receiveClientAnswer(User user, boolean joining) {
