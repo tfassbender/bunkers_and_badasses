@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
@@ -62,6 +63,17 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		closeConnection(connection);
 		
 		sendUserUpdate();
+	}
+	
+	public void sendGameCreationRequest(MainMenuMessage message) {
+		List<JFGConnection> invitedConnections = new ArrayList<JFGConnection>();
+		for (User user : message.getInvitedPlayers()) {
+			invitedConnections.add(userMap.get(user));
+		}
+		for (JFGConnection con : invitedConnections) {
+			con.resetOutput();
+			con.sendMessage(message);
+		}
 	}
 	
 	private void sendUserUpdate() {

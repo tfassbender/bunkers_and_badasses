@@ -85,7 +85,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				//TODO send the answer to the player that created the game (MainMenuMessage.toPlayer)
 				break;
 			case GAME_CREATION_REQUEST:
-				//TODO send the request to all players that are invited (MainMenuMessage.invitedPlayers)
+				server.sendGameCreationRequest(message);
 				break;
 			case GAME_CREATEION_ABORT:
 				//TODO send the abort to all players that were invited
