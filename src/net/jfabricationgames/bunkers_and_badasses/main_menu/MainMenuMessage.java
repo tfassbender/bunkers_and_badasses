@@ -14,6 +14,7 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 		PASSWORD_USERNAME_UPDATE,
 		GAME_CREATION_REQUEST,
 		GAME_CREATION_ANSWER,
+		GAME_CREATEION_ABORT,
 		DYNAMIC_CONTENT_REQUEST,
 		DYNAMIC_CONTENT_ANSWER;
 	}
@@ -30,6 +31,7 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	private boolean joining;
 	//private String dynamicContentRequest;
 	private String dynamicContentAnswer;
+	private String abortCause;
 	private List<User> users;
 	
 	public MainMenuMessage() {
@@ -105,6 +107,13 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setDynamicContentAnswer(String dynamicContentAnswer) {
 		this.dynamicContentAnswer = dynamicContentAnswer;
+	}
+	
+	public String getAbortCause() {
+		return abortCause;
+	}
+	public void setAbortCause(String abortCause) {
+		this.abortCause = abortCause;
 	}
 	
 	public List<User> getUsers() {

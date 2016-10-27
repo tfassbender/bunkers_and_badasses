@@ -45,7 +45,10 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				//TODO send the answer to the player that created the game (MainMenuMessage.toPlayer)
 				break;
 			case GAME_CREATION_REQUEST:
-				//do nothing here; only server side
+				//TODO open a GameRequestDialog
+				break;
+			case GAME_CREATEION_ABORT:
+				//TODO inform the user about the abort
 				break;
 			case PASSWORD_UPDATE:
 				//do nothing here; only server side

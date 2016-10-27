@@ -144,7 +144,7 @@ public class MainMenuFrame extends JFrame {
 		panel_content.add(panel_img_1, "cell 0 2,grow");
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setBackground(Color.GRAY);
 		panel_content.add(scrollPane, "cell 1 2,grow");
 		

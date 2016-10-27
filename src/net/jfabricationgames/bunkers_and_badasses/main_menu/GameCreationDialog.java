@@ -8,20 +8,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ListModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextArea;
 
 public class GameCreationDialog extends JDialog {
 	
@@ -31,13 +35,19 @@ public class GameCreationDialog extends JDialog {
 	
 	private JFGClient client;
 	
+	private JList<User> list;
+	private JTextArea txtrAnswers;
+	
+	private boolean requestSent = false;
+	private List<User> invitedUsers;
+	
 	public GameCreationDialog(JFGClient client, MainMenuFrame callingFrame) {
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Erstellen");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameCreationDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		this.client = client;
 		
-		setBounds(100, 100, 350, 500);
+		setBounds(100, 100, 400, 500);
 		setLocationRelativeTo(callingFrame);
 		
 		getContentPane().setLayout(new BorderLayout());
@@ -60,7 +70,8 @@ public class GameCreationDialog extends JDialog {
 			scrollPane.setBackground(Color.GRAY);
 			contentPanel.add(scrollPane, "cell 0 3,grow");
 			{
-				JList<User> list = new JList<User>();
+				ListModel<User> userListModel = createUserListModel();
+				list = new JList<User>(userListModel);
 				list.setBackground(Color.LIGHT_GRAY);
 				scrollPane.setViewportView(list);
 			}
@@ -79,9 +90,10 @@ public class GameCreationDialog extends JDialog {
 		}
 		{
 			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			contentPanel.add(scrollPane, "cell 0 6,grow");
 			{
-				JTextArea txtrAnswers = new JTextArea();
+				txtrAnswers = new JTextArea();
 				txtrAnswers.setEditable(false);
 				txtrAnswers.setBackground(Color.LIGHT_GRAY);
 				scrollPane.setViewportView(txtrAnswers);
@@ -101,6 +113,14 @@ public class GameCreationDialog extends JDialog {
 				JButton okButton = new JButton("Erstellen");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if (!requestSent) {
+							requestSent = true;
+							invitedUsers = list.getSelectedValuesList();
+							//TODO check if there are enough players
+							if (!invitedUsers.isEmpty()) {
+								sendGameRequest(invitedUsers);
+							}
+						}
 					}
 				});
 				okButton.setBackground(Color.GRAY);
@@ -112,6 +132,8 @@ public class GameCreationDialog extends JDialog {
 				JButton cancelButton = new JButton("Abbrechen");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						sendGameCreationAbort();
+						dispose();
 					}
 				});
 				cancelButton.setBackground(Color.GRAY);
@@ -121,10 +143,41 @@ public class GameCreationDialog extends JDialog {
 		}
 	}
 	
+	private DefaultListModel<User> createUserListModel() {
+		DefaultListModel<User> model = new DefaultListModel<User>();
+		for (User user : UserManager.getUsers()) {
+			if (user.isOnline() && !user.isInGame() && !user.getUsername().equals(UserManager.getUsername())) {
+				model.addElement(user);
+			}
+		}
+		return model;
+	}
+	
 	private void sendGameRequest(List<User> players) {
-		//TODO
+		MainMenuMessage gameRequest = new MainMenuMessage();
+		gameRequest.setMessageType(MainMenuMessage.MessageType.DYNAMIC_CONTENT_REQUEST);
+		gameRequest.setInvitedPlayers(players);
+		gameRequest.setPlayer(new User(UserManager.getUsername()));
+		client.resetOutput();
+		client.sendMessage(gameRequest);
+	}
+	private void sendGameCreationAbort() {
+		if (requestSent) {
+			MainMenuMessage gameCreationAbort = new MainMenuMessage();
+			gameCreationAbort.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
+			gameCreationAbort.setInvitedPlayers(invitedUsers);
+			gameCreationAbort.setAbortCause("Der Startspieler hat die Anfrage zurückgezogen");
+			client.resetOutput();
+			client.sendMessage(gameCreationAbort);
+		}
 	}
 	public void receiveClientAnswer(User user, boolean joining) {
-		//TODO
+		if (joining) {
+			txtrAnswers.append("Zusage von: ");
+		}
+		else {
+			txtrAnswers.append("Absage von: ");
+		}
+		txtrAnswers.append(user.getUsername() + "\n");
 	}
 }
