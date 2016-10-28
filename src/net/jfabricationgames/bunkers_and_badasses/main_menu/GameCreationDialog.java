@@ -45,6 +45,7 @@ public class GameCreationDialog extends JDialog {
 	
 	private List<User> invitedUsers;
 	private List<User> rejections;
+	private JButton okButton;
 	
 	public GameCreationDialog(JFGClient client, MainMenuFrame callingFrame) {
 		addWindowListener(new WindowAdapter() {
@@ -121,7 +122,7 @@ public class GameCreationDialog extends JDialog {
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{
-				JButton okButton = new JButton("Erstellen");
+				okButton = new JButton("Erstellen");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (!requestSent) {
@@ -166,11 +167,12 @@ public class GameCreationDialog extends JDialog {
 	
 	private void sendGameRequest(List<User> players) {
 		MainMenuMessage gameRequest = new MainMenuMessage();
-		gameRequest.setMessageType(MainMenuMessage.MessageType.DYNAMIC_CONTENT_REQUEST);
+		gameRequest.setMessageType(MainMenuMessage.MessageType.GAME_CREATION_REQUEST);
 		gameRequest.setInvitedPlayers(players);
 		gameRequest.setPlayer(new User(UserManager.getUsername()));
 		client.resetOutput();
 		client.sendMessage(gameRequest);
+		okButton.setEnabled(false);
 		rejections = new ArrayList<User>();
 	}
 	private void sendGameCreationAbort() {
@@ -211,5 +213,6 @@ public class GameCreationDialog extends JDialog {
 			}
 		}
 		txtrAnswers.append(user.getUsername() + "\n");
+		//TODO if all players have answered let the starting player decide if he wants to start the game
 	}
 }

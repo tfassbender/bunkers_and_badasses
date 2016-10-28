@@ -29,6 +29,17 @@ public class User implements Serializable {
 		}
 	}
 	
+	@Override
+	public int hashCode() {
+		//generate a hash code depending on the username
+		int hash = 43;
+		for (int i = 0; i < username.length(); i++) {
+			hash *= 17;
+			hash += username.charAt(i);
+		}
+		return hash;
+	}
+	
 	public String getUsername() {
 		return username;
 	}

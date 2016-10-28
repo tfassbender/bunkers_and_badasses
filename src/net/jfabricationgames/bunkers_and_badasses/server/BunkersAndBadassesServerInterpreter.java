@@ -88,7 +88,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				server.sendGameCreationRequest(message);
 				break;
 			case GAME_CREATEION_ABORT:
-				//TODO send the abort to all players that were invited
+				server.sendGameCreationAbort(message);
 				break;
 			case PASSWORD_UPDATE:
 				//TODO update the password of the player (MainMenuMessage.lastUsername)

@@ -68,6 +68,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	public void sendGameCreationRequest(MainMenuMessage message) {
 		List<JFGConnection> invitedConnections = new ArrayList<JFGConnection>();
 		for (User user : message.getInvitedPlayers()) {
+			System.out.println(userMap.get(user));
 			invitedConnections.add(userMap.get(user));
 		}
 		for (JFGConnection con : invitedConnections) {
@@ -79,6 +80,10 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		JFGConnection toPlayer = userMap.get(message.getToPlayer());
 		toPlayer.resetOutput();
 		toPlayer.sendMessage(message);
+	}
+	public void sendGameCreationAbort(MainMenuMessage message) {
+		//same as send request; just the message sent is different...
+		sendGameCreationRequest(message);
 	}
 	
 	private void sendUserUpdate() {
