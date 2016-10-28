@@ -18,8 +18,10 @@ import javax.swing.border.EmptyBorder;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextArea;
 
 public class GameRequestDialog extends JDialog {
 	
@@ -29,11 +31,18 @@ public class GameRequestDialog extends JDialog {
 	
 	private JFGClient client;
 	
+	private User invitingUser;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JTextArea txtrInvitedplayers;
+	
 	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers) {
+		this.client = client;
+		this.invitingUser = invitingUser;
+		
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Spiel Einladung");
-		this.client = client;
 		
 		setBounds(100, 100, 450, 400);
 		setLocationRelativeTo(callingFrame);
@@ -62,14 +71,12 @@ public class GameRequestDialog extends JDialog {
 			JScrollPane scrollPane = new JScrollPane();
 			contentPanel.add(scrollPane, "cell 0 5,grow");
 			{
-				JPanel panel = new JPanel();
-				panel.setBackground(Color.LIGHT_GRAY);
-				scrollPane.setViewportView(panel);
-				panel.setLayout(new MigLayout("", "[grow]", "[grow]"));
-				{
-					JLabel lblInvitedUsers = new JLabel("");
-					panel.add(lblInvitedUsers, "cell 0 0");
-				}
+				txtrInvitedplayers = new JTextArea();
+				txtrInvitedplayers.setBackground(Color.LIGHT_GRAY);
+				txtrInvitedplayers.setEditable(false);
+				txtrInvitedplayers.setWrapStyleWord(true);
+				txtrInvitedplayers.setLineWrap(true);
+				scrollPane.setViewportView(txtrInvitedplayers);
 			}
 		}
 		{
@@ -85,9 +92,10 @@ public class GameRequestDialog extends JDialog {
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{
-				JButton okButton = new JButton("Annehmen");
+				okButton = new JButton("Annehmen");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						sendAnswer(true);
 					}
 				});
 				okButton.setBackground(Color.GRAY);
@@ -96,9 +104,11 @@ public class GameRequestDialog extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Ablehnen");
+				cancelButton = new JButton("Ablehnen");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						sendAnswer(false);
+						dispose();
 					}
 				});
 				cancelButton.setBackground(Color.GRAY);
@@ -106,9 +116,27 @@ public class GameRequestDialog extends JDialog {
 				buttonPane.add(cancelButton, "cell 1 0");
 			}
 		}
+		
+		addInvitedPlayers(invitedUsers);
+	}
+	
+	private void addInvitedPlayers(List<User> players) {
+		for (User user : players) {
+			txtrInvitedplayers.append(user.getUsername() + "\n");
+		}
 	}
 	
 	private void sendAnswer(boolean joining) {
-		//TODO
+		//disable the buttons
+		okButton.setEnabled(false);
+		cancelButton.setEnabled(false);
+		//send the message
+		MainMenuMessage gameCreationAnswer = new MainMenuMessage();
+		gameCreationAnswer.setMessageType(MainMenuMessage.MessageType.GAME_CREATION_ANSWER);
+		gameCreationAnswer.setJoining(joining);
+		gameCreationAnswer.setPlayer(new User(UserManager.getUsername()));
+		gameCreationAnswer.setToPlayer(invitingUser);
+		client.resetOutput();
+		client.sendMessage(gameCreationAnswer);
 	}
 }

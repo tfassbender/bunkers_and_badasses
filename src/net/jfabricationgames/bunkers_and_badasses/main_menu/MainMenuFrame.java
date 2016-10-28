@@ -39,11 +39,12 @@ public class MainMenuFrame extends JFrame {
 	//private List<User> playersOnline;
 	//private List<User> playersInGame;
 	
+	private GameCreationDialog gameCreationDialog;
+	
 	private static ImageLoader imageLoader;
 	
 	private JPanel contentPane;
 	private JPanel panel_buttons;
-	
 	private ChatPanel panel_chat;
 	private ChatClient chatClient;
 	private JTextArea txtrPlayers;
@@ -237,15 +238,31 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	private void startGameCreationDialog() {
-		//TODO implement the real (non-test) version
-		new GameCreationDialog(client, MainMenuFrame.this).setVisible(true);
+		if (gameCreationDialog == null) {
+			gameCreationDialog = new GameCreationDialog(client, this);
+			gameCreationDialog.setVisible(true);
+		}
 	}
 	private void showAccountSettings() {
-		new AccountSettingsDialog(client, MainMenuFrame.this).setVisible(true);
+		new AccountSettingsDialog(client, this).setVisible(true);
 	}
-	private void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
-		//TODO implement the real (non-test) version
-		new GameRequestDialog(client, MainMenuFrame.this, new User("user"), null).setVisible(true);
+	public void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
+		if (startingPlayer == null) {
+			//TODO remove after test cases
+			new GameRequestDialog(client, this, new User("user"), null).setVisible(true);
+		}
+		else {
+			new GameRequestDialog(client, this, startingPlayer, invitedPlayers).setVisible(true);
+		}
+	}
+	
+	protected void disposeGameCreationDialog() {
+		gameCreationDialog = null;
+	}
+	public void receiveGameCreationAnswer(User player, boolean joining) {
+		if (gameCreationDialog != null) {
+			gameCreationDialog.receiveClientAnswer(player, joining);
+		}
 	}
 	
 	public static ImageLoader getImageLoader() {

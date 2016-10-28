@@ -42,10 +42,10 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				//do nothing here; only server side
 				break;
 			case GAME_CREATION_ANSWER:
-				//TODO send the answer to the player that created the game (MainMenuMessage.toPlayer)
+				mainMenu.receiveGameCreationAnswer(message.getPlayer(), message.isJoining());
 				break;
 			case GAME_CREATION_REQUEST:
-				//TODO open a GameRequestDialog
+				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers());
 				break;
 			case GAME_CREATEION_ABORT:
 				//TODO inform the user about the abort
@@ -58,6 +58,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				break;
 			case USERNAME_UPDATE:
 				//do nothing here; only server side
+				break;
+			case PASSWORD_USERNAME_UPDATE_ANSWER:
+				//TODO
 				break;
 		}
 	}

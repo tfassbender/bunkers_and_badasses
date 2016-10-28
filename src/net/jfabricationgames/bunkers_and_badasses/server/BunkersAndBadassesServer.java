@@ -75,6 +75,11 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			con.sendMessage(message);
 		}
 	}
+	public void sendGameCreationAnswer(MainMenuMessage message) {
+		JFGConnection toPlayer = userMap.get(message.getToPlayer());
+		toPlayer.resetOutput();
+		toPlayer.sendMessage(message);
+	}
 	
 	private void sendUserUpdate() {
 		UserUpdateMessage update = new UserUpdateMessage(allUsers);

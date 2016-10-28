@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -26,6 +27,8 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class GameCreationDialog extends JDialog {
 	
@@ -39,9 +42,17 @@ public class GameCreationDialog extends JDialog {
 	private JTextArea txtrAnswers;
 	
 	private boolean requestSent = false;
+	
 	private List<User> invitedUsers;
+	private List<User> rejections;
 	
 	public GameCreationDialog(JFGClient client, MainMenuFrame callingFrame) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				callingFrame.disposeGameCreationDialog();
+			}
+		});
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Erstellen");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameCreationDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -116,7 +127,6 @@ public class GameCreationDialog extends JDialog {
 						if (!requestSent) {
 							requestSent = true;
 							invitedUsers = list.getSelectedValuesList();
-							//TODO check if there are enough players
 							if (!invitedUsers.isEmpty()) {
 								sendGameRequest(invitedUsers);
 							}
@@ -133,6 +143,7 @@ public class GameCreationDialog extends JDialog {
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						sendGameCreationAbort();
+						callingFrame.disposeGameCreationDialog();
 						dispose();
 					}
 				});
@@ -160,6 +171,7 @@ public class GameCreationDialog extends JDialog {
 		gameRequest.setPlayer(new User(UserManager.getUsername()));
 		client.resetOutput();
 		client.sendMessage(gameRequest);
+		rejections = new ArrayList<User>();
 	}
 	private void sendGameCreationAbort() {
 		if (requestSent) {
@@ -177,6 +189,26 @@ public class GameCreationDialog extends JDialog {
 		}
 		else {
 			txtrAnswers.append("Absage von: ");
+			rejections.add(user);
+			//TODO inform the starting player
+			if (invitedUsers.size() - rejections.size() <= 0) {
+				//no more players left
+				//if there are more players than two needed the message needs to be send
+				
+				/*List<User> usersLeft = new ArrayList<User>();
+				for (User left : invitedUsers) {
+					if (!rejections.contains(left)) {
+						usersLeft.add(left);
+					}
+				}
+				MainMenuMessage abortMessage = new MainMenuMessage();
+				abortMessage.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
+				abortMessage.setAbortCause("Nicht mehr genug Spieler vorhanden");
+				//empty list because there are no mor users
+				abortMessage.setInvitedPlayers(usersLeft);
+				client.resetOutput();
+				client.sendMessage(abortMessage);*/
+			}
 		}
 		txtrAnswers.append(user.getUsername() + "\n");
 	}

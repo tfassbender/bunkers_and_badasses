@@ -82,7 +82,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				connection.sendMessage(dynamicContent);
 				break;
 			case GAME_CREATION_ANSWER:
-				//TODO send the answer to the player that created the game (MainMenuMessage.toPlayer)
+				server.sendGameCreationAnswer(message);
 				break;
 			case GAME_CREATION_REQUEST:
 				server.sendGameCreationRequest(message);
@@ -98,6 +98,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				break;
 			case USERNAME_UPDATE:
 				//TODO update the password and user name of the player (MainMenuMessage.lastUsername)
+				break;
+			case PASSWORD_USERNAME_UPDATE_ANSWER:
+				//do nothing here; only client side
 				break;
 		}
 	}
