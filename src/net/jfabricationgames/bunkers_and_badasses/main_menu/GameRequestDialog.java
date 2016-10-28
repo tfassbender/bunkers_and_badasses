@@ -138,5 +138,6 @@ public class GameRequestDialog extends JDialog {
 		gameCreationAnswer.setToPlayer(invitingUser);
 		client.resetOutput();
 		client.sendMessage(gameCreationAnswer);
+		//TODO inform the player that they are waiting for other players
 	}
 }
