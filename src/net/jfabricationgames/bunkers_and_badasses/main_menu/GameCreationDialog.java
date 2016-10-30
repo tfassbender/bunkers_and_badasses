@@ -46,6 +46,7 @@ public class GameCreationDialog extends JDialog {
 	private List<User> invitedUsers;
 	private List<User> rejections;
 	private JButton okButton;
+	private JLabel lblError;
 	
 	public GameCreationDialog(JFGClient client, MainMenuFrame callingFrame) {
 		addWindowListener(new WindowAdapter() {
@@ -112,7 +113,7 @@ public class GameCreationDialog extends JDialog {
 			}
 		}
 		{
-			JLabel lblError = new JLabel("");
+			lblError = new JLabel("");
 			lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
 			contentPanel.add(lblError, "cell 0 7 2 1,alignx center");
 		}
@@ -192,8 +193,8 @@ public class GameCreationDialog extends JDialog {
 		else {
 			txtrAnswers.append("Absage von: ");
 			rejections.add(user);
-			//TODO inform the starting player
 			if (invitedUsers.size() - rejections.size() <= 0) {
+				lblError.setText("Nicht mehr genügend Spieler vorhanden.");
 				//no more players left
 				//if there are more players than two needed the message needs to be send
 				

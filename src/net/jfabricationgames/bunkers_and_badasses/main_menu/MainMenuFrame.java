@@ -265,6 +265,10 @@ public class MainMenuFrame extends JFrame {
 		}
 	}
 	
+	public void receiveGameCreationAbort(String cause) {
+		//TODO send to the right dialog (if there are more than one)
+	}
+	
 	public static ImageLoader getImageLoader() {
 		return imageLoader;
 	}

@@ -48,7 +48,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers());
 				break;
 			case GAME_CREATEION_ABORT:
-				//TODO inform the user about the abort
+				mainMenu.receiveGameCreationAbort(message.getAbortCause());
 				break;
 			case PASSWORD_UPDATE:
 				//do nothing here; only server side

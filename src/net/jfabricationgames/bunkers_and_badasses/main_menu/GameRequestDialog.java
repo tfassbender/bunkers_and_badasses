@@ -35,6 +35,7 @@ public class GameRequestDialog extends JDialog {
 	private JButton okButton;
 	private JButton cancelButton;
 	private JTextArea txtrInvitedplayers;
+	private JLabel lblMessage_1;
 	
 	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers) {
 		this.client = client;
@@ -44,14 +45,14 @@ public class GameRequestDialog extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Spiel Einladung");
 		
-		setBounds(100, 100, 450, 400);
+		setBounds(100, 100, 450, 425);
 		setLocationRelativeTo(callingFrame);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[250px][grow]", "[][10px][][10px][][grow][]"));
+		contentPanel.setLayout(new MigLayout("", "[250px][grow]", "[][10px][][10px][][grow][25px][]"));
 		{
 			JLabel lblSpielEinladung = new JLabel("Spiel Einladung");
 			lblSpielEinladung.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -84,11 +85,16 @@ public class GameRequestDialog extends JDialog {
 			panel.setCentered(true);
 			panel.setAdaptSizeKeepProportion(true);
 			panel.setBackground(Color.GRAY);
-			contentPanel.add(panel, "cell 1 5,grow");
+			contentPanel.add(panel, "cell 1 5 1 2,grow");
+		}
+		{
+			lblMessage_1 = new JLabel("");
+			lblMessage_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+			contentPanel.add(lblMessage_1, "cell 0 6");
 		}
 		{
 			JPanel buttonPane = new JPanel();
-			contentPanel.add(buttonPane, "cell 0 6 2 1,alignx center");
+			contentPanel.add(buttonPane, "cell 0 7 2 1,alignx center");
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{
@@ -138,6 +144,11 @@ public class GameRequestDialog extends JDialog {
 		gameCreationAnswer.setToPlayer(invitingUser);
 		client.resetOutput();
 		client.sendMessage(gameCreationAnswer);
-		//TODO inform the player that they are waiting for other players
+		lblMessage_1.setText("Warte auf andere Spieler");
+	}
+	
+	public void receiveAbort(String abortMessage) {
+		okButton.setEnabled(false);
+		lblMessage_1.setText(abortMessage);
 	}
 }
