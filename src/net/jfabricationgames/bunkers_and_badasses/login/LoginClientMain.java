@@ -57,6 +57,7 @@ public class LoginClientMain extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginClientMain.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		
 		//create a new client to login and change the interpreter to a bunkers and badasses login interpreter
+		//TODO maybe catch ConnectException ?
 		client = new JFGDatabaseLoginClient(ServerMain.SERVER_URL, ServerMain.SERVER_PORT);
 		JFGDatabaseLoginClientInterpreter loginInterpreter = (JFGDatabaseLoginClientInterpreter) client.getClient().getClientInterpreter();
 		LoginClientInterpreter interpreter = new LoginClientInterpreter(loginInterpreter, this);

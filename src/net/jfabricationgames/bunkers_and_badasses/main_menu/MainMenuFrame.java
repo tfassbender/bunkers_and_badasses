@@ -5,7 +5,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,6 +40,8 @@ public class MainMenuFrame extends JFrame {
 	private JFGClient client;
 	//private List<User> playersOnline;
 	//private List<User> playersInGame;
+	
+	private Map<User, GameRequestDialog> requestDialogs = new HashMap<User, GameRequestDialog>();
 	
 	private GameCreationDialog gameCreationDialog;
 	
@@ -111,15 +115,6 @@ public class MainMenuFrame extends JFrame {
 		JMenuItem mntmSpielLaden = new JMenuItem("Spiel Laden");
 		mntmSpielLaden.setEnabled(false);
 		mnSpiel.add(mntmSpielLaden);
-		
-		JMenuItem mntmSpielEinladungAnzeigen = new JMenuItem("Spiel Einladung anzeigen");
-		mntmSpielEinladungAnzeigen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//TODO remove after tests
-				showGameRequest(null, null);
-			}
-		});
-		mnSpiel.add(mntmSpielEinladungAnzeigen);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
@@ -247,13 +242,15 @@ public class MainMenuFrame extends JFrame {
 		new AccountSettingsDialog(client, this).setVisible(true);
 	}
 	public void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
-		if (startingPlayer == null) {
-			//TODO remove after test cases
-			new GameRequestDialog(client, this, new User("user"), null).setVisible(true);
+		//map the requests to the starting player
+		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers);
+		GameRequestDialog last = requestDialogs.get(startingPlayer);
+		if (last != null) {
+			//if the same player sent another request earlier, dispose the old request 
+			last.dispose();
 		}
-		else {
-			new GameRequestDialog(client, this, startingPlayer, invitedPlayers).setVisible(true);
-		}
+		requestDialogs.put(startingPlayer, request);
+		request.setVisible(true);
 	}
 	
 	protected void disposeGameCreationDialog() {
@@ -265,8 +262,11 @@ public class MainMenuFrame extends JFrame {
 		}
 	}
 	
-	public void receiveGameCreationAbort(String cause) {
-		//TODO send to the right dialog (if there are more than one)
+	public void receiveGameCreationAbort(User startingPlayer, String cause) {
+		GameRequestDialog request = requestDialogs.get(startingPlayer);
+		if (request != null) {
+			request.receiveAbort(cause);
+		}
 	}
 	
 	public static ImageLoader getImageLoader() {

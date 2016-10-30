@@ -180,6 +180,7 @@ public class GameCreationDialog extends JDialog {
 		if (requestSent) {
 			MainMenuMessage gameCreationAbort = new MainMenuMessage();
 			gameCreationAbort.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
+			gameCreationAbort.setPlayer(new User(UserManager.getUsername()));
 			gameCreationAbort.setInvitedPlayers(invitedUsers);
 			gameCreationAbort.setAbortCause("Der Startspieler hat die Anfrage zurückgezogen");
 			client.resetOutput();
@@ -206,8 +207,9 @@ public class GameCreationDialog extends JDialog {
 				}
 				MainMenuMessage abortMessage = new MainMenuMessage();
 				abortMessage.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
+				abortMessage.setPlayer(new User(UserManager.getUsername()));
 				abortMessage.setAbortCause("Nicht mehr genug Spieler vorhanden");
-				//empty list because there are no mor users
+				//empty list because there are no more users
 				abortMessage.setInvitedPlayers(usersLeft);
 				client.resetOutput();
 				client.sendMessage(abortMessage);*/
