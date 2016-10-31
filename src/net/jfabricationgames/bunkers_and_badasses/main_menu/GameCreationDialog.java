@@ -42,9 +42,11 @@ public class GameCreationDialog extends JDialog {
 	private JTextArea txtrAnswers;
 	
 	private boolean requestSent = false;
+	private boolean allRequestAnswered = false;
 	
 	private List<User> invitedUsers;
 	private List<User> rejections;
+	private List<User> answers;
 	private JButton okButton;
 	private JLabel lblError;
 	
@@ -126,7 +128,10 @@ public class GameCreationDialog extends JDialog {
 				okButton = new JButton("Erstellen");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if (!requestSent) {
+						if (allRequestAnswered) {
+							startGame();
+						}
+						else if (!requestSent) {
 							requestSent = true;
 							invitedUsers = list.getSelectedValuesList();
 							if (!invitedUsers.isEmpty()) {
@@ -154,6 +159,10 @@ public class GameCreationDialog extends JDialog {
 				buttonPane.add(cancelButton, "cell 1 0");
 			}
 		}
+	}
+	
+	private void startGame() {
+		//TODO start the game
 	}
 	
 	private DefaultListModel<User> createUserListModel() {
@@ -188,6 +197,9 @@ public class GameCreationDialog extends JDialog {
 		}
 	}
 	public void receiveClientAnswer(User user, boolean joining) {
+		//if the user has already answered delete him before adding him again
+		answers.remove(user);
+		answers.add(user);
 		if (joining) {
 			txtrAnswers.append("Zusage von: ");
 		}
@@ -216,6 +228,11 @@ public class GameCreationDialog extends JDialog {
 			}
 		}
 		txtrAnswers.append(user.getUsername() + "\n");
-		//TODO if all players have answered let the starting player decide if he wants to start the game
+		if (answers.size() == invitedUsers.size()) {
+			//all users have answered the request
+			lblError.setText("Alle Spieler haben geantwortet.");
+			allRequestAnswered = true;
+			okButton.setText("Starten");
+		}
 	}
 }

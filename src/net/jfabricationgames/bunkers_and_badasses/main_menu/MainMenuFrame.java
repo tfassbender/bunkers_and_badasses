@@ -54,6 +54,7 @@ public class MainMenuFrame extends JFrame {
 	private JPanel panel_buttons;
 	private ChatClient chatClient;
 	private JTextArea txtrPlayers;
+	private ChatPanel chatPanel;
 	
 	public MainMenuFrame(JFGClient client) {
 		addWindowListener(new WindowAdapter() {
@@ -184,7 +185,8 @@ public class MainMenuFrame extends JFrame {
 		txtrPlayers.setBackground(Color.LIGHT_GRAY);
 		scrollPane_1.setViewportView(txtrPlayers);
 		
-		ChatPanel chatPanel = new ChatPanel(chatClient);
+		chatPanel = new ChatPanel(chatClient);
+		chatClient.setChatPanel(chatPanel);
 		chatPanel.setBackground(Color.GRAY);
 		panel_content.add(chatPanel, "cell 0 3 3 2,grow");
 		
