@@ -16,6 +16,8 @@ import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
+import net.jfabricationgames.jfgdatabaselogin.message.Cryptographer;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
@@ -36,21 +38,24 @@ public class AccountSettingsDialog extends JDialog {
 	private JFGClient client;
 	private JCheckBox chckbxPassword;
 	private JCheckBox chckbxName;
+	private JLabel lblError;
+	private JButton okButton;
+	private JButton cancelButton;
 	
 	public AccountSettingsDialog(JFGClient client, MainMenuFrame callingFrame) {
+		this.client = client;
+
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Profil Einstellungen");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AccountSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		this.client = client;
-		
-		setBounds(100, 100, 450, 250);
+		setBounds(100, 100, 500, 250);
 		setLocationRelativeTo(callingFrame);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[50px][][150px][grow]", "[][][][][][grow][]"));
+		contentPanel.setLayout(new MigLayout("", "[50px][][225px][grow]", "[][][][][][25px,grow][]"));
 		{
 			JLabel lblAendern = new JLabel("Einstellungen \u00C4ndern");
 			lblAendern.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -126,14 +131,20 @@ public class AccountSettingsDialog extends JDialog {
 			contentPanel.add(panel_img_2, "cell 0 5 2 2,grow");
 		}
 		{
+			lblError = new JLabel("");
+			lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
+			contentPanel.add(lblError, "cell 2 5,alignx center");
+		}
+		{
 			JPanel buttonPane = new JPanel();
-			contentPanel.add(buttonPane, "cell 2 6");
+			contentPanel.add(buttonPane, "cell 2 6,alignx center");
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][85px]", "[23px]"));
 			{
-				JButton okButton = new JButton("OK");
+				okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						lblError.setText("");
 						sendUpdate();
 					}
 				});
@@ -143,7 +154,7 @@ public class AccountSettingsDialog extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Abbrechen");
+				cancelButton = new JButton("Abbrechen");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
@@ -156,31 +167,79 @@ public class AccountSettingsDialog extends JDialog {
 		}
 	}
 	
+	public void receiveUpdateAnswer(boolean updateSuccessfull, String username) {
+		if (updateSuccessfull) {
+			lblError.setText("Änderungen wurden eingetragen");
+			UserManager.setUsername(username);
+		}
+		else {
+			lblError.setText("Fehler: Änderungen fehlgeschlagen");
+		}
+		okButton.setEnabled(true);
+		cancelButton.setEnabled(true);
+	}
+	
 	private void sendUpdate() {
 		if (chckbxName.isSelected()) {
 			if (chckbxPassword.isSelected()) {
-				if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword())) {
+				if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword()) && pwdPassword.getPassword().length >= 5 && txtUsername.getText().length() >= 5) {
 					updateAll(txtUsername.getText(), new String(pwdPassword.getPassword()));
 				}
+				else if (pwdPassword.getPassword().length < 5) {
+					lblError.setText("Password zu kurz");
+				}
+				else if (txtUsername.getText().length() < 5) {
+					lblError.setText("Name zu kurz");
+				}
+			}
+			else if (txtUsername.getText().length() >= 5) {
+				updateUsername(txtUsername.getText());
 			}
 			else {
-				updateUsername(txtUsername.getText());
+				lblError.setText("Name zu kurz");
 			}
 		}
 		else if (chckbxPassword.isSelected()) {
-			if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword())) {
-				updatePassword(txtUsername.getText());
+			if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword()) && pwdPassword.getPassword().length >= 5) {
+				updatePassword(new String(pwdPassword.getPassword()));
+			}
+			else if (pwdPassword.getPassword().length < 5) {
+				lblError.setText("Password zu kurz");
 			}
 		}
 	}
 	
 	private void updatePassword(String password) {
-		//TODO
+		okButton.setEnabled(false);
+		cancelButton.setEnabled(false);
+		MainMenuMessage message = new MainMenuMessage();
+		String passwdCrypt = Cryptographer.encryptText(password, "cG4d2DP1MQlyonezuv71Z03");
+		message.setMessageType(MainMenuMessage.MessageType.PASSWORD_UPDATE);
+		message.setLastUsername(UserManager.getUsername());
+		message.setPassword(passwdCrypt);
+		client.resetOutput();
+		client.sendMessage(message);
 	}
 	private void updateUsername(String username) {
-		//TODO
+		okButton.setEnabled(false);
+		cancelButton.setEnabled(false);
+		MainMenuMessage message = new MainMenuMessage();
+		message.setMessageType(MainMenuMessage.MessageType.USERNAME_UPDATE);
+		message.setLastUsername(UserManager.getUsername());
+		message.setUsername(username);
+		client.resetOutput();
+		client.sendMessage(message);
 	}
 	private void updateAll(String username, String password) {
-		//TODO
+		okButton.setEnabled(false);
+		cancelButton.setEnabled(false);
+		MainMenuMessage message = new MainMenuMessage();
+		String passwdCrypt = Cryptographer.encryptText(password, "cG4d2DP1MQlyonezuv71Z03");
+		message.setMessageType(MainMenuMessage.MessageType.PASSWORD_USERNAME_UPDATE);
+		message.setLastUsername(UserManager.getUsername());
+		message.setUsername(username);
+		message.setPassword(passwdCrypt);
+		client.resetOutput();
+		client.sendMessage(message);
 	}
 }

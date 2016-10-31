@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -42,18 +45,23 @@ public class MainMenuFrame extends JFrame {
 	//private List<User> playersInGame;
 	
 	private Map<User, GameRequestDialog> requestDialogs = new HashMap<User, GameRequestDialog>();
-	
 	private GameCreationDialog gameCreationDialog;
+	private AccountSettingsDialog accountSettingsDialog;
 	
 	private static ImageLoader imageLoader;
 	
 	private JPanel contentPane;
 	private JPanel panel_buttons;
-	private ChatPanel panel_chat;
 	private ChatClient chatClient;
 	private JTextArea txtrPlayers;
 	
 	public MainMenuFrame(JFGClient client) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				client.sendMessage(new UserLogoutMessage());
+			}
+		});
 		this.client = client;
 		
 		dynamicLoader = new MainMenuDynamicLoader(client);
@@ -176,14 +184,9 @@ public class MainMenuFrame extends JFrame {
 		txtrPlayers.setBackground(Color.LIGHT_GRAY);
 		scrollPane_1.setViewportView(txtrPlayers);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBackground(Color.GRAY);
-		panel_content.add(scrollPane_2, "cell 0 3 3 2,grow");
-		
-		panel_chat = new ChatPanel(chatClient);
-		chatClient.setChatPanel(panel_chat);
-		panel_chat.setBackground(Color.GRAY);
-		scrollPane_2.setViewportView(panel_chat);
+		ChatPanel chatPanel = new ChatPanel(chatClient);
+		chatPanel.setBackground(Color.GRAY);
+		panel_content.add(chatPanel, "cell 0 3 3 2,grow");
 		
 		panel_buttons = new JPanel();
 		panel_buttons.setBackground(Color.GRAY);
@@ -239,7 +242,11 @@ public class MainMenuFrame extends JFrame {
 		}
 	}
 	private void showAccountSettings() {
-		new AccountSettingsDialog(client, this).setVisible(true);
+		if (accountSettingsDialog != null) {
+			accountSettingsDialog.dispose();			
+		}
+		accountSettingsDialog = new AccountSettingsDialog(client, this);
+		accountSettingsDialog.setVisible(true);
 	}
 	public void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
 		//map the requests to the starting player
@@ -266,6 +273,12 @@ public class MainMenuFrame extends JFrame {
 		GameRequestDialog request = requestDialogs.get(startingPlayer);
 		if (request != null) {
 			request.receiveAbort(cause);
+		}
+	}
+	
+	public void receiveAccoutUpdateAnswer(boolean answer, String username) {
+		if (accountSettingsDialog != null) {
+			accountSettingsDialog.receiveUpdateAnswer(answer, username);
 		}
 	}
 	

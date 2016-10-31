@@ -60,7 +60,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				//do nothing here; only server side
 				break;
 			case PASSWORD_USERNAME_UPDATE_ANSWER:
-				//TODO react on the servers answer
+				mainMenu.receiveAccoutUpdateAnswer(message.isUpdateSuccessfull(), message.getUsername());
 				break;
 		}
 	}

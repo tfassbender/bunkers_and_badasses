@@ -91,13 +91,13 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				server.sendGameCreationAbort(message);
 				break;
 			case PASSWORD_UPDATE:
-				//TODO update the password of the player (MainMenuMessage.lastUsername)
+				server.updatePassword(message, connection);
 				break;
 			case PASSWORD_USERNAME_UPDATE:
-				//TODO update the user name of the player (MainMenuMessage.lastUsername)
+				server.updateUser(message, connection);
 				break;
 			case USERNAME_UPDATE:
-				//TODO update the password and user name of the player (MainMenuMessage.lastUsername)
+				server.updateUsername(message, connection);
 				break;
 			case PASSWORD_USERNAME_UPDATE_ANSWER:
 				//do nothing here; only client side
