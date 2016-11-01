@@ -51,6 +51,7 @@ public class GameCreationDialog extends JDialog {
 	private JLabel lblError;
 	
 	public GameCreationDialog(JFGClient client, MainMenuFrame callingFrame) {
+		setAlwaysOnTop(true);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -69,7 +70,7 @@ public class GameCreationDialog extends JDialog {
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[grow][200px,grow]", "[][10px][][200px,grow][10px][][100px,grow][25px:n:25px][]"));
+		contentPanel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[][10px][][200px,grow][10px][][100px,grow][25px:n:25px][]"));
 		{
 			JLabel lblSpielErstellen = new JLabel("Spiel Erstellen");
 			lblSpielErstellen.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -184,6 +185,7 @@ public class GameCreationDialog extends JDialog {
 		client.sendMessage(gameRequest);
 		okButton.setEnabled(false);
 		rejections = new ArrayList<User>();
+		answers = new ArrayList<User>();
 	}
 	private void sendGameCreationAbort() {
 		if (requestSent) {
@@ -191,7 +193,7 @@ public class GameCreationDialog extends JDialog {
 			gameCreationAbort.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
 			gameCreationAbort.setPlayer(new User(UserManager.getUsername()));
 			gameCreationAbort.setInvitedPlayers(invitedUsers);
-			gameCreationAbort.setAbortCause("Der Startspieler hat die Anfrage zurÃ¼ckgezogen");
+			gameCreationAbort.setAbortCause("Der Startspieler hat die Anfrage zurückgezogen");
 			client.resetOutput();
 			client.sendMessage(gameCreationAbort);
 		}
@@ -200,6 +202,7 @@ public class GameCreationDialog extends JDialog {
 		//if the user has already answered delete him before adding him again
 		answers.remove(user);
 		answers.add(user);
+		boolean gameActive = true;
 		if (joining) {
 			txtrAnswers.append("Zusage von: ");
 		}
@@ -208,6 +211,7 @@ public class GameCreationDialog extends JDialog {
 			rejections.add(user);
 			if (invitedUsers.size() - rejections.size() <= 0) {
 				lblError.setText("Nicht mehr genügend Spieler vorhanden.");
+				gameActive = false;
 				//no more players left
 				//if there are more players than two needed the message needs to be send
 				
@@ -228,11 +232,12 @@ public class GameCreationDialog extends JDialog {
 			}
 		}
 		txtrAnswers.append(user.getUsername() + "\n");
-		if (answers.size() == invitedUsers.size()) {
+		if (gameActive && answers.size() == invitedUsers.size()) {
 			//all users have answered the request
 			lblError.setText("Alle Spieler haben geantwortet.");
 			allRequestAnswered = true;
 			okButton.setText("Starten");
+			okButton.setEnabled(true);
 		}
 	}
 }

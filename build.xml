@@ -19,7 +19,7 @@
 	<property name="images">net/jfabricationgames/bunkers_and_badasses/images/**/*.*</property>
 
 	<property name="path_elem_jfg_toolbox">JFabricationGamesToolbox V1.0.5.jar</property>
-	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.0.2.jar</property>
+	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.1.0.jar</property>
 	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
 	<property name="path_elem_jfg_server">JFGServerV1.0.1.jar</property>
 	<property name="path_elem_miglayout">miglayout15-swing.jar</property>

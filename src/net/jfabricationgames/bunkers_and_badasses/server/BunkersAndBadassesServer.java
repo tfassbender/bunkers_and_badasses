@@ -79,7 +79,6 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	public void sendGameCreationRequest(MainMenuMessage message) {
 		List<JFGConnection> invitedConnections = new ArrayList<JFGConnection>();
 		for (User user : message.getInvitedPlayers()) {
-			System.out.println(userMap.get(user));
 			invitedConnections.add(userMap.get(user));
 		}
 		for (JFGConnection con : invitedConnections) {
@@ -207,7 +206,10 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	}
 	private String getPasswordHash(String password) {
 		String pass = Cryptographer.decryptText(password, "cG4d2DP1MQlyonezuv71Z03");
-		byte[] inBuff = pass.getBytes();
+		return getHash(pass);
+	}
+	private String getHash(String password) {
+		byte[] inBuff = password.getBytes();
 		byte[] outBuff = md5.digest(inBuff);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < outBuff.length; i++) {

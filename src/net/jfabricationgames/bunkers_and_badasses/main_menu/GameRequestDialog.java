@@ -38,6 +38,7 @@ public class GameRequestDialog extends JDialog {
 	private JLabel lblMessage_1;
 	
 	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers) {
+		setAlwaysOnTop(true);
 		this.client = client;
 		this.invitingUser = invitingUser;
 		

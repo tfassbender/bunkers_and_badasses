@@ -43,6 +43,7 @@ public class AccountSettingsDialog extends JDialog {
 	private JButton cancelButton;
 	
 	public AccountSettingsDialog(JFGClient client, MainMenuFrame callingFrame) {
+		setAlwaysOnTop(true);
 		this.client = client;
 
 		setResizable(false);
@@ -114,7 +115,7 @@ public class AccountSettingsDialog extends JDialog {
 			contentPanel.add(pwdPassword, "cell 2 3,growx");
 		}
 		{
-			JLabel lblWiederhohlen = new JLabel("Wiederhohlen:");
+			JLabel lblWiederhohlen = new JLabel("Widerhohlen:");
 			contentPanel.add(lblWiederhohlen, "cell 1 4,alignx trailing");
 		}
 		{
@@ -170,7 +171,9 @@ public class AccountSettingsDialog extends JDialog {
 	public void receiveUpdateAnswer(boolean updateSuccessfull, String username) {
 		if (updateSuccessfull) {
 			lblError.setText("Änderungen wurden eingetragen");
-			UserManager.setUsername(username);
+			if (username != null) {
+				UserManager.setUsername(username);
+			}
 		}
 		else {
 			lblError.setText("Fehler: Änderungen fehlgeschlagen");
@@ -182,7 +185,7 @@ public class AccountSettingsDialog extends JDialog {
 	private void sendUpdate() {
 		if (chckbxName.isSelected()) {
 			if (chckbxPassword.isSelected()) {
-				if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword()) && pwdPassword.getPassword().length >= 5 && txtUsername.getText().length() >= 5) {
+				if (new String(pwdPassword.getPassword()).equals(new String(pwdConfirm.getPassword())) && pwdPassword.getPassword().length >= 5 && txtUsername.getText().length() >= 5) {
 					updateAll(txtUsername.getText(), new String(pwdPassword.getPassword()));
 				}
 				else if (pwdPassword.getPassword().length < 5) {
@@ -190,6 +193,9 @@ public class AccountSettingsDialog extends JDialog {
 				}
 				else if (txtUsername.getText().length() < 5) {
 					lblError.setText("Name zu kurz");
+				}
+				else {
+					lblError.setText("Falsche Widerhohlung");
 				}
 			}
 			else if (txtUsername.getText().length() >= 5) {
@@ -200,11 +206,14 @@ public class AccountSettingsDialog extends JDialog {
 			}
 		}
 		else if (chckbxPassword.isSelected()) {
-			if (new String(pwdPassword.getPassword()).equals(pwdConfirm.getPassword()) && pwdPassword.getPassword().length >= 5) {
+			if (new String(pwdPassword.getPassword()).equals(new String(pwdConfirm.getPassword())) && pwdPassword.getPassword().length >= 5) {
 				updatePassword(new String(pwdPassword.getPassword()));
 			}
 			else if (pwdPassword.getPassword().length < 5) {
 				lblError.setText("Password zu kurz");
+			}
+			else {
+				lblError.setText("Falsche Widerhohlung");
 			}
 		}
 	}
