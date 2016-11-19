@@ -8,6 +8,11 @@ public class PointManager {
 	
 	private Map<User, Integer> points;
 	
+	public class UserPoints() {
+		
+		
+	}
+	
 	public void addPoints(User player, int points) {
 		//TODO
 	}
