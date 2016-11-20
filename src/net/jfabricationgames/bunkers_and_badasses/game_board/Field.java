@@ -12,4 +12,9 @@ public class Field {
 	private User affiliation;
 	private List<Troop> troops;
 	private Building building;
+	private String name;
+	
+	public String getName() {
+		return name;
+	}
 }

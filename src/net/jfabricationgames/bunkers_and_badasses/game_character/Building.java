@@ -13,6 +13,8 @@ public abstract class Building {
 	protected boolean attackable;
 	protected boolean badassTroopsRecruitable;
 	
+	protected String name;
+	
 	public Building() {
 		recruitableTroops = 1;
 		ammoMining = 0;
@@ -23,5 +25,9 @@ public abstract class Building {
 		moveDistance = 1;
 		attackable = true;
 		badassTroopsRecruitable = false;
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

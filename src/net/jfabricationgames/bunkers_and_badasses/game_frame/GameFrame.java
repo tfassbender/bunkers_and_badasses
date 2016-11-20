@@ -30,11 +30,15 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager.UserPoints;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLogMessage;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GameFrame extends JFrame {
 	
@@ -52,10 +56,12 @@ public class GameFrame extends JFrame {
 	private JTextField txtCommand;
 	
 	private static ImageLoader imageLoader;
-	
+
 	private ListModel<Hero> heroesListModel = new DefaultListModel<Hero>();
 	private ListModel<Field> fieldListModel = new DefaultListModel<Field>();
+	private ListModel<User> userListModel = new DefaultListModel<User>();
 	private ListModel<GameLogMessage> logListModel = new DefaultListModel<GameLogMessage>();
+	private ListModel<UserPoints> pointListModel = new DefaultListModel<UserPoints>();
 	
 	public static void main(String[] args) {
 		new GameFrame(null).setVisible(true);
@@ -93,7 +99,22 @@ public class GameFrame extends JFrame {
 		menuBar.add(mnDialog);
 		
 		JMenuItem mntmPlanungsDialogffnen = new JMenuItem("Zug Planung");
+		mntmPlanungsDialogffnen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new TurnPlaningFrame().setVisible(true);
+			}
+		});
 		mnDialog.add(mntmPlanungsDialogffnen);
+		
+		JMenuItem mntmZugAusfhren = new JMenuItem("Zug Ausf\u00FChren");
+		mntmZugAusfhren.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new TurnExecutionFrame().setVisible(true);
+			}
+		});
+		mnDialog.add(mntmZugAusfhren);
 		
 		JMenuItem mntmSpielbersicht = new JMenuItem("Spiel\u00FCbersicht");
 		mnDialog.add(mntmSpielbersicht);
@@ -124,6 +145,7 @@ public class GameFrame extends JFrame {
 		
 		JMenuItem mntmSpielFunktionen = new JMenuItem("Spiel Funktionen");
 		mnHilfe.add(mntmSpielFunktionen);
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -184,7 +206,8 @@ public class GameFrame extends JFrame {
 		JScrollPane scrollPane_log = new JScrollPane();
 		panel_log.add(scrollPane_log, "cell 0 2,grow");
 		
-		JList list_log = new JList();
+		JList<GameLogMessage> list_log = new JList<GameLogMessage>(logListModel);
+		list_log.setToolTipText("<html>\r\n\u00DCbersicht \u00FCber die letzten Aktionen\r\n</html>");
 		list_log.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_log.setBackground(Color.LIGHT_GRAY);
 		scrollPane_log.setViewportView(list_log);
@@ -226,7 +249,8 @@ public class GameFrame extends JFrame {
 		JScrollPane scrollPane_neighbours = new JScrollPane();
 		panel_field.add(scrollPane_neighbours, "cell 0 7 4 1,grow");
 		
-		JList list_neighbours = new JList();
+		JList<Field> list_neighbours = new JList<Field>(fieldListModel);
+		list_neighbours.setToolTipText("<html>\r\nBenachbarte Felder\r\n</html>");
 		list_neighbours.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_neighbours.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_neighbours.setBackground(Color.LIGHT_GRAY);
@@ -235,7 +259,7 @@ public class GameFrame extends JFrame {
 		JPanel panel_low_bar = new JPanel();
 		panel_low_bar.setBackground(Color.GRAY);
 		panel.add(panel_low_bar, "cell 0 1 2 1,grow");
-		panel_low_bar.setLayout(new MigLayout("", "[300px,grow][300px,grow][:200px:250px,grow][:200px:250px,grow][:200px:200px,grow]", "[100px,grow]"));
+		panel_low_bar.setLayout(new MigLayout("", "[250px,grow][250px,grow][:200px:250px,grow][:200px:200px,grow][:200px:250px,grow][:200px:200px,grow]", "[100px,grow]"));
 		
 		JPanel panel_turn = new JPanel();
 		panel_turn.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -248,10 +272,12 @@ public class GameFrame extends JFrame {
 		panel_turn.add(lblSpielzug, "cell 0 0 2 1,alignx center");
 		
 		JButton btnSpielfeldbersicht = new JButton("Spielfeld \u00DCbersicht");
+		btnSpielfeldbersicht.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
 		btnSpielfeldbersicht.setBackground(Color.GRAY);
 		panel_turn.add(btnSpielfeldbersicht, "cell 0 2,alignx center");
 		
 		JButton btnSpielzugAusfhren = new JButton("Spielzug Ausf\u00FChren");
+		btnSpielzugAusfhren.setToolTipText("<html>\r\nDen Spielzug des ausgew\u00E4hlten <br>\r\nFeldes ausf\u00FChren (Wie der Befehl <br>\r\nausgef\u00FChrt wird, wird im Folgenden <br>\r\nDialog festgelegt\r\n</html>");
 		btnSpielzugAusfhren.setBackground(Color.GRAY);
 		panel_turn.add(btnSpielzugAusfhren, "cell 1 2,alignx center");
 		
@@ -310,14 +336,17 @@ public class GameFrame extends JFrame {
 		panel_resources.add(lblResourcen, "cell 0 0 4 1,alignx center");
 		
 		JLabel lblbrigeResourcen = new JLabel("\u00DCbrig:");
+		lblbrigeResourcen.setToolTipText("Im Moment vorhandene Resourcen");
 		lblbrigeResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_resources.add(lblbrigeResourcen, "cell 1 2");
 		
 		JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
+		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnung nicht ber\u00FCcksichtigt)<br>\r\n</html>");
 		lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
 		
 		JLabel lblVerbrauchletzteRunde = new JLabel("Verbrauch:");
+		lblVerbrauchletzteRunde.setToolTipText("<html>\r\nVerbrauchte Resourcen (f\u00FCr <br>\r\nBefehle) in der letzten Runde\r\n</html>");
 		lblVerbrauchletzteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_resources.add(lblVerbrauchletzteRunde, "cell 3 2");
 		
@@ -374,24 +403,45 @@ public class GameFrame extends JFrame {
 		scrollPane_heroes.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panel_heroes.add(scrollPane_heroes, "cell 0 2 2 1,grow");
 		
-		JList list_heroes = new JList();
+		JList<Hero> list_heroes = new JList<Hero>(heroesListModel);
 		list_heroes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_heroes.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_heroes.setBackground(Color.LIGHT_GRAY);
 		scrollPane_heroes.setViewportView(list_heroes);
 		
 		JButton btnbersicht = new JButton("\u00DCbersicht");
+		btnbersicht.setToolTipText("<html>\r\n\u00DCbersicht \u00FCber die vorhandenen <br>\r\nHelden Karten\r\n</html>");
 		btnbersicht.setBackground(Color.GRAY);
 		panel_heroes.add(btnbersicht, "cell 0 3,alignx center");
 		
 		JButton btnEinsetzen = new JButton("Einsetzen");
+		btnEinsetzen.setToolTipText("<html>\r\nEine der vorhandenen Helden Karten<br>\r\n(deren Spezialfunktion) einsetzen\r\n</html>");
 		btnEinsetzen.setBackground(Color.GRAY);
 		panel_heroes.add(btnEinsetzen, "cell 1 3,alignx center");
+		
+		JPanel panel_order = new JPanel();
+		panel_order.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_order.setBackground(Color.GRAY);
+		panel_low_bar.add(panel_order, "cell 3 0,grow");
+		panel_order.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
+		
+		JLabel lblReihenfolge = new JLabel("Reihenfolge:");
+		lblReihenfolge.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_order.add(lblReihenfolge, "cell 0 0,alignx center");
+		
+		JScrollPane scrollPane_order = new JScrollPane();
+		panel_order.add(scrollPane_order, "cell 0 2,grow");
+		
+		JList<User> list_order = new JList<User>(userListModel);
+		list_order.setToolTipText("<html>\r\nDie Reihenfolge der Spieler <br>\r\n(F\u00FCr diese Runde)\r\n</html>");
+		scrollPane_order.setViewportView(list_order);
+		list_order.setBackground(Color.LIGHT_GRAY);
+		list_order.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		JPanel panel_points = new JPanel();
 		panel_points.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_points.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_points, "cell 3 0,grow");
+		panel_low_bar.add(panel_points, "cell 4 0,grow");
 		panel_points.setLayout(new MigLayout("", "[][5px][grow]", "[][5px][grow][][]"));
 		
 		JLabel lblPunkte = new JLabel("Punkte:");
@@ -401,7 +451,8 @@ public class GameFrame extends JFrame {
 		JScrollPane scrollPane_points = new JScrollPane();
 		panel_points.add(scrollPane_points, "cell 0 2 3 1,grow");
 		
-		JList list_points = new JList();
+		JList<UserPoints> list_points = new JList<UserPoints>(pointListModel);
+		list_points.setToolTipText("<html>\r\nDie Siegpunkte aller Spieler\r\n</html>");
 		list_points.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_points.setBackground(Color.LIGHT_GRAY);
 		scrollPane_points.setViewportView(list_points);
@@ -424,13 +475,17 @@ public class GameFrame extends JFrame {
 		
 		JPanel panel_logo_capture = new JPanel();
 		panel_logo_capture.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_logo_capture, "cell 4 0,grow");
+		panel_low_bar.add(panel_logo_capture, "cell 5 0,grow");
 		panel_logo_capture.setLayout(new MigLayout("", "[grow]", "[grow][:200px:200px,grow]"));
 		
-		ImagePanel panel_logo = new ImagePanel(imageLoader.loadImage("others/logo_1.png"));
+		ImagePanel panel_logo = new ImagePanel(imageLoader.loadImage("game_frame/logo_1.png"));
 		panel_logo.setCentered(true);
 		panel_logo.setAdaptSizeKeepProportion(true);
 		panel_logo.setBackground(Color.GRAY);
 		panel_logo_capture.add(panel_logo, "cell 0 1,grow");
+	}
+	
+	public static ImageLoader getImageLoader() {
+		return imageLoader;
 	}
 }
