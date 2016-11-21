@@ -1,9 +1,12 @@
 package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -37,8 +40,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLogMess
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class GameFrame extends JFrame {
 	
@@ -62,6 +63,13 @@ public class GameFrame extends JFrame {
 	private ListModel<User> userListModel = new DefaultListModel<User>();
 	private ListModel<GameLogMessage> logListModel = new DefaultListModel<GameLogMessage>();
 	private ListModel<UserPoints> pointListModel = new DefaultListModel<UserPoints>();
+	
+	private boolean fieldOverview = false;
+	
+	private final String SCROLL_BOARD = "scroll_board";
+	private final String OVERVIEW_BOARD = "overview_board";
+	
+	private JPanel panel_board_capture;
 	
 	public static void main(String[] args) {
 		new GameFrame(null).setVisible(true);
@@ -165,17 +173,31 @@ public class GameFrame extends JFrame {
 		contentPane.add(panel, "cell 0 0,grow");
 		panel.setLayout(new MigLayout("", "[900px,grow][:350px:400px,grow]", "[500px,grow][:200px:200px,grow]"));
 		
-		JPanel panel_board_capture = new JPanel();
+		panel_board_capture = new JPanel();
 		panel_board_capture.setBackground(Color.GRAY);
 		panel.add(panel_board_capture, "cell 0 0,grow");
-		panel_board_capture.setLayout(new MigLayout("", "[971px,grow]", "[460px,grow]"));
+		panel_board_capture.setLayout(new CardLayout(0, 0));
+		
+		JPanel panel_scroll_board_capture = new JPanel();
+		panel_scroll_board_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
+		panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
 		JScrollPane scrollPane_board = new JScrollPane();
-		panel_board_capture.add(scrollPane_board, "cell 0 0,grow");
+		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
 		
-		JPanel panel_board = new JPanel();
-		panel_board.setBackground(Color.GRAY);
-		scrollPane_board.setViewportView(panel_board);
+		JPanel panel_scroll_board = new JPanel();
+		panel_scroll_board.setBackground(Color.GRAY);
+		scrollPane_board.setViewportView(panel_scroll_board);
+		
+		JPanel panel_board_overview_capture = new JPanel();
+		panel_board_overview_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
+		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		
+		JPanel panel_board_overview = new JPanel();
+		panel_board_overview.setBackground(Color.GRAY);
+		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
 		
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
@@ -272,6 +294,18 @@ public class GameFrame extends JFrame {
 		panel_turn.add(lblSpielzug, "cell 0 0 2 1,alignx center");
 		
 		JButton btnSpielfeldbersicht = new JButton("Spielfeld \u00DCbersicht");
+		btnSpielfeldbersicht.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout layout = (CardLayout) panel_board_capture.getLayout();
+				if (fieldOverview) {
+					layout.show(panel_board_capture, SCROLL_BOARD);
+				}
+				else {
+					layout.show(panel_board_capture, OVERVIEW_BOARD);
+				}
+				fieldOverview = !fieldOverview;
+			}
+		});
 		btnSpielfeldbersicht.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
 		btnSpielfeldbersicht.setBackground(Color.GRAY);
 		panel_turn.add(btnSpielfeldbersicht, "cell 0 2,alignx center");

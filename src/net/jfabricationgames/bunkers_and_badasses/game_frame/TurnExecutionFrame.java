@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -27,6 +28,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.border.LineBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class TurnExecutionFrame extends JFrame {
 	
@@ -41,12 +44,19 @@ public class TurnExecutionFrame extends JFrame {
 	private ListModel<User> userListModel = new DefaultListModel<User>();
 	
 	private ComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
+	
 	private JTextField txtFeld;
 	private JTextField txtBefehl;
 	private JTextField txtTruppenn;
 	private JTextField txtTruppenb;
 	private JTextField txtGebude;
 	private JTextField txtVerluste;
+	private JPanel panel_board_capture;
+	
+	private boolean fieldOverview = false;
+	
+	private final String SCROLL_BOARD = "scroll_board";
+	private final String OVERVIEW_BOARD = "overview_board";
 	
 	public TurnExecutionFrame() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -64,17 +74,31 @@ public class TurnExecutionFrame extends JFrame {
 		contentPane.add(panel, "cell 0 0,grow");
 		panel.setLayout(new MigLayout("", "[700px,grow][:500px:800px,grow]", "[350px,grow][:400px:400px,grow]"));
 		
-		JPanel panel_board_capture = new JPanel();
+		panel_board_capture = new JPanel();
 		panel_board_capture.setBackground(Color.GRAY);
 		panel.add(panel_board_capture, "cell 0 0,grow");
-		panel_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		panel_board_capture.setLayout(new CardLayout(0, 0));
+		
+		JPanel panel_scroll_board_capture = new JPanel();
+		panel_scroll_board_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
+		panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
 		JScrollPane scrollPane_board = new JScrollPane();
-		panel_board_capture.add(scrollPane_board, "cell 0 0,grow");
+		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
 		
-		JPanel panel_board = new JPanel();
-		panel_board.setBackground(Color.GRAY);
-		scrollPane_board.setViewportView(panel_board);
+		JPanel panel_scroll_board = new JPanel();
+		panel_scroll_board.setBackground(Color.GRAY);
+		scrollPane_board.setViewportView(panel_scroll_board);
+		
+		JPanel panel_board_overview_capture = new JPanel();
+		panel_board_overview_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
+		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		
+		JPanel panel_board_overview = new JPanel();
+		panel_board_overview.setBackground(Color.GRAY);
+		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
 		
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
@@ -262,13 +286,13 @@ public class TurnExecutionFrame extends JFrame {
 		JPanel panel_command_row_1 = new JPanel();
 		panel_command_row_1.setBackground(Color.GRAY);
 		panel_execution.add(panel_command_row_1, "cell 0 2,grow");
-		panel_command_row_1.setLayout(new MigLayout("", "[grow]", "[grow][grow][grow]"));
+		panel_command_row_1.setLayout(new MigLayout("", "[grow]", "[grow][3px:n:3px][grow]"));
 		
 		JPanel panel_command_1 = new JPanel();
 		panel_command_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_command_row_1.add(panel_command_1, "cell 0 0,grow");
 		panel_command_1.setBackground(Color.GRAY);
-		panel_command_1.setLayout(new MigLayout("", "[][grow]", "[][5px][][][][][][5px][][grow]"));
+		panel_command_1.setLayout(new MigLayout("", "[][grow]", "[][5px][][][][][][5px][grow]"));
 		
 		JLabel lblbersicht = new JLabel("\u00DCbersicht:");
 		lblbersicht.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -329,39 +353,36 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_1.add(txtGebude, "cell 1 6,growx");
 		txtGebude.setColumns(10);
 		
-		JPanel panel_command_3 = new JPanel();
-		panel_command_3.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_command_row_1.add(panel_command_3, "cell 0 2,grow");
-		panel_command_3.setBackground(Color.GRAY);
-		panel_command_3.setLayout(new MigLayout("", "[grow][][50px][grow]", "[][5px][][]"));
+		JButton btnbersicht = new JButton("Spielfeld \u00DCbersicht");
+		btnbersicht.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout layout = (CardLayout) panel_board_capture.getLayout();
+				if (fieldOverview) {
+					layout.show(panel_board_capture, SCROLL_BOARD);
+				}
+				else {
+					layout.show(panel_board_capture, OVERVIEW_BOARD);
+				}
+				fieldOverview = !fieldOverview;
+			}
+		});
+		panel_command_1.add(btnbersicht, "cell 0 8 2 1,alignx center");
+		btnbersicht.setBackground(Color.GRAY);
 		
-		JLabel lblMarschBefehl = new JLabel("Marsch Befehl:");
-		lblMarschBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_3.add(lblMarschBefehl, "cell 1 0 2 1,alignx center");
+		JPanel panel_command_7 = new JPanel();
+		panel_command_row_1.add(panel_command_7, "cell 0 2,grow");
+		panel_command_7.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_command_7.setBackground(Color.GRAY);
+		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JLabel lblTruppennormal_1 = new JLabel("Truppen (Normal):");
-		lblTruppennormal_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_3.add(lblTruppennormal_1, "cell 1 2");
-		
-		JSpinner spinner = new JSpinner();
-		spinner.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		spinner.setForeground(Color.LIGHT_GRAY);
-		spinner.setBackground(Color.LIGHT_GRAY);
-		panel_command_3.add(spinner, "cell 2 2,growx");
-		
-		JLabel lblTruppenbadass_1 = new JLabel("Truppen (Badass):");
-		lblTruppenbadass_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_3.add(lblTruppenbadass_1, "cell 1 3");
-		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		spinner_1.setBackground(Color.LIGHT_GRAY);
-		panel_command_3.add(spinner_1, "cell 2 3,growx");
+		JButton btnBefehlAusfhren = new JButton("Befehl Ausf\u00FChren");
+		btnBefehlAusfhren.setBackground(Color.GRAY);
+		panel_command_7.add(btnBefehlAusfhren, "cell 0 0,alignx center,aligny center");
 		
 		JPanel panel_command_row_2 = new JPanel();
 		panel_command_row_2.setBackground(Color.GRAY);
 		panel_execution.add(panel_command_row_2, "cell 1 2,grow");
-		panel_command_row_2.setLayout(new MigLayout("", "[grow]", "[][grow][][grow][grow]"));
+		panel_command_row_2.setLayout(new MigLayout("", "[grow]", "[grow][3px:n:3px,grow][][3px:n:3px,grow][5px,grow]"));
 		
 		JPanel panel_command_2 = new JPanel();
 		panel_command_2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -430,7 +451,7 @@ public class TurnExecutionFrame extends JFrame {
 		JPanel panel_command_row_3 = new JPanel();
 		panel_command_row_3.setBackground(Color.GRAY);
 		panel_execution.add(panel_command_row_3, "cell 2 2,grow");
-		panel_command_row_3.setLayout(new MigLayout("", "[grow]", "[grow][5px,grow][grow]"));
+		panel_command_row_3.setLayout(new MigLayout("", "[grow]", "[grow][3px:n:3px,grow][100px:n,grow]"));
 		
 		JPanel panel_command_5 = new JPanel();
 		panel_command_5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -464,14 +485,33 @@ public class TurnExecutionFrame extends JFrame {
 		list_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		scrollPane_1.setViewportView(list_2);
 		
-		JPanel panel_command_7 = new JPanel();
-		panel_command_7.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_command_row_3.add(panel_command_7, "cell 0 2,grow");
-		panel_command_7.setBackground(Color.GRAY);
-		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		JPanel panel_command_3 = new JPanel();
+		panel_command_row_3.add(panel_command_3, "cell 0 2,grow");
+		panel_command_3.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_command_3.setBackground(Color.GRAY);
+		panel_command_3.setLayout(new MigLayout("", "[grow][][50px][grow]", "[][5px][][]"));
 		
-		JButton btnBefehlAusfhren = new JButton("Befehl Ausf\u00FChren");
-		btnBefehlAusfhren.setBackground(Color.GRAY);
-		panel_command_7.add(btnBefehlAusfhren, "cell 0 0,alignx center,aligny center");
+		JLabel lblMarschBefehl = new JLabel("Marsch Befehl:");
+		lblMarschBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_3.add(lblMarschBefehl, "cell 1 0 2 1,alignx center");
+		
+		JLabel lblTruppennormal_1 = new JLabel("Truppen (Normal):");
+		lblTruppennormal_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_3.add(lblTruppennormal_1, "cell 1 2");
+		
+		JSpinner spinner = new JSpinner();
+		spinner.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		spinner.setForeground(Color.LIGHT_GRAY);
+		spinner.setBackground(Color.LIGHT_GRAY);
+		panel_command_3.add(spinner, "cell 2 2,growx");
+		
+		JLabel lblTruppenbadass_1 = new JLabel("Truppen (Badass):");
+		lblTruppenbadass_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_3.add(lblTruppenbadass_1, "cell 1 3");
+		
+		JSpinner spinner_1 = new JSpinner();
+		spinner_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		spinner_1.setBackground(Color.LIGHT_GRAY);
+		panel_command_3.add(spinner_1, "cell 2 3,growx");
 	}
 }

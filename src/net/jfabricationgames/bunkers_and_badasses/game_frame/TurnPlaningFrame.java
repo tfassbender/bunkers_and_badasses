@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -61,6 +62,13 @@ public class TurnPlaningFrame extends JFrame {
 	
 	private ComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
 	
+	private JPanel panel_board_capture;
+	
+	private boolean fieldOverview = false;
+	
+	private final String SCROLL_BOARD = "scroll_board";
+	private final String OVERVIEW_BOARD = "overview_board";
+	
 	public TurnPlaningFrame() {
 		setTitle("Bunkers and Badasses - Zug Planung");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -77,17 +85,31 @@ public class TurnPlaningFrame extends JFrame {
 		contentPanel.add(panel, "cell 0 0,grow");
 		panel.setLayout(new MigLayout("", "[450px,grow][:600px:800px,grow]", "[300px,grow][:400px:400px,grow]"));
 			
-		JPanel panel_board_capture = new JPanel();
+		panel_board_capture = new JPanel();
 		panel_board_capture.setBackground(Color.GRAY);
 		panel.add(panel_board_capture, "cell 0 0,grow");
-		panel_board_capture.setLayout(new MigLayout("", "[971px,grow]", "[460px,grow]"));
+		panel_board_capture.setLayout(new CardLayout(0, 0));
+		
+		JPanel panel_scroll_board_capture = new JPanel();
+		panel_scroll_board_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
+		panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
 		JScrollPane scrollPane_board = new JScrollPane();
-		panel_board_capture.add(scrollPane_board, "cell 0 0,grow");
+		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
 		
-		JPanel panel_board = new JPanel();
-		panel_board.setBackground(Color.GRAY);
-		scrollPane_board.setViewportView(panel_board);
+		JPanel panel_scroll_board = new JPanel();
+		panel_scroll_board.setBackground(Color.GRAY);
+		scrollPane_board.setViewportView(panel_scroll_board);
+		
+		JPanel panel_board_overview_capture = new JPanel();
+		panel_board_overview_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
+		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		
+		JPanel panel_board_overview = new JPanel();
+		panel_board_overview.setBackground(Color.GRAY);
+		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
 		
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
@@ -253,6 +275,18 @@ public class TurnPlaningFrame extends JFrame {
 		txtField.setColumns(10);
 		
 		JButton btnbersicht = new JButton("\u00DCbersicht");
+		btnbersicht.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout layout = (CardLayout) panel_board_capture.getLayout();
+				if (fieldOverview) {
+					layout.show(panel_board_capture, SCROLL_BOARD);
+				}
+				else {
+					layout.show(panel_board_capture, OVERVIEW_BOARD);
+				}
+				fieldOverview = !fieldOverview;
+			}
+		});
 		btnbersicht.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
 		btnbersicht.setBackground(Color.GRAY);
 		panel_command.add(btnbersicht, "cell 2 2");
