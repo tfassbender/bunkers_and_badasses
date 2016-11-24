@@ -5,9 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,14 +22,13 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.Building;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.border.LineBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class TurnExecutionFrame extends JFrame {
 	
@@ -37,13 +36,12 @@ public class TurnExecutionFrame extends JFrame {
 	
 	private JPanel contentPane;
 	
-	private ListModel<Field> fieldNoCommandListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldCommandListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldNeighboursListModel = new DefaultListModel<Field>();
+	private ListModel<Field> fieldTargetModel = new DefaultListModel<Field>();
+	private ListModel<Building> buildingModel = new DefaultListModel<Building>();
 	private ListModel<User> userListModel = new DefaultListModel<User>();
-	
-	private ComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
+	private ListModel<FieldCommand> fieldCommandModel = new DefaultListModel<FieldCommand>();
 	
 	private JTextField txtFeld;
 	private JTextField txtBefehl;
@@ -51,10 +49,15 @@ public class TurnExecutionFrame extends JFrame {
 	private JTextField txtTruppenb;
 	private JTextField txtGebude;
 	private JTextField txtVerluste;
-	private JPanel panel_board_capture;
+	
+	private JTextField txtSpieler;
+	private JTextField txtBefehl_field;
+	private JTextField txtGebude_field;
+	private JTextField txtTruppennormal;
+	private JTextField txtTruppenbadass;
 	
 	private boolean fieldOverview = false;
-	
+	private JPanel panel_board_capture;
 	private final String SCROLL_BOARD = "scroll_board";
 	private final String OVERVIEW_BOARD = "overview_board";
 	
@@ -72,7 +75,7 @@ public class TurnExecutionFrame extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[700px,grow][:500px:800px,grow]", "[350px,grow][:400px:400px,grow]"));
+		panel.setLayout(new MigLayout("", "[650px,grow][:550px:800px,grow]", "[350px,grow][:400px:400px,grow]"));
 		
 		panel_board_capture = new JPanel();
 		panel_board_capture.setBackground(Color.GRAY);
@@ -103,7 +106,7 @@ public class TurnExecutionFrame extends JFrame {
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
 		panel.add(panel_side_bar, "cell 1 0 1 2,grow");
-		panel_side_bar.setLayout(new MigLayout("", "[grow][grow]", "[300px,grow][:100px:100px,grow][:100px:100px,grow][:200px:300px,grow]"));
+		panel_side_bar.setLayout(new MigLayout("", "[250px,grow][350px,grow]", "[300px,grow][:100px:100px,grow][:100px:100px,grow][:200px:300px,grow]"));
 		
 		JPanel panel_fields_all = new JPanel();
 		panel_fields_all.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -135,23 +138,58 @@ public class TurnExecutionFrame extends JFrame {
 		
 		JLabel lblSpieler = new JLabel("Spieler:");
 		lblSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblSpieler, "cell 0 2");
+		panel_field_info.add(lblSpieler, "cell 0 2,alignx trailing");
 		
-		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
-		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblNormaleTruppen, "cell 2 2");
+		txtSpieler = new JTextField();
+		txtSpieler.setBackground(Color.LIGHT_GRAY);
+		txtSpieler.setEditable(false);
+		txtSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtSpieler, "cell 1 2 3 1,growx");
+		txtSpieler.setColumns(10);
 		
 		JLabel lblBefehl_1 = new JLabel("Befehl:");
 		lblBefehl_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBefehl_1, "cell 0 3");
+		panel_field_info.add(lblBefehl_1, "cell 0 3,alignx trailing");
 		
-		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
-		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBadassTruppen, "cell 2 3");
+		txtBefehl_field = new JTextField();
+		txtBefehl_field.setBackground(Color.LIGHT_GRAY);
+		txtBefehl_field.setEditable(false);
+		txtBefehl_field.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtBefehl_field, "cell 1 3,growx");
+		txtBefehl_field.setColumns(10);
+		
+		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
+		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(lblNormaleTruppen, "cell 2 3,alignx trailing");
+		
+		txtTruppennormal = new JTextField();
+		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
+		txtTruppennormal.setEditable(false);
+		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtTruppennormal, "cell 3 3,growx");
+		txtTruppennormal.setColumns(10);
 		
 		JLabel lblGebude = new JLabel("Geb\u00E4ude:");
 		lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblGebude, "cell 0 4");
+		panel_field_info.add(lblGebude, "cell 0 4,alignx trailing");
+		
+		txtGebude_field = new JTextField();
+		txtGebude_field.setBackground(Color.LIGHT_GRAY);
+		txtGebude_field.setEditable(false);
+		txtGebude_field.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtGebude_field, "cell 1 4,growx");
+		txtGebude_field.setColumns(10);
+		
+		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
+		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(lblBadassTruppen, "cell 2 4,alignx trailing");
+		
+		txtTruppenbadass = new JTextField();
+		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
+		txtTruppenbadass.setEditable(false);
+		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtTruppenbadass, "cell 3 4,growx");
+		txtTruppenbadass.setColumns(10);
 		
 		JLabel lblNachbarn = new JLabel("Nachbarn:");
 		lblNachbarn.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -177,13 +215,13 @@ public class TurnExecutionFrame extends JFrame {
 		lblAusfhrbareBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_executable_commands.add(lblAusfhrbareBefehle, "cell 0 0,alignx center");
 		
-		JScrollPane scrollPane = new JScrollPane();
-		panel_executable_commands.add(scrollPane, "cell 0 2,grow");
+		JScrollPane scrollPane_executable_commands = new JScrollPane();
+		panel_executable_commands.add(scrollPane_executable_commands, "cell 0 2,grow");
 		
-		JList list = new JList();
-		list.setBackground(Color.LIGHT_GRAY);
-		list.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		scrollPane.setViewportView(list);
+		JList<FieldCommand> list_executable_commands = new JList<FieldCommand>(fieldCommandModel);
+		list_executable_commands.setBackground(Color.LIGHT_GRAY);
+		list_executable_commands.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrollPane_executable_commands.setViewportView(list_executable_commands);
 		
 		JPanel panel_resources = new JPanel();
 		panel_resources.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -277,7 +315,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_execution.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_execution.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_execution, "cell 0 0,grow");
-		panel_execution.setLayout(new MigLayout("", "[300px,grow][100px,grow][100px,grow]", "[][5px,grow][100px:n,grow]"));
+		panel_execution.setLayout(new MigLayout("", "[300px,grow][200px,grow][100px,grow]", "[][5px,grow][100px:n,grow]"));
 		
 		JLabel lblBefehlAusfhren = new JLabel("Befehl Ausf\u00FChren");
 		lblBefehlAusfhren.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -394,13 +432,13 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_2.add(lblZiel, "cell 0 0,alignx center");
 		lblZiel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
-		JScrollPane scrollPane_target = new JScrollPane();
-		panel_command_2.add(scrollPane_target, "cell 0 2,grow");
+		JScrollPane scrollPane_target_field = new JScrollPane();
+		panel_command_2.add(scrollPane_target_field, "cell 0 2,grow");
 		
-		JList list_1 = new JList();
-		list_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		list_1.setBackground(Color.LIGHT_GRAY);
-		scrollPane_target.setViewportView(list_1);
+		JList<Field> list_target_field = new JList<Field>(fieldTargetModel);
+		list_target_field.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		list_target_field.setBackground(Color.LIGHT_GRAY);
+		scrollPane_target_field.setViewportView(list_target_field);
 		
 		JPanel panel_command_4 = new JPanel();
 		panel_command_4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -427,26 +465,26 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_6.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_command_row_2.add(panel_command_6, "cell 0 4,grow");
 		panel_command_6.setBackground(Color.GRAY);
-		panel_command_6.setLayout(new MigLayout("", "[grow][grow][grow]", "[][5px][]"));
+		panel_command_6.setLayout(new MigLayout("", "[grow][grow]", "[][5px][][]"));
 		
 		JLabel lblResourcenGewinnung = new JLabel("Resourcen Gewinnung:");
 		lblResourcenGewinnung.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_6.add(lblResourcenGewinnung, "cell 0 0 3 1,alignx center");
+		panel_command_6.add(lblResourcenGewinnung, "cell 0 0 2 1,alignx center");
 		
 		JRadioButton rdbtnCredits = new JRadioButton("Credits");
 		rdbtnCredits.setBackground(Color.GRAY);
 		rdbtnCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_6.add(rdbtnCredits, "cell 0 2");
+		panel_command_6.add(rdbtnCredits, "cell 0 2,alignx center");
 		
 		JRadioButton rdbtnMunition = new JRadioButton("Munition");
 		rdbtnMunition.setBackground(Color.GRAY);
 		rdbtnMunition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_6.add(rdbtnMunition, "cell 1 2");
+		panel_command_6.add(rdbtnMunition, "cell 1 2,alignx center");
 		
 		JRadioButton rdbtnEridium = new JRadioButton("Eridium");
 		rdbtnEridium.setBackground(Color.GRAY);
 		rdbtnEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_6.add(rdbtnEridium, "cell 2 2");
+		panel_command_6.add(rdbtnEridium, "cell 0 3 2 1,alignx center");
 		
 		JPanel panel_command_row_3 = new JPanel();
 		panel_command_row_3.setBackground(Color.GRAY);
@@ -477,13 +515,13 @@ public class TurnExecutionFrame extends JFrame {
 		lblGebude_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_5.add(lblGebude_2, "cell 0 4 2 1");
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		panel_command_5.add(scrollPane_1, "cell 0 5 5 1,grow");
+		JScrollPane scrollPane_building = new JScrollPane();
+		panel_command_5.add(scrollPane_building, "cell 0 5 5 1,grow");
 		
-		JList list_2 = new JList();
-		list_2.setBackground(Color.LIGHT_GRAY);
-		list_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		scrollPane_1.setViewportView(list_2);
+		JList<Building> list_building = new JList<Building>(buildingModel);
+		list_building.setBackground(Color.LIGHT_GRAY);
+		list_building.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrollPane_building.setViewportView(list_building);
 		
 		JPanel panel_command_3 = new JPanel();
 		panel_command_row_3.add(panel_command_3, "cell 0 2,grow");
@@ -513,5 +551,28 @@ public class TurnExecutionFrame extends JFrame {
 		spinner_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		spinner_1.setBackground(Color.LIGHT_GRAY);
 		panel_command_3.add(spinner_1, "cell 2 3,growx");
+	}
+	
+	private class FieldCommand {
+		
+		private Field field;
+		private Command command;
+		
+		public FieldCommand(Field field, Command command) {
+			this.field = field;
+			this.command = command;
+		}
+		
+		@Override
+		public String toString() {
+			return field.toString() + command.toString();
+		}
+		
+		public Field getField() {
+			return field;
+		}
+		public Command getCommand() {
+			return command;
+		}
 	}
 }

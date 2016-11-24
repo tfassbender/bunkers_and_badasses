@@ -52,6 +52,12 @@ public class TurnPlaningFrame extends JFrame {
 	private JTextField txtRekrutierungen;
 	private JTextField txtResourcen;
 	
+	private JTextField txtSpieler;
+	private JTextField txtBefehl;
+	private JTextField txtGebude;
+	private JTextField txtTruppennormal;
+	private JTextField txtTruppenbadass;
+	
 	private ListModel<Field> fieldNoCommandListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldCommandListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
@@ -62,10 +68,8 @@ public class TurnPlaningFrame extends JFrame {
 	
 	private ComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
 	
-	private JPanel panel_board_capture;
-	
 	private boolean fieldOverview = false;
-	
+	private JPanel panel_board_capture;
 	private final String SCROLL_BOARD = "scroll_board";
 	private final String OVERVIEW_BOARD = "overview_board";
 	
@@ -216,23 +220,58 @@ public class TurnPlaningFrame extends JFrame {
 		
 		JLabel lblSpieler = new JLabel("Spieler:");
 		lblSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblSpieler, "cell 0 2");
+		panel_field_info.add(lblSpieler, "cell 0 2,alignx trailing");
 		
-		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
-		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblNormaleTruppen, "cell 2 2");
+		txtSpieler = new JTextField();
+		txtSpieler.setBackground(Color.LIGHT_GRAY);
+		txtSpieler.setEditable(false);
+		txtSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtSpieler, "cell 1 2 3 1,growx");
+		txtSpieler.setColumns(10);
 		
 		JLabel lblBefehl_1 = new JLabel("Befehl:");
 		lblBefehl_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBefehl_1, "cell 0 3");
+		panel_field_info.add(lblBefehl_1, "cell 0 3,alignx trailing");
 		
-		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
-		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBadassTruppen, "cell 2 3");
+		txtBefehl = new JTextField();
+		txtBefehl.setBackground(Color.LIGHT_GRAY);
+		txtBefehl.setEditable(false);
+		txtBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtBefehl, "cell 1 3,growx");
+		txtBefehl.setColumns(10);
+		
+		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
+		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(lblNormaleTruppen, "cell 2 3,alignx trailing");
+		
+		txtTruppennormal = new JTextField();
+		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
+		txtTruppennormal.setEditable(false);
+		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtTruppennormal, "cell 3 3,growx");
+		txtTruppennormal.setColumns(10);
 		
 		JLabel lblGebude = new JLabel("Geb\u00E4ude:");
 		lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblGebude, "cell 0 4");
+		panel_field_info.add(lblGebude, "cell 0 4,alignx trailing");
+		
+		txtGebude = new JTextField();
+		txtGebude.setBackground(Color.LIGHT_GRAY);
+		txtGebude.setEditable(false);
+		txtGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtGebude, "cell 1 4,growx");
+		txtGebude.setColumns(10);
+		
+		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
+		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(lblBadassTruppen, "cell 2 4,alignx trailing");
+		
+		txtTruppenbadass = new JTextField();
+		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
+		txtTruppenbadass.setEditable(false);
+		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtTruppenbadass, "cell 3 4,growx");
+		txtTruppenbadass.setColumns(10);
 		
 		JLabel lblNachbarn = new JLabel("Nachbarn:");
 		lblNachbarn.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -337,7 +376,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_1.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_1, "cell 2 0,grow");
-		panel_1.setLayout(new MigLayout("", "[][20px:40px][grow]", "[][5px][][][][][][]"));
+		panel_1.setLayout(new MigLayout("", "[][25px:40px][grow]", "[][5px][][][][][][]"));
 		
 		JLabel lblbrigeBefehle = new JLabel("\u00DCbrige Befehle:");
 		lblbrigeBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
