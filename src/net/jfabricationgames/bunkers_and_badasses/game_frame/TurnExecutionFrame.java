@@ -29,6 +29,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.Building;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 public class TurnExecutionFrame extends JFrame {
 	
@@ -122,6 +123,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_fields_all.add(scrollPane_fields_all, "cell 0 2,grow");
 		
 		JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+		list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_fields_all.setViewportView(list_fields_all);
@@ -163,6 +165,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_field_info.add(lblNormaleTruppen, "cell 2 3,alignx trailing");
 		
 		txtTruppennormal = new JTextField();
+		txtTruppennormal.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
 		txtTruppennormal.setEditable(false);
 		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -185,6 +188,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_field_info.add(lblBadassTruppen, "cell 2 4,alignx trailing");
 		
 		txtTruppenbadass = new JTextField();
+		txtTruppenbadass.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
 		txtTruppenbadass.setEditable(false);
 		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -219,6 +223,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_executable_commands.add(scrollPane_executable_commands, "cell 0 2,grow");
 		
 		JList<FieldCommand> list_executable_commands = new JList<FieldCommand>(fieldCommandModel);
+		list_executable_commands.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_executable_commands.setBackground(Color.LIGHT_GRAY);
 		list_executable_commands.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		scrollPane_executable_commands.setViewportView(list_executable_commands);
@@ -301,6 +306,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_order.add(scrollPane_order, "cell 0 2,grow");
 		
 		JList<User> list_order = new JList<User>(userListModel);
+		list_order.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_order.setToolTipText("<html>\r\nDie Reihenfolge der Spieler <br>\r\n(F\u00FCr diese Runde)\r\n</html>");
 		scrollPane_order.setViewportView(list_order);
 		list_order.setBackground(Color.LIGHT_GRAY);
@@ -436,6 +442,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_2.add(scrollPane_target_field, "cell 0 2,grow");
 		
 		JList<Field> list_target_field = new JList<Field>(fieldTargetModel);
+		list_target_field.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_target_field.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_target_field.setBackground(Color.LIGHT_GRAY);
 		scrollPane_target_field.setViewportView(list_target_field);
@@ -455,6 +462,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_4.add(lblVerluste, "cell 1 2,alignx trailing");
 		
 		txtVerluste = new JTextField();
+		txtVerluste.setHorizontalAlignment(SwingConstants.CENTER);
 		txtVerluste.setEditable(false);
 		txtVerluste.setBackground(Color.LIGHT_GRAY);
 		txtVerluste.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -519,6 +527,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_5.add(scrollPane_building, "cell 0 5 5 1,grow");
 		
 		JList<Building> list_building = new JList<Building>(buildingModel);
+		list_building.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_building.setBackground(Color.LIGHT_GRAY);
 		list_building.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		scrollPane_building.setViewportView(list_building);

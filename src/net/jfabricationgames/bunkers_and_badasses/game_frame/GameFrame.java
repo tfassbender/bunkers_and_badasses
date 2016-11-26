@@ -40,6 +40,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLogMess
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 public class GameFrame extends JFrame {
 	
@@ -149,6 +150,15 @@ public class GameFrame extends JFrame {
 		JMenuItem mntmChatDialog = new JMenuItem("Chat Dialog");
 		mnDialog.add(mntmChatDialog);
 		
+		JMenuItem mntmkamfAusfhrung = new JMenuItem("(Kamf Ausf\u00FChrung)");
+		mntmkamfAusfhrung.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new FightExecutionFrame().setVisible(true);
+			}
+		});
+		mnDialog.add(mntmkamfAusfhrung);
+		
 		JMenu mnHilfe = new JMenu("Hilfe");
 		menuBar.add(mnHilfe);
 		
@@ -233,6 +243,7 @@ public class GameFrame extends JFrame {
 		panel_log.add(scrollPane_log, "cell 0 2,grow");
 		
 		JList<GameLogMessage> list_log = new JList<GameLogMessage>(logListModel);
+		list_log.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_log.setToolTipText("<html>\r\n\u00DCbersicht \u00FCber die letzten Aktionen\r\n</html>");
 		list_log.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_log.setBackground(Color.LIGHT_GRAY);
@@ -275,6 +286,7 @@ public class GameFrame extends JFrame {
 		panel_field.add(lblNormaleTruppen, "cell 2 3,alignx trailing");
 		
 		txtTruppennormal = new JTextField();
+		txtTruppennormal.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
 		txtTruppennormal.setEditable(false);
 		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -297,6 +309,7 @@ public class GameFrame extends JFrame {
 		panel_field.add(lblBadassTruppen, "cell 2 4,alignx trailing");
 		
 		txtTruppenbadass = new JTextField();
+		txtTruppenbadass.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
 		txtTruppenbadass.setEditable(false);
 		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -506,6 +519,7 @@ public class GameFrame extends JFrame {
 		panel_order.add(scrollPane_order, "cell 0 2,grow");
 		
 		JList<User> list_order = new JList<User>(userListModel);
+		list_order.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_order.setToolTipText("<html>\r\nDie Reihenfolge der Spieler <br>\r\n(F\u00FCr diese Runde)\r\n</html>");
 		scrollPane_order.setViewportView(list_order);
 		list_order.setBackground(Color.LIGHT_GRAY);
@@ -525,6 +539,7 @@ public class GameFrame extends JFrame {
 		panel_points.add(scrollPane_points, "cell 0 2 3 1,grow");
 		
 		JList<UserPoints> list_points = new JList<UserPoints>(pointListModel);
+		list_points.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_points.setToolTipText("<html>\r\nDie Siegpunkte aller Spieler\r\n</html>");
 		list_points.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_points.setBackground(Color.LIGHT_GRAY);

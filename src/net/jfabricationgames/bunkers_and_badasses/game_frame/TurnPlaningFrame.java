@@ -35,6 +35,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class TurnPlaningFrame extends JFrame {
 	
@@ -134,6 +135,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_fields_no_command.add(scrollPane_fields_no_command, "cell 0 2,grow");
 		
 		JList<Field> list_fields_no_command = new JList<Field>(fieldNoCommandListModel);
+		list_fields_no_command.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_no_command.setToolTipText("<html>\r\nDiese Gebiete haben noch <br>\r\nkeinen Befehl erhalten.\r\n</html>");
 		list_fields_no_command.setBackground(Color.LIGHT_GRAY);
 		list_fields_no_command.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -153,6 +155,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_fields_command.add(scrollPane_fields_command, "cell 0 2,grow");
 		
 		JList<Field> list_fields_command = new JList<Field>(fieldCommandListModel);
+		list_fields_command.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_command.setToolTipText("<html>\r\nDiese Gebiete haben bereits <br>\r\neinen Befehl erhalten\r\n</html>");
 		list_fields_command.setBackground(Color.LIGHT_GRAY);
 		list_fields_command.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -172,6 +175,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_fields_all.add(scrollPane_fields_all, "cell 0 2,grow");
 		
 		JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+		list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_fields_all.setViewportView(list_fields_all);
@@ -187,23 +191,27 @@ public class TurnPlaningFrame extends JFrame {
 		panel_buildings.add(lblGebude_1, "cell 0 0,alignx center");
 		
 		JLabel lblDeineGebude = new JLabel("Deine Geb\u00E4ude:");
+		lblDeineGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_buildings.add(lblDeineGebude, "cell 0 2");
 		
 		JScrollPane scrollPane_buildings_player = new JScrollPane();
 		panel_buildings.add(scrollPane_buildings_player, "cell 0 3,grow");
 		
 		JList<FieldBuilding> list_buildings_player = new JList<FieldBuilding>(buildingsPlayerListModel);
+		list_buildings_player.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_buildings_player.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_buildings_player.setBackground(Color.LIGHT_GRAY);
 		scrollPane_buildings_player.setViewportView(list_buildings_player);
 		
 		JLabel lblAlleGebude = new JLabel("Alle Geb\u00E4ude:");
+		lblAlleGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_buildings.add(lblAlleGebude, "cell 0 5");
 		
 		JScrollPane scrollPane_buildings_all = new JScrollPane();
 		panel_buildings.add(scrollPane_buildings_all, "cell 0 6,grow");
 		
 		JList<FieldBuilding> list_buildings_all = new JList<FieldBuilding>(buildingsAllListModel);
+		list_buildings_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_buildings_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_buildings_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_buildings_all.setViewportView(list_buildings_all);
@@ -245,6 +253,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_field_info.add(lblNormaleTruppen, "cell 2 3,alignx trailing");
 		
 		txtTruppennormal = new JTextField();
+		txtTruppennormal.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
 		txtTruppennormal.setEditable(false);
 		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -267,6 +276,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_field_info.add(lblBadassTruppen, "cell 2 4,alignx trailing");
 		
 		txtTruppenbadass = new JTextField();
+		txtTruppenbadass.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
 		txtTruppenbadass.setEditable(false);
 		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -387,6 +397,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.add(lblberflle, "cell 0 2,alignx trailing");
 		
 		txtberflle = new JTextField();
+		txtberflle.setHorizontalAlignment(SwingConstants.CENTER);
 		txtberflle.setBackground(Color.LIGHT_GRAY);
 		txtberflle.setEditable(false);
 		txtberflle.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -398,6 +409,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.add(lblRckzge, "cell 0 3,alignx trailing");
 		
 		txtRckzge = new JTextField();
+		txtRckzge.setHorizontalAlignment(SwingConstants.CENTER);
 		txtRckzge.setBackground(Color.LIGHT_GRAY);
 		txtRckzge.setEditable(false);
 		txtRckzge.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -409,6 +421,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.add(lblMrsche, "cell 0 4,alignx trailing");
 		
 		txtMrsche = new JTextField();
+		txtMrsche.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMrsche.setBackground(Color.LIGHT_GRAY);
 		txtMrsche.setEditable(false);
 		txtMrsche.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -420,6 +433,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.add(lblAufbauten, "cell 0 5,alignx trailing");
 		
 		txtAufbauten = new JTextField();
+		txtAufbauten.setHorizontalAlignment(SwingConstants.CENTER);
 		txtAufbauten.setBackground(Color.LIGHT_GRAY);
 		txtAufbauten.setEditable(false);
 		txtAufbauten.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -431,6 +445,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.add(lblRekrutierungen, "cell 0 6,alignx trailing");
 		
 		txtRekrutierungen = new JTextField();
+		txtRekrutierungen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtRekrutierungen.setBackground(Color.LIGHT_GRAY);
 		txtRekrutierungen.setEditable(false);
 		txtRekrutierungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -442,6 +457,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.add(lblResourcen, "cell 0 7,alignx trailing");
 		
 		txtResourcen = new JTextField();
+		txtResourcen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtResourcen.setBackground(Color.LIGHT_GRAY);
 		txtResourcen.setEditable(false);
 		txtResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -534,6 +550,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_order.add(scrollPane_order, "cell 0 2,grow");
 		
 		JList<User> list_order = new JList<User>(userListModel);
+		list_order.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_order.setToolTipText("<html>\r\nDie Reihenfolge der Spieler <br>\r\n(F\u00FCr diese Runde)\r\n</html>");
 		scrollPane_order.setViewportView(list_order);
 		list_order.setBackground(Color.LIGHT_GRAY);
