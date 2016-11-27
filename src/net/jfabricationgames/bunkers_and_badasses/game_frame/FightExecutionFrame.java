@@ -64,6 +64,7 @@ public class FightExecutionFrame extends JFrame {
 	private ListModel<Field> fieldAttackerSupportModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldDefenderSupportModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldRetreadModel = new DefaultListModel<Field>();
+	private ListModel<Field> fieldFallingSupportModel = new DefaultListModel<Field>();
 	
 	private ComboBoxModel<Field> fieldSelectionModel = new DefaultComboBoxModel<Field>();
 	
@@ -71,24 +72,24 @@ public class FightExecutionFrame extends JFrame {
 	private JTextField txtHerodefender;
 	private JTextField txtHeroAttackerAtk;
 	private JTextField txtHeroAttackerDef;
-	private JTextField textField;
+	private JTextField txtDieAngriffspunkteDes;
 	private JTextField textField_1;
 	private JTextField txtSieger;
 	private JTextField txtVerlierer;
 	private JTextField txtOverhead;
 	private JTextField txtFallendetruppen;
 	private JTextField txtFallendetruppenbis;
-	private JTextField txtKampfstrkeAngreifer;
-	private JTextField txtKampfstrkeVerteidiger;
 	private JTextField txtRckzugnach;
 	private JTextField txtFallendetruppengesammt;
 	private JTextField textField_2;
+	private JTextField txtbrig;
+	private JTextField txtFallendeTruppen;
 	
 	public FightExecutionFrame() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FightExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Kampf Ausf\u00FChrung");
-		setBounds(100, 100, 1200, 725);
-		setMinimumSize(new Dimension(1200, 725));
+		setBounds(100, 100, 1200, 740);
+		setMinimumSize(new Dimension(1200, 740));
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -163,7 +164,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_info.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_info.setBackground(Color.GRAY);
 		panel_top_bar.add(panel_info, "cell 0 0 1 2,grow");
-		panel_info.setLayout(new MigLayout("", "[][grow][50px,grow][5px][grow][50px,grow]", "[][5px][][][5px][][][5px][][][10px][][][grow]"));
+		panel_info.setLayout(new MigLayout("", "[][grow][50px,grow][5px][grow][50px,grow]", "[][5px,grow][][][5px][][][5px][][][10px][][][grow]"));
 		
 		JLabel lblKampfInfo = new JLabel("Kampf Info:");
 		lblKampfInfo.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -293,7 +294,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_field_attacker.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_field_attacker.setBackground(Color.GRAY);
 		panel_top_bar.add(panel_field_attacker, "cell 1 0,grow");
-		panel_field_attacker.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px][][][]"));
+		panel_field_attacker.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px,grow][][][][grow]"));
 		
 		JLabel lblFeldbersicht = new JLabel("Angreifer Feld \u00DCbersicht:");
 		lblFeldbersicht.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -370,6 +371,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_neighbours_support.add(scrollPane_neighbour_support, "cell 0 2,grow");
 		
 		JList<Field> list_neighbour_support = new JList<Field>(fieldNeighboursSupportModel);
+		list_neighbour_support.setToolTipText("<html>\r\nAlle Nachbarfelder die einen<br>\r\nUnterst\u00FCtzungsbefehl haben\r\n</html>");
 		list_neighbour_support.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_neighbour_support.setEnabled(false);
 		list_neighbour_support.setBackground(Color.LIGHT_GRAY);
@@ -390,6 +392,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_denied_support.add(scrollPane_denied_support, "cell 0 2,grow");
 		
 		JList<Field> list_denied_support = new JList<Field>(fieldDeniedSupportModel);
+		list_denied_support.setToolTipText("<html>\r\nAlle Nachbarfelder die ihre <br>\r\nUnterst\u00FCtzung abgesagt haben\r\n</html>");
 		list_denied_support.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_denied_support.setEnabled(false);
 		list_denied_support.setBackground(Color.LIGHT_GRAY);
@@ -400,7 +403,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_field_defender.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_field_defender.setBackground(Color.GRAY);
 		panel_top_bar.add(panel_field_defender, "cell 1 1,grow");
-		panel_field_defender.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px][][][]"));
+		panel_field_defender.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px,grow][][][][grow]"));
 		
 		JLabel lblFelddefender = new JLabel("Verteidiger Feld \u00DCbersicht:");
 		lblFelddefender.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -477,6 +480,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_attacker_support.add(scrollPane_attacker_support, "cell 0 2,grow");
 		
 		JList<Field> list_attacker_support = new JList<Field>(fieldAttackerSupportModel);
+		list_attacker_support.setToolTipText("<html>\r\nAlle Nachbarfelder die den <br>\r\nAngreifer unterst\u00FCtzen\r\n</html>");
 		list_attacker_support.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_attacker_support.setEnabled(false);
 		list_attacker_support.setBackground(Color.LIGHT_GRAY);
@@ -497,6 +501,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_defender_support.add(scrollPane_defender_support, "cell 0 2,grow");
 		
 		JList<Field> list_defender_support = new JList<Field>(fieldDefenderSupportModel);
+		list_defender_support.setToolTipText("<html>\r\nAlle Nachbarfelder die den<br>\r\nVerteidiger unterst\u00FCtzen\r\n</html>");
 		list_defender_support.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_defender_support.setEnabled(false);
 		list_defender_support.setBackground(Color.LIGHT_GRAY);
@@ -547,6 +552,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_hero_attacker.add(lblAtk, "cell 0 2,alignx trailing");
 		
 		txtHeroAttackerAtk = new JTextField();
+		txtHeroAttackerAtk.setToolTipText("<html>\r\nDie Angriffspunkte des Helden\r\n</html>");
 		txtHeroAttackerAtk.setHorizontalAlignment(SwingConstants.CENTER);
 		txtHeroAttackerAtk.setBackground(Color.LIGHT_GRAY);
 		txtHeroAttackerAtk.setEditable(false);
@@ -559,6 +565,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_hero_attacker.add(lblVert, "cell 2 2,alignx trailing");
 		
 		txtHeroAttackerDef = new JTextField();
+		txtHeroAttackerDef.setToolTipText("<html>\r\nDie Verteidugungspunkte des Helden\r\n</html>");
 		txtHeroAttackerDef.setHorizontalAlignment(SwingConstants.CENTER);
 		txtHeroAttackerDef.setBackground(Color.LIGHT_GRAY);
 		txtHeroAttackerDef.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -578,15 +585,16 @@ public class FightExecutionFrame extends JFrame {
 		rdbtnStrke.setEnabled(false);
 		panel_hero_attacker.add(rdbtnStrke, "cell 2 4 2 1,alignx center");
 		
-		JScrollPane scrollPane = new JScrollPane();
-		panel_hero_attacker.add(scrollPane, "cell 0 6 4 1,grow");
+		JScrollPane scrollPane_hero_effect_atk = new JScrollPane();
+		panel_hero_attacker.add(scrollPane_hero_effect_atk, "cell 0 6 4 1,grow");
 		
 		JTextArea txtrHeroEffectAttacker = new JTextArea();
+		txtrHeroEffectAttacker.setToolTipText("<html>\r\nDer Spezialeffekt des Helden\r\n</html>");
 		txtrHeroEffectAttacker.setWrapStyleWord(true);
 		txtrHeroEffectAttacker.setLineWrap(true);
 		txtrHeroEffectAttacker.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtrHeroEffectAttacker.setBackground(Color.LIGHT_GRAY);
-		scrollPane.setViewportView(txtrHeroEffectAttacker);
+		scrollPane_hero_effect_atk.setViewportView(txtrHeroEffectAttacker);
 		
 		JButton btnHeldAuswhlen = new JButton("Held Ausw\u00E4hlen");
 		btnHeldAuswhlen.setBackground(Color.GRAY);
@@ -612,19 +620,21 @@ public class FightExecutionFrame extends JFrame {
 		label.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_hero_defender.add(label, "cell 0 2,alignx trailing");
 		
-		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField.setEditable(false);
-		textField.setColumns(10);
-		textField.setBackground(Color.LIGHT_GRAY);
-		panel_hero_defender.add(textField, "cell 1 2,growx");
+		txtDieAngriffspunkteDes = new JTextField();
+		txtDieAngriffspunkteDes.setToolTipText("<html>\r\nDie Angriffspunkte des Helden\r\n</html>");
+		txtDieAngriffspunkteDes.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDieAngriffspunkteDes.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtDieAngriffspunkteDes.setEditable(false);
+		txtDieAngriffspunkteDes.setColumns(10);
+		txtDieAngriffspunkteDes.setBackground(Color.LIGHT_GRAY);
+		panel_hero_defender.add(txtDieAngriffspunkteDes, "cell 1 2,growx");
 		
 		JLabel label_1 = new JLabel("Vert.:");
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_hero_defender.add(label_1, "cell 2 2,alignx trailing");
 		
 		textField_1 = new JTextField();
+		textField_1.setToolTipText("<html>\r\nDie Verteidugungspunkte des Helden\r\n</html>");
 		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
 		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField_1.setEditable(false);
@@ -644,15 +654,16 @@ public class FightExecutionFrame extends JFrame {
 		radioButton_1.setBackground(Color.GRAY);
 		panel_hero_defender.add(radioButton_1, "cell 2 4 2 1,alignx center");
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		panel_hero_defender.add(scrollPane_1, "cell 0 6 4 1,grow");
+		JScrollPane scrollPane_hero_effect_def = new JScrollPane();
+		panel_hero_defender.add(scrollPane_hero_effect_def, "cell 0 6 4 1,grow");
 		
 		JTextArea textArea = new JTextArea();
+		textArea.setToolTipText("<html>\r\nDer Spezialeffekt des Helden\r\n</html>");
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
 		textArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textArea.setBackground(Color.LIGHT_GRAY);
-		scrollPane_1.setViewportView(textArea);
+		scrollPane_hero_effect_def.setViewportView(textArea);
 		
 		JButton button = new JButton("Held Ausw\u00E4hlen");
 		button.setBackground(Color.GRAY);
@@ -662,130 +673,119 @@ public class FightExecutionFrame extends JFrame {
 		panel_end.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_end.setBackground(Color.GRAY);
 		panel_low_right_bar.add(panel_end, "cell 1 0,grow");
-		panel_end.setLayout(new MigLayout("", "[][25px][25px:n:25px][][25px:n:25px][:10px:10px][100px,grow]", "[][5px][][][5px][][][][5px][]"));
+		panel_end.setLayout(new MigLayout("", "[grow][][25px][25px:n:25px][][25px:n:25px][50px][grow]", "[][5px,grow][][][5px][][5px][][grow]"));
 		
 		JLabel lblKampfAusgang = new JLabel("Kampf Ausgang:");
 		lblKampfAusgang.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_end.add(lblKampfAusgang, "cell 0 0 7 1,alignx center");
+		panel_end.add(lblKampfAusgang, "cell 1 0 6 1,alignx center");
 		
 		JLabel lblSieger = new JLabel("Sieger:");
 		lblSieger.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblSieger, "cell 0 2");
+		panel_end.add(lblSieger, "cell 1 2");
 		
 		txtSieger = new JTextField();
 		txtSieger.setEditable(false);
 		txtSieger.setBackground(Color.LIGHT_GRAY);
 		txtSieger.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtSieger, "cell 1 2 6 1,growx");
+		panel_end.add(txtSieger, "cell 2 2 5 1,growx");
 		txtSieger.setColumns(10);
 		
 		JLabel lblVerlierer = new JLabel("Verlierer:");
 		lblVerlierer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblVerlierer, "cell 0 3");
+		panel_end.add(lblVerlierer, "cell 1 3");
 		
 		txtVerlierer = new JTextField();
 		txtVerlierer.setEditable(false);
 		txtVerlierer.setBackground(Color.LIGHT_GRAY);
 		txtVerlierer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtVerlierer, "cell 1 3 6 1,growx");
+		panel_end.add(txtVerlierer, "cell 2 3 5 1,growx");
 		txtVerlierer.setColumns(10);
-		
-		JLabel lblKampfstrkeAngreifer = new JLabel("Kampfst\u00E4rke Angreifer:");
-		lblKampfstrkeAngreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblKampfstrkeAngreifer, "cell 0 5 4 1");
-		
-		txtKampfstrkeAngreifer = new JTextField();
-		txtKampfstrkeAngreifer.setHorizontalAlignment(SwingConstants.CENTER);
-		txtKampfstrkeAngreifer.setEditable(false);
-		txtKampfstrkeAngreifer.setBackground(Color.LIGHT_GRAY);
-		txtKampfstrkeAngreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtKampfstrkeAngreifer, "cell 4 5 2 1,growx");
-		txtKampfstrkeAngreifer.setColumns(10);
-		
-		JLabel lblKampfstrkeVerteidiger = new JLabel("Kampfst\u00E4rke Verteidiger:");
-		lblKampfstrkeVerteidiger.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblKampfstrkeVerteidiger, "cell 0 6 4 1");
-		
-		txtKampfstrkeVerteidiger = new JTextField();
-		txtKampfstrkeVerteidiger.setHorizontalAlignment(SwingConstants.CENTER);
-		txtKampfstrkeVerteidiger.setEditable(false);
-		txtKampfstrkeVerteidiger.setBackground(Color.LIGHT_GRAY);
-		txtKampfstrkeVerteidiger.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtKampfstrkeVerteidiger, "cell 4 6 2 1,growx");
-		txtKampfstrkeVerteidiger.setColumns(10);
 		
 		JLabel lblOverhead = new JLabel("Overhead:");
 		lblOverhead.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblOverhead, "cell 0 7 4 1");
+		panel_end.add(lblOverhead, "cell 1 5");
 		
 		txtOverhead = new JTextField();
 		txtOverhead.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOverhead.setEditable(false);
 		txtOverhead.setBackground(Color.LIGHT_GRAY);
 		txtOverhead.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtOverhead, "cell 4 7 2 1,growx");
+		panel_end.add(txtOverhead, "cell 2 5,growx");
 		txtOverhead.setColumns(10);
 		
 		JLabel lblFallendeTruppen = new JLabel("Fallende Truppen:");
 		lblFallendeTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblFallendeTruppen, "cell 0 9 2 1");
+		panel_end.add(lblFallendeTruppen, "cell 1 7 2 1");
 		
 		txtFallendetruppen = new JTextField();
 		txtFallendetruppen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtFallendetruppen.setEditable(false);
 		txtFallendetruppen.setBackground(Color.LIGHT_GRAY);
 		txtFallendetruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtFallendetruppen, "cell 2 9,growx");
+		panel_end.add(txtFallendetruppen, "cell 3 7,growx");
 		txtFallendetruppen.setColumns(10);
 		
 		JLabel lblBis = new JLabel("bis");
 		lblBis.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblBis, "cell 3 9,alignx center");
+		panel_end.add(lblBis, "cell 4 7,alignx center");
 		
 		txtFallendetruppenbis = new JTextField();
 		txtFallendetruppenbis.setHorizontalAlignment(SwingConstants.CENTER);
 		txtFallendetruppenbis.setEditable(false);
 		txtFallendetruppenbis.setBackground(Color.LIGHT_GRAY);
 		txtFallendetruppenbis.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtFallendetruppenbis, "cell 4 9,growx");
+		panel_end.add(txtFallendetruppenbis, "cell 5 7,growx");
 		txtFallendetruppenbis.setColumns(10);
 		
 		JPanel panel_fallen_troups_looser = new JPanel();
 		panel_fallen_troups_looser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_fallen_troups_looser.setBackground(Color.GRAY);
 		panel_low_right_bar.add(panel_fallen_troups_looser, "cell 2 0,grow");
-		panel_fallen_troups_looser.setLayout(new MigLayout("", "[grow][][][][50px][][grow]", "[][5px][][][][][grow]"));
+		panel_fallen_troups_looser.setLayout(new MigLayout("", "[grow][][][50px][grow]", "[][5px,grow][][][][][][grow]"));
 		
 		JLabel lblFallendeTruppenAuswhlen = new JLabel("Fallende Truppen Ausw\u00E4hlen:");
 		lblFallendeTruppenAuswhlen.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_fallen_troups_looser.add(lblFallendeTruppenAuswhlen, "cell 0 0 7 1,alignx center");
+		panel_fallen_troups_looser.add(lblFallendeTruppenAuswhlen, "cell 0 0 5 1,alignx center");
 		
 		JLabel lblFeld = new JLabel("Feld:");
 		lblFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_fallen_troups_looser.add(lblFeld, "cell 2 2,alignx trailing");
+		panel_fallen_troups_looser.add(lblFeld, "cell 1 2,alignx trailing");
 		
 		JComboBox<Field> comboBox = new JComboBox<Field>(fieldSelectionModel);
+		comboBox.setToolTipText("<html>\r\nFalls auf mehreren deiner Felder Truppen <br>\r\nfallen kannst du hier das Feld ausw\u00E4hlen\r\n</html>");
 		comboBox.setBackground(Color.GRAY);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_fallen_troups_looser.add(comboBox, "cell 3 2 2 1,growx");
+		panel_fallen_troups_looser.add(comboBox, "cell 2 2 2 1,growx");
+		
+		JLabel lblFallendeTruppen_2 = new JLabel("Fallende Truppen:");
+		lblFallendeTruppen_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_fallen_troups_looser.add(lblFallendeTruppen_2, "cell 1 3 2 1");
+		
+		txtFallendeTruppen = new JTextField();
+		txtFallendeTruppen.setToolTipText("<html>\r\nDie Anzahl an Truppen die auf diesem Feld fallen\r\n</html>");
+		txtFallendeTruppen.setHorizontalAlignment(SwingConstants.CENTER);
+		txtFallendeTruppen.setBackground(Color.LIGHT_GRAY);
+		txtFallendeTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_fallen_troups_looser.add(txtFallendeTruppen, "cell 3 3,growx");
+		txtFallendeTruppen.setColumns(10);
 		
 		JLabel lblNormaleTruppen_1 = new JLabel("Normale Truppen:");
 		lblNormaleTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_fallen_troups_looser.add(lblNormaleTruppen_1, "cell 2 3 2 1");
+		panel_fallen_troups_looser.add(lblNormaleTruppen_1, "cell 1 4 2 1");
 		
 		JSpinner spinner_normal_troups = new JSpinner();
-		panel_fallen_troups_looser.add(spinner_normal_troups, "cell 4 3,growx");
+		panel_fallen_troups_looser.add(spinner_normal_troups, "cell 3 4,growx");
 		
 		JLabel lblBadassTruppen_1 = new JLabel("Badass Truppen:");
 		lblBadassTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_fallen_troups_looser.add(lblBadassTruppen_1, "cell 2 4 2 1");
+		panel_fallen_troups_looser.add(lblBadassTruppen_1, "cell 1 5 2 1");
 		
 		JSpinner spinner_badass_troups = new JSpinner();
-		panel_fallen_troups_looser.add(spinner_badass_troups, "cell 4 4,growx");
+		panel_fallen_troups_looser.add(spinner_badass_troups, "cell 3 5,growx");
 		
 		JPanel panel_fallen_troups_looser_1 = new JPanel();
 		panel_fallen_troups_looser_1.setBackground(Color.GRAY);
-		panel_fallen_troups_looser.add(panel_fallen_troups_looser_1, "cell 1 5 5 1,grow");
+		panel_fallen_troups_looser.add(panel_fallen_troups_looser_1, "cell 0 6 5 1,alignx center,growy");
 		panel_fallen_troups_looser_1.setLayout(new MigLayout("", "[][25px][]", "[]"));
 		
 		JLabel lblInstgesammt = new JLabel("Instgesammt:");
@@ -793,6 +793,7 @@ public class FightExecutionFrame extends JFrame {
 		panel_fallen_troups_looser_1.add(lblInstgesammt, "cell 0 0");
 		
 		txtFallendetruppengesammt = new JTextField();
+		txtFallendetruppengesammt.setToolTipText("<html>\r\nDie Anzahl an ausgew\u00E4hlten Truppen, <br>\r\ndie auf diesem Feld fallen (Normale <br>\r\nTruppen z\u00E4hlen einen Punkt, Badasses <br>\r\nz\u00E4hlen zwei)\r\n</html>");
 		panel_fallen_troups_looser_1.add(txtFallendetruppengesammt, "cell 1 0");
 		txtFallendetruppengesammt.setEditable(false);
 		txtFallendetruppengesammt.setBackground(Color.LIGHT_GRAY);
@@ -816,6 +817,8 @@ public class FightExecutionFrame extends JFrame {
 		panel_retread.add(scrollPane_rueckzug, "cell 0 2 2 1,grow");
 		
 		JList<Field> list_rueckzug = new JList<Field>(fieldRetreadModel);
+		list_rueckzug.setToolTipText("<html>\r\nDas Feld in das sich der Verlierer zur\u00FCck <br>\r\nzieht (verliert der angreifer zieht er sich<br>\r\nimmer in das Feld zur\u00FCck aus dem er <br>\r\ngekommen ist)\r\n</html>");
+		list_rueckzug.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_rueckzug.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_rueckzug.setBackground(Color.LIGHT_GRAY);
 		scrollPane_rueckzug.setViewportView(list_rueckzug);
@@ -838,44 +841,73 @@ public class FightExecutionFrame extends JFrame {
 		panel_fallen_troups.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_fallen_troups.setBackground(Color.GRAY);
 		panel_low_right_bar.add(panel_fallen_troups, "cell 2 1,grow");
-		panel_fallen_troups.setLayout(new MigLayout("", "[grow][][50px,fill][grow]", "[][5px][][][]"));
+		panel_fallen_troups.setLayout(new MigLayout("", "[grow][][50px:50px,fill][10px:n][grow][grow]", "[][5px,grow][][][100px][][5px][][grow]"));
 		
 		JLabel lblFallendeTruppen_1 = new JLabel("Fallende Truppen:");
 		lblFallendeTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_fallen_troups.add(lblFallendeTruppen_1, "cell 0 0 4 1,alignx center");
+		panel_fallen_troups.add(lblFallendeTruppen_1, "cell 1 0 4 1,alignx center");
 		
 		JLabel lblGesammt = new JLabel("Gesammt:");
 		lblGesammt.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_fallen_troups.add(lblGesammt, "cell 1 2");
 		
 		JSpinner spinner_fallende_truppen_gesammt = new JSpinner();
+		spinner_fallende_truppen_gesammt.setToolTipText("<html>\r\nDie gesammte Anzahl an fallenden Truppen (auf <br>\r\nbeiden Seiten). Die maximal m\u00F6gliche Anzahl entspricht<br>\r\ndem Overhead, die minimal m\u00F6gliche Anzahl dem <br>\r\nhalben abgerundeten Overhead (genauere Beschreibung <br>\r\nin der Regel Hilfe)\r\n</html>");
 		spinner_fallende_truppen_gesammt.setModel(new SpinnerNumberModel(0, 0, 5, 1));
 		spinner_fallende_truppen_gesammt.setForeground(Color.LIGHT_GRAY);
 		spinner_fallende_truppen_gesammt.setBackground(Color.LIGHT_GRAY);
 		panel_fallen_troups.add(spinner_fallende_truppen_gesammt, "cell 2 2");
+		
+		JLabel lblUntersttzendesFeld = new JLabel("Unterst\u00FCtzende Felder:");
+		lblUntersttzendesFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_fallen_troups.add(lblUntersttzendesFeld, "cell 4 2,alignx center");
 		
 		JLabel lblVerlierer_1 = new JLabel("Verlierer:");
 		lblVerlierer_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_fallen_troups.add(lblVerlierer_1, "cell 1 3");
 		
 		JSpinner spinner_fallende_truppen_verlierer = new JSpinner();
+		spinner_fallende_truppen_verlierer.setToolTipText("<html>\r\nDie Anzahl an Truppen die in dem Feld fallen, <br>\r\ndass den Kampf verloren hat (nicht die <br>\r\nUnterst\u00FCtzer). Mindestens die H\u00E4lfte der <br>\r\ninsgesammt fallenden Truppen muss in diesem<br>\r\nFeld fallen (genauere Beschreibung in der <br>\r\nRegel Hilfe)\r\n</html>");
 		spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(0, 0, 5, 1));
 		spinner_fallende_truppen_verlierer.setForeground(Color.LIGHT_GRAY);
 		spinner_fallende_truppen_verlierer.setBackground(Color.LIGHT_GRAY);
 		panel_fallen_troups.add(spinner_fallende_truppen_verlierer, "cell 2 3");
 		
+		JScrollPane scrollPane_support_field = new JScrollPane();
+		panel_fallen_troups.add(scrollPane_support_field, "cell 4 3 1 3,grow");
+		
+		JList<Field> list_support_field = new JList<Field>(fieldFallingSupportModel);
+		list_support_field.setToolTipText("<html>\r\nDie Felder die den verlierer unterst\u00FCtzt <br>\r\nhaben und in denen Truppen fallen k\u00F6nnen\r\n</html>");
+		list_support_field.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_support_field.setBackground(Color.LIGHT_GRAY);
+		scrollPane_support_field.setViewportView(list_support_field);
+		
+		JLabel lblbrig = new JLabel("\u00DCbrig:");
+		lblbrig.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_fallen_troups.add(lblbrig, "cell 1 4");
+		
+		txtbrig = new JTextField();
+		txtbrig.setEditable(false);
+		txtbrig.setToolTipText("<html>\r\nDie Anzahl an fallenden Truppen, die noch <br>\r\nauf den Verlierer und die unterst\u00FCtzenden <br>\r\nFelder verteilt werden m\u00FCssen\r\n</html>");
+		txtbrig.setHorizontalAlignment(SwingConstants.CENTER);
+		txtbrig.setBackground(Color.LIGHT_GRAY);
+		txtbrig.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_fallen_troups.add(txtbrig, "cell 2 4,growx");
+		txtbrig.setColumns(10);
+		
 		JLabel lblUntersttzer_1 = new JLabel("Unterst\u00FCtzer:");
 		lblUntersttzer_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_fallen_troups.add(lblUntersttzer_1, "cell 1 4");
+		panel_fallen_troups.add(lblUntersttzer_1, "cell 1 5");
 		
 		JSpinner spinner_fallende_truppen_unterstuetzer = new JSpinner();
+		spinner_fallende_truppen_unterstuetzer.setToolTipText("<html>\r\nDie Anzahl der fallenden Truppen in einem <br>\r\nder unterst\u00FCtzenden Felder (maximal die <br>\r\nh\u00E4lfte der Truppen in einem unterst\u00FCtzenden <br>\r\nFeld (abgerundet) kann fallen; genauere <br>\r\nBeschreibung in der Regel Hilfe)\r\n</html>");
 		spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(0, 0, 5, 1));
 		spinner_fallende_truppen_unterstuetzer.setForeground(Color.LIGHT_GRAY);
 		spinner_fallende_truppen_unterstuetzer.setBackground(Color.LIGHT_GRAY);
-		panel_fallen_troups.add(spinner_fallende_truppen_unterstuetzer, "cell 2 4");
+		panel_fallen_troups.add(spinner_fallende_truppen_unterstuetzer, "cell 2 5");
 		
-		JLabel lblProUntersttzer = new JLabel("pro Unterst\u00FCtzer");
-		lblProUntersttzer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_fallen_troups.add(lblProUntersttzer, "cell 3 4");
+		JButton btnBesttigen_1 = new JButton("Best\u00E4tigen");
+		btnBesttigen_1.setBackground(Color.GRAY);
+		panel_fallen_troups.add(btnBesttigen_1, "cell 1 7 4 1,alignx center");
 	}
 }

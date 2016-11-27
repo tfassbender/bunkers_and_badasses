@@ -596,7 +596,7 @@ public class TurnPlaningFrame extends JFrame {
 		mnHilfe.add(mntmSpielFunktionen);
 	}
 	
-	private class FieldBuilding {
+	public class FieldBuilding {
 		
 		private Field field;
 		private Building building;

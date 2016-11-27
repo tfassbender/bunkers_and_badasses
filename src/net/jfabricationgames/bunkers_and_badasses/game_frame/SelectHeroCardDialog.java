@@ -23,6 +23,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.game_character.Hero;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.ListSelectionModel;
+import java.awt.Toolkit;
 
 public class SelectHeroCardDialog extends JDialog {
 	
@@ -39,6 +40,7 @@ public class SelectHeroCardDialog extends JDialog {
 	private ListModel<Hero> heroListModel = new DefaultListModel<Hero>();
 	
 	public SelectHeroCardDialog() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
 		setBounds(100, 100, 450, 601);
 		getContentPane().setLayout(new BorderLayout());

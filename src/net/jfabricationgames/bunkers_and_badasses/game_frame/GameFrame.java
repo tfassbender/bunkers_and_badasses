@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
@@ -40,7 +41,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLogMess
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.SwingConstants;
 
 public class GameFrame extends JFrame {
 	
@@ -75,6 +75,9 @@ public class GameFrame extends JFrame {
 	private JTextField txtGebude;
 	private JTextField txtTruppennormal;
 	private JTextField txtTruppenbadass;
+	
+	private JTextField txtYourPoints;
+	private JTextField txtYourPosition;
 	
 	public static void main(String[] args) {
 		new GameFrame(null).setVisible(true);
@@ -130,6 +133,12 @@ public class GameFrame extends JFrame {
 		mnDialog.add(mntmZugAusfhren);
 		
 		JMenuItem mntmSpielbersicht = new JMenuItem("Spiel\u00FCbersicht");
+		mntmSpielbersicht.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new GameOverviewFrame().setVisible(true);
+			}
+		});
 		mnDialog.add(mntmSpielbersicht);
 		
 		JMenuItem mntmGebietsbersicht = new JMenuItem("Gebiets\u00FCbersicht");
@@ -549,17 +558,25 @@ public class GameFrame extends JFrame {
 		lblDeinePunkte.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_points.add(lblDeinePunkte, "cell 0 3");
 		
-		JLabel lblPlayerpoints = new JLabel("");
-		lblPlayerpoints.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_points.add(lblPlayerpoints, "cell 2 3");
+		txtYourPoints = new JTextField();
+		txtYourPoints.setHorizontalAlignment(SwingConstants.CENTER);
+		txtYourPoints.setBackground(Color.LIGHT_GRAY);
+		txtYourPoints.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtYourPoints.setEditable(false);
+		panel_points.add(txtYourPoints, "cell 2 3,growx");
+		txtYourPoints.setColumns(10);
 		
 		JLabel lblDeinePosition = new JLabel("Deine Position:");
 		lblDeinePosition.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_points.add(lblDeinePosition, "cell 0 4");
 		
-		JLabel lblPlayerposition = new JLabel("");
-		lblPlayerposition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_points.add(lblPlayerposition, "cell 2 4");
+		txtYourPosition = new JTextField();
+		txtYourPosition.setHorizontalAlignment(SwingConstants.CENTER);
+		txtYourPosition.setBackground(Color.LIGHT_GRAY);
+		txtYourPosition.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtYourPosition.setEditable(false);
+		panel_points.add(txtYourPosition, "cell 2 4,growx");
+		txtYourPosition.setColumns(10);
 		
 		JPanel panel_logo_capture = new JPanel();
 		panel_logo_capture.setBackground(Color.GRAY);
