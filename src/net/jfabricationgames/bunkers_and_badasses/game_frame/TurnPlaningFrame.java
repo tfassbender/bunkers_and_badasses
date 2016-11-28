@@ -73,6 +73,7 @@ public class TurnPlaningFrame extends JFrame {
 	private JPanel panel_board_capture;
 	private final String SCROLL_BOARD = "scroll_board";
 	private final String OVERVIEW_BOARD = "overview_board";
+	private JTextField txtFeld;
 	
 	public TurnPlaningFrame() {
 		setTitle("Bunkers and Badasses - Zug Planung");
@@ -220,75 +221,86 @@ public class TurnPlaningFrame extends JFrame {
 		panel_field_info.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_field_info.setBackground(Color.GRAY);
 		panel_side_bar.add(panel_field_info, "cell 0 2 2 1,grow");
-		panel_field_info.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px][][][][5px][][50px,grow]"));
+		panel_field_info.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px][][][][][5px][][50px,grow]"));
 		
 		JLabel lblFeldbersicht = new JLabel("Feld \u00DCbersicht:");
 		lblFeldbersicht.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_field_info.add(lblFeldbersicht, "cell 0 0 4 1,alignx center");
 		
+		JLabel lblFeld_1 = new JLabel("Feld:");
+		lblFeld_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(lblFeld_1, "cell 0 2,alignx trailing");
+		
+		txtFeld = new JTextField();
+		txtFeld.setBackground(Color.LIGHT_GRAY);
+		txtFeld.setEditable(false);
+		txtFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_info.add(txtFeld, "cell 1 2 3 1,growx");
+		txtFeld.setColumns(10);
+		
 		JLabel lblSpieler = new JLabel("Spieler:");
 		lblSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblSpieler, "cell 0 2,alignx trailing");
+		panel_field_info.add(lblSpieler, "cell 0 3,alignx trailing");
 		
 		txtSpieler = new JTextField();
 		txtSpieler.setBackground(Color.LIGHT_GRAY);
 		txtSpieler.setEditable(false);
 		txtSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtSpieler, "cell 1 2 3 1,growx");
+		panel_field_info.add(txtSpieler, "cell 1 3 3 1,growx");
 		txtSpieler.setColumns(10);
 		
 		JLabel lblBefehl_1 = new JLabel("Befehl:");
 		lblBefehl_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBefehl_1, "cell 0 3,alignx trailing");
+		panel_field_info.add(lblBefehl_1, "cell 0 4,alignx trailing");
 		
 		txtBefehl = new JTextField();
 		txtBefehl.setBackground(Color.LIGHT_GRAY);
 		txtBefehl.setEditable(false);
 		txtBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtBefehl, "cell 1 3,growx");
+		panel_field_info.add(txtBefehl, "cell 1 4,growx");
 		txtBefehl.setColumns(10);
 		
 		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
 		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblNormaleTruppen, "cell 2 3,alignx trailing");
+		panel_field_info.add(lblNormaleTruppen, "cell 2 4,alignx trailing");
 		
 		txtTruppennormal = new JTextField();
 		txtTruppennormal.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
 		txtTruppennormal.setEditable(false);
 		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtTruppennormal, "cell 3 3,growx");
+		panel_field_info.add(txtTruppennormal, "cell 3 4,growx");
 		txtTruppennormal.setColumns(10);
 		
 		JLabel lblGebude = new JLabel("Geb\u00E4ude:");
 		lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblGebude, "cell 0 4,alignx trailing");
+		panel_field_info.add(lblGebude, "cell 0 5,alignx trailing");
 		
 		txtGebude = new JTextField();
 		txtGebude.setBackground(Color.LIGHT_GRAY);
 		txtGebude.setEditable(false);
 		txtGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtGebude, "cell 1 4,growx");
+		panel_field_info.add(txtGebude, "cell 1 5,growx");
 		txtGebude.setColumns(10);
 		
 		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
 		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBadassTruppen, "cell 2 4,alignx trailing");
+		panel_field_info.add(lblBadassTruppen, "cell 2 5,alignx trailing");
 		
 		txtTruppenbadass = new JTextField();
 		txtTruppenbadass.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
 		txtTruppenbadass.setEditable(false);
 		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtTruppenbadass, "cell 3 4,growx");
+		panel_field_info.add(txtTruppenbadass, "cell 3 5,growx");
 		txtTruppenbadass.setColumns(10);
 		
 		JLabel lblNachbarn = new JLabel("Nachbarn:");
 		lblNachbarn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblNachbarn, "cell 0 6 4 1,alignx center");
+		panel_field_info.add(lblNachbarn, "cell 0 7 4 1,alignx center");
 		
 		JScrollPane scrollPane_neighbours = new JScrollPane();
-		panel_field_info.add(scrollPane_neighbours, "cell 0 7 4 1,grow");
+		panel_field_info.add(scrollPane_neighbours, "cell 0 8 4 1,grow");
 		
 		JList<Field> list_neighbours = new JList<Field>(fieldNeighboursListModel);
 		list_neighbours.setToolTipText("<html>\r\nBenachbarte Felder\r\n</html>");

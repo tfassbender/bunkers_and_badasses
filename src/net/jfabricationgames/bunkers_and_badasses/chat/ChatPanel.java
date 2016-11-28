@@ -25,7 +25,7 @@ public class ChatPanel extends JPanel {
 	public ChatPanel(ChatClient client) {
 		setBackground(Color.GRAY);
 		this.client = client;
-		setLayout(new MigLayout("", "[grow][]", "[grow][]"));
+		setLayout(new MigLayout("", "[grow][]", "[50px,grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
