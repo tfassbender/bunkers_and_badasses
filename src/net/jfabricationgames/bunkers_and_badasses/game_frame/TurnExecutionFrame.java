@@ -335,7 +335,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_low_bar.add(panel_execution, "cell 0 0,grow");
 		panel_execution.setLayout(new MigLayout("", "[300px,grow][200px,grow][100px,grow]", "[][5px,grow][100px:n,grow]"));
 		
-		JLabel lblBefehlAusfhren = new JLabel("Befehl Ausf\u00FChren");
+		JLabel lblBefehlAusfhren = new JLabel("Befehl Ausf\u00FChren:");
 		lblBefehlAusfhren.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_execution.add(lblBefehlAusfhren, "cell 0 0 3 1,alignx center");
 		

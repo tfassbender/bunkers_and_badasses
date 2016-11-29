@@ -121,6 +121,7 @@ public class GameOverviewFrame extends JFrame {
 		txtYourPosition.setColumns(10);
 		
 		ImagePanel panel_image_1 = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/salvador_1.png"));
+		panel_image_1.setToolTipText("Salvadore: Doppelte Knarren = Doppelter Spa\u00DF");
 		panel_image_1.setAdaptSizeKeepProportion(true);
 		panel_image_1.setCentered(true);
 		panel_image_1.setBackground(Color.GRAY);
@@ -489,6 +490,7 @@ public class GameOverviewFrame extends JFrame {
 		scrollPane_buildings_player.setViewportView(list_buildings_player);
 		
 		ImagePanel panel_image_2 = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/roland_1.png"));
+		panel_image_2.setToolTipText("Roland: Commander der Crimson Raiders");
 		panel_image_2.setAdaptSizeKeepProportion(true);
 		panel_image_2.setCentered(true);
 		panel_image_2.setBackground(Color.GRAY);

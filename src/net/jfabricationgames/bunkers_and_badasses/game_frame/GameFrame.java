@@ -151,10 +151,13 @@ public class GameFrame extends JFrame {
 		});
 		mnDialog.add(mntmGebietsbersicht);
 		
-		JMenuItem mntmInfoDialogffnen = new JMenuItem("Allgemein Info");
-		mnDialog.add(mntmInfoDialogffnen);
-		
 		JMenuItem mntmTruppenInfoDialog = new JMenuItem("Truppen Info");
+		mntmTruppenInfoDialog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new TroopInfoDialog().setVisible(true);
+			}
+		});
 		mnDialog.add(mntmTruppenInfoDialog);
 		
 		JMenuItem mntmResourcenInfoDialog = new JMenuItem("Resourcen Info");
@@ -528,6 +531,12 @@ public class GameFrame extends JFrame {
 		panel_heroes.add(btnbersicht, "cell 0 3,alignx center");
 		
 		JButton btnEinsetzen = new JButton("Einsetzen");
+		btnEinsetzen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new SelectHeroCardDialog().setVisible(true);
+			}
+		});
 		btnEinsetzen.setToolTipText("<html>\r\nEine der vorhandenen Helden Karten<br>\r\n(deren Spezialfunktion) einsetzen\r\n</html>");
 		btnEinsetzen.setBackground(Color.GRAY);
 		panel_heroes.add(btnEinsetzen, "cell 1 3,alignx center");

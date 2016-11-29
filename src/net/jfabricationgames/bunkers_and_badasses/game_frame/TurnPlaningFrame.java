@@ -477,6 +477,7 @@ public class TurnPlaningFrame extends JFrame {
 		txtResourcen.setColumns(10);
 		
 		ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/claptrap_1.png"));
+		panel_image.setToolTipText("Claptrap: Interplanetarer Ninja Assasine");
 		panel_image.setRemoveIfToSmall(true);
 		panel_image.setAdaptSizeKeepProportion(true);
 		panel_image.setCentered(true);

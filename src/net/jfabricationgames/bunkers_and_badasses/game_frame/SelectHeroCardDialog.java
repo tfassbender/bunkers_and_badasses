@@ -78,8 +78,10 @@ public class SelectHeroCardDialog extends JDialog {
 			btnAlleHeldenAnsehen.setBackground(Color.GRAY);
 			panel_heroes.add(btnAlleHeldenAnsehen, "cell 0 2");
 			
-			panel_image = new ImagePanel();
-			panel_image.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+			panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/brick_1.png"));
+			panel_image.setToolTipText("Brick: ICH KLOPP SIE!!!");
+			panel_image.setCentered(true);
+			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setBackground(Color.GRAY);
 			panel.add(panel_image, "cell 1 0,grow");
 			

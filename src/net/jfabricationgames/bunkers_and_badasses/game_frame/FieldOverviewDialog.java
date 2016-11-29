@@ -216,6 +216,7 @@ public class FieldOverviewDialog extends JDialog {
 			txtGrenzenkontrolliert.setColumns(10);
 			
 			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/tannis_1.png"));
+			panel_image.setToolTipText("Tannis: Genie und Wahnsinn...");
 			panel_image.setCentered(true);
 			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setBackground(Color.GRAY);
