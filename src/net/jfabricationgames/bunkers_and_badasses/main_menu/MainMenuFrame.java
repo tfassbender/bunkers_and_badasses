@@ -186,7 +186,7 @@ public class MainMenuFrame extends JFrame {
 		scrollPane_1.setViewportView(txtrPlayers);
 		
 		chatPanel = new ChatPanel(chatClient);
-		chatClient.setChatPanel(chatPanel);
+		chatClient.addChatPanel(chatPanel);
 		chatPanel.setBackground(Color.GRAY);
 		panel_content.add(chatPanel, "cell 0 3 3 2,grow");
 		

@@ -33,6 +33,7 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
+import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.bunkers_and_badasses.game.PointManager.UserPoints;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
@@ -75,10 +76,10 @@ public class GameFrame extends JFrame {
 	private JTextField txtGebude;
 	private JTextField txtTruppennormal;
 	private JTextField txtTruppenbadass;
+	private JTextField txtFeld;
 	
 	private JTextField txtYourPoints;
 	private JTextField txtYourPosition;
-	private JTextField txtFeld;
 	
 	public static void main(String[] args) {
 		new GameFrame(null).setVisible(true);
@@ -161,12 +162,30 @@ public class GameFrame extends JFrame {
 		mnDialog.add(mntmTruppenInfoDialog);
 		
 		JMenuItem mntmResourcenInfoDialog = new JMenuItem("Resourcen Info");
+		mntmResourcenInfoDialog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new ResourceInfoDialog().setVisible(true);
+			}
+		});
 		mnDialog.add(mntmResourcenInfoDialog);
 		
 		JMenuItem mntmHeldenInfoDialog = new JMenuItem("Helden Info");
+		mntmHeldenInfoDialog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new SelectHeroCardDialog(false).setVisible(true);
+			}
+		});
 		mnDialog.add(mntmHeldenInfoDialog);
 		
 		JMenuItem mntmChatDialog = new JMenuItem("Chat Dialog");
+		mntmChatDialog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO delete after tests
+				new ChatDialog(chatClient, GameFrame.this).setVisible(true);
+			}
+		});
 		mnDialog.add(mntmChatDialog);
 		
 		JMenuItem mntmkamfAusfhrung = new JMenuItem("(Kamf Ausf\u00FChrung)");
@@ -199,7 +218,7 @@ public class GameFrame extends JFrame {
 		chatClient = new ChatClient(client);
 		chatPanel = new ChatPanel(chatClient);
 		chatPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		chatClient.setChatPanel(chatPanel);
+		chatClient.addChatPanel(chatPanel);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
@@ -457,7 +476,7 @@ public class GameFrame extends JFrame {
 		panel_resources.add(lblbrigeResourcen, "cell 1 2");
 		
 		JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnung nicht ber\u00FCcksichtigt)<br>\r\n</html>");
+		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
 		lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
 		
@@ -534,7 +553,7 @@ public class GameFrame extends JFrame {
 		btnEinsetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO delete after tests
-				new SelectHeroCardDialog().setVisible(true);
+				new SelectHeroCardDialog(true).setVisible(true);
 			}
 		});
 		btnEinsetzen.setToolTipText("<html>\r\nEine der vorhandenen Helden Karten<br>\r\n(deren Spezialfunktion) einsetzen\r\n</html>");

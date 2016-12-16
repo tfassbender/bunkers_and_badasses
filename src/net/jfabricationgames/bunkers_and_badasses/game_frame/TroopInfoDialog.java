@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 
@@ -50,6 +51,8 @@ public class TroopInfoDialog extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Truppen Info");
 		setBounds(100, 100, 900, 600);
+		setMinimumSize(new Dimension(900, 600));
+		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -59,7 +62,7 @@ public class TroopInfoDialog extends JDialog {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.GRAY);
 			contentPanel.add(panel, "cell 0 0,grow");
-			panel.setLayout(new MigLayout("", "[:300px:300px,grow][100px,grow][100px,grow][300px,grow]", "[300px,grow][200px,grow]"));
+			panel.setLayout(new MigLayout("", "[:300px:500px,grow][100px,grow][100px,grow][300px,grow]", "[300px,grow][200px,grow]"));
 			
 			JPanel panel_troop_info = new JPanel();
 			panel_troop_info.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -190,7 +193,7 @@ public class TroopInfoDialog extends JDialog {
 			panel_resources.add(lblbrigeResourcen, "cell 1 2");
 			
 			JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-			lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnung nicht ber\u00FCcksichtigt)<br>\r\n</html>");
+			lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
 			lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
 			
@@ -238,10 +241,10 @@ public class TroopInfoDialog extends JDialog {
 			JLabel lblUE = new JLabel("");
 			panel_resources.add(lblUE, "cell 3 5");
 			
-			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/marcus_1.png"));
+			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/mr_torgue_1.png"));
+			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setToolTipText("Marcus: Keine R\u00FCckerstattung");
 			panel_image.setCentered(true);
-			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setBackground(Color.GRAY);
 			panel.add(panel_image, "cell 1 1 2 1,grow");
 			

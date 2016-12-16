@@ -398,82 +398,82 @@ public class TurnPlaningFrame extends JFrame {
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_1.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_1, "cell 2 0,grow");
-		panel_1.setLayout(new MigLayout("", "[][25px:40px][grow]", "[][5px][][][][][][]"));
+		panel_1.setLayout(new MigLayout("", "[grow][][25px:40px][grow]", "[][5px][][][][][][]"));
 		
 		JLabel lblbrigeBefehle = new JLabel("\u00DCbrige Befehle:");
 		lblbrigeBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_1.add(lblbrigeBefehle, "cell 0 0 3 1,alignx center");
+		panel_1.add(lblbrigeBefehle, "cell 1 0 3 1,alignx center");
 		
 		JLabel lblberflle = new JLabel("\u00DCberf\u00E4lle:");
 		lblberflle.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblberflle, "cell 0 2,alignx trailing");
+		panel_1.add(lblberflle, "cell 1 2,alignx trailing");
 		
 		txtberflle = new JTextField();
 		txtberflle.setHorizontalAlignment(SwingConstants.CENTER);
 		txtberflle.setBackground(Color.LIGHT_GRAY);
 		txtberflle.setEditable(false);
 		txtberflle.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtberflle, "cell 1 2,growx");
+		panel_1.add(txtberflle, "cell 2 2,growx");
 		txtberflle.setColumns(10);
 		
 		JLabel lblRckzge = new JLabel("R\u00FCckz\u00FCge:");
 		lblRckzge.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblRckzge, "cell 0 3,alignx trailing");
+		panel_1.add(lblRckzge, "cell 1 3,alignx trailing");
 		
 		txtRckzge = new JTextField();
 		txtRckzge.setHorizontalAlignment(SwingConstants.CENTER);
 		txtRckzge.setBackground(Color.LIGHT_GRAY);
 		txtRckzge.setEditable(false);
 		txtRckzge.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtRckzge, "cell 1 3,growx");
+		panel_1.add(txtRckzge, "cell 2 3,growx");
 		txtRckzge.setColumns(10);
 		
 		JLabel lblMrsche = new JLabel("M\u00E4rsche:");
 		lblMrsche.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblMrsche, "cell 0 4,alignx trailing");
+		panel_1.add(lblMrsche, "cell 1 4,alignx trailing");
 		
 		txtMrsche = new JTextField();
 		txtMrsche.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMrsche.setBackground(Color.LIGHT_GRAY);
 		txtMrsche.setEditable(false);
 		txtMrsche.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtMrsche, "cell 1 4,growx");
+		panel_1.add(txtMrsche, "cell 2 4,growx");
 		txtMrsche.setColumns(10);
 		
 		JLabel lblAufbauten = new JLabel("Aufbauten:");
 		lblAufbauten.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblAufbauten, "cell 0 5,alignx trailing");
+		panel_1.add(lblAufbauten, "cell 1 5,alignx trailing");
 		
 		txtAufbauten = new JTextField();
 		txtAufbauten.setHorizontalAlignment(SwingConstants.CENTER);
 		txtAufbauten.setBackground(Color.LIGHT_GRAY);
 		txtAufbauten.setEditable(false);
 		txtAufbauten.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtAufbauten, "cell 1 5,growx");
+		panel_1.add(txtAufbauten, "cell 2 5,growx");
 		txtAufbauten.setColumns(10);
 		
 		JLabel lblRekrutierungen = new JLabel("Rekrutierungen:");
 		lblRekrutierungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblRekrutierungen, "cell 0 6,alignx trailing");
+		panel_1.add(lblRekrutierungen, "cell 1 6,alignx trailing");
 		
 		txtRekrutierungen = new JTextField();
 		txtRekrutierungen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtRekrutierungen.setBackground(Color.LIGHT_GRAY);
 		txtRekrutierungen.setEditable(false);
 		txtRekrutierungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtRekrutierungen, "cell 1 6,growx");
+		panel_1.add(txtRekrutierungen, "cell 2 6,growx");
 		txtRekrutierungen.setColumns(10);
 		
 		JLabel lblResourcen = new JLabel("Resourcen:");
 		lblResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblResourcen, "cell 0 7,alignx trailing");
+		panel_1.add(lblResourcen, "cell 1 7,alignx trailing");
 		
 		txtResourcen = new JTextField();
 		txtResourcen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtResourcen.setBackground(Color.LIGHT_GRAY);
 		txtResourcen.setEditable(false);
 		txtResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtResourcen, "cell 1 7,growx");
+		panel_1.add(txtResourcen, "cell 2 7,growx");
 		txtResourcen.setColumns(10);
 		
 		ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/claptrap_1.png"));
@@ -501,7 +501,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_resources.add(lblbrigeResourcen, "cell 1 2");
 		
 		JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnung nicht ber\u00FCcksichtigt)<br>\r\n</html>");
+		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
 		lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
 		

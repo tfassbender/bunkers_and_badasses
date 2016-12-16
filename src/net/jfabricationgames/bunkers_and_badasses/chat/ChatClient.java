@@ -1,15 +1,19 @@
 package net.jfabricationgames.bunkers_and_badasses.chat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.jfabricationgames.jfgserver.client.JFGClient;
 
 public class ChatClient {
 	
 	private JFGClient client;
 	
-	private ChatPanel panel;
+	private List<ChatPanel> panels;
 	
 	public ChatClient(JFGClient client) {
 		this.client = client;
+		panels = new ArrayList<ChatPanel>();
 	}
 	
 	public void sendMessage(String message) {
@@ -17,15 +21,17 @@ public class ChatClient {
 		client.sendMessage(msg);
 	}
 	public void receiveMessage(String message) {
-		if (panel != null) {
-			panel.receiveMessage(message);
+		if (panels != null && !panels.isEmpty()) {
+			for (int i = 0; i < panels.size(); i++) {
+				panels.get(i).receiveMessage(message);
+			}
 		}
 	}
 	
-	public ChatPanel getPanel() {
-		return panel;
+	public List<ChatPanel> getPanels() {
+		return panels;
 	}
-	public void setChatPanel(ChatPanel panel) {
-		this.panel = panel;
+	public void addChatPanel(ChatPanel panel) {
+		panels.add(panel);
 	}
 }

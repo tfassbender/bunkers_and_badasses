@@ -256,7 +256,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_resources.add(lblbrigeResourcen, "cell 1 2");
 		
 		JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnung nicht ber\u00FCcksichtigt)<br>\r\n</html>");
+		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
 		lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
 		
@@ -515,7 +515,7 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_command_row_3.add(panel_command_5, "cell 0 0,grow");
 		panel_command_5.setBackground(Color.GRAY);
-		panel_command_5.setLayout(new MigLayout("", "[grow][grow][][][grow]", "[][5px][][5px][][grow]"));
+		panel_command_5.setLayout(new MigLayout("", "[grow][grow][][][grow]", "[][5px][][][5px][][grow]"));
 		
 		JLabel lblAufbau = new JLabel("Aufbau:");
 		lblAufbau.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -526,17 +526,22 @@ public class TurnExecutionFrame extends JFrame {
 		rdbtnAufbauen.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_5.add(rdbtnAufbauen, "cell 1 2 2 1");
 		
+		JRadioButton rdbtnAufrsten = new JRadioButton("Aufr\u00FCsten");
+		rdbtnAufrsten.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		rdbtnAufrsten.setBackground(Color.GRAY);
+		panel_command_5.add(rdbtnAufrsten, "cell 3 2");
+		
 		JRadioButton rdbtnAbreien = new JRadioButton("Abrei\u00DFen");
 		rdbtnAbreien.setBackground(Color.GRAY);
 		rdbtnAbreien.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_5.add(rdbtnAbreien, "cell 3 2");
+		panel_command_5.add(rdbtnAbreien, "cell 1 3 3 1,alignx center");
 		
 		JLabel lblGebude_2 = new JLabel("Geb\u00E4ude:");
 		lblGebude_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_5.add(lblGebude_2, "cell 0 4 2 1");
+		panel_command_5.add(lblGebude_2, "cell 0 5 2 1");
 		
 		JScrollPane scrollPane_building = new JScrollPane();
-		panel_command_5.add(scrollPane_building, "cell 0 5 5 1,grow");
+		panel_command_5.add(scrollPane_building, "cell 0 6 5 1,grow");
 		
 		JList<Building> list_building = new JList<Building>(buildingModel);
 		list_building.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

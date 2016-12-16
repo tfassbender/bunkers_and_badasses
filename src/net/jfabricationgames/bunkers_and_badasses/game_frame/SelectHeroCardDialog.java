@@ -39,7 +39,7 @@ public class SelectHeroCardDialog extends JDialog {
 	
 	private ListModel<Hero> heroListModel = new DefaultListModel<Hero>();
 	
-	public SelectHeroCardDialog() {
+	public SelectHeroCardDialog(boolean cardPlayable) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
 		setBounds(100, 100, 450, 601);
@@ -148,6 +148,7 @@ public class SelectHeroCardDialog extends JDialog {
 			panel_buttons.setLayout(new MigLayout("", "[grow][][][grow]", "[]"));
 			
 			JButton btnAuswhlen = new JButton("Ausw\u00E4hlen");
+			btnAuswhlen.setEnabled(cardPlayable);
 			btnAuswhlen.setBackground(Color.GRAY);
 			panel_buttons.add(btnAuswhlen, "cell 1 0");
 			

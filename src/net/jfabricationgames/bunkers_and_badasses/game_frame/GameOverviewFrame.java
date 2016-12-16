@@ -307,7 +307,7 @@ public class GameOverviewFrame extends JFrame {
 		panel_resources.add(lblbrigeResourcen, "cell 1 2");
 		
 		JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnung nicht ber\u00FCcksichtigt)<br>\r\n</html>");
+		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
 		lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
 		
