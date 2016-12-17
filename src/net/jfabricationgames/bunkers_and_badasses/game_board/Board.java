@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_board;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,9 +19,51 @@ public class Board implements Serializable {
 	private List<Region> regions;
 	private transient BufferedImage baseImage;
 	private String name;
-
+	
+	/**
+	 * Create the field image with the basic image, the troops and buildings.
+	 * The image is created in original size. The scaling for the overview is done by the ImagePanel.
+	 * 
+	 * @return
+	 * 		The board image.
+	 */
 	public BufferedImage displayField() {
-		//TODO
+		//create a new BufferedImage and draw the basic image on it.
+		BufferedImage board = new BufferedImage(baseImage.getWidth(), baseImage.getHeight(), baseImage.getType());
+	    Graphics g = board.getGraphics();
+	    g.drawImage(baseImage, 0, 0, null);
+	    //draw the images for troops and buildings
+	    
+	    g.dispose();
+		return board;
+	}
+	
+	/**
+	 * Get a Field by the color the player clicked on the board.
+	 * The color is chosen by the RGB code with a deviation of 3 on every component.
+	 * 
+	 * @param color
+	 * 		The color underneath the mouse when the player clicked the board.
+	 * 
+	 * @return
+	 * 		The Field the player has chosen.
+	 */
+	public Field getFieldByColor(Color color) {
+		int r = color.getRed();
+		int g = color.getGreen();
+		int b = color.getBlue();
+		int rc;
+		int gc;
+		int bc;
+		int deviation = 3;
+		for (Field field : fields) {
+			rc = field.getFieldColor().getRed();
+			gc = field.getFieldColor().getGreen();
+			bc = field.getFieldColor().getBlue();
+			if (rc >= r - deviation && rc <= r + deviation && gc >= g - deviation && gc <= g + deviation && bc >= b - deviation && bc <= b + deviation) {
+				return field;
+			}
+		}
 		return null;
 	}
 	

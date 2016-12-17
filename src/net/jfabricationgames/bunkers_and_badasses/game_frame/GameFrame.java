@@ -81,6 +81,9 @@ public class GameFrame extends JFrame {
 	
 	private JTextField txtYourPoints;
 	private JTextField txtYourPosition;
+	private JPanel panel_scroll_board;
+	private JPanel panel_board_overview;
+	private JScrollPane scrollPane_board;
 	
 	public static void main(String[] args) {
 		new GameFrame(null).setVisible(true);
@@ -236,10 +239,10 @@ public class GameFrame extends JFrame {
 		panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
 		panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JScrollPane scrollPane_board = new JScrollPane();
+		scrollPane_board = new JScrollPane();
 		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
 		
-		JPanel panel_scroll_board = new JPanel();
+		panel_scroll_board = new JPanel();
 		panel_scroll_board.setBackground(Color.GRAY);
 		scrollPane_board.setViewportView(panel_scroll_board);
 		
@@ -248,7 +251,7 @@ public class GameFrame extends JFrame {
 		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
 		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JPanel panel_board_overview = new JPanel();
+		panel_board_overview = new JPanel();
 		panel_board_overview.setBackground(Color.GRAY);
 		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
 		

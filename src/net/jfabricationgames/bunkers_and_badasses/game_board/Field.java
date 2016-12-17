@@ -2,12 +2,14 @@ package net.jfabricationgames.bunkers_and_badasses.game_board;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_character.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.Troop;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Field implements Serializable {
@@ -28,6 +30,17 @@ public class Field implements Serializable {
 	
 	private Color fieldColor;
 	
+	private static BufferedImage normalTroopImage;
+	private static BufferedImage badassTroopImage;
+	private static BufferedImage neutralTroopImage;
+	
+	static {
+		//load the troop images
+		normalTroopImage = GameFrame.getImageLoader().loadImage("troops/bandit_3_small.png");
+		badassTroopImage = GameFrame.getImageLoader().loadImage("troops/lance_4_small.png");
+		neutralTroopImage = GameFrame.getImageLoader().loadImage("troops/skag_1_small.png");
+	}
+
 	public Field() {
 		neighbours = new ArrayList<Field>();
 		troops = new ArrayList<Troop>();
@@ -36,6 +49,16 @@ public class Field implements Serializable {
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	public static BufferedImage getNormalTroopImage() {
+		return normalTroopImage;
+	}
+	public static BufferedImage getBadassTroopImage() {
+		return badassTroopImage;
+	}
+	public static BufferedImage getNeutralTroopImage() {
+		return neutralTroopImage;
 	}
 	
 	public List<Field> getNeighbours() {
