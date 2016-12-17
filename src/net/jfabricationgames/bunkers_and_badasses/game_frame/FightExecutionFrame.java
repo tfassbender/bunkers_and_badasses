@@ -74,6 +74,8 @@ public class FightExecutionFrame extends JFrame {
 	private JTextField txtHeroAttackerDef;
 	private JTextField txtDieAngriffspunkteDes;
 	private JTextField textField_1;
+	private JTextField txtFieldattacker;
+	private JTextField txtRegion_attacker;
 	private JTextField txtSieger;
 	private JTextField txtVerlierer;
 	private JTextField txtOverhead;
@@ -81,15 +83,17 @@ public class FightExecutionFrame extends JFrame {
 	private JTextField txtFallendetruppenbis;
 	private JTextField txtRckzugnach;
 	private JTextField txtFallendetruppengesammt;
-	private JTextField textField_2;
+	private JTextField txtAction;
+	private JTextField txtFieldDefender;
+	private JTextField txtRegion_defender;
 	private JTextField txtbrig;
 	private JTextField txtFallendeTruppen;
 	
 	public FightExecutionFrame() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FightExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Kampf Ausf\u00FChrung");
-		setBounds(100, 100, 1200, 740);
-		setMinimumSize(new Dimension(1200, 740));
+		setBounds(100, 100, 1200, 775);
+		setMinimumSize(new Dimension(1200, 775));
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -282,23 +286,23 @@ public class FightExecutionFrame extends JFrame {
 		lblAktion.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_info.add(lblAktion, "cell 0 12,alignx trailing");
 		
-		textField_2 = new JTextField();
-		textField_2.setToolTipText("<html>\r\nDie aktuell auszuf\u00FChrende Aktion\r\n</html>");
-		textField_2.setEditable(false);
-		textField_2.setBackground(Color.LIGHT_GRAY);
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_info.add(textField_2, "cell 1 12 5 1,growx");
-		textField_2.setColumns(10);
+		txtAction = new JTextField();
+		txtAction.setToolTipText("<html>\r\nDie aktuell auszuf\u00FChrende Aktion\r\n</html>");
+		txtAction.setEditable(false);
+		txtAction.setBackground(Color.LIGHT_GRAY);
+		txtAction.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_info.add(txtAction, "cell 1 12 5 1,growx");
+		txtAction.setColumns(10);
 		
 		JPanel panel_field_attacker = new JPanel();
 		panel_field_attacker.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_field_attacker.setBackground(Color.GRAY);
 		panel_top_bar.add(panel_field_attacker, "cell 1 0,grow");
-		panel_field_attacker.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px,grow][][][][grow]"));
+		panel_field_attacker.setLayout(new MigLayout("", "[][150px,grow][][][50px,grow]", "[][5px,grow][][][][][grow]"));
 		
 		JLabel lblFeldbersicht = new JLabel("Angreifer Feld \u00DCbersicht:");
 		lblFeldbersicht.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_field_attacker.add(lblFeldbersicht, "cell 0 0 4 1,alignx center");
+		panel_field_attacker.add(lblFeldbersicht, "cell 0 0 5 1,alignx center");
 		
 		JLabel lblSpieler = new JLabel("Spieler:");
 		lblSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -308,53 +312,75 @@ public class FightExecutionFrame extends JFrame {
 		txtSpieler_angreifer.setBackground(Color.LIGHT_GRAY);
 		txtSpieler_angreifer.setEditable(false);
 		txtSpieler_angreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(txtSpieler_angreifer, "cell 1 2 3 1,growx");
+		panel_field_attacker.add(txtSpieler_angreifer, "cell 1 2 4 1,growx");
 		txtSpieler_angreifer.setColumns(10);
+		
+		JLabel lblFeld_1 = new JLabel("Feld:");
+		lblFeld_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_attacker.add(lblFeld_1, "cell 0 3,alignx trailing");
+		
+		txtFieldattacker = new JTextField();
+		txtFieldattacker.setBackground(Color.LIGHT_GRAY);
+		txtFieldattacker.setEditable(false);
+		txtFieldattacker.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_attacker.add(txtFieldattacker, "cell 1 3,growx");
+		txtFieldattacker.setColumns(10);
+		
+		JLabel lblRegion = new JLabel("Region:");
+		lblRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_attacker.add(lblRegion, "cell 2 3,alignx trailing");
+		
+		txtRegion_attacker = new JTextField();
+		txtRegion_attacker.setEditable(false);
+		txtRegion_attacker.setBackground(Color.LIGHT_GRAY);
+		txtRegion_attacker.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_attacker.add(txtRegion_attacker, "cell 3 3 2 1,growx");
+		txtRegion_attacker.setColumns(10);
 		
 		JLabel lblBefehl_1 = new JLabel("Befehl:");
 		lblBefehl_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(lblBefehl_1, "cell 0 3,alignx trailing");
+		panel_field_attacker.add(lblBefehl_1, "cell 0 4,alignx trailing");
 		
 		txtBefehl_angreifer = new JTextField();
 		txtBefehl_angreifer.setBackground(Color.LIGHT_GRAY);
 		txtBefehl_angreifer.setEditable(false);
 		txtBefehl_angreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(txtBefehl_angreifer, "cell 1 3,growx");
+		panel_field_attacker.add(txtBefehl_angreifer, "cell 1 4,growx");
 		txtBefehl_angreifer.setColumns(10);
 		
 		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
 		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(lblNormaleTruppen, "cell 2 3,alignx trailing");
+		panel_field_attacker.add(lblNormaleTruppen, "cell 2 4 2 1,alignx trailing");
 		
 		txtTruppennormal_angreifer = new JTextField();
 		txtTruppennormal_angreifer.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppennormal_angreifer.setBackground(Color.LIGHT_GRAY);
 		txtTruppennormal_angreifer.setEditable(false);
 		txtTruppennormal_angreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(txtTruppennormal_angreifer, "cell 3 3,growx");
+		panel_field_attacker.add(txtTruppennormal_angreifer, "cell 4 4,growx");
 		txtTruppennormal_angreifer.setColumns(10);
 		
 		JLabel lblGebude = new JLabel("Geb\u00E4ude:");
 		lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(lblGebude, "cell 0 4,alignx trailing");
+		panel_field_attacker.add(lblGebude, "cell 0 5,alignx trailing");
 		
 		txtGebude_angreifer = new JTextField();
 		txtGebude_angreifer.setBackground(Color.LIGHT_GRAY);
 		txtGebude_angreifer.setEditable(false);
 		txtGebude_angreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(txtGebude_angreifer, "cell 1 4,growx");
+		panel_field_attacker.add(txtGebude_angreifer, "cell 1 5,growx");
 		txtGebude_angreifer.setColumns(10);
 		
 		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
 		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(lblBadassTruppen, "cell 2 4,alignx trailing");
+		panel_field_attacker.add(lblBadassTruppen, "cell 2 5 2 1,alignx trailing");
 		
 		txtTruppenbadass_angreifer = new JTextField();
 		txtTruppenbadass_angreifer.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppenbadass_angreifer.setBackground(Color.LIGHT_GRAY);
 		txtTruppenbadass_angreifer.setEditable(false);
 		txtTruppenbadass_angreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_attacker.add(txtTruppenbadass_angreifer, "cell 3 4,growx");
+		panel_field_attacker.add(txtTruppenbadass_angreifer, "cell 4 5,growx");
 		txtTruppenbadass_angreifer.setColumns(10);
 		
 		JPanel panel_neighbours_support = new JPanel();
@@ -403,11 +429,11 @@ public class FightExecutionFrame extends JFrame {
 		panel_field_defender.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_field_defender.setBackground(Color.GRAY);
 		panel_top_bar.add(panel_field_defender, "cell 1 1,grow");
-		panel_field_defender.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px,grow][][][][grow]"));
+		panel_field_defender.setLayout(new MigLayout("", "[][150px,grow][][][50px,grow]", "[][5px,grow][][][][][grow]"));
 		
 		JLabel lblFelddefender = new JLabel("Verteidiger Feld \u00DCbersicht:");
 		lblFelddefender.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_field_defender.add(lblFelddefender, "cell 0 0 4 1,alignx center");
+		panel_field_defender.add(lblFelddefender, "cell 0 0 5 1,alignx center");
 		
 		JLabel lblSpieler2 = new JLabel("Spieler:");
 		lblSpieler2.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -417,53 +443,75 @@ public class FightExecutionFrame extends JFrame {
 		txtSpieler_defender.setBackground(Color.LIGHT_GRAY);
 		txtSpieler_defender.setEditable(false);
 		txtSpieler_defender.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(txtSpieler_defender, "cell 1 2 3 1,growx");
+		panel_field_defender.add(txtSpieler_defender, "cell 1 2 4 1,growx");
 		txtSpieler_defender.setColumns(10);
+		
+		JLabel lblFeld_2 = new JLabel("Feld:");
+		lblFeld_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_defender.add(lblFeld_2, "cell 0 3,alignx trailing");
+		
+		txtFieldDefender = new JTextField();
+		txtFieldDefender.setBackground(Color.LIGHT_GRAY);
+		txtFieldDefender.setEditable(false);
+		txtFieldDefender.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_defender.add(txtFieldDefender, "cell 1 3,growx");
+		txtFieldDefender.setColumns(10);
+		
+		JLabel lblRegion_1 = new JLabel("Region:");
+		lblRegion_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_defender.add(lblRegion_1, "cell 2 3,alignx trailing");
+		
+		txtRegion_defender = new JTextField();
+		txtRegion_defender.setEditable(false);
+		txtRegion_defender.setBackground(Color.LIGHT_GRAY);
+		txtRegion_defender.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_field_defender.add(txtRegion_defender, "cell 3 3 2 1,growx");
+		txtRegion_defender.setColumns(10);
 		
 		JLabel lblBefehl = new JLabel("Befehl:");
 		lblBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(lblBefehl, "cell 0 3,alignx trailing");
+		panel_field_defender.add(lblBefehl, "cell 0 4,alignx trailing");
 		
 		txtBefehl_defender = new JTextField();
 		txtBefehl_defender.setBackground(Color.LIGHT_GRAY);
 		txtBefehl_defender.setEditable(false);
 		txtBefehl_defender.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(txtBefehl_defender, "cell 1 3,growx");
+		panel_field_defender.add(txtBefehl_defender, "cell 1 4,growx");
 		txtBefehl_defender.setColumns(10);
 		
 		JLabel lblNormaleTruppen2 = new JLabel("Normale Truppen:");
 		lblNormaleTruppen2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(lblNormaleTruppen2, "cell 2 3,alignx trailing");
+		panel_field_defender.add(lblNormaleTruppen2, "cell 2 4 2 1,alignx trailing");
 		
 		txtTruppennormal_defender = new JTextField();
 		txtTruppennormal_defender.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppennormal_defender.setBackground(Color.LIGHT_GRAY);
 		txtTruppennormal_defender.setEditable(false);
 		txtTruppennormal_defender.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(txtTruppennormal_defender, "cell 3 3,growx");
+		panel_field_defender.add(txtTruppennormal_defender, "cell 4 4,growx");
 		txtTruppennormal_defender.setColumns(10);
 		
 		JLabel lblGebude2 = new JLabel("Geb\u00E4ude:");
 		lblGebude2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(lblGebude2, "cell 0 4,alignx trailing");
+		panel_field_defender.add(lblGebude2, "cell 0 5,alignx trailing");
 		
 		txtGebude_defender = new JTextField();
 		txtGebude_defender.setBackground(Color.LIGHT_GRAY);
 		txtGebude_defender.setEditable(false);
 		txtGebude_defender.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(txtGebude_defender, "cell 1 4,growx");
+		panel_field_defender.add(txtGebude_defender, "cell 1 5,growx");
 		txtGebude_defender.setColumns(10);
 		
 		JLabel lblBadassTruppen2 = new JLabel("Badass Truppen:");
 		lblBadassTruppen2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(lblBadassTruppen2, "cell 2 4,alignx trailing");
+		panel_field_defender.add(lblBadassTruppen2, "cell 2 5 2 1,alignx trailing");
 		
 		txtTruppenbadass_defender = new JTextField();
 		txtTruppenbadass_defender.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTruppenbadass_defender.setBackground(Color.LIGHT_GRAY);
 		txtTruppenbadass_defender.setEditable(false);
 		txtTruppenbadass_defender.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_defender.add(txtTruppenbadass_defender, "cell 3 4,growx");
+		panel_field_defender.add(txtTruppenbadass_defender, "cell 4 5,growx");
 		txtTruppenbadass_defender.setColumns(10);
 		
 		JPanel panel_attacker_support = new JPanel();

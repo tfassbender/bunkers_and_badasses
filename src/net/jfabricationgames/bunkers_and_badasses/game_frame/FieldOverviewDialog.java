@@ -40,6 +40,7 @@ public class FieldOverviewDialog extends JDialog {
 	
 	private JTextField txtSpieler;
 	private JTextField txtFeld;
+	private JTextField txtRegion;
 	private JTextField txtBefehl;
 	private JTextField txtGebude;
 	private JTextField txtNormaleTruppen;
@@ -127,7 +128,7 @@ public class FieldOverviewDialog extends JDialog {
 			panel_field_description.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_field_description.setBackground(Color.GRAY);
 			panel.add(panel_field_description, "cell 2 0 2 3,grow");
-			panel_field_description.setLayout(new MigLayout("", "[grow][grow][150px,grow][10px][][50px][100px][grow]", "[][5px][][][][10px][grow]"));
+			panel_field_description.setLayout(new MigLayout("", "[grow][grow][150px,grow][10px][][50px][100px][grow]", "[][5px][][][][][10px][grow]"));
 			
 			JLabel lblFeldDetail = new JLabel("Feld Detail:");
 			lblFeldDetail.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -155,16 +156,16 @@ public class FieldOverviewDialog extends JDialog {
 			panel_field_description.add(txtSpieler, "cell 5 2 2 1,growx");
 			txtSpieler.setColumns(10);
 			
-			JLabel lblBefehl = new JLabel("Befehl:");
-			lblBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_description.add(lblBefehl, "cell 1 3,alignx trailing");
+			JLabel lblRegion = new JLabel("Region:");
+			lblRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(lblRegion, "cell 1 3,alignx trailing");
 			
-			txtBefehl = new JTextField();
-			txtBefehl.setEditable(false);
-			txtBefehl.setBackground(Color.LIGHT_GRAY);
-			txtBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_description.add(txtBefehl, "cell 2 3,growx");
-			txtBefehl.setColumns(10);
+			txtRegion = new JTextField();
+			txtRegion.setEditable(false);
+			txtRegion.setBackground(Color.LIGHT_GRAY);
+			txtRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(txtRegion, "cell 2 3,growx");
+			txtRegion.setColumns(10);
 			
 			JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
 			lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -177,16 +178,16 @@ public class FieldOverviewDialog extends JDialog {
 			panel_field_description.add(txtNormaleTruppen, "cell 6 3,growx");
 			txtNormaleTruppen.setColumns(10);
 			
-			JLabel lblGebude = new JLabel("Geb\u00E4ude:");
-			lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_description.add(lblGebude, "cell 1 4,alignx trailing");
+			JLabel lblBefehl = new JLabel("Befehl:");
+			lblBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(lblBefehl, "cell 1 4,alignx trailing");
 			
-			txtGebude = new JTextField();
-			txtGebude.setEditable(false);
-			txtGebude.setBackground(Color.LIGHT_GRAY);
-			txtGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_description.add(txtGebude, "cell 2 4,growx");
-			txtGebude.setColumns(10);
+			txtBefehl = new JTextField();
+			txtBefehl.setEditable(false);
+			txtBefehl.setBackground(Color.LIGHT_GRAY);
+			txtBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(txtBefehl, "cell 2 4,growx");
+			txtBefehl.setColumns(10);
 			
 			JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
 			lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -199,9 +200,20 @@ public class FieldOverviewDialog extends JDialog {
 			panel_field_description.add(txtBadassTruppen, "cell 6 4,growx");
 			txtBadassTruppen.setColumns(10);
 			
+			JLabel lblGebude = new JLabel("Geb\u00E4ude:");
+			lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(lblGebude, "cell 1 5,alignx trailing");
+			
+			txtGebude = new JTextField();
+			txtGebude.setEditable(false);
+			txtGebude.setBackground(Color.LIGHT_GRAY);
+			txtGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(txtGebude, "cell 2 5,growx");
+			txtGebude.setColumns(10);
+			
 			JPanel panel_field_1 = new JPanel();
 			panel_field_1.setBackground(Color.GRAY);
-			panel_field_description.add(panel_field_1, "cell 0 6 8 1,grow");
+			panel_field_description.add(panel_field_1, "cell 0 7 8 1,grow");
 			panel_field_1.setLayout(new MigLayout("", "[][50px][5px][grow]", "[][][][10px][][grow]"));
 			
 			JLabel lblGrenzenZuKontrollierten = new JLabel("Grenzen zu kontrollierten Gebieten:");

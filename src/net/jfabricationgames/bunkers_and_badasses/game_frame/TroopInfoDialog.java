@@ -46,6 +46,8 @@ public class TroopInfoDialog extends JDialog {
 	private JTextField txtGesammtKostenMunition_1;
 	private JTextField txtSpieler;
 	private JTextField txtBefehl;
+	private JTextField txtField;
+	private JTextField txtRegion;
 	
 	public TroopInfoDialog() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -284,37 +286,64 @@ public class TroopInfoDialog extends JDialog {
 			panel_field_info.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_field_info.setBackground(Color.GRAY);
 			panel.add(panel_field_info, "cell 3 1,grow");
-			panel_field_info.setLayout(new MigLayout("", "[grow][][grow][50px][][grow]", "[][5px,grow][][][5px][][][][][grow]"));
+			panel_field_info.setLayout(new MigLayout("", "[grow][::100px,grow][][50px][][::100px,grow][grow]", "[][5px,grow][grow][][5px][][][][][grow]"));
 			
 			JLabel lblFeldInfo = new JLabel("Feld Info:");
 			lblFeldInfo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			panel_field_info.add(lblFeldInfo, "cell 0 0 6 1,alignx center");
+			panel_field_info.add(lblFeldInfo, "cell 1 0 5 1,alignx center");
+			
+			JPanel panel_1 = new JPanel();
+			panel_1.setBackground(Color.GRAY);
+			panel_field_info.add(panel_1, "cell 1 2 5 1,grow");
+			panel_1.setLayout(new MigLayout("", "[][grow][][grow]", "[][]"));
+			
+			JLabel lblFeld = new JLabel("Feld:");
+			lblFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_1.add(lblFeld, "cell 0 0,alignx trailing");
+			
+			txtField = new JTextField();
+			txtField.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtField.setBackground(Color.LIGHT_GRAY);
+			txtField.setEditable(false);
+			panel_1.add(txtField, "cell 1 0,growx");
+			txtField.setColumns(10);
+			
+			JLabel lblRegion = new JLabel("Region:");
+			lblRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_1.add(lblRegion, "cell 2 0,alignx trailing");
+			
+			txtRegion = new JTextField();
+			txtRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtRegion.setBackground(Color.LIGHT_GRAY);
+			txtRegion.setEditable(false);
+			panel_1.add(txtRegion, "cell 3 0,growx");
+			txtRegion.setColumns(10);
 			
 			JLabel lblSpieler = new JLabel("Spieler:");
+			panel_1.add(lblSpieler, "cell 0 1");
 			lblSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_info.add(lblSpieler, "cell 1 2,alignx trailing");
 			
 			txtSpieler = new JTextField();
+			panel_1.add(txtSpieler, "cell 1 1,growx");
 			txtSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			txtSpieler.setEditable(false);
 			txtSpieler.setBackground(Color.LIGHT_GRAY);
-			panel_field_info.add(txtSpieler, "cell 2 2 3 1,growx");
 			txtSpieler.setColumns(10);
 			
 			JLabel lblBefehl = new JLabel("Befehl:");
+			panel_1.add(lblBefehl, "cell 2 1");
 			lblBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_info.add(lblBefehl, "cell 1 3,alignx trailing");
 			
 			txtBefehl = new JTextField();
+			panel_1.add(txtBefehl, "cell 3 1,growx");
 			txtBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			txtBefehl.setEditable(false);
 			txtBefehl.setBackground(Color.LIGHT_GRAY);
-			panel_field_info.add(txtBefehl, "cell 2 3 3 1,growx");
 			txtBefehl.setColumns(10);
 			
 			JLabel lblNormaleTruppen_1 = new JLabel("Normale Truppen:");
 			lblNormaleTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_info.add(lblNormaleTruppen_1, "cell 1 5 2 1,alignx trailing");
+			panel_field_info.add(lblNormaleTruppen_1, "cell 2 5,alignx trailing");
 			
 			txtNormaleTruppen_1 = new JTextField();
 			txtNormaleTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -323,20 +352,12 @@ public class TroopInfoDialog extends JDialog {
 			panel_field_info.add(txtNormaleTruppen_1, "cell 3 5,growx");
 			txtNormaleTruppen_1.setColumns(10);
 			
-			JLabel lblBadassTruppen_1 = new JLabel("Badass Truppen:");
-			lblBadassTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_info.add(lblBadassTruppen_1, "cell 1 6 2 1,alignx trailing");
-			
 			txtBadassTruppen_1 = new JTextField();
 			txtBadassTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			txtBadassTruppen_1.setEditable(false);
 			txtBadassTruppen_1.setBackground(Color.LIGHT_GRAY);
 			panel_field_info.add(txtBadassTruppen_1, "cell 3 6,growx");
 			txtBadassTruppen_1.setColumns(10);
-			
-			JLabel lblGesammtKosten_1 = new JLabel("Gesammt Kosten:");
-			lblGesammtKosten_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_info.add(lblGesammtKosten_1, "cell 1 7 2 1,alignx trailing");
 			
 			txtGesammtKostenCredits_1 = new JTextField();
 			txtGesammtKostenCredits_1.setToolTipText("<html>\r\nDie Kosten fallen nur an wenn das Gebiet <br>\r\neinen Befehle erh\u00E4llt. Ohne Befehl sind die <br>\r\nKosten f\u00FCr die Truppen auf dem Gebiet 0\r\n</html>");
