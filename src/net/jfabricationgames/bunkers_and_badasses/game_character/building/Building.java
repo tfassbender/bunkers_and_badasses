@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character;
 
+import java.awt.image.BufferedImage;
+
 public abstract class Building {
 	
 	protected int recruitableTroops;
@@ -12,6 +14,8 @@ public abstract class Building {
 	
 	protected boolean attackable;
 	protected boolean badassTroopsRecruitable;
+	
+	protected BufferedImage image;
 	
 	protected String name;
 	
