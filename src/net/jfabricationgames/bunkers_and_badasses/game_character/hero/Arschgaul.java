@@ -1,0 +1,19 @@
+package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
+
+public class Arschgaul extends Hero {
+	
+	static {
+		staticImage = imageLoader.loadImage("arschgaul_2.png");
+	}
+	
+	public Arschgaul() {
+		attack = 0;
+		defence = 0;
+	}
+	
+	@Override
+	public void executeTurn() {
+		//TODO
+		//Wunderschöne Anführerin: Wähle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf
+	}
+}
