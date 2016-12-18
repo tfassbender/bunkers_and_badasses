@@ -37,6 +37,7 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.bunkers_and_badasses.game.PointManager.UserPoints;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisTavern;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLogMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
