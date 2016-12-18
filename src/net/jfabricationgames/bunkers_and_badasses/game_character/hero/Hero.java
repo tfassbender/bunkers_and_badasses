@@ -1,4 +1,4 @@
-package net.jfabricationgames.bunkers_and_badasses.game_character;
+package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 

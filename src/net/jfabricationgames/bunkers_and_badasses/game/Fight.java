@@ -3,7 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
-import net.jfabricationgames.bunkers_and_badasses.game_character.Hero;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Fight {

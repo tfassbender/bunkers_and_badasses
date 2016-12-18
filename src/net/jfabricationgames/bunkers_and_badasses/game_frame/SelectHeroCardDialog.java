@@ -20,7 +20,7 @@ import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
-import net.jfabricationgames.bunkers_and_badasses.game_character.Hero;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.ListSelectionModel;
 import java.awt.Toolkit;

@@ -33,7 +33,9 @@ public class Board implements Serializable {
 	    Graphics g = board.getGraphics();
 	    g.drawImage(baseImage, 0, 0, null);
 	    //draw the images for troops and buildings
-	    
+	    for (Field field : fields) {
+	    	
+	    }
 	    g.dispose();
 		return board;
 	}

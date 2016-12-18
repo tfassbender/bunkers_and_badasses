@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jfabricationgames.bunkers_and_badasses.game_character.Building;
-import net.jfabricationgames.bunkers_and_badasses.game_character.Troop;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 

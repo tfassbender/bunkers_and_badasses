@@ -30,7 +30,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
-import net.jfabricationgames.bunkers_and_badasses.game_character.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
