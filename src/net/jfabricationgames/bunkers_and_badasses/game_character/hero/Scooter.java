@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 public class Scooter extends Hero {
 	
+	private static final long serialVersionUID = -6292099839196271278L;
+
 	static {
 		staticImage = imageLoader.loadImage("scooter_3.png");
 	}

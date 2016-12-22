@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 public class Zero extends Hero {
 	
+	private static final long serialVersionUID = 8601494966049836609L;
+
 	static {
 		staticImage = imageLoader.loadImage("zero_1.png");
 	}

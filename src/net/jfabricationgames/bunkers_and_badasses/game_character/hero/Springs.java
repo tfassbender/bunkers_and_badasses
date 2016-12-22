@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 public class Springs extends Hero {
 	
+	private static final long serialVersionUID = -5937437808209595383L;
+
 	static {
 		staticImage = imageLoader.loadImage("springs_1.png");
 	}

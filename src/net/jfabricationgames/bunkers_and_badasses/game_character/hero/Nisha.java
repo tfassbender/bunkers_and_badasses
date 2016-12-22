@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class Nisha extends Hero {
 	
+	private static final long serialVersionUID = -267769346062408045L;
+
 	static {
 		staticImage = imageLoader.loadImage("nisha_1.png");
 	}

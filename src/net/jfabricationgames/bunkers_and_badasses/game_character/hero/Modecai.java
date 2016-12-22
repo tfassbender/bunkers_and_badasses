@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class Modecai extends Hero {
 	
+	private static final long serialVersionUID = -3664578792584135642L;
+
 	static {
 		staticImage = imageLoader.loadImage("modecai_1.png");
 	}

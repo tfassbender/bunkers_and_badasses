@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class Brick extends Hero {
 	
+	private static final long serialVersionUID = -5807273048228466283L;
+
 	static {
 		staticImage = imageLoader.loadImage("brick_1.png");
 	}

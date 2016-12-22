@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 public class Ellie extends Hero {
 	
+	private static final long serialVersionUID = 8110478891996236498L;
+
 	static {
 		staticImage = imageLoader.loadImage("ellie_1.png");
 	}

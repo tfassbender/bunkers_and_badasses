@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class Axton extends Hero {
 	
+	private static final long serialVersionUID = 6188313370223500688L;
+
 	static {
 		staticImage = imageLoader.loadImage("axton_1.png");
 	}

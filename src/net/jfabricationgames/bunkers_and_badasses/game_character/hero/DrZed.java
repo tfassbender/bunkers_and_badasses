@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class DrZed extends Hero {
 	
+	private static final long serialVersionUID = 5153305812609894519L;
+
 	static {
 		staticImage = imageLoader.loadImage("dr_zed_1.png");
 	}

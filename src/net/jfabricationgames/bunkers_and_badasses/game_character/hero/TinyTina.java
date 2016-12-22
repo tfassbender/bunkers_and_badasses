@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 public class TinyTina extends Hero {
 	
+	private static final long serialVersionUID = -7358701771719372456L;
+
 	static {
 		staticImage = imageLoader.loadImage("tina_1.png");
 	}

@@ -30,9 +30,9 @@ public class Field implements Serializable {
 	
 	private Color fieldColor;
 	
-	private static BufferedImage normalTroopImage;
-	private static BufferedImage badassTroopImage;
-	private static BufferedImage neutralTroopImage;
+	private static transient BufferedImage normalTroopImage;
+	private static transient BufferedImage badassTroopImage;
+	private static transient BufferedImage neutralTroopImage;
 	
 	static {
 		//load the troop images

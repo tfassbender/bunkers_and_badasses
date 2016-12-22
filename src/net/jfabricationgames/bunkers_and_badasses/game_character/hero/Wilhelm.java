@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class Wilhelm extends Hero {
 	
+	private static final long serialVersionUID = -3924768912224518016L;
+
 	static {
 		staticImage = imageLoader.loadImage("wilhelm_1.png");
 	}

@@ -1,13 +1,16 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
-public abstract class Hero {
+public abstract class Hero implements Serializable {
 	
+	private static final long serialVersionUID = 4244972938699657617L;
+
 	protected HeroEffectTime time;
 	
 	protected int attack;
@@ -16,7 +19,7 @@ public abstract class Hero {
 	protected int usedAttack;
 	protected int usedDefence;
 	
-	public BufferedImage image;
+	public transient BufferedImage image;
 	
 	protected static BufferedImage staticImage;//load the image in a static content in the subclasses
 	protected static ImageLoader imageLoader;

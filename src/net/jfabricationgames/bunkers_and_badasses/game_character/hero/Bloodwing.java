@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class Bloodwing extends Hero {
 	
+	private static final long serialVersionUID = 5514081444025611690L;
+
 	static {
 		staticImage = imageLoader.loadImage("bloodwing_1.png");
 	}

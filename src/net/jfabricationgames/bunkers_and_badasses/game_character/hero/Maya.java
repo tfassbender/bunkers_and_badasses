@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 public class Maya extends Hero {
 	
+	private static final long serialVersionUID = -8029606369601412517L;
+
 	static {
 		staticImage = imageLoader.loadImage("maya_1.png");
 	}

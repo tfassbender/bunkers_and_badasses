@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 public class Moxxi extends Hero {
 	
+	private static final long serialVersionUID = -4123023043047504302L;
+
 	static {
 		staticImage = imageLoader.loadImage("moxxi_1.png");
 	}

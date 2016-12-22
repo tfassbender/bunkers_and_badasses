@@ -4,6 +4,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 
 public class Roland extends Hero {
 	
+	private static final long serialVersionUID = -1123087849222660325L;
+
 	static {
 		staticImage = imageLoader.loadImage("roland_1.png");
 	}
