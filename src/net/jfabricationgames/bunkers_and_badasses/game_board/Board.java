@@ -2,6 +2,9 @@ package net.jfabricationgames.bunkers_and_badasses.game_board;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,6 +22,17 @@ public class Board implements Serializable {
 	private List<Region> regions;
 	private transient BufferedImage baseImage;
 	private String name;
+	
+	private Robot robot;
+	
+	public Board() {
+		try {
+			robot = new Robot();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Create the field image with the basic image, the troops and buildings.
@@ -38,6 +52,19 @@ public class Board implements Serializable {
 	    }
 	    g.dispose();
 		return board;
+	}
+	
+	/**
+	 * Get the field at the current mouse position by it's color.
+	 * Only works when the mouse is over a field of the board.
+	 * 
+	 * @return
+	 * 		The field the user points to.
+	 */
+	public Field getFieldAtMousePosition() {
+		Point point = MouseInfo.getPointerInfo().getLocation();
+		Color color = robot.getPixelColor((int) point.getX(), (int) point.getY());
+		return getFieldByColor(color);
 	}
 	
 	/**
@@ -62,7 +89,7 @@ public class Board implements Serializable {
 			rc = field.getFieldColor().getRed();
 			gc = field.getFieldColor().getGreen();
 			bc = field.getFieldColor().getBlue();
-			if (rc >= r - deviation && rc <= r + deviation && gc >= g - deviation && gc <= g + deviation && bc >= b - deviation && bc <= b + deviation) {
+			if (Math.abs(rc - r) < deviation && Math.abs(gc - g) < deviation && Math.abs(bc - b) < deviation) {
 				return field;
 			}
 		}
@@ -80,6 +107,7 @@ public class Board implements Serializable {
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.defaultWriteObject();//serialize the object but the transient fields (the baseImage)
+		//TODO don't write the images when loaded from or stored to the database
 		out.writeInt(1);//write the number of images down (needed also if there is only one)
 		ImageIO.write(baseImage, "png", out);//write the image at the end of the file
 	}
@@ -94,6 +122,7 @@ public class Board implements Serializable {
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();//load all the fields that could be serialized (not the transient fields like baseImage)
+		//TODO don't write the images when loaded from or stored to the database
 		in.readInt();//read the number of stored images (its only one so no need to store the value)
 		baseImage = ImageIO.read(in);//read the image file
 	}

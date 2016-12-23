@@ -1,0 +1,11 @@
+Bunkers and Badasses - Tasks
+
+
+- work on the board serialization (don't store the image if not necessary)
+- implement the board drawing function
+- load the game board from the file, send it to the player and deserialize it
+- serialize the game and store it in the database (without images)
+- load the game from the database
+- implement hero and building functions
+- implement player skills (front- and back-end)
+- frame functions
