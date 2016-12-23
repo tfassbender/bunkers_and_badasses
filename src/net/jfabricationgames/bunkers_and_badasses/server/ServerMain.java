@@ -29,9 +29,9 @@ public class ServerMain {
 	 */
 	public ServerMain() {
 		//Tell the server interpreter how to reach the login data
-		JFGDatabaseLoginServerInterpreter.CHECK_NAME_SQL = "SELECT username FROM bunkers_and_badasses.login WHERE username = '%user';";
-		JFGDatabaseLoginServerInterpreter.LOGIN_SQL = "SELECT passwd FROM bunkers_and_badasses.login WHERE username = '%user';";
-		JFGDatabaseLoginServerInterpreter.SIGN_UP_SQL = "INSERT INTO bunkers_and_badasses.login VALUES (0, '%user', '%pass');";
+		JFGDatabaseLoginServerInterpreter.CHECK_NAME_SQL = "SELECT username FROM bunkers_and_badasses." + BunkersAndBadassesServer.loginTable + " WHERE username = '%user';";
+		JFGDatabaseLoginServerInterpreter.LOGIN_SQL = "SELECT passwd FROM bunkers_and_badasses." + BunkersAndBadassesServer.loginTable + " WHERE username = '%user';";
+		JFGDatabaseLoginServerInterpreter.SIGN_UP_SQL = "INSERT INTO bunkers_and_badasses." + BunkersAndBadassesServer.loginTable + " VALUES (0, '%user', '%pass');";
 		//create a new interpreter
 		server = new BunkersAndBadassesServer(SERVER_PORT);
 		JFGDatabaseLoginServerInterpreter loginInterpreter = new JFGDatabaseLoginServerInterpreter(server);

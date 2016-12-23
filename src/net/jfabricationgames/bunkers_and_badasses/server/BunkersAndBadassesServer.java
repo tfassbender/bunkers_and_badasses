@@ -20,6 +20,8 @@ import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 public class BunkersAndBadassesServer extends JFGLoginServer {
 	
+	public static final String loginTable = "users";
+	
 	private Map<User, JFGConnection> userMap;
 	private Map<JFGConnection, User> connectionMap;
 	
@@ -101,7 +103,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		Statement statement = null;
 		boolean result = false;
 		String password = getPasswordHash(message.getPassword());
-		String sql = "UPDATE bunkers_and_badasses.login SET passwd = '"  + password + "' WHERE username = '" + message.getLastUsername() + "'";
+		String sql = "UPDATE bunkers_and_badasses." + loginTable + " SET passwd = '"  + password + "' WHERE username = '" + message.getLastUsername() + "'";
 		try {
 			statement = connection.createStatement();
 			statement.execute(sql);
@@ -133,7 +135,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
 		Statement statement = null;
 		boolean result = false;
-		String sql = "UPDATE bunkers_and_badasses.login SET username = '"  + message.getUsername() + "' WHERE username = '" + message.getLastUsername() + "'";
+		String sql = "UPDATE bunkers_and_badasses." + loginTable + " SET username = '"  + message.getUsername() + "' WHERE username = '" + message.getLastUsername() + "'";
 		try {
 			statement = connection.createStatement();
 			statement.execute(sql);
@@ -170,8 +172,8 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		Statement statement = null;
 		boolean result = false;
 		String password = getPasswordHash(message.getPassword());
-		String sql = "UPDATE bunkers_and_badasses.login SET passwd = '"  + password + "' WHERE username = '" + message.getLastUsername() + "'";
-		String sql2 = "UPDATE bunkers_and_badasses.login SET username = '"  + message.getUsername() + "' WHERE username = '" + message.getLastUsername() + "'";
+		String sql = "UPDATE bunkers_and_badasses." + loginTable + " SET passwd = '"  + password + "' WHERE username = '" + message.getLastUsername() + "'";
+		String sql2 = "UPDATE bunkers_and_badasses." + loginTable + " SET username = '"  + message.getUsername() + "' WHERE username = '" + message.getLastUsername() + "'";
 		try {
 			statement = connection.createStatement();
 			statement.execute(sql);
@@ -246,7 +248,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		ResultSet result = null;
 		try {
 			statement = connection.createStatement();
-			result = statement.executeQuery("SELECT username FROM bunkers_and_badasses.login");
+			result = statement.executeQuery("SELECT username FROM bunkers_and_badasses." + loginTable + "");
 			while (result.next()) {
 				allUsers.add(new User(result.getString(1)));
 			}
