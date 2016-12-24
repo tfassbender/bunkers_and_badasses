@@ -12,7 +12,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 
 public class Board implements Serializable {
 	
@@ -23,7 +25,13 @@ public class Board implements Serializable {
 	private transient BufferedImage baseImage;
 	private String name;
 	
+	//Decide whether the image shall be wrapped as ImageIcon and serialized
+	private boolean storeImage;
+	private ImageIcon imageWrapper;
+	
 	private Robot robot;
+	
+	private Game game;
 	
 	public Board() {
 		try {
@@ -32,6 +40,7 @@ public class Board implements Serializable {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		storeImage = true;
 	}
 	
 	/**
@@ -48,7 +57,7 @@ public class Board implements Serializable {
 	    g.drawImage(baseImage, 0, 0, null);
 	    //draw the images for troops and buildings
 	    for (Field field : fields) {
-	    	
+	    	field.drawField(g);
 	    }
 	    g.dispose();
 		return board;
@@ -106,10 +115,16 @@ public class Board implements Serializable {
 	 * 		The ObjectOutputStream that is used to write down the file.
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException {
+		if (storeImage) {
+			imageWrapper = new ImageIcon(baseImage);
+		}
+		else {
+			imageWrapper = null;
+		}
 		out.defaultWriteObject();//serialize the object but the transient fields (the baseImage)
 		//TODO don't write the images when loaded from or stored to the database
-		out.writeInt(1);//write the number of images down (needed also if there is only one)
-		ImageIO.write(baseImage, "png", out);//write the image at the end of the file
+		//out.writeInt(1);//write the number of images down (needed also if there is only one)
+		//ImageIO.write(baseImage, "png", out);//write the image at the end of the file
 	}
 	/**
 	 * Read the object from a serialized file. The not-serializabel parts (the buffered image) is stored separately at the end of the file.
@@ -122,9 +137,29 @@ public class Board implements Serializable {
 	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();//load all the fields that could be serialized (not the transient fields like baseImage)
-		//TODO don't write the images when loaded from or stored to the database
-		in.readInt();//read the number of stored images (its only one so no need to store the value)
-		baseImage = ImageIO.read(in);//read the image file
+		if (imageWrapper != null) {
+			baseImage = loadBaseImage(imageWrapper);
+		}
+		imageWrapper = null;
+		//in.readInt();//read the number of stored images (its only one so no need to store the value)
+		//baseImage = ImageIO.read(in);//read the image file
+	}
+	
+	/**
+	 * Create a BufferedImage from an ImageIcon by drawing it.
+	 *  
+	 * @param imageIcon
+	 * 		The ImageIcon.
+	 * 
+	 * @return
+	 * 		The BufferedImage.
+	 */
+	private BufferedImage loadBaseImage(ImageIcon imageIcon) {
+		BufferedImage img = new BufferedImage(imageIcon.getIconWidth(), imageIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = img.createGraphics();
+		imageIcon.paintIcon(null, g, 0, 0);
+		g.dispose();
+		return img;
 	}
 	
 	public List<Field> getFields() {
@@ -141,6 +176,13 @@ public class Board implements Serializable {
 		this.baseImage = baseImage;
 	}
 	
+	public Game getGame() {
+		return game;
+	}
+	public void setGame(Game game) {
+		this.game = game;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -153,5 +195,12 @@ public class Board implements Serializable {
 	}
 	public void setRegions(List<Region> regions) {
 		this.regions = regions;
+	}
+	
+	public boolean isStoreImage() {
+		return storeImage;
+	}
+	public void setStoreImage(boolean storeImage) {
+		this.storeImage = storeImage;
 	}
 }

@@ -62,4 +62,8 @@ public abstract class Building {
 	public void extend() {
 		
 	}
+	
+	public BufferedImage getImage() {
+		return image;
+	}
 }
