@@ -1,9 +1,6 @@
 Bunkers and Badasses - Tasks
 
 
-- implement the board drawing function
-- store/load the board to/from the database
-- load the game board from the file, send it to the player and deserialize it
 - serialize the game and store it in the database (without images)
 - load the game from the database
 - implement hero and building functions

@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
+import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
@@ -24,6 +28,8 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	
 	private Map<User, JFGConnection> userMap;
 	private Map<JFGConnection, User> connectionMap;
+	
+	private Map<Integer, BoardKeeper> loadedMaps;
 	
 	private List<User> allUsers;
 	
@@ -278,7 +284,39 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		}
 	}
 	
+	/**
+	 * Load a map and send it back to the client.
+	 * If the map is already loaded use the loaded one. Otherwise load the map and store it for the next player.
+	 * The maps are stored until all players that play in the game have sent the request or up to 30 seconds.
+	 * 
+	 * @param id
+	 * 		The map id in the database.
+	 * 
+	 * @param players
+	 * 		The number of players playing in the game the map is used for.
+	 * 
+	 * @param connection
+	 * 		The client connection that send the request.
+	 */
+	public void loadMap(int id, int players, JFGConnection connection) {
+		BoardKeeper keeper = loadedMaps.get(id);
+		synchronized (this) {//wait if the map is currently loaded
+			if (keeper == null) {
+				BoardLoader loader = new BoardLoader();
+				Board board = loader.loadBoard(id);//get the path from the database and load the file
+				keeper = new BoardKeeper(board, this, id, players);
+				loadedMaps.put(id, keeper);//store the loaded map for the next players
+			}			
+		}
+		BoardTransfereMessage transfere = new BoardTransfereMessage(keeper.getBoard());
+		connection.sendMessage(transfere);
+	}
+	
 	public List<User> getUsers() {
 		return allUsers;
+	}
+	
+	public Map<Integer, BoardKeeper> getLoadedMaps() {
+		return loadedMaps;
 	}
 }

@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
@@ -36,6 +37,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	@Override
 	public void interpreteServerMessage(JFGServerMessage message, JFGConnection connection) {
+		//login messages
 		if (message instanceof JFGDatabaseLoginMessage) {
 			interpreteDatabaseLoginMessage((JFGDatabaseLoginMessage) message, connection);
 		}
@@ -53,6 +55,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		}
 		else if (message instanceof ServerPingMessage) {
 			//TODO react on ping (user still connected)
+		}
+		//board loading message
+		else if (message instanceof BoardRequestMessage) {
+			interpreteBoardRequestMessage((BoardRequestMessage) message, connection);
 		}
 	}
 	
@@ -167,5 +173,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpreteUserLogoutMessage(UserLogoutMessage message, JFGConnection connection) {
 		((BunkersAndBadassesServer) connection.getServer()).logout(connection);
+	}
+	
+	private void interpreteBoardRequestMessage(BoardRequestMessage message, JFGConnection connection) {
+		
 	}
 }
