@@ -17,6 +17,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -467,6 +468,48 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		boolean statisticsSuccessful = false;
 		//TODO create the game statistics and store them in the database
 		return statisticsSuccessful;
+	}
+	
+	/**
+	 * Send all game overview objects that can be found in the database to the client that is identified by his connection.
+	 * All Overviews are sent to the client. The selection of the games in which the player took part is implemented on the client side.
+	 * 
+	 * @param connection
+	 * 		The connection that sent the request for the game overviews.
+	 */
+	public void sendGameOverviews(GameOverviewRequestMessage message, JFGConnection connection) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		List<GameOverview> gameOverviews = new ArrayList<GameOverview>();
+		ResultSet result = null;
+		String query = "SELECT id, game_overview FROM bunkers_and_badasses.games WHERE active = true";
+		GameOverview overview;
+		int id;
+		try (Statement statement = con.createStatement()) {
+			//get the overviews from the database and store them in a list
+			result = statement.executeQuery(query);
+			while (result.next()) {
+				id = result.getInt(1);
+				overview = result.getObject(2, GameOverview.class);
+				overview.setId(id);//add the id to the overview to identify the game save
+				gameOverviews.add(overview);
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+		}
+		//add the overviews to the message and send it back to the client 
+		message.setGameOverviews(gameOverviews);
+		connection.sendMessage(message);
 	}
 	
 	public List<User> getUsers() {
