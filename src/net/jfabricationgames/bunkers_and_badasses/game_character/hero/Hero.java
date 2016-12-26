@@ -1,6 +1,9 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
@@ -54,5 +57,24 @@ public abstract class Hero implements Serializable {
 	 */
 	public void executeTurn() {
 		
+	}
+	
+	/**
+	 * Serialize the object without the transient parts (the images that are not stored in the database)
+	 * 
+	 * @param out
+	 * 		The ObjectOutputStream that is used to write down the file.
+	 */
+	protected void writeObject(ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+	}
+	/**
+	 * Read the object without the transient parts (the images that are not stored in the database)
+	 * 
+	 * @param in
+	 * 		The ObjectInputStream that is used to read the file.
+	 */
+	protected void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		in.defaultReadObject();
 	}
 }

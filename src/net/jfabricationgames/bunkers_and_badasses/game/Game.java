@@ -12,7 +12,10 @@ public class Game {
 	private PlayerOrder order;
 	private List<User> players;
 	private UserColorManager colorManager;
+	private GameTurnManager turnManager;
 	private Board board;
+	
+	private int id;//the game id in the database
 	
 	public List<UserResource> getResources() {
 		return resources;
@@ -49,10 +52,24 @@ public class Game {
 		this.colorManager = colorManager;
 	}
 	
+	public GameTurnManager getTurnManager() {
+		return turnManager;
+	}
+	public void setTurnManager(GameTurnManager turnManager) {
+		this.turnManager = turnManager;
+	}
+	
 	public Board getBoard() {
 		return board;
 	}
 	public void setBoard(Board board) {
 		this.board = board;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 }

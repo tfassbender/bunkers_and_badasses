@@ -1,8 +1,11 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Turn {
+public class Turn implements Serializable {
+	
+	private static final long serialVersionUID = 2331474745357608431L;
 	
 	private List<Move> moves;
 	

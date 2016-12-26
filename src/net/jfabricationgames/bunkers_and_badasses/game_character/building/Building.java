@@ -1,6 +1,11 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import javax.swing.ImageIcon;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
@@ -61,6 +66,25 @@ public abstract class Building {
 	 */
 	public void extend() {
 		
+	}
+	
+	/**
+	 * Serialize the object without the transient parts (the images that are not stored in the database)
+	 * 
+	 * @param out
+	 * 		The ObjectOutputStream that is used to write down the file.
+	 */
+	protected void writeObject(ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+	}
+	/**
+	 * Read the object without the transient parts (the images that are not stored in the database)
+	 * 
+	 * @param in
+	 * 		The ObjectInputStream that is used to read the file.
+	 */
+	protected void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		in.defaultReadObject();
 	}
 	
 	public BufferedImage getImage() {

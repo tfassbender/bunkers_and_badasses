@@ -1,12 +1,15 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class UserColorManager {
+public class UserColorManager implements Serializable {
+	
+	private static final long serialVersionUID = -7691778554986063225L;
 	
 	public static final int COLOR_ALPHA = 255;//the alpha value for all user colors
 	

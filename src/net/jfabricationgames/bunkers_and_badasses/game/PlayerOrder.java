@@ -1,10 +1,13 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class PlayerOrder {
+public class PlayerOrder implements Serializable {
+	
+	private static final long serialVersionUID = 2676622781904752270L;
 	
 	private Map<Integer, User> order;
 	private int move;

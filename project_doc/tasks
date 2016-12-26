@@ -1,8 +1,10 @@
 Bunkers and Badasses - Tasks
 
 
-- serialize the game and store it in the database (without images)
 - load the game from the database
+- implement the GameStore methods
+- create the statistics of a game and store them in the database when the game ends
 - implement hero and building functions
+- implement GameTurnManager
 - implement player skills (front- and back-end)
 - frame functions
