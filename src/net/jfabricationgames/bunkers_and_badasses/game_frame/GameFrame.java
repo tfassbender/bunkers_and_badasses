@@ -4,9 +4,11 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -35,9 +37,11 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.PointManager.UserPoints;
+import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
+import net.jfabricationgames.bunkers_and_badasses.game.UserColorManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
-import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisTavern;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLogMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -87,15 +91,15 @@ public class GameFrame extends JFrame {
 	private JScrollPane scrollPane_board;
 	
 	public static void main(String[] args) {
-		new GameFrame(null).setVisible(true);
+		new GameFrame(null, null).setVisible(true);
 	}
 	
-	public GameFrame(JFGClient client) {
+	public GameFrame(JFGClient client, Game game) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1250, 750);
-		setMinimumSize(new Dimension(1250, 700));
+		setMinimumSize(new Dimension(1250, 750));
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -398,7 +402,7 @@ public class GameFrame extends JFrame {
 		JPanel panel_low_bar = new JPanel();
 		panel_low_bar.setBackground(Color.GRAY);
 		panel.add(panel_low_bar, "cell 0 1 2 1,grow");
-		panel_low_bar.setLayout(new MigLayout("", "[250px,grow][250px,grow][:200px:250px,grow][:200px:200px,grow][:200px:250px,grow][:200px:200px,grow]", "[100px,grow]"));
+		panel_low_bar.setLayout(new MigLayout("", "[250px,grow][250px,grow][:200px:200px,grow][:200px:200px,grow][:200px:200px,grow][:200px:200px,grow][::200px,grow 99]", "[100px,grow]"));
 		
 		JPanel panel_turn = new JPanel();
 		panel_turn.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -640,16 +644,91 @@ public class GameFrame extends JFrame {
 		panel_points.add(txtYourPosition, "cell 2 4,growx");
 		txtYourPosition.setColumns(10);
 		
+		JPanel panel_player_colors = new JPanel();
+		panel_player_colors.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_player_colors.setBackground(Color.GRAY);
+		panel_low_bar.add(panel_player_colors, "cell 5 0,grow");
+		panel_player_colors.setLayout(new MigLayout("", "[grow]", "[][grow]"));
+		
+		JLabel lblFarben = new JLabel("Farben:");
+		lblFarben.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_player_colors.add(lblFarben, "cell 0 0,alignx center");
+		
+		JScrollPane scrollPane_colors = new JScrollPane();
+		panel_player_colors.add(scrollPane_colors, "cell 0 1,grow");
+		
+		JPanel panel_colors = new JPanel();
+		panel_colors.setBackground(Color.GRAY);
+		scrollPane_colors.setViewportView(panel_colors);
+		
+		//TODO delete comment after tests; while testing game will be null
+		//addPlayerColors(panel_colors, game.getPlayers(), game.getColorManager());
+		
 		JPanel panel_logo_capture = new JPanel();
 		panel_logo_capture.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_logo_capture, "cell 5 0,grow");
+		panel_low_bar.add(panel_logo_capture, "cell 6 0,grow");
 		panel_logo_capture.setLayout(new MigLayout("", "[grow]", "[grow][:200px:200px,grow]"));
 		
 		ImagePanel panel_logo = new ImagePanel(imageLoader.loadImage("game_frame/logo_1.png"));
+		panel_logo.setImageMinimumSize(new int[] {100, 100});
+		panel_logo.setRemoveIfToSmall(true);
 		panel_logo.setCentered(true);
 		panel_logo.setAdaptSizeKeepProportion(true);
 		panel_logo.setBackground(Color.GRAY);
 		panel_logo_capture.add(panel_logo, "cell 0 1,grow");
+	}
+	
+	/**
+	 * Display the players color in this panel.
+	 */
+	private class UserColorPanel extends JPanel {
+		
+		private static final long serialVersionUID = 1744860767844725855L;
+		
+		private UserColor color;
+		
+		public UserColorPanel(UserColor color) {
+			this.color = color;
+		}
+		
+		@Override
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.setColor(color.getColor());
+			g.drawOval(0, 0, getWidth(), getHeight());//draw an oval of the users color on the panel
+		}
+	}
+	
+	/**
+	 * Add the player names and their colors to a panel.
+	 * 
+	 * @param panel_colors
+	 * 		The panel to which the user colors are added.
+	 * 
+	 * @param players
+	 * 		A list of all players.
+	 * 
+	 * @param colorManager
+	 * 		A ColorManager that knows the players colors.
+	 */
+	private void addPlayerColors(JPanel panel_colors, List<User> players, UserColorManager colorManager) {
+		String singleRow = "[20px:n:20px]"; 
+		StringBuilder rows = new StringBuilder();
+		for (int i = 0; i < players.size(); i++) {
+			rows.append(singleRow);
+		}
+		panel_colors.setLayout(new MigLayout("", "[grow][25px:n:25px]", rows.toString()));//set the layout
+		
+		for (int i = 0; i < players.size(); i++) {
+			//create a label for the players name and a panel for his color
+			JLabel lblName = new JLabel(players.get(i).getUsername());
+			UserColorPanel colorPanel = new UserColorPanel(colorManager.getUserColors().get(players.get(i)));
+			colorPanel.setBackground(Color.GRAY);
+			
+			//add the components to the panel
+			panel_colors.add(lblName, "cell 0 " + i);
+			panel_colors.add(colorPanel, "cell 1 " + i + ",grow");
+		}
 	}
 	
 	public static ImageLoader getImageLoader() {

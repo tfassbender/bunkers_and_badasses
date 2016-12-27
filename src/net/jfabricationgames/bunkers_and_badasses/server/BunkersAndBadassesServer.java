@@ -17,6 +17,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
@@ -509,6 +510,46 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		}
 		//add the overviews to the message and send it back to the client 
 		message.setGameOverviews(gameOverviews);
+		connection.sendMessage(message);
+	}
+	
+	/**
+	 * Load a game from the database and send it to a client.
+	 * 
+	 * @param id
+	 * 		The id in the database that identifies the game that is to be loaded.
+	 * 
+	 * @param connection
+	 * 		The connection that sent the request.
+	 */
+	public void loadGame(GameLoadRequestMessage message, JFGConnection connection) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		int id = message.getOverview().getId();
+		String query = "SELECT game_data FROM bunkers_and_badasses.games WHERE id = " + id;
+		Game loadedGame = null;
+		try (Statement statement = con.createStatement()) {
+			result = statement.executeQuery(query);//load the game from the database
+			if (result.next()) {
+				loadedGame = result.getObject(1, Game.class);
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+		}
+		//add the game to the message and send it back to the client
+		message.setLoadedGame(loadedGame);
+		message.setLoadedSuccessful(loadedGame != null);
 		connection.sendMessage(message);
 	}
 	

@@ -1,10 +1,9 @@
 Bunkers and Badasses - Tasks
 
 
-- load the game from the database
-- implement the GameStore methods
+- add the game overviews to the main menu
 - create the statistics of a game and store them in the database when the game ends
-- implement hero and building functions
 - implement GameTurnManager
+- implement hero and building functions
 - implement player skills (front- and back-end)
 - frame functions

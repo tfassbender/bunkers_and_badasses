@@ -1,13 +1,19 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.interpreter.JFGClientInterpreter;
 
 public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter {
+	
+	private GameStore gameStore;
+	
+	public BunkersAndBadassesClientInterpreter(GameStore gameStore) {
+		this.gameStore = gameStore;
+	}
 
 	@Override
 	public void interpreteClientMessage(JFGClientMessage message, JFGClient client) {
@@ -19,10 +25,7 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		else if (message instanceof GameSaveMessage) {
 			interpreteGameSaveMessage((GameSaveMessage) message, client);
 		}
-		//game loading messages
-		else if (message instanceof GameOverviewRequestMessage) {
-			interpreteGameOverviewRequestMessage((GameOverviewRequestMessage) message, client);
-		}
+		//game loading messages are implemented in main menu interpreter
 	}
 	
 	private void interpreteBoardTransfereMessage(BoardTransfereMessage message, JFGClient client) {
@@ -30,13 +33,6 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	}
 	
 	private void interpreteGameSaveMessage(GameSaveMessage message, JFGClient client) {
-		if (!message.isSaveSuccessful()) {
-			//TODO the game was not saved successful so do something
-			System.out.println("ERROR: The game could not be saved");
-		}
-	}
-	
-	private void  interpreteGameOverviewRequestMessage(GameOverviewRequestMessage message, JFGClient client) {
-		//TODO do something with the game overviews
+		gameStore.addServerAnswer(message.isSaveSuccessful());
 	}
 }

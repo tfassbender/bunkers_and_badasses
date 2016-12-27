@@ -29,6 +29,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -43,6 +44,8 @@ public class MainMenuFrame extends JFrame {
 	private JFGClient client;
 	//private List<User> playersOnline;
 	//private List<User> playersInGame;
+	
+	private GameStore gameStore;
 	
 	private Map<User, GameRequestDialog> requestDialogs = new HashMap<User, GameRequestDialog>();
 	private GameCreationDialog gameCreationDialog;
@@ -65,9 +68,10 @@ public class MainMenuFrame extends JFrame {
 		});
 		this.client = client;
 		
+		gameStore = new GameStore(client);
 		dynamicLoader = new MainMenuDynamicLoader(client);
 		chatClient = new ChatClient(client);
-		MainMenuClientInterpreter interpreter = new MainMenuClientInterpreter(chatClient, dynamicLoader, this);
+		MainMenuClientInterpreter interpreter = new MainMenuClientInterpreter(chatClient, dynamicLoader, this, gameStore);
 		client.setClientInterpreter(interpreter);
 		
 		try {

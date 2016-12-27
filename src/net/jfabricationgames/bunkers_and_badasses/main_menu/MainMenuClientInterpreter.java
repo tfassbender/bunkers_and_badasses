@@ -2,6 +2,9 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.UserUpdateMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -14,10 +17,13 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	private MainMenuDynamicLoader dynamicLoader;
 	private MainMenuFrame mainMenu;
 	
-	public MainMenuClientInterpreter(ChatClient chatClient, MainMenuDynamicLoader dynamicLoader, MainMenuFrame mainMenu) {
+	private GameStore gameStore;
+	
+	public MainMenuClientInterpreter(ChatClient chatClient, MainMenuDynamicLoader dynamicLoader, MainMenuFrame mainMenu, GameStore gameStore) {
 		this.chatClient = chatClient;
 		this.dynamicLoader = dynamicLoader;
 		this.mainMenu = mainMenu;
+		this.gameStore = gameStore;
 	}
 	
 	@Override
@@ -30,6 +36,12 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 		}
 		else if (message instanceof ChatMessage) {
 			interpreteChatMessage((ChatMessage) message, client);
+		}
+		else if (message instanceof GameOverviewRequestMessage) {
+			interpreteGameOverviewRequestMessage((GameOverviewRequestMessage) message, client);
+		}
+		else if (message instanceof GameLoadRequestMessage) {
+			interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, client);
 		}
 	}
 	
@@ -72,5 +84,14 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	
 	private void interpreteChatMessage(ChatMessage message, JFGClient client) {
 		chatClient.receiveMessage(message.getMessage());
+	}
+	
+	private void interpreteGameOverviewRequestMessage(GameOverviewRequestMessage message, JFGClient client) {
+		//TODO do something with the game overviews
+	}
+	
+	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGClient client) {
+		gameStore.setLoadedGame(message.getLoadedGame());
+		gameStore.addServerAnswer(message.isLoadedSuccessful());
 	}
 }
