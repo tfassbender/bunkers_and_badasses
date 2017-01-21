@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
@@ -62,6 +63,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		//board loading message
 		else if (message instanceof BoardRequestMessage) {
 			interpreteBoardRequestMessage((BoardRequestMessage) message, connection);
+		}
+		else if (message instanceof BoardOverviewRequestMessage) {
+			interpreteBoardOverviewRequestMessage((BoardOverviewRequestMessage) message, connection);
 		}
 		//game storing message
 		else if (message instanceof GameSaveMessage) {
@@ -191,6 +195,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpreteBoardRequestMessage(BoardRequestMessage message, JFGConnection connection) {
 		server.loadMap(message.getId(), message.getPlayers(), connection);
+	}
+	
+	private void interpreteBoardOverviewRequestMessage(BoardOverviewRequestMessage message, JFGConnection connection) {
+		server.loadMapOverviews(message, connection);
 	}
 	
 	private void interpreteGameSaveMessage(GameSaveMessage message, JFGConnection connection) {

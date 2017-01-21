@@ -73,14 +73,18 @@ public class BoardLoader {
 	public Board loadBoard(int id) {
 		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
 		ResultSet result = null;
-		String query = "SELECT path FROM bunkers_and_badasses.maps WHERE id = " + id;
+		String query = "SELECT path, players_min, players_max FROM bunkers_and_badasses.maps WHERE id = " + id;
 		Board board = null;
 		try (Statement statement = connection.createStatement()) {
 			result = statement.executeQuery(query);//get the path from the database
 			if (result.next()) {
 				String path = result.getString(1);//column count starts by one
+				int playersMin = result.getInt(2);
+				int playersMax = result.getInt(3);
 				File file = new File(path);
 				board = loadBoard(file);//load the map from a file
+				board.setPlayersMin(playersMin);
+				board.setPlayersMax(playersMax);
 			}
 		}
 		catch (SQLException e) {

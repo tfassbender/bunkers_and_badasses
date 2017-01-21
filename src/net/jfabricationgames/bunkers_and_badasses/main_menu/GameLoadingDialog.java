@@ -5,6 +5,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -17,9 +21,13 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class GameLoadingDialog extends JDialog {
 	
@@ -31,13 +39,17 @@ public class GameLoadingDialog extends JDialog {
 	private JTextField txtStoringDate;
 	private JTextField txtTurn;
 	
-	private MainMenuFrame mainMenu;
-	
 	private DefaultListModel<User> playersListModel = new DefaultListModel<User>();
 	private DefaultListModel<GameOverview> gamesListModel = new DefaultListModel<GameOverview>();
+	private JLabel lblLade;
 	
-	public GameLoadingDialog(MainMenuFrame mainMenu) {
-		this.mainMenu = mainMenu;
+	public GameLoadingDialog(JFGClient client, MainMenuFrame callingFrame) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				callingFrame.disposeGameLoadingDialog();
+			}
+		});
 		
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Laden");
@@ -46,7 +58,7 @@ public class GameLoadingDialog extends JDialog {
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[100px,grow][100px,grow]", "[][10px][][250px,grow][10px][][grow][]"));
+		contentPanel.setLayout(new MigLayout("", "[300px,grow][300px,grow]", "[][10px][][250px,grow][10px][][grow][]"));
 		{
 			JLabel lblSpielLaden = new JLabel("Spiel Laden");
 			lblSpielLaden.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -55,13 +67,24 @@ public class GameLoadingDialog extends JDialog {
 		{
 			JLabel lblGespeicherteSpiele = new JLabel("Gespeicherte Spiele:");
 			lblGespeicherteSpiele.setFont(new Font("Tahoma", Font.BOLD, 16));
-			contentPanel.add(lblGespeicherteSpiele, "cell 0 2 2 1");
+			contentPanel.add(lblGespeicherteSpiele, "cell 0 2");
+		}
+		{
+			lblLade = new JLabel("Laden...");
+			lblLade.setFont(new Font("Tahoma", Font.BOLD, 14));
+			contentPanel.add(lblLade, "cell 1 2");
 		}
 		{
 			JScrollPane scrollPane = new JScrollPane();
 			contentPanel.add(scrollPane, "cell 0 3 2 1,grow");
 			{
 				JList<GameOverview> list_games = new JList<GameOverview>(gamesListModel);
+				list_games.addListSelectionListener(new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						GameOverview overview = list_games.getSelectedValue();
+						showGameOverview(overview);
+					}
+				});
 				list_games.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				list_games.setBackground(Color.LIGHT_GRAY);
 				list_games.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -145,6 +168,32 @@ public class GameLoadingDialog extends JDialog {
 			});
 			btnAbbrechen.setBackground(Color.GRAY);
 			contentPanel.add(btnAbbrechen, "cell 1 7");
+		}
+		
+		GameOverviewRequestMessage message = new GameOverviewRequestMessage();
+		client.sendMessage(message);
+	}
+	
+	private void showGameOverview(GameOverview overview) {
+		//add general info
+		txtBoard.setText(overview.getBoardName());
+		txtStoringDate.setText(overview.getDateStored());
+		txtTurn.setText(Integer.toString(overview.getTurn()));
+		//add the players
+		playersListModel.clear();
+		for (User user : overview.getPlayers()) {
+			playersListModel.addElement(user);
+		}
+	}
+	
+	public void receiveGameOverviews(List<GameOverview> gameOverviews) {
+		lblLade.setText("");
+		//sort the game overviews by date
+		Collections.sort(gameOverviews);
+		//add the game overviews to the list
+		gamesListModel.clear();
+		for (GameOverview overview : gameOverviews) {
+			gamesListModel.addElement(overview);
 		}
 	}
 }

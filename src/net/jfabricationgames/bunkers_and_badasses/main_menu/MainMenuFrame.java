@@ -29,6 +29,9 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -47,8 +50,11 @@ public class MainMenuFrame extends JFrame {
 	
 	private GameStore gameStore;
 	
+	private List<Board> playableBoards;//no complete boards; only name and image
+	
 	private Map<User, GameRequestDialog> requestDialogs = new HashMap<User, GameRequestDialog>();
 	private GameCreationDialog gameCreationDialog;
+	private GameLoadingDialog gameLoadingDialog;
 	private AccountSettingsDialog accountSettingsDialog;
 	
 	private static ImageLoader imageLoader;
@@ -126,7 +132,11 @@ public class MainMenuFrame extends JFrame {
 		mnSpiel.add(mntmSpielErstellen);
 		
 		JMenuItem mntmSpielLaden = new JMenuItem("Spiel Laden");
-		mntmSpielLaden.setEnabled(false);
+		mntmSpielLaden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				startGameLoadingDialog();
+			}
+		});
 		mnSpiel.add(mntmSpielLaden);
 		
 		contentPane = new JPanel();
@@ -209,6 +219,7 @@ public class MainMenuFrame extends JFrame {
 		panel_buttons.add(btnSpielErstellen, "cell 0 0,alignx center,aligny center");
 		
 		updateUserList();
+		requireBoards();
 	}
 	
 	public void updateUserList() {
@@ -241,10 +252,27 @@ public class MainMenuFrame extends JFrame {
 		repaint();
 	}
 	
+	private void requireBoards() {
+		BoardOverviewRequestMessage message = new BoardOverviewRequestMessage();
+		client.sendMessage(message);
+	}
+	
 	private void startGameCreationDialog() {
 		if (gameCreationDialog == null) {
-			gameCreationDialog = new GameCreationDialog(client, this);
+			gameCreationDialog = new GameCreationDialog(client, playableBoards, this);
 			gameCreationDialog.setVisible(true);
+		}
+		else {
+			gameCreationDialog.requestFocus();
+		}
+	}
+	private void startGameLoadingDialog() {
+		if (gameLoadingDialog == null) {
+			gameLoadingDialog = new GameLoadingDialog(client, this);
+			gameLoadingDialog.setVisible(true);
+		}
+		else {
+			gameLoadingDialog.requestFocus();
 		}
 	}
 	private void showAccountSettings() {
@@ -254,9 +282,9 @@ public class MainMenuFrame extends JFrame {
 		accountSettingsDialog = new AccountSettingsDialog(client, this);
 		accountSettingsDialog.setVisible(true);
 	}
-	public void showGameRequest(User startingPlayer, List<User> invitedPlayers) {
+	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map) {
 		//map the requests to the starting player
-		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers);
+		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map);
 		GameRequestDialog last = requestDialogs.get(startingPlayer);
 		if (last != null) {
 			//if the same player sent another request earlier, dispose the old request 
@@ -268,6 +296,9 @@ public class MainMenuFrame extends JFrame {
 	
 	protected void disposeGameCreationDialog() {
 		gameCreationDialog = null;
+	}
+	protected void disposeGameLoadingDialog() {
+		gameLoadingDialog = null;
 	}
 	public void receiveGameCreationAnswer(User player, boolean joining) {
 		if (gameCreationDialog != null) {
@@ -286,6 +317,15 @@ public class MainMenuFrame extends JFrame {
 		if (accountSettingsDialog != null) {
 			accountSettingsDialog.receiveUpdateAnswer(answer, username);
 		}
+	}
+	
+	public void receiveGameOverviews(List<GameOverview> gameOverviews) {
+		if (gameLoadingDialog != null) {
+			gameLoadingDialog.receiveGameOverviews(gameOverviews);
+		}
+	}
+	public void receiveBoardOverviews(List<Board> boards) {
+		this.playableBoards = boards;
 	}
 	
 	public static ImageLoader getImageLoader() {

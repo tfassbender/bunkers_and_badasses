@@ -6,8 +6,6 @@ import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 /**
  * Send a board from the server to the client.
  * The board is only sent when the client starts a new game and needs a basic map that is kept in the server file system.
- * 
- * TODO implement in client interpreter
  */
 public class BoardTransfereMessage  implements JFGClientMessage {
 

@@ -26,6 +26,7 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	private String username;
 	private String lastUsername;
 	private String password;
+	private String map;
 	private User player;
 	private User toPlayer;
 	private List<User> invitedPlayers;
@@ -66,6 +67,13 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getMap() {
+		return map;
+	}
+	public void setMap(String map) {
+		this.map = map;
 	}
 	
 	public User getPlayer() {

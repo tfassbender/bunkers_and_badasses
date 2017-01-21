@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +20,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class GameCreationDialog extends JDialog {
 	
@@ -38,7 +40,7 @@ public class GameCreationDialog extends JDialog {
 	
 	private JFGClient client;
 	
-	private JList<User> list;
+	private JList<User> list_players;
 	private JTextArea txtrAnswers;
 	
 	private boolean requestSent = false;
@@ -49,8 +51,9 @@ public class GameCreationDialog extends JDialog {
 	private List<User> answers;
 	private JButton okButton;
 	private JLabel lblError;
+	private JList<Board> list_map;
 	
-	public GameCreationDialog(JFGClient client, MainMenuFrame callingFrame) {
+	public GameCreationDialog(JFGClient client, List<Board> playableBoards, MainMenuFrame callingFrame) {
 		setAlwaysOnTop(true);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -63,14 +66,14 @@ public class GameCreationDialog extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameCreationDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		this.client = client;
 		
-		setBounds(100, 100, 400, 500);
+		setBounds(100, 100, 500, 650);
 		setLocationRelativeTo(callingFrame);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[][10px][][200px,grow][10px][][100px,grow][25px:n:25px][]"));
+		contentPanel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[][10px][][100px,grow][10px][][75px,grow][][10px][][75px,grow][25px:n:25px][]"));
 		{
 			JLabel lblSpielErstellen = new JLabel("Spiel Erstellen");
 			lblSpielErstellen.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -87,9 +90,9 @@ public class GameCreationDialog extends JDialog {
 			contentPanel.add(scrollPane, "cell 0 3,grow");
 			{
 				ListModel<User> userListModel = createUserListModel();
-				list = new JList<User>(userListModel);
-				list.setBackground(Color.LIGHT_GRAY);
-				scrollPane.setViewportView(list);
+				list_players = new JList<User>(userListModel);
+				list_players.setBackground(Color.LIGHT_GRAY);
+				scrollPane.setViewportView(list_players);
 			}
 		}
 		{
@@ -97,17 +100,45 @@ public class GameCreationDialog extends JDialog {
 			panel.setCentered(true);
 			panel.setAdaptSizeKeepProportion(true);
 			panel.setBackground(Color.GRAY);
-			contentPanel.add(panel, "cell 1 3 1 4,grow");
+			contentPanel.add(panel, "cell 1 3 1 8,grow");
+		}
+		{
+			JLabel lblKarte = new JLabel("Karte Ausw\u00E4hlen:");
+			lblKarte.setFont(new Font("Tahoma", Font.BOLD, 16));
+			contentPanel.add(lblKarte, "cell 0 5");
+		}
+		{
+			JScrollPane scrollPane = new JScrollPane();
+			contentPanel.add(scrollPane, "cell 0 6,grow");
+			{
+				list_map = new JList<Board>();
+				list_map.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				list_map.setBackground(Color.LIGHT_GRAY);
+				scrollPane.setViewportView(list_map);
+			}
+		}
+		{
+			JButton btnKarteAnzeigen = new JButton("Karte Anzeigen");
+			btnKarteAnzeigen.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Board board = list_map.getSelectedValue();
+					if (board != null) {
+						new BoardPreviewDialog(GameCreationDialog.this, board).setVisible(true);
+					}
+				}
+			});
+			btnKarteAnzeigen.setBackground(Color.GRAY);
+			contentPanel.add(btnKarteAnzeigen, "cell 0 7");
 		}
 		{
 			JLabel lblAntworten = new JLabel("Antworten:");
 			lblAntworten.setFont(new Font("Tahoma", Font.BOLD, 16));
-			contentPanel.add(lblAntworten, "cell 0 5");
+			contentPanel.add(lblAntworten, "cell 0 9");
 		}
 		{
 			JScrollPane scrollPane = new JScrollPane();
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			contentPanel.add(scrollPane, "cell 0 6,grow");
+			contentPanel.add(scrollPane, "cell 0 10,grow");
 			{
 				txtrAnswers = new JTextArea();
 				txtrAnswers.setEditable(false);
@@ -118,11 +149,11 @@ public class GameCreationDialog extends JDialog {
 		{
 			lblError = new JLabel("");
 			lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
-			contentPanel.add(lblError, "cell 0 7 2 1,alignx center");
+			contentPanel.add(lblError, "cell 0 11 2 1,alignx center");
 		}
 		{
 			JPanel buttonPane = new JPanel();
-			contentPanel.add(buttonPane, "cell 0 8 2 1,alignx center");
+			contentPanel.add(buttonPane, "cell 0 12 2 1,alignx center");
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{
@@ -134,9 +165,23 @@ public class GameCreationDialog extends JDialog {
 						}
 						else if (!requestSent) {
 							requestSent = true;
-							invitedUsers = list.getSelectedValuesList();
+							invitedUsers = list_players.getSelectedValuesList();
 							if (!invitedUsers.isEmpty()) {
-								sendGameRequest(invitedUsers);
+								Board board = list_map.getSelectedValue();
+								if (board != null) {
+									if (invitedUsers.size() >= board.getPlayersMin() && invitedUsers.size() <= board.getPlayersMax()) {
+										sendGameRequest(invitedUsers, board.getName());
+									}
+									else {
+										lblError.setText("Zu viele/wenig Spieler für diese Karte");
+									}
+								}
+								else {
+									lblError.setText("Karte auswählen!");
+								}
+							}
+							else {
+								lblError.setText("Spieler auswählen!");
 							}
 						}
 					}
@@ -176,11 +221,12 @@ public class GameCreationDialog extends JDialog {
 		return model;
 	}
 	
-	private void sendGameRequest(List<User> players) {
+	private void sendGameRequest(List<User> players, String map) {
 		MainMenuMessage gameRequest = new MainMenuMessage();
 		gameRequest.setMessageType(MainMenuMessage.MessageType.GAME_CREATION_REQUEST);
 		gameRequest.setInvitedPlayers(players);
 		gameRequest.setPlayer(new User(UserManager.getUsername()));
+		gameRequest.setMap(map);
 		client.resetOutput();
 		client.sendMessage(gameRequest);
 		okButton.setEnabled(false);

@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
@@ -40,6 +41,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 		else if (message instanceof GameOverviewRequestMessage) {
 			interpreteGameOverviewRequestMessage((GameOverviewRequestMessage) message, client);
 		}
+		else if (message instanceof BoardOverviewRequestMessage) {
+			interpreteBoardOverviewRequestMessage((BoardOverviewRequestMessage) message, client);
+		}
 		else if (message instanceof GameLoadRequestMessage) {
 			interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, client);
 		}
@@ -57,7 +61,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				mainMenu.receiveGameCreationAnswer(message.getPlayer(), message.isJoining());
 				break;
 			case GAME_CREATION_REQUEST:
-				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers());
+				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap());
 				break;
 			case GAME_CREATEION_ABORT:
 				mainMenu.receiveGameCreationAbort(message.getPlayer(), message.getAbortCause());
@@ -87,7 +91,11 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	}
 	
 	private void interpreteGameOverviewRequestMessage(GameOverviewRequestMessage message, JFGClient client) {
-		//TODO do something with the game overviews
+		mainMenu.receiveGameOverviews(message.getGameOverviews());
+	}
+	
+	private void interpreteBoardOverviewRequestMessage(BoardOverviewRequestMessage message, JFGClient client) {
+		mainMenu.receiveBoardOverviews(message.getBoards());
 	}
 	
 	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGClient client) {

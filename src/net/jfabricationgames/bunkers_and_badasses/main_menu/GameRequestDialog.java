@@ -22,6 +22,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class GameRequestDialog extends JDialog {
 	
@@ -36,8 +37,9 @@ public class GameRequestDialog extends JDialog {
 	private JButton cancelButton;
 	private JTextArea txtrInvitedplayers;
 	private JLabel lblMessage_1;
+	private JTextField txtMap;
 	
-	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers) {
+	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map) {
 		setAlwaysOnTop(true);
 		this.client = client;
 		this.invitingUser = invitingUser;
@@ -46,14 +48,14 @@ public class GameRequestDialog extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Spiel Einladung");
 		
-		setBounds(100, 100, 450, 425);
+		setBounds(100, 100, 500, 450);
 		setLocationRelativeTo(callingFrame);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[250px][grow]", "[][10px][][10px][][grow][25px][]"));
+		contentPanel.setLayout(new MigLayout("", "[250px][grow]", "[][10px][][10px][][grow][5px][][][25px][]"));
 		{
 			JLabel lblSpielEinladung = new JLabel("Spiel Einladung");
 			lblSpielEinladung.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -86,16 +88,29 @@ public class GameRequestDialog extends JDialog {
 			panel.setCentered(true);
 			panel.setAdaptSizeKeepProportion(true);
 			panel.setBackground(Color.GRAY);
-			contentPanel.add(panel, "cell 1 5 1 2,grow");
+			contentPanel.add(panel, "cell 1 5 1 5,grow");
+		}
+		{
+			JLabel lblKarte = new JLabel("Karte:");
+			lblKarte.setFont(new Font("Tahoma", Font.BOLD, 16));
+			contentPanel.add(lblKarte, "cell 0 7");
+		}
+		{
+			txtMap = new JTextField(map);
+			txtMap.setEditable(false);
+			txtMap.setBackground(Color.LIGHT_GRAY);
+			txtMap.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			contentPanel.add(txtMap, "cell 0 8,growx");
+			txtMap.setColumns(10);
 		}
 		{
 			lblMessage_1 = new JLabel("");
 			lblMessage_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-			contentPanel.add(lblMessage_1, "cell 0 6");
+			contentPanel.add(lblMessage_1, "cell 0 9");
 		}
 		{
 			JPanel buttonPane = new JPanel();
-			contentPanel.add(buttonPane, "cell 0 7 2 1,alignx center");
+			contentPanel.add(buttonPane, "cell 0 10 2 1,alignx center");
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{

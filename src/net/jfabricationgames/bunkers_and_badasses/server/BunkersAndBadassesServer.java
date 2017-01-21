@@ -16,6 +16,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
@@ -406,7 +407,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * 		The number of players playing in the game the map is used for.
 	 * 
 	 * @param connection
-	 * 		The client connection that send the request.
+	 * 		The client connection that sent the request.
 	 */
 	public void loadMap(int id, int players, JFGConnection connection) {
 		BoardKeeper keeper = loadedMaps.get(id);
@@ -420,6 +421,56 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		}
 		BoardTransfereMessage transfere = new BoardTransfereMessage(keeper.getBoard());
 		connection.sendMessage(transfere);
+	}
+	/**
+	 * Load an overview of all maps (including the name, the image and the player number) and send it to the client.
+	 * 
+	 * @param message
+	 * 		The message that is sent back to the client
+	 * 
+	 * @param connection
+	 * 		The client connection that sent the request.
+	 */
+	public void loadMapOverviews(BoardOverviewRequestMessage message, JFGConnection connection) {
+		List<Integer> availableBoardIds = new ArrayList<Integer>();
+		//get the available ids from the database 
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		String query = "SELECT id FROM bunkers_and_badasses.maps";
+		try (Statement statement = con.createStatement()) {
+			result = statement.executeQuery(query);//get the ids
+			if (result.next()) {
+				availableBoardIds.add(result.getInt(1));//store all ids in a list
+			}
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			//close resources
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		//load all boards from files
+		BoardLoader loader = new BoardLoader();
+		List<Board> boards = new ArrayList<Board>();
+		for (int id : availableBoardIds) {
+			Board b = loader.loadBoard(id);
+			//delete the fields and regions form the board
+			b.setFields(null);
+			b.setRegions(null);
+			boards.add(b);
+		}
+		//send the board overviews to the client
+		message.setBoards(boards);
+		connection.sendMessage(message);
 	}
 	
 	/**

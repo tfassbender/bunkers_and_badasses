@@ -5,8 +5,6 @@ import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 /**
  * Send a request to the server to load a basic map from the file system.
  * The id is the primary key in the maps table in the database that identifies the map that is to be loaded.
- * 
- * TODO implement in server interpreter.
  */
 public class BoardRequestMessage implements JFGServerMessage {
 	

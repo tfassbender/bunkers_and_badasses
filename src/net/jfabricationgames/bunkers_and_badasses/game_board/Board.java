@@ -25,6 +25,9 @@ public class Board implements Serializable {
 	private transient BufferedImage baseImage;
 	private String name;
 	
+	private int playersMin;
+	private int playersMax;
+	
 	//Decide whether the image shall be wrapped as ImageIcon and serialized
 	private boolean storeImage;
 	private ImageIcon imageWrapper;
@@ -162,6 +165,18 @@ public class Board implements Serializable {
 		return img;
 	}
 	
+	@Override
+	public String toString() {
+		String players;
+		if (playersMin == playersMax) {
+			players = Integer.toString(playersMin);
+		}
+		else {
+			players = playersMin + "-" + playersMax;
+		}
+		return name + " (" + players + " Players)";
+	}
+	
 	public List<Field> getFields() {
 		return fields;
 	}
@@ -188,6 +203,20 @@ public class Board implements Serializable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getPlayersMin() {
+		return playersMin;
+	}
+	public void setPlayersMin(int playersMin) {
+		this.playersMin = playersMin;
+	}
+	
+	public int getPlayersMax() {
+		return playersMax;
+	}
+	public void setPlayersMax(int playersMax) {
+		this.playersMax = playersMax;
 	}
 	
 	public List<Region> getRegions() {

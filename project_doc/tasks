@@ -1,7 +1,6 @@
 Bunkers and Badasses - Tasks
 
 
-- add the game overviews to the main menu
 - create the statistics of a game and store them in the database when the game ends
 - implement GameTurnManager
 - implement hero and building functions
