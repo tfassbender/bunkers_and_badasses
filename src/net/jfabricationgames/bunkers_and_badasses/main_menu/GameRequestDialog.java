@@ -38,8 +38,9 @@ public class GameRequestDialog extends JDialog {
 	private JTextArea txtrInvitedplayers;
 	private JLabel lblMessage_1;
 	private JTextField txtMap;
+	private JTextField txtDateStored;
 	
-	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map) {
+	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map, String lastPlayed) {
 		setAlwaysOnTop(true);
 		this.client = client;
 		this.invitingUser = invitingUser;
@@ -55,7 +56,7 @@ public class GameRequestDialog extends JDialog {
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[250px][grow]", "[][10px][][10px][][grow][5px][][][25px][]"));
+		contentPanel.setLayout(new MigLayout("", "[250px][grow]", "[][10px][][10px][][grow][5px][][][5px][][][25px][]"));
 		{
 			JLabel lblSpielEinladung = new JLabel("Spiel Einladung");
 			lblSpielEinladung.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -88,7 +89,7 @@ public class GameRequestDialog extends JDialog {
 			panel.setCentered(true);
 			panel.setAdaptSizeKeepProportion(true);
 			panel.setBackground(Color.GRAY);
-			contentPanel.add(panel, "cell 1 5 1 5,grow");
+			contentPanel.add(panel, "cell 1 5 1 8,grow");
 		}
 		{
 			JLabel lblKarte = new JLabel("Karte:");
@@ -104,13 +105,28 @@ public class GameRequestDialog extends JDialog {
 			txtMap.setColumns(10);
 		}
 		{
+			JLabel lblZuletztGespielt = new JLabel("Zuletzt Gespielt:");
+			lblZuletztGespielt.setFont(new Font("Tahoma", Font.BOLD, 16));
+			contentPanel.add(lblZuletztGespielt, "cell 0 10");
+		}
+		{
+			if (lastPlayed == null) {
+				lastPlayed = "-----";
+			}
+			txtDateStored = new JTextField(lastPlayed);
+			txtDateStored.setBackground(Color.LIGHT_GRAY);
+			contentPanel.add(txtDateStored, "cell 0 11,growx");
+			txtDateStored.setColumns(10);
+			
+		}
+		{
 			lblMessage_1 = new JLabel("");
 			lblMessage_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-			contentPanel.add(lblMessage_1, "cell 0 9");
+			contentPanel.add(lblMessage_1, "cell 0 12");
 		}
 		{
 			JPanel buttonPane = new JPanel();
-			contentPanel.add(buttonPane, "cell 0 10 2 1,alignx center");
+			contentPanel.add(buttonPane, "cell 0 13 2 1,alignx center");
 			buttonPane.setBackground(Color.GRAY);
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{

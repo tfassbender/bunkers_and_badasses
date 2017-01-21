@@ -28,6 +28,7 @@ import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import java.awt.Toolkit;
 
 public class GameLoadingDialog extends JDialog {
 	
@@ -44,6 +45,7 @@ public class GameLoadingDialog extends JDialog {
 	private JLabel lblLade;
 	
 	public GameLoadingDialog(JFGClient client, MainMenuFrame callingFrame) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -133,6 +135,7 @@ public class GameLoadingDialog extends JDialog {
 			}
 			{
 				txtTurn = new JTextField();
+				txtTurn.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				panel.add(txtTurn, "cell 1 2,growx");
 				txtTurn.setBackground(Color.LIGHT_GRAY);
 				txtTurn.setEditable(false);
@@ -148,6 +151,7 @@ public class GameLoadingDialog extends JDialog {
 				panel.add(scrollPane, "cell 0 4 3 1,grow");
 				{
 					JList<User> list_players = new JList<User>(playersListModel);
+					list_players.setFont(new Font("Tahoma", Font.PLAIN, 12));
 					list_players.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					list_players.setBackground(Color.LIGHT_GRAY);
 					scrollPane.setViewportView(list_players);
@@ -156,6 +160,11 @@ public class GameLoadingDialog extends JDialog {
 		}
 		{
 			JButton btnSpielLaden = new JButton("Spiel Laden");
+			btnSpielLaden.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					startGame();
+				}
+			});
 			btnSpielLaden.setBackground(Color.GRAY);
 			contentPanel.add(btnSpielLaden, "cell 0 7,alignx right");
 		}
@@ -172,6 +181,10 @@ public class GameLoadingDialog extends JDialog {
 		
 		GameOverviewRequestMessage message = new GameOverviewRequestMessage();
 		client.sendMessage(message);
+	}
+	
+	private void startGame() {
+		
 	}
 	
 	private void showGameOverview(GameOverview overview) {

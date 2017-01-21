@@ -284,7 +284,7 @@ public class MainMenuFrame extends JFrame {
 	}
 	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map) {
 		//map the requests to the starting player
-		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map);
+		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map, null);
 		GameRequestDialog last = requestDialogs.get(startingPlayer);
 		if (last != null) {
 			//if the same player sent another request earlier, dispose the old request 

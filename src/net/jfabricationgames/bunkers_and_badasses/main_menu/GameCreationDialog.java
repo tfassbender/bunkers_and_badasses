@@ -53,6 +53,8 @@ public class GameCreationDialog extends JDialog {
 	private JLabel lblError;
 	private JList<Board> list_map;
 	
+	private Board selectedBoard;
+	
 	public GameCreationDialog(JFGClient client, List<Board> playableBoards, MainMenuFrame callingFrame) {
 		setAlwaysOnTop(true);
 		addWindowListener(new WindowAdapter() {
@@ -73,7 +75,7 @@ public class GameCreationDialog extends JDialog {
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[][10px][][100px,grow][10px][][75px,grow][][10px][][75px,grow][25px:n:25px][]"));
+		contentPanel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[][10px][][100px,grow][10px][][50px,grow][][10px][][75px,grow][25px:n:25px][]"));
 		{
 			JLabel lblSpielErstellen = new JLabel("Spiel Erstellen");
 			lblSpielErstellen.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -169,8 +171,9 @@ public class GameCreationDialog extends JDialog {
 							if (!invitedUsers.isEmpty()) {
 								Board board = list_map.getSelectedValue();
 								if (board != null) {
-									if (invitedUsers.size() >= board.getPlayersMin() && invitedUsers.size() <= board.getPlayersMax()) {
+									if (invitedUsers.size()+1 >= board.getPlayersMin() && invitedUsers.size()+1 <= board.getPlayersMax()) {//+1 is the player himself
 										sendGameRequest(invitedUsers, board.getName());
+										selectedBoard = board;
 									}
 									else {
 										lblError.setText("Zu viele/wenig Spieler für diese Karte");
@@ -255,7 +258,7 @@ public class GameCreationDialog extends JDialog {
 		else {
 			txtrAnswers.append("Absage von: ");
 			rejections.add(user);
-			if (invitedUsers.size() - rejections.size() <= 0) {
+			if (invitedUsers.size() - rejections.size() + 1 < selectedBoard.getPlayersMin()) {//invited - rejected + player himself
 				lblError.setText("Nicht mehr genügend Spieler vorhanden.");
 				gameActive = false;
 				//no more players left

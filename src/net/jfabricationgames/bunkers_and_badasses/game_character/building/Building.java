@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import javax.swing.ImageIcon;
-
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 public abstract class Building {
