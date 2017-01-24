@@ -184,7 +184,7 @@ public class GameLoadingDialog extends JDialog {
 	}
 	
 	private void startGame() {
-		
+		//TODO check whether all needed users are online and if so send a game request
 	}
 	
 	private void showGameOverview(GameOverview overview) {
