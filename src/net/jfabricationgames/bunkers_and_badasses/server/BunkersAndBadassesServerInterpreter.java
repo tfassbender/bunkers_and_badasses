@@ -105,10 +105,12 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				MainMenuMessage dynamicContent = createDynamicContentAnswer();
 				connection.sendMessage(dynamicContent);
 				break;
+			case GAME_LOADING_ANSWER:
 			case GAME_CREATION_ANSWER:
 				server.sendGameCreationAnswer(message);
 				break;
 			case GAME_CREATION_REQUEST:
+			case GAME_LOADING_REQUEST:
 				server.sendGameCreationRequest(message);
 				break;
 			case GAME_CREATEION_ABORT:

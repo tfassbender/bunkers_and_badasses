@@ -283,8 +283,11 @@ public class MainMenuFrame extends JFrame {
 		accountSettingsDialog.setVisible(true);
 	}
 	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map) {
+		showGameRequest(startingPlayer, invitedPlayers, map, null);
+	}
+	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map, GameOverview overview) {
 		//map the requests to the starting player
-		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map, null);
+		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map, overview);
 		GameRequestDialog last = requestDialogs.get(startingPlayer);
 		if (last != null) {
 			//if the same player sent another request earlier, dispose the old request 
@@ -303,6 +306,11 @@ public class MainMenuFrame extends JFrame {
 	public void receiveGameCreationAnswer(User player, boolean joining) {
 		if (gameCreationDialog != null) {
 			gameCreationDialog.receiveClientAnswer(player, joining);
+		}
+	}
+	public void receiveGameLoadingAnswer(User player, boolean joining) {
+		if (gameLoadingDialog != null) {
+			gameLoadingDialog.receiveGameLoadingAnswer(player, joining);
 		}
 	}
 	

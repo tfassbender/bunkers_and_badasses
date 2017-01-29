@@ -36,8 +36,10 @@ public class GameLoadingAnswerDialog extends JDialog {
 	private JTextArea txtrAnswers;
 	
 	private DefaultListModel<User> playersListModel = new DefaultListModel<User>();
+	private JButton btnSpielStarten;
 	
 	public GameLoadingAnswerDialog(GameLoadingDialog callingFrame) {
+		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Laden");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingAnswerDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 500, 550);
@@ -148,7 +150,8 @@ public class GameLoadingAnswerDialog extends JDialog {
 			contentPanel.add(panel, "cell 0 7 2 1,grow");
 			panel.setLayout(new MigLayout("", "[grow][grow]", "[]"));
 			{
-				JButton btnSpielStarten = new JButton("Spiel Starten");
+				btnSpielStarten = new JButton("Spiel Starten");
+				btnSpielStarten.setEnabled(false);
 				btnSpielStarten.setBackground(Color.GRAY);
 				panel.add(btnSpielStarten, "cell 0 0,alignx right");
 			}
@@ -158,5 +161,26 @@ public class GameLoadingAnswerDialog extends JDialog {
 				panel.add(btnAbbrechen, "cell 1 0");
 			}
 		}
+	}
+	
+	public void receiveGameLoadingAnswer(User player, boolean joining) {
+		if (joining) {
+			txtrAnswers.append("Zusage von: ");
+		}
+		else {
+			txtrAnswers.append("Absage von: ");
+		}
+		txtrAnswers.append(player.getUsername() + "\n");
+	}
+	
+	public void enableGameStart() {
+		btnSpielStarten.setEnabled(true);
+	}
+	public void disableGameStart() {
+		btnSpielStarten.setEnabled(false);
+	}
+	
+	public void startGame() {
+		
 	}
 }

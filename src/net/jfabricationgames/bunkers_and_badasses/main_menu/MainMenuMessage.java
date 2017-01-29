@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import java.util.List;
 
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
@@ -16,6 +17,8 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 		GAME_CREATION_REQUEST,
 		GAME_CREATION_ANSWER,
 		GAME_CREATEION_ABORT,
+		GAME_LOADING_REQUEST,
+		GAME_LOADING_ANSWER,
 		DYNAMIC_CONTENT_REQUEST,
 		DYNAMIC_CONTENT_ANSWER;
 	}
@@ -36,7 +39,8 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	private String dynamicContentAnswer;
 	private String abortCause;
 	private List<User> users;
-	
+	private GameOverview overview;
+
 	public MainMenuMessage() {
 		
 	}
@@ -138,5 +142,12 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+	
+	public GameOverview getOverview() {
+		return overview;
+	}
+	public void setOverview(GameOverview overview) {
+		this.overview = overview;
 	}
 }

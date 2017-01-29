@@ -237,12 +237,15 @@ public class GameCreationDialog extends JDialog {
 		answers = new ArrayList<User>();
 	}
 	private void sendGameCreationAbort() {
+		sendGameCreationAbort("Der Startspieler hat die Anfrage zurückgezogen");
+	}
+	private void sendGameCreationAbort(String cause) {
 		if (requestSent) {
 			MainMenuMessage gameCreationAbort = new MainMenuMessage();
 			gameCreationAbort.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
 			gameCreationAbort.setPlayer(new User(UserManager.getUsername()));
 			gameCreationAbort.setInvitedPlayers(invitedUsers);
-			gameCreationAbort.setAbortCause("Der Startspieler hat die Anfrage zurückgezogen");
+			gameCreationAbort.setAbortCause(cause);
 			client.resetOutput();
 			client.sendMessage(gameCreationAbort);
 		}
@@ -259,25 +262,10 @@ public class GameCreationDialog extends JDialog {
 			txtrAnswers.append("Absage von: ");
 			rejections.add(user);
 			if (invitedUsers.size() - rejections.size() + 1 < selectedBoard.getPlayersMin()) {//invited - rejected + player himself
+				//not enough players left
 				lblError.setText("Nicht mehr genügend Spieler vorhanden.");
 				gameActive = false;
-				//no more players left
-				//if there are more players than two needed the message needs to be send
-				
-				/*List<User> usersLeft = new ArrayList<User>();
-				for (User left : invitedUsers) {
-					if (!rejections.contains(left)) {
-						usersLeft.add(left);
-					}
-				}
-				MainMenuMessage abortMessage = new MainMenuMessage();
-				abortMessage.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
-				abortMessage.setPlayer(new User(UserManager.getUsername()));
-				abortMessage.setAbortCause("Nicht mehr genug Spieler vorhanden");
-				//empty list because there are no more users
-				abortMessage.setInvitedPlayers(usersLeft);
-				client.resetOutput();
-				client.sendMessage(abortMessage);*/
+				sendGameCreationAbort("Absage von " + user.getUsername() +  ". Zu wenig Spieler.");
 			}
 		}
 		txtrAnswers.append(user.getUsername() + "\n");

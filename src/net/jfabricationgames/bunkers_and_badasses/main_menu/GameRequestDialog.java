@@ -13,16 +13,17 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 public class GameRequestDialog extends JDialog {
 	
@@ -40,10 +41,13 @@ public class GameRequestDialog extends JDialog {
 	private JTextField txtMap;
 	private JTextField txtDateStored;
 	
-	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map, String lastPlayed) {
+	private GameOverview overview;//keep the reference to know which game to load
+	
+	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map, GameOverview overview) {
 		setAlwaysOnTop(true);
 		this.client = client;
 		this.invitingUser = invitingUser;
+		this.overview = overview;
 		
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -110,7 +114,12 @@ public class GameRequestDialog extends JDialog {
 			contentPanel.add(lblZuletztGespielt, "cell 0 10");
 		}
 		{
-			if (lastPlayed == null) {
+			String lastPlayed = null;
+			if (overview != null) {
+				lastPlayed = overview.getDateStored();
+				lastPlayed += " (Runde " + overview.getTurn() + ")"; 
+			}
+			else {
 				lastPlayed = "-----";
 			}
 			txtDateStored = new JTextField(lastPlayed);

@@ -3,10 +3,12 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,19 +22,27 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import java.awt.Toolkit;
 
 public class GameLoadingDialog extends JDialog {
 	
 	private static final long serialVersionUID = 5567858686487512818L;
+	
+	private JFGClient client;
+	
+	private GameLoadingAnswerDialog answerDialog;
+	
+	private List<User> answers;
+	private List<User> invitedUsers;
+	private boolean abort;
 	
 	private final JPanel contentPanel = new JPanel();
 	
@@ -43,6 +53,8 @@ public class GameLoadingDialog extends JDialog {
 	private DefaultListModel<User> playersListModel = new DefaultListModel<User>();
 	private DefaultListModel<GameOverview> gamesListModel = new DefaultListModel<GameOverview>();
 	private JLabel lblLade;
+	private JList<GameOverview> list_games;
+	private JLabel lblError;
 	
 	public GameLoadingDialog(JFGClient client, MainMenuFrame callingFrame) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -53,14 +65,16 @@ public class GameLoadingDialog extends JDialog {
 			}
 		});
 		
+		this.client = client;
+		
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Laden");
-		setBounds(100, 100, 400, 550);
+		setBounds(100, 100, 450, 600);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[300px,grow][300px,grow]", "[][10px][][250px,grow][10px][][grow][]"));
+		contentPanel.setLayout(new MigLayout("", "[300px,grow][300px,grow]", "[][10px][][200px,grow][10px][][grow][50px][]"));
 		{
 			JLabel lblSpielLaden = new JLabel("Spiel Laden");
 			lblSpielLaden.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -80,7 +94,7 @@ public class GameLoadingDialog extends JDialog {
 			JScrollPane scrollPane = new JScrollPane();
 			contentPanel.add(scrollPane, "cell 0 3 2 1,grow");
 			{
-				JList<GameOverview> list_games = new JList<GameOverview>(gamesListModel);
+				list_games = new JList<GameOverview>(gamesListModel);
 				list_games.addListSelectionListener(new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent e) {
 						GameOverview overview = list_games.getSelectedValue();
@@ -162,11 +176,16 @@ public class GameLoadingDialog extends JDialog {
 			JButton btnSpielLaden = new JButton("Spiel Laden");
 			btnSpielLaden.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					startGame();
+					sendRequests();
 				}
 			});
+			{
+				lblError = new JLabel("");
+				lblError.setFont(new Font("Tahoma", Font.BOLD, 12));
+				contentPanel.add(lblError, "cell 0 7 2 1,alignx center");
+			}
 			btnSpielLaden.setBackground(Color.GRAY);
-			contentPanel.add(btnSpielLaden, "cell 0 7,alignx right");
+			contentPanel.add(btnSpielLaden, "cell 0 8,alignx right");
 		}
 		{
 			JButton btnAbbrechen = new JButton("Abbrechen");
@@ -176,15 +195,57 @@ public class GameLoadingDialog extends JDialog {
 				}
 			});
 			btnAbbrechen.setBackground(Color.GRAY);
-			contentPanel.add(btnAbbrechen, "cell 1 7");
+			contentPanel.add(btnAbbrechen, "cell 1 8");
 		}
 		
 		GameOverviewRequestMessage message = new GameOverviewRequestMessage();
 		client.sendMessage(message);
 	}
 	
-	private void startGame() {
-		
+	/**
+	 * Check whether all players are online and if so send them the requests for the selected game.
+	 */
+	private void sendRequests() {
+		GameOverview overview = list_games.getSelectedValue();
+		List<User> players = overview.getPlayers();
+		List<User> allUsers = UserManager.getUsers();
+		boolean playersOnline = true;
+		for (User p : players) {
+			//find the user p in the user list of the UserManager class
+			//the users from the overview may not contain the right online state
+			int userPos = allUsers.indexOf(p);
+			User user;
+			if (userPos != -1) {
+				user = allUsers.get(userPos);
+				playersOnline &= user.isOnline() && !user.isInGame();
+			}
+			else {
+				playersOnline = false;
+			}
+		}
+		if (playersOnline) {
+			//all players that play in the game are online
+			//send the game requests
+			MainMenuMessage gameRequest = new MainMenuMessage();
+			gameRequest.setMessageType(MainMenuMessage.MessageType.GAME_LOADING_REQUEST);
+			gameRequest.setInvitedPlayers(players);
+			gameRequest.setPlayer(new User(UserManager.getUsername()));
+			gameRequest.setOverview(overview);
+			answers = new ArrayList<User>();
+			invitedUsers = players;
+			abort = false;
+			//send the request message
+			client.resetOutput();
+			client.sendMessage(gameRequest);
+			//start the answer dialog
+			answerDialog = new GameLoadingAnswerDialog(this);
+			answerDialog.setVisible(true);
+			//hide this frame
+			setVisible(false);
+		}
+		else {
+			lblError.setText("Nicht alle Spieler Online");
+		}
 	}
 	
 	private void showGameOverview(GameOverview overview) {
@@ -207,6 +268,31 @@ public class GameLoadingDialog extends JDialog {
 		gamesListModel.clear();
 		for (GameOverview overview : gameOverviews) {
 			gamesListModel.addElement(overview);
+		}
+	}
+	
+	private void sendGameCreationAbort(String cause) {
+		MainMenuMessage gameCreationAbort = new MainMenuMessage();
+		gameCreationAbort.setMessageType(MainMenuMessage.MessageType.GAME_CREATEION_ABORT);
+		gameCreationAbort.setPlayer(new User(UserManager.getUsername()));
+		gameCreationAbort.setInvitedPlayers(invitedUsers);
+		gameCreationAbort.setAbortCause(cause);
+		client.resetOutput();
+		client.sendMessage(gameCreationAbort);
+	}
+	public void receiveGameLoadingAnswer(User player, boolean joining) {
+		if (answerDialog != null) {
+			answerDialog.receiveGameLoadingAnswer(player, joining);
+		}
+		answers.remove(player);
+		answers.add(player);
+		if (!joining) {
+			sendGameCreationAbort("Absage von " + player.getUsername() + ".");
+			abort = true;
+			answerDialog.disableGameStart();
+		}
+		else if (!abort && answers.size() == invitedUsers.size()) {
+			answerDialog.enableGameStart();
 		}
 	}
 }
