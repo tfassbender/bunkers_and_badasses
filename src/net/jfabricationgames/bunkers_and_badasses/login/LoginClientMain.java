@@ -14,6 +14,7 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClientInterpreter;
+import net.jfabricationgames.jfgserver.client.JFGClient;
 
 public class LoginClientMain extends JFrame {
 	
@@ -62,6 +63,9 @@ public class LoginClientMain extends JFrame {
 		JFGDatabaseLoginClientInterpreter loginInterpreter = (JFGDatabaseLoginClientInterpreter) client.getClient().getClientInterpreter();
 		LoginClientInterpreter interpreter = new LoginClientInterpreter(loginInterpreter, this);
 		client.getClient().setClientInterpreter(interpreter);
+		
+		//set the JFGClient to automatically reset the output before every message sent
+		JFGClient.setResetBeforeSending(true);
 		
 		//create a new ImageLoader for the login panels
 		imageLoader = new ImageLoader();

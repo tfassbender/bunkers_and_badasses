@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.server;
 import java.io.IOException;
 
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
+import net.jfabricationgames.jfgserver.server.JFGConnection;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 /**
@@ -37,6 +38,10 @@ public class ServerMain {
 		JFGDatabaseLoginServerInterpreter loginInterpreter = new JFGDatabaseLoginServerInterpreter(server);
 		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter, server);
 		server.setInterpreterFactory(interpreter);
+		
+		//set the JFGConnections to reset the output before every message sent
+		JFGConnection.setResetBeforeSending(true);
+		
 		//start the server
 		try {
 			server.startServer();
