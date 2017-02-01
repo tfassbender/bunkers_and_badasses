@@ -5,6 +5,7 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.UserUpdateMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -47,6 +48,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 		else if (message instanceof GameLoadRequestMessage) {
 			interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, client);
 		}
+		else if (message instanceof GameStartMessage) {
+			interpreteGameStartMessage((GameStartMessage) message, client);
+		}
 	}
 	
 	private void interpreteMainMenuMessage(MainMenuMessage message, JFGClient client) {
@@ -61,7 +65,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				mainMenu.receiveGameCreationAnswer(message.getPlayer(), message.isJoining());
 				break;
 			case GAME_CREATION_REQUEST:
-				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap(), message.getBoardId());
+				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap());
 				break;
 			case GAME_CREATEION_ABORT:
 				mainMenu.receiveGameCreationAbort(message.getPlayer(), message.getAbortCause());
@@ -82,7 +86,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				mainMenu.receiveGameLoadingAnswer(message.getPlayer(), message.isJoining());
 				break;
 			case GAME_LOADING_REQUEST:
-				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap(), message.getBoardId(), message.getOverview());
+				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap(), message.getOverview());
 				break;
 		}
 	}
@@ -107,5 +111,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGClient client) {
 		gameStore.setLoadedGame(message.getLoadedGame());
 		gameStore.addServerAnswer(message.isLoadedSuccessful());
+	}
+	
+	private void interpreteGameStartMessage(GameStartMessage message, JFGClient client) {
+		mainMenu.receiveGameStartMessage(message.getPlayers().get(0), message.getBoardId(), message.getPlayers().size());
 	}
 }

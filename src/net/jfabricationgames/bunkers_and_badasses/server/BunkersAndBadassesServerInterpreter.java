@@ -9,9 +9,11 @@ import java.util.List;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
@@ -77,6 +79,12 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		}
 		else if (message instanceof GameLoadRequestMessage) {
 			interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, connection);
+		}
+		else if (message instanceof GameCreationMessage) {
+			interpreteGameCreationMessage((GameCreationMessage) message, connection);
+		}
+		else if (message instanceof GameStartMessage) {
+			interpreteGameStartMessage((GameStartMessage) message, connection);
 		}
 	}
 	
@@ -215,5 +223,13 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGConnection connection) {
 		server.loadGame(message, connection);
+	}
+	
+	private void interpreteGameCreationMessage(GameCreationMessage message, JFGConnection connection) {
+		server.createGame(message);
+	}
+	
+	private void interpreteGameStartMessage(GameStartMessage message, JFGConnection connection) {
+		server.sendGameStartMessage(message);
 	}
 }

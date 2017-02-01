@@ -8,6 +8,16 @@ public abstract class UserManager {
 	
 	private static String username;
 	
+	public static User getLocalUser() {
+		User user = null;
+		for (User u : users) {
+			if (u.getUsername().equals(username)) {
+				user = u;
+			}
+		}
+		return user;
+	}
+	
 	public static List<User> getUsers() {
 		return users;
 	}

@@ -222,6 +222,17 @@ public class MainMenuFrame extends JFrame {
 		requireBoards();
 	}
 	
+	@Override
+	public void dispose() {
+		for (GameRequestDialog request : requestDialogs.values()) {
+			request.dispose();
+		}
+		gameCreationDialog.dispose();
+		gameLoadingDialog.dispose();
+		accountSettingsDialog.dispose();
+		super.dispose();
+	}
+	
 	public void updateUserList() {
 		StringBuilder inGameUsers = new StringBuilder();
 		StringBuilder onlineUsers = new StringBuilder();
@@ -282,12 +293,12 @@ public class MainMenuFrame extends JFrame {
 		accountSettingsDialog = new AccountSettingsDialog(client, this);
 		accountSettingsDialog.setVisible(true);
 	}
-	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map, int boardId) {
-		showGameRequest(startingPlayer, invitedPlayers, map, boardId, null);
+	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map) {
+		showGameRequest(startingPlayer, invitedPlayers, map, null);
 	}
-	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map, int boardId, GameOverview overview) {
+	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map, GameOverview overview) {
 		//map the requests to the starting player
-		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map, boardId, overview);
+		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map, overview);
 		GameRequestDialog last = requestDialogs.get(startingPlayer);
 		if (last != null) {
 			//if the same player sent another request earlier, dispose the old request 
@@ -319,6 +330,10 @@ public class MainMenuFrame extends JFrame {
 		if (request != null) {
 			request.receiveAbort(cause);
 		}
+	}
+	
+	public void receiveGameStartMessage(User startingPlayer, int boardId, int players) {
+		requestDialogs.get(startingPlayer).startGame(boardId, players);
 	}
 	
 	public void receiveAccoutUpdateAnswer(boolean answer, String username) {

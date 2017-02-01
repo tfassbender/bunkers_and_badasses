@@ -1,7 +1,7 @@
 Bunkers and Badasses - Tasks
 
 
-- implement the start of the game after all users confirmed
+- implement the continuing of the game
 - implement GameTurnManager
 - implement hero and building functions
 - create the statistics of a game and store them in the database when the game ends

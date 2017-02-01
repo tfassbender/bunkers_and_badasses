@@ -202,6 +202,12 @@ public class GameLoadingDialog extends JDialog {
 		client.sendMessage(message);
 	}
 	
+	@Override
+	public void dispose() {
+		answerDialog.dispose();
+		super.dispose();
+	}
+	
 	/**
 	 * Check whether all players are online and if so send them the requests for the selected game.
 	 */

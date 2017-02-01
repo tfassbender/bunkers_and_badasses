@@ -18,8 +18,10 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -178,13 +180,13 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				statement.close();
 			}
 			catch (SQLException sqle) {
-				//sqle.printStackTrace();
+				sqle.printStackTrace();
 			}
 			try {
 				connection.close();
 			}
 			catch (SQLException sqle) {
-				//sqle.printStackTrace();
+				sqle.printStackTrace();
 			}
 		}
 		MainMenuMessage updateAnswer = new MainMenuMessage();
@@ -221,13 +223,13 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				statement.close();
 			}
 			catch (SQLException sqle) {
-				//sqle.printStackTrace();
+				sqle.printStackTrace();
 			}
 			try {
 				connection.close();
 			}
 			catch (SQLException sqle) {
-				//sqle.printStackTrace();
+				sqle.printStackTrace();
 			}
 		}
 		MainMenuMessage updateAnswer = new MainMenuMessage();
@@ -271,13 +273,13 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				statement.close();
 			}
 			catch (SQLException sqle) {
-				//sqle.printStackTrace();
+				sqle.printStackTrace();
 			}
 			try {
 				connection.close();
 			}
 			catch (SQLException sqle) {
-				//sqle.printStackTrace();
+				sqle.printStackTrace();
 			}
 		}
 		MainMenuMessage updateAnswer = new MainMenuMessage();
@@ -374,11 +376,13 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			sqle.printStackTrace();
 		}
 		finally {
-			try {
-				result.close();
-			}
-			catch (SQLException e1) {
-				;
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException e1) {
+					;
+				}				
 			}
 			try {
 				statement.close();
@@ -456,6 +460,12 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
 			}
 		}
 		//load all boards from files
@@ -559,6 +569,12 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 					sqle.printStackTrace();
 				}
 			}
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
 		}
 		//add the overviews to the message and send it back to the client 
 		message.setGameOverviews(gameOverviews);
@@ -598,11 +614,113 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 					sqle.printStackTrace();
 				}
 			}
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
 		}
 		//add the game to the message and send it back to the client
 		message.setLoadedGame(loadedGame);
 		message.setLoadedSuccessful(loadedGame != null);
 		connection.sendMessage(message);
+	}
+	
+	/**
+	 * Send game start messages to all invited players (except the starting player).
+	 * 
+	 * @param message
+	 * 		The message to be sent.
+	 */
+	public void sendGameStartMessage(GameStartMessage message) {
+		List<User> players = message.getPlayers();
+		for (int i = 1; i < players.size(); i++) {//first player is the starting player and gets no start message
+			userMap.get(players.get(i)).sendMessage(message);
+		}
+	}
+	
+	/**
+	 * Create a new game in the database and send the game's id to the players.
+	 * 
+	 * @param message
+	 * 		The creation message.
+	 */
+	public void createGame(GameCreationMessage message) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		String query = "SELECT MAX(id) FROM bunkers_and_badasses.games";//find the maximum id of a game
+		int gameId = 0;
+		try (Statement statement = con.createStatement()) {
+			result = statement.executeQuery(query);
+			if (result.next()) {
+				gameId = result.getInt(1);
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+			//don't close the connection; needed later
+		}
+		gameId += 1;//use the next free id for the game
+		query = "SELECT id FROM bunkers_and_badasses.users WHERE username = '";
+		int[] userIds = new int[message.getPlayers().size()];
+		try (Statement statement = con.createStatement()) {
+			for (int i = 0; i < message.getPlayers().size(); i++) {
+				//get the user's ids
+				result = statement.executeQuery(query + message.getPlayers().get(i).getUsername() + "'");
+				if (result.next()) {
+					userIds[i] = result.getInt(1);
+				}
+				try {
+					result.close();
+				}
+				catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		//create the tables
+		String[] sql = new String[message.getPlayers().size()+2];
+		sql[0] = "INSERT INTO bunkers_and_badasses.games (id, active) VALUES (" + gameId + ", true)";//create the game
+		sql[1] = "INSERT INTO bunkers_and_badasses.game_maps VALUES (" + gameId + ", " + message.getBoardId() + ")";//create a game - map
+		for (int i = 0; i < message.getPlayers().size(); i++) {
+			sql[2+i] = "INSERT INTO bunkers_and_badasses.statistics (user_id, game_id) VALUES (" + userIds[i] + ", " + gameId + ")";
+		}
+		try (Statement statement = con.createStatement()) {
+			for (String s : sql) {
+				statement.execute(s);
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		//send the game id to the clients to start the game
+		GameStartMessage startMessage = new GameStartMessage();
+		startMessage.setGameId(gameId);
+		for (int i = 0; i < message.getPlayers().size(); i++) {
+			userMap.get(message.getPlayers().get(i)).sendMessage(startMessage);
+		}
 	}
 	
 	public List<User> getUsers() {

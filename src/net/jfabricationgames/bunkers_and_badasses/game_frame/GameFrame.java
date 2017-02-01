@@ -64,6 +64,11 @@ public class GameFrame extends JFrame {
 	private JTextField txtCommand;
 	
 	private static ImageLoader imageLoader;
+	
+	static {
+		imageLoader = new ImageLoader();
+		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/");
+	}
 
 	private ListModel<Hero> heroesListModel = new DefaultListModel<Hero>();
 	private ListModel<Field> fieldListModel = new DefaultListModel<Field>();
@@ -220,9 +225,6 @@ public class GameFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		imageLoader = new ImageLoader();
-		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/");
 		
 		chatClient = new ChatClient(client);
 		chatPanel = new ChatPanel(chatClient);

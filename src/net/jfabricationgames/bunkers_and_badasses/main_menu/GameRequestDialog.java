@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -33,6 +34,8 @@ public class GameRequestDialog extends JDialog {
 	
 	private JFGClient client;
 	
+	private MainMenuFrame mainMenu;
+	
 	private User invitingUser;
 	private JButton okButton;
 	private JButton cancelButton;
@@ -43,14 +46,12 @@ public class GameRequestDialog extends JDialog {
 	
 	private GameOverview overview;//keep the reference to know which game to load
 	
-	private int boardId;//identify the board to load from the server (not used if the overview is known)
-	
-	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map, int boardId, GameOverview overview) {
+	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map, GameOverview overview) {
 		setAlwaysOnTop(true);
 		this.client = client;
 		this.invitingUser = invitingUser;
-		this.boardId = boardId;
 		this.overview = overview;
+		this.mainMenu = callingFrame;
 		
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -168,6 +169,13 @@ public class GameRequestDialog extends JDialog {
 		}
 		
 		addInvitedPlayers(invitedUsers);
+	}
+	
+	public void startGame(int boardId, int players) {
+		GameStartDialog startDialog = new GameStartDialog();
+		startDialog.setVisible(true);
+		mainMenu.dispose();
+		startDialog.startGame(client, boardId, players);
 	}
 	
 	private void addInvitedPlayers(List<User> players) {

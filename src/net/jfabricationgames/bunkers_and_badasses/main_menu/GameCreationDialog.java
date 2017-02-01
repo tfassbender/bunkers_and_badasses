@@ -27,6 +27,7 @@ import javax.swing.border.EmptyBorder;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -39,6 +40,8 @@ public class GameCreationDialog extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	
 	private JFGClient client;
+	
+	private MainMenuFrame mainMenu;
 	
 	private JList<User> list_players;
 	private JTextArea txtrAnswers;
@@ -68,7 +71,9 @@ public class GameCreationDialog extends JDialog {
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Erstellen");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameCreationDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+		
 		this.client = client;
+		this.mainMenu = callingFrame;
 		
 		setBounds(100, 100, 500, 650);
 		setLocationRelativeTo(callingFrame);
@@ -217,7 +222,18 @@ public class GameCreationDialog extends JDialog {
 	}
 	
 	private void startGame() {
-		//TODO start the game
+		//create a new GameStartDialog and pass on the data
+		GameStartDialog startDialog = new GameStartDialog();
+		startDialog.setVisible(true);
+		mainMenu.dispose();//dispose all frames of the main menu
+		List<User> players = new ArrayList<User>();
+		players.add(UserManager.getLocalUser());
+		for (User user : answers) {
+			if (!rejections.contains(user)) {
+				players.add(user);
+			}
+		}
+		startDialog.startGameMaster(client, players, selectedBoard);
 	}
 	
 	private DefaultListModel<User> createUserListModel() {
