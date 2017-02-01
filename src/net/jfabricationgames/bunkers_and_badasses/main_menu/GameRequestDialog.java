@@ -43,10 +43,13 @@ public class GameRequestDialog extends JDialog {
 	
 	private GameOverview overview;//keep the reference to know which game to load
 	
-	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map, GameOverview overview) {
+	private int boardId;//identify the board to load from the server (not used if the overview is known)
+	
+	public GameRequestDialog(JFGClient client, MainMenuFrame callingFrame, User invitingUser, List<User> invitedUsers, String map, int boardId, GameOverview overview) {
 		setAlwaysOnTop(true);
 		this.client = client;
 		this.invitingUser = invitingUser;
+		this.boardId = boardId;
 		this.overview = overview;
 		
 		setResizable(false);

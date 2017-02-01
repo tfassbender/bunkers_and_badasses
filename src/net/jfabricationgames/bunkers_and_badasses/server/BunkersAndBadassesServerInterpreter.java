@@ -200,7 +200,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	}
 	
 	private void interpreteBoardOverviewRequestMessage(BoardOverviewRequestMessage message, JFGConnection connection) {
-		server.loadMapOverviews(message, connection);
+		server.sendMapOverviews(message, connection);
 	}
 	
 	private void interpreteGameSaveMessage(GameSaveMessage message, JFGConnection connection) {

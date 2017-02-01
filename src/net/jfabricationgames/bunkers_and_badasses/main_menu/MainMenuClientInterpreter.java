@@ -61,7 +61,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				mainMenu.receiveGameCreationAnswer(message.getPlayer(), message.isJoining());
 				break;
 			case GAME_CREATION_REQUEST:
-				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap());
+				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap(), message.getBoardId());
 				break;
 			case GAME_CREATEION_ABORT:
 				mainMenu.receiveGameCreationAbort(message.getPlayer(), message.getAbortCause());
@@ -82,7 +82,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				mainMenu.receiveGameLoadingAnswer(message.getPlayer(), message.isJoining());
 				break;
 			case GAME_LOADING_REQUEST:
-				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap(), message.getOverview());
+				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap(), message.getBoardId(), message.getOverview());
 				break;
 		}
 	}

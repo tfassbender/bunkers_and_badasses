@@ -53,6 +53,8 @@ public class GameCreationDialog extends JDialog {
 	private JLabel lblError;
 	private JList<Board> list_map;
 	
+	private DefaultListModel<Board> listModelBoard = new DefaultListModel<Board>();
+	
 	private Board selectedBoard;
 	
 	public GameCreationDialog(JFGClient client, List<Board> playableBoards, MainMenuFrame callingFrame) {
@@ -113,9 +115,13 @@ public class GameCreationDialog extends JDialog {
 			JScrollPane scrollPane = new JScrollPane();
 			contentPanel.add(scrollPane, "cell 0 6,grow");
 			{
-				list_map = new JList<Board>();
+				list_map = new JList<Board>(listModelBoard);
 				list_map.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				list_map.setBackground(Color.LIGHT_GRAY);
+				//add the boards to the list
+				for (Board b : playableBoards) {
+					listModelBoard.addElement(b);
+				}
 				scrollPane.setViewportView(list_map);
 			}
 		}
@@ -172,7 +178,7 @@ public class GameCreationDialog extends JDialog {
 								Board board = list_map.getSelectedValue();
 								if (board != null) {
 									if (invitedUsers.size()+1 >= board.getPlayersMin() && invitedUsers.size()+1 <= board.getPlayersMax()) {//+1 is the player himself
-										sendGameRequest(invitedUsers, board.getName());
+										sendGameRequest(invitedUsers, board);
 										selectedBoard = board;
 									}
 									else {
@@ -224,12 +230,13 @@ public class GameCreationDialog extends JDialog {
 		return model;
 	}
 	
-	private void sendGameRequest(List<User> players, String map) {
+	private void sendGameRequest(List<User> players, Board board) {
 		MainMenuMessage gameRequest = new MainMenuMessage();
 		gameRequest.setMessageType(MainMenuMessage.MessageType.GAME_CREATION_REQUEST);
 		gameRequest.setInvitedPlayers(players);
 		gameRequest.setPlayer(new User(UserManager.getUsername()));
-		gameRequest.setMap(map);
+		gameRequest.setMap(board.getName());
+		gameRequest.setBoardId(board.getBoardId());
 		client.resetOutput();
 		client.sendMessage(gameRequest);
 		okButton.setEnabled(false);

@@ -415,6 +415,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			if (keeper == null) {
 				BoardLoader loader = new BoardLoader();
 				Board board = loader.loadBoard(id);//get the path from the database and load the file
+				board.setBoardId(id);
 				keeper = new BoardKeeper(board, this, id, players);
 				loadedMaps.put(id, keeper);//store the loaded map for the next players
 			}
@@ -431,7 +432,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * @param connection
 	 * 		The client connection that sent the request.
 	 */
-	public void loadMapOverviews(BoardOverviewRequestMessage message, JFGConnection connection) {
+	public void sendMapOverviews(BoardOverviewRequestMessage message, JFGConnection connection) {
 		List<Integer> availableBoardIds = new ArrayList<Integer>();
 		//get the available ids from the database 
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
@@ -444,7 +445,6 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			}
 		}
 		catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
@@ -466,6 +466,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			//delete the fields and regions form the board
 			b.setFields(null);
 			b.setRegions(null);
+			b.setBoardId(id);
 			boards.add(b);
 		}
 		//send the board overviews to the client

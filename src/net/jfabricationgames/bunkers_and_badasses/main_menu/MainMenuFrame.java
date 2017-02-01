@@ -282,12 +282,12 @@ public class MainMenuFrame extends JFrame {
 		accountSettingsDialog = new AccountSettingsDialog(client, this);
 		accountSettingsDialog.setVisible(true);
 	}
-	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map) {
-		showGameRequest(startingPlayer, invitedPlayers, map, null);
+	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map, int boardId) {
+		showGameRequest(startingPlayer, invitedPlayers, map, boardId, null);
 	}
-	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map, GameOverview overview) {
+	public void showGameRequest(User startingPlayer, List<User> invitedPlayers, String map, int boardId, GameOverview overview) {
 		//map the requests to the starting player
-		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map, overview);
+		GameRequestDialog request = new GameRequestDialog(client, this, startingPlayer, invitedPlayers, map, boardId, overview);
 		GameRequestDialog last = requestDialogs.get(startingPlayer);
 		if (last != null) {
 			//if the same player sent another request earlier, dispose the old request 

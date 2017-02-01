@@ -1,10 +1,9 @@
 Bunkers and Badasses - Tasks
 
 
-- check for client reset output in all communications
-- create the statistics of a game and store them in the database when the game ends
 - implement the start of the game after all users confirmed
 - implement GameTurnManager
 - implement hero and building functions
+- create the statistics of a game and store them in the database when the game ends
 - implement player skills (front- and back-end)
 - frame functions

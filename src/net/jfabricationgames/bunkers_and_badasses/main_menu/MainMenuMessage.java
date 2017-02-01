@@ -40,7 +40,8 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	private String abortCause;
 	private List<User> users;
 	private GameOverview overview;
-
+	private int boardId;
+	
 	public MainMenuMessage() {
 		
 	}
@@ -149,5 +150,12 @@ public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setOverview(GameOverview overview) {
 		this.overview = overview;
+	}
+
+	public int getBoardId() {
+		return boardId;
+	}
+	public void setBoardId(int boardId) {
+		this.boardId = boardId;
 	}
 }

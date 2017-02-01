@@ -20,6 +20,8 @@ public class Board implements Serializable {
 	
 	private static final long serialVersionUID = 4537459302664184784L;
 	
+	private int boardId;//identify the board to load it from the server
+	
 	private List<Field> fields;
 	private List<Region> regions;
 	private transient BufferedImage baseImage;
@@ -175,6 +177,13 @@ public class Board implements Serializable {
 			players = playersMin + "-" + playersMax;
 		}
 		return name + " (" + players + " Players)";
+	}
+	
+	public int getBoardId() {
+		return boardId;
+	}
+	public void setBoardId(int boardId) {
+		this.boardId = boardId;
 	}
 	
 	public List<Field> getFields() {
