@@ -43,6 +43,8 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	
 	private MessageDigest md5;
 	
+	private ServerPingManager pingManager;
+	
 	public BunkersAndBadassesServer(int port) {
 		super(port);
 		userMap = new HashMap<User, JFGConnection>();
@@ -54,6 +56,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			nsae.printStackTrace();
 		}
 		loadUsers();
+		pingManager = new ServerPingManager(this);
 	}
 	
 	/**
@@ -90,7 +93,9 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		user.setOnline(true);
 		userMap.put(user, connection);
 		connectionMap.put(connection, user);
-		
+		//inform the ping manager
+		pingManager.addUser(user);
+		//send updates to the users
 		sendUserUpdate();
 	}
 	
@@ -104,12 +109,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		User user = connectionMap.get(connection);
 		user.setInGame(false);
 		user.setOnline(false);
-		
+		//inform the ping manager
+		pingManager.removeUser(connectionMap.get(connection));
+		//remove the user from the connection maps
 		connectionMap.remove(connection);
 		userMap.remove(user);
-		
+		//close the connection
 		closeConnection(connection);
-		
+		//send an update to the clients
 		sendUserUpdate();
 	}
 	
@@ -125,7 +132,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			invitedConnections.add(userMap.get(user));
 		}
 		for (JFGConnection con : invitedConnections) {
-			con.resetOutput();
+			//con.resetOutput();
 			con.sendMessage(message);
 		}
 	}
@@ -137,7 +144,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void sendGameCreationAnswer(MainMenuMessage message) {
 		JFGConnection toPlayer = userMap.get(message.getToPlayer());
-		toPlayer.resetOutput();
+		//toPlayer.resetOutput();
 		toPlayer.sendMessage(message);
 	}
 	/**
@@ -351,7 +358,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		UserUpdateMessage update = new UserUpdateMessage(allUsers);
 		for (JFGConnection con : getConnections()) {
 			if (isLoggedIn(con)) {
-				con.resetOutput();
+				//con.resetOutput();
 				con.sendMessage(update);
 			}
 		}
@@ -721,6 +728,23 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		for (int i = 0; i < message.getPlayers().size(); i++) {
 			userMap.get(message.getPlayers().get(i)).sendMessage(startMessage);
 		}
+	}
+	
+	/**
+	 * Receive a ping from a user.
+	 * 
+	 * @param connection
+	 * 		The users connection to identify the user.
+	 */
+	public void receivePing(JFGConnection connection) {
+		pingManager.ping(connectionMap.get(connection));
+	}
+	
+	public Map<User, JFGConnection> getUserMap() {
+		return userMap;
+	}
+	public Map<JFGConnection, User> getConnectionMap() {
+		return connectionMap;
 	}
 	
 	public List<User> getUsers() {

@@ -60,7 +60,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			interpreteUserLogoutMessage((UserLogoutMessage) message, connection);
 		}
 		else if (message instanceof ServerPingMessage) {
-			//TODO react on ping (user still connected)
+			interpreteServerPingMessage((ServerPingMessage) message, connection);
 		}
 		//board loading message
 		else if (message instanceof BoardRequestMessage) {
@@ -101,7 +101,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	}
 	
 	private void interpreteServerNameRequest(ServerNameRequest message, JFGConnection connection) {
-		((BunkersAndBadassesServer) connection.getServer()).mapConnection(message.getUsername(), connection);
+		server.mapConnection(message.getUsername(), connection);
 	}
 	
 	private void interpreteMainMenuMessage(MainMenuMessage message, JFGConnection connection) {
@@ -200,7 +200,11 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	}
 	
 	private void interpreteUserLogoutMessage(UserLogoutMessage message, JFGConnection connection) {
-		((BunkersAndBadassesServer) connection.getServer()).logout(connection);
+		server.logout(connection);
+	}
+	
+	private void interpreteServerPingMessage(ServerPingMessage message, JFGConnection connection) {
+		server.receivePing(connection);
 	}
 	
 	private void interpreteBoardRequestMessage(BoardRequestMessage message, JFGConnection connection) {
