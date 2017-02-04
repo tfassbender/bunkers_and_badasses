@@ -279,7 +279,7 @@ public class MainMenuFrame extends JFrame {
 	}
 	private void startGameLoadingDialog() {
 		if (gameLoadingDialog == null) {
-			gameLoadingDialog = new GameLoadingDialog(client, this);
+			gameLoadingDialog = new GameLoadingDialog(client, this, playableBoards);
 			gameLoadingDialog.setVisible(true);
 		}
 		else {

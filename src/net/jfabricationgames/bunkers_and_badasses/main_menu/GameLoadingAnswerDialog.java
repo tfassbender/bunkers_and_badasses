@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -21,7 +24,10 @@ import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
 public class GameLoadingAnswerDialog extends JDialog {
@@ -29,6 +35,8 @@ public class GameLoadingAnswerDialog extends JDialog {
 	private static final long serialVersionUID = -1855631664399810658L;
 	
 	private final JPanel contentPanel = new JPanel();
+	
+	private JFGClient client;
 	
 	private JTextField txtBoard;
 	private JTextField txtStoringDate;
@@ -38,13 +46,22 @@ public class GameLoadingAnswerDialog extends JDialog {
 	private DefaultListModel<User> playersListModel = new DefaultListModel<User>();
 	private JButton btnSpielStarten;
 	
-	public GameLoadingAnswerDialog(GameLoadingDialog callingFrame) {
+	private List<User> players;
+	private MainMenuFrame mainMenu;
+	private Board selectedBoard;
+	
+	public GameLoadingAnswerDialog(GameLoadingDialog callingFrame, JFGClient client, List<User> players, MainMenuFrame mainMenu, Board selectedBoard) {
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Laden");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingAnswerDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 500, 550);
 		setMinimumSize(new Dimension(500, 450));
 		setLocationRelativeTo(callingFrame);
+		
+		this.client = client;
+		this.players = players;
+		this.mainMenu = mainMenu;
+		this.selectedBoard = selectedBoard;
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
@@ -151,6 +168,11 @@ public class GameLoadingAnswerDialog extends JDialog {
 			panel.setLayout(new MigLayout("", "[grow][grow]", "[]"));
 			{
 				btnSpielStarten = new JButton("Spiel Starten");
+				btnSpielStarten.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						startGame();
+					}
+				});
 				btnSpielStarten.setEnabled(false);
 				btnSpielStarten.setBackground(Color.GRAY);
 				panel.add(btnSpielStarten, "cell 0 0,alignx right");
@@ -181,6 +203,10 @@ public class GameLoadingAnswerDialog extends JDialog {
 	}
 	
 	public void startGame() {
-		
+		//create a new GameStartDialog and pass on the data
+		GameStartDialog startDialog = new GameStartDialog();
+		startDialog.setVisible(true);
+		mainMenu.dispose();// dispose all frames of the main menu
+		startDialog.startGameMaster(client, players, selectedBoard);
 	}
 }

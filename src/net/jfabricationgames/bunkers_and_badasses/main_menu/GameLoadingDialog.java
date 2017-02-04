@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -52,11 +53,14 @@ public class GameLoadingDialog extends JDialog {
 	
 	private DefaultListModel<User> playersListModel = new DefaultListModel<User>();
 	private DefaultListModel<GameOverview> gamesListModel = new DefaultListModel<GameOverview>();
-	private JLabel lblLade;
 	private JList<GameOverview> list_games;
+	private JLabel lblLade;
 	private JLabel lblError;
 	
-	public GameLoadingDialog(JFGClient client, MainMenuFrame callingFrame) {
+	private MainMenuFrame mainMenu;
+	private List<Board> playableBoards;
+	
+	public GameLoadingDialog(JFGClient client, MainMenuFrame callingFrame, List<Board> playableBoards) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -66,6 +70,8 @@ public class GameLoadingDialog extends JDialog {
 		});
 		
 		this.client = client;
+		this.mainMenu = callingFrame;
+		this.playableBoards = playableBoards;
 		
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Laden");
@@ -243,8 +249,15 @@ public class GameLoadingDialog extends JDialog {
 			//send the request message
 			client.resetOutput();
 			client.sendMessage(gameRequest);
+			//select the board from the list of playable boards
+			Board board = null;
+			for (Board b : playableBoards) {
+				if (b.getName().equals(overview.getBoardName())) {
+					board = b;
+				}
+			}
 			//start the answer dialog
-			answerDialog = new GameLoadingAnswerDialog(this);
+			answerDialog = new GameLoadingAnswerDialog(this, client, invitedUsers, mainMenu, board);
 			answerDialog.setVisible(true);
 			//hide this frame
 			setVisible(false);
