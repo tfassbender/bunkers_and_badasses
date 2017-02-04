@@ -127,7 +127,6 @@ public class Board implements Serializable {
 			imageWrapper = null;
 		}
 		out.defaultWriteObject();//serialize the object but the transient fields (the baseImage)
-		//TODO don't write the images when loaded from or stored to the database
 		//out.writeInt(1);//write the number of images down (needed also if there is only one)
 		//ImageIO.write(baseImage, "png", out);//write the image at the end of the file
 	}

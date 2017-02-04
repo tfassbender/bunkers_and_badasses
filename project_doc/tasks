@@ -4,5 +4,6 @@ Bunkers and Badasses - Tasks
 - implement GameTurnManager
 - implement hero and building functions
 - create the statistics of a game and store them in the database when the game ends
+- implement the ping function
 - implement player skills (front- and back-end)
 - frame functions

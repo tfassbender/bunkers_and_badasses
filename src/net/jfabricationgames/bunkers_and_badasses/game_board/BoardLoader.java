@@ -87,9 +87,8 @@ public class BoardLoader {
 				board.setPlayersMax(playersMax);
 			}
 		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
 		}
 		finally {
 			//close resources
