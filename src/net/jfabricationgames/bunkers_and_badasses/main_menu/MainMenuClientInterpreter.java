@@ -2,11 +2,13 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
+import net.jfabricationgames.bunkers_and_badasses.game.ServerLogoutDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
+import net.jfabricationgames.bunkers_and_badasses.server.ServerLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.server.UserUpdateMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -50,6 +52,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 		}
 		else if (message instanceof GameStartMessage) {
 			interpreteGameStartMessage((GameStartMessage) message, client);
+		}
+		else if (message instanceof ServerLogoutMessage) {
+			interpreteServerLogoutMessage((ServerLogoutMessage) message, client);
 		}
 	}
 	
@@ -115,5 +120,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	
 	private void interpreteGameStartMessage(GameStartMessage message, JFGClient client) {
 		mainMenu.receiveGameStartMessage(message.getPlayers().get(0), message.getBoardId(), message.getPlayers().size());
+	}
+	
+	private void interpreteServerLogoutMessage(ServerLogoutMessage message, JFGClient client) {
+		new ServerLogoutDialog(message).setVisible(true);
 	}
 }
