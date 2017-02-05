@@ -59,8 +59,8 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		else if (message instanceof UserLogoutMessage) {
 			interpreteUserLogoutMessage((UserLogoutMessage) message, connection);
 		}
-		else if (message instanceof ServerPingMessage) {
-			interpreteServerPingMessage((ServerPingMessage) message, connection);
+		else if (message instanceof PingMessage) {
+			interpreteServerPingMessage((PingMessage) message, connection);
 		}
 		//board loading message
 		else if (message instanceof BoardRequestMessage) {
@@ -203,7 +203,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		server.logout(connection);
 	}
 	
-	private void interpreteServerPingMessage(ServerPingMessage message, JFGConnection connection) {
+	private void interpreteServerPingMessage(PingMessage message, JFGConnection connection) {
 		server.receivePing(connection);
 	}
 	

@@ -29,6 +29,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.game.ClientPingManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
@@ -79,6 +80,9 @@ public class MainMenuFrame extends JFrame {
 		chatClient = new ChatClient(client);
 		MainMenuClientInterpreter interpreter = new MainMenuClientInterpreter(chatClient, dynamicLoader, this, gameStore);
 		client.setClientInterpreter(interpreter);
+		
+		//start the client ping
+		new ClientPingManager(client).start();//no need to keep the reference because it runs in a new thread
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
