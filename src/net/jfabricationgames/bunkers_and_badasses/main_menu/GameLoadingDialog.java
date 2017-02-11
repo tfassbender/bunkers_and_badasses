@@ -247,7 +247,7 @@ public class GameLoadingDialog extends JDialog {
 			invitedUsers = players;
 			abort = false;
 			//send the request message
-			client.resetOutput();
+			//client.resetOutput();
 			client.sendMessage(gameRequest);
 			//select the board from the list of playable boards
 			Board board = null;
@@ -257,7 +257,7 @@ public class GameLoadingDialog extends JDialog {
 				}
 			}
 			//start the answer dialog
-			answerDialog = new GameLoadingAnswerDialog(this, client, invitedUsers, mainMenu, board);
+			answerDialog = new GameLoadingAnswerDialog(this, client, invitedUsers, mainMenu, board, overview);
 			answerDialog.setVisible(true);
 			//hide this frame
 			setVisible(false);

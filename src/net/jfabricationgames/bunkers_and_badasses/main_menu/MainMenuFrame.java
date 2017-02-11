@@ -336,8 +336,8 @@ public class MainMenuFrame extends JFrame {
 		}
 	}
 	
-	public void receiveGameStartMessage(User startingPlayer, int boardId, int players) {
-		requestDialogs.get(startingPlayer).startGame(boardId, players);
+	public void receiveGameStartMessage(User startingPlayer, int boardId, int players, boolean loadedGame) {
+		requestDialogs.get(startingPlayer).startGame(boardId, players, loadedGame);
 	}
 	
 	public void receiveAccoutUpdateAnswer(boolean answer, String username) {

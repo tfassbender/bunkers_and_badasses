@@ -26,6 +26,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardReques
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStorageException;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -140,17 +142,21 @@ public class GameStartDialog extends JDialog {
 	
 	/**
 	 * Create and start the game. This method is only called by the starting player to create the game in the database.
+	 * 
+	 * @param client
+	 * 		The JFGClient to send messages to the server.
 	 *  
 	 * @param players
 	 * 		The players taking part in this game.
 	 * 
 	 * @param board
-	 * 		The board on which is played.
+	 * 		The board on which is played. Needs to be loaded by the server because it's incomplete.
 	 */
 	public void startGameMaster(JFGClient client, List<User> players, Board board) {
 		this.client = client;
 		changeClientInterpreter(client);
 		//send a game start message containing the board id to all players
+		//this message is received by the MainMenuClientInterpreter and starts the GameStartDialog that adds the BunkersAndBadassesClientInterpreter
 		GameStartMessage message = new GameStartMessage();
 		message.setBoardId(board.getBoardId());
 		message.setPlayers(players);
@@ -192,26 +198,107 @@ public class GameStartDialog extends JDialog {
 	}
 	
 	/**
+	 * Load an existing game from the database and start it. This method is only called by the starting player.
+	 * 
+	 * @param client
+	 * 		The JFGClient to send messages to the server.
+	 *  
+	 * @param players
+	 * 		The players taking part in this game.
+	 * 
+	 * @param board
+	 * 		The board on which is played. Needs to be loaded by the server because it's incomplete.
+	 * 
+	 * @param overview
+	 * 		The GameOverview to identify the game that is to be loaded from the server.
+	 */
+	public void loadGameMaster(JFGClient client, List<User> players, Board board, GameOverview overview) {
+		this.client = client;
+		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
+		GameStore gameStore = interpreter.getGameStore();
+		//send a game start message containing the board id to all players
+		//this message is received by the MainMenuClientInterpreter and starts the GameStartDialog that adds the BunkersAndBadassesClientInterpreter
+		GameStartMessage message = new GameStartMessage();
+		message.setBoardId(board.getBoardId());
+		message.setPlayers(players);
+		message.setLoaded(true);
+		client.sendMessage(message);
+		//load the game from the server using the GameStore
+		Thread gameLoadingThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					game = gameStore.loadGame(overview);
+					gameId = game.getId();
+					GameStartDialog.this.board = game.getBoard();
+					//the loaded game already contains the board and the id so the game can be started
+					startGameFrame();
+				}
+				catch (GameStorageException gse) {
+					gse.printStackTrace();
+				}
+			}
+		});
+		gameLoadingThread.start();
+	}
+	
+	/**
 	 * Start the game and load the board form the server.
+	 * 
+	 * @param client
+	 * 		The JFGClient to communicate with the server.
 	 * 
 	 * @param boardId
 	 * 		The board's id.
+	 * 
+	 * @param players
+	 * 		The number of players in this game.
+	 * 
+	 * @param loadedGame
+	 * 		Indicates whether this game is a new game or loaded from the server database.
+	 * 
+	 * @param overview
+	 * 		The GameOverview to identify the game that is to be loaded (or null if the game is new).
 	 */
-	public void startGame(JFGClient client, int boardId, int players) {
+	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview) {
 		this.client = client;
-		changeClientInterpreter(client);
-		//load the board from the server
-		BoardRequestMessage boardRequest = new BoardRequestMessage();
-		boardRequest.setId(boardId);
-		boardRequest.setPlayers(players);
-		client.sendMessage(boardRequest);
-		//wait for the server to send the game id
+		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
+		GameStore gameStore = interpreter.getGameStore();
+		if (loadedGame) {
+			//if the game needs to be loaded from the server use the GameStore to load it
+			//load the game in a new thread because the method is modal
+			Thread gameLoadingThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						game = gameStore.loadGame(overview);
+						gameId = game.getId();
+						board = game.getBoard();
+						//the loaded game already contains the board and the id so the game can be started
+						startGameFrame();
+					}
+					catch (GameStorageException gse) {
+						gse.printStackTrace();
+					}
+				}
+			});
+			gameLoadingThread.start();
+		}
+		else {
+			//load the board from the server
+			BoardRequestMessage boardRequest = new BoardRequestMessage();
+			boardRequest.setId(boardId);
+			boardRequest.setPlayers(players);
+			client.sendMessage(boardRequest);
+			//wait for the server to send the game id
+		}
 	}
 	
-	private void changeClientInterpreter(JFGClient client) {
+	private BunkersAndBadassesClientInterpreter changeClientInterpreter(JFGClient client) {
 		//replace the main menu interpreter with the game interpreter
 		GameStore gameStore = new GameStore(client);
 		BunkersAndBadassesClientInterpreter interpreter = new BunkersAndBadassesClientInterpreter(gameStore, this);
 		client.setClientInterpreter(interpreter);
+		return interpreter;
 	}
 }

@@ -638,14 +638,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	}
 	
 	/**
-	 * Send game start messages to all invited players (except the starting player).
+	 * Send game start messages to all invited players.
 	 * 
 	 * @param message
 	 * 		The message to be sent.
 	 */
 	public void sendGameStartMessage(GameStartMessage message) {
 		List<User> players = message.getPlayers();
-		for (int i = 1; i < players.size(); i++) {//first player is the starting player and gets no start message
+		for (int i = 0; i < players.size(); i++) {
 			userMap.get(players.get(i)).sendMessage(message);
 		}
 	}

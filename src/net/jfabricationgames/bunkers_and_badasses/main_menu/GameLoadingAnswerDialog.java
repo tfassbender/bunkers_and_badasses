@@ -26,6 +26,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
@@ -49,8 +50,9 @@ public class GameLoadingAnswerDialog extends JDialog {
 	private List<User> players;
 	private MainMenuFrame mainMenu;
 	private Board selectedBoard;
+	private GameOverview overview;
 	
-	public GameLoadingAnswerDialog(GameLoadingDialog callingFrame, JFGClient client, List<User> players, MainMenuFrame mainMenu, Board selectedBoard) {
+	public GameLoadingAnswerDialog(GameLoadingDialog callingFrame, JFGClient client, List<User> players, MainMenuFrame mainMenu, Board selectedBoard, GameOverview overview) {
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Laden");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingAnswerDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -62,6 +64,7 @@ public class GameLoadingAnswerDialog extends JDialog {
 		this.players = players;
 		this.mainMenu = mainMenu;
 		this.selectedBoard = selectedBoard;
+		this.overview = overview;
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
@@ -208,6 +211,6 @@ public class GameLoadingAnswerDialog extends JDialog {
 		startDialog.setVisible(true);
 		mainMenu.dispose();// dispose all frames of the main menu
 		//startDialog.startGameMaster(client, players, selectedBoard);
-		//TODO load a game (don't use startGameMaster)
+		startDialog.loadGameMaster(client, players, selectedBoard, overview);
 	}
 }

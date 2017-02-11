@@ -65,4 +65,11 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	private void interpreteGameTransferMessage(GameTransferMessage message, JFGClient client) {
 		gameStartDialog.receiveGame(message.getGame());
 	}
+	
+	public GameStore getGameStore() {
+		return gameStore;
+	}
+	public void setGameStore(GameStore gameStore) {
+		this.gameStore = gameStore;
+	}
 }

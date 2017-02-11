@@ -119,7 +119,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	}
 	
 	private void interpreteGameStartMessage(GameStartMessage message, JFGClient client) {
-		mainMenu.receiveGameStartMessage(message.getPlayers().get(0), message.getBoardId(), message.getPlayers().size());
+		mainMenu.receiveGameStartMessage(message.getPlayers().get(0), message.getBoardId(), message.getPlayers().size(), message.isLoaded());
 	}
 	
 	private void interpreteServerLogoutMessage(ServerLogoutMessage message, JFGClient client) {
