@@ -14,6 +14,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadReq
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
@@ -85,6 +86,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		}
 		else if (message instanceof GameStartMessage) {
 			interpreteGameStartMessage((GameStartMessage) message, connection);
+		}
+		//game transfer messages
+		else if (message instanceof GameTransferMessage) {
+			interpreteGameTransferMessage((GameTransferMessage) message, connection);
 		}
 	}
 	
@@ -235,5 +240,13 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpreteGameStartMessage(GameStartMessage message, JFGConnection connection) {
 		server.sendGameStartMessage(message);
+	}
+	
+	private void interpreteGameTransferMessage(GameTransferMessage message, JFGConnection connection) {
+		if (message.isNewGame()) {
+			server.addResources(message.getGame());
+			server.sendGameTransferMessage(message);
+		}
+		//TODO add other cases
 	}
 }

@@ -14,10 +14,18 @@ import javax.swing.border.EmptyBorder;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameState;
+import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
+import net.jfabricationgames.bunkers_and_badasses.game.HeroCardManager;
+import net.jfabricationgames.bunkers_and_badasses.game.PlayerOrder;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
+import net.jfabricationgames.bunkers_and_badasses.game.UserColorManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -32,6 +40,7 @@ public class GameStartDialog extends JDialog {
 	private JFGClient client;
 	private Board board;
 	private int gameId = -1;
+	private Game game;
 	
 	public GameStartDialog() {
 		setResizable(false);
@@ -93,7 +102,7 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void receiveGameId(int id) {
 		this.gameId = id;
-		if (board != null) {
+		if (board != null && game != null) {
 			startGameFrame();
 		}
 	}
@@ -106,7 +115,14 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void receiveBoard(Board board) {
 		this.board = board;
-		if (gameId != -1) {
+		if (gameId != -1 && game != null) {
+			startGameFrame();
+		}
+	}
+	
+	public void receiveGame(Game game) {
+		this.game = game;
+		if (board != null && gameId != -1) {
 			startGameFrame();
 		}
 	}
@@ -145,7 +161,30 @@ public class GameStartDialog extends JDialog {
 		GameCreationMessage creationMessage = new GameCreationMessage();
 		creationMessage.setBoardId(board.getBoardId());
 		creationMessage.setPlayers(players);
-		//wait for the server to send the game id
+		client.sendMessage(creationMessage);
+		//create a game object with the game managers
+		Game game = new Game();
+		//board and id are not sent to the server (added later by the clients)
+		game.setState(GameState.PLAN);
+		game.setPlayers(players);
+		game.setTurnManager(new GameTurnManager());
+		UserColorManager colorManager = new UserColorManager();
+		colorManager.chooseRandomColors(players);//select random colors for all users
+		game.setColorManager(colorManager);
+		PlayerOrder playerOrder = new PlayerOrder();
+		playerOrder.chooseRandomOrder(players);
+		game.setOrder(playerOrder);
+		PointManager pointManager = new PointManager();
+		pointManager.initialize(players);
+		game.setPointManager(pointManager);
+		HeroCardManager heroCardMananger = new HeroCardManager();
+		heroCardMananger.intitialize(players);
+		//resources are added by the server because of the skills
+		GameTransferMessage gameTransferMessage = new GameTransferMessage();
+		gameTransferMessage.setGame(game);
+		gameTransferMessage.setNewGame(true);
+		client.sendMessage(gameTransferMessage);
+		//wait for the server to send the game id, the board and the completed game object
 	}
 	
 	/**

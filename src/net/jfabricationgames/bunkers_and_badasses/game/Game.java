@@ -1,26 +1,29 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.util.List;
+import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Game {
 	
-	private List<UserResource> resources;
+	private Map<User, UserResource> resources;
 	private GameState state;
 	private PlayerOrder order;
 	private List<User> players;
 	private UserColorManager colorManager;
 	private GameTurnManager turnManager;
+	private PointManager pointManager;
+	private HeroCardManager heroCardManager;
 	private Board board;
 	
 	private int id;//the game id in the database
 	
-	public List<UserResource> getResources() {
+	public Map<User, UserResource> getResources() {
 		return resources;
 	}
-	public void setResources(List<UserResource> resources) {
+	public void setResources(Map<User, UserResource> resources) {
 		this.resources = resources;
 	}
 	
@@ -57,6 +60,20 @@ public class Game {
 	}
 	public void setTurnManager(GameTurnManager turnManager) {
 		this.turnManager = turnManager;
+	}
+	
+	public PointManager getPointManager() {
+		return pointManager;
+	}
+	public void setPointManager(PointManager pointManager) {
+		this.pointManager = pointManager;
+	}
+	
+	public HeroCardManager getHeroCardManager() {
+		return heroCardManager;
+	}
+	public void setHeroCardManager(HeroCardManager heroCardManager) {
+		this.heroCardManager = heroCardManager;
 	}
 	
 	public Board getBoard() {

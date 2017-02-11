@@ -207,6 +207,7 @@ public class GameLoadingAnswerDialog extends JDialog {
 		GameStartDialog startDialog = new GameStartDialog();
 		startDialog.setVisible(true);
 		mainMenu.dispose();// dispose all frames of the main menu
-		startDialog.startGameMaster(client, players, selectedBoard);
+		//startDialog.startGameMaster(client, players, selectedBoard);
+		//TODO load a game (don't use startGameMaster)
 	}
 }

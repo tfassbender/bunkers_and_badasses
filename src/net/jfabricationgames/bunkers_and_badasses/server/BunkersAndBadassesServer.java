@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillTreeProfit;
+import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
@@ -22,6 +24,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreatio
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -738,6 +741,67 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void receivePing(JFGConnection connection) {
 		pingManager.ping(connectionMap.get(connection));
+	}
+	
+	/**
+	 * Add the users resources depending on the users skill profiles.
+	 * 
+	 * @param game
+	 * 		The game containing the users.
+	 */
+	public void addResources(Game game) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		Map<User, UserResource> userResources = new HashMap<User, UserResource>();
+		for (User user : game.getPlayers()) {
+			String username = "__global_user_skill__";//In the first version there is only one global user skill profile
+			String query = "SELECT * FROM bunkers_and_badasses.skills WHERE name = " + username;
+			try (Statement statement = con.createStatement()) {
+				result = statement.executeQuery(query);//load the skill profile
+				if (result.next()) {
+					UserResource resource = new UserResource();
+					resource.setEridium(SkillTreeProfit.ERIDIUM_SKILL_LEVEL[result.getInt(4)]);
+					resource.setCredits(SkillTreeProfit.CREDITS_SKILL_LEVEL[result.getInt(5)]);
+					resource.setAmmo(SkillTreeProfit.AMMO_SKILL_LEVEL[result.getInt(6)]);
+					resource.setEridiumBuilding(SkillTreeProfit.ERIDIUM_BUILDING_SKILL_LEVEL[result.getInt(7)]);
+					resource.setCreditsBuilding(SkillTreeProfit.CREDITS_BUILDING_SKILL_LEVEL[result.getInt(8)]);
+					resource.setAmmoBuilding(SkillTreeProfit.AMMO_BUILDING_SKILL_LEVEL[result.getInt(9)]);
+					userResources.put(user, resource);
+					game.getPointManager().addPoints(user, SkillTreeProfit.POINTS[result.getInt(3)]);
+					game.getHeroCardManager().takeCards(user, SkillTreeProfit.HEROES[result.getInt(10)]);
+				}
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			finally {
+				if (result != null) {
+					try {
+						result.close();
+					}
+					catch (SQLException sqle) {
+						sqle.printStackTrace();
+					}
+				}
+			}			
+		}
+		try {
+			con.close();
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+	}
+	/**
+	 * Send the game transfer message to all players joining the game.
+	 * 
+	 * @param message
+	 * 		The message containing the players.
+	 */
+	public void sendGameTransferMessage(GameTransferMessage message) {
+		for (User user : message.getGame().getPlayers()) {
+			userMap.get(user).sendMessage(message);
+		}
 	}
 	
 	public Map<User, JFGConnection> getUserMap() {

@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -28,6 +29,12 @@ public class PointManager {
 		@Override
 		public String toString() {
 			return user.getUsername() + ": " + points;
+		}
+	}
+	
+	public void initialize(List<User> players) {
+		for (User user : players) {
+			points.put(user, 0);
 		}
 	}
 	
