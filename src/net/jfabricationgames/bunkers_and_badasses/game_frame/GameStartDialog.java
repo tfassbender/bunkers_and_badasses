@@ -131,7 +131,11 @@ public class GameStartDialog extends JDialog {
 	 * Create the game frame when the game id and the board are loaded.
 	 */
 	private void startGameFrame() {
-		//TODO start the game frame
+		if (board != null && game != null && gameId != -1) {
+			game.setBoard(board);
+			game.setId(gameId);
+			//TODO start the game frame			
+		}
 	}
 	
 	/**

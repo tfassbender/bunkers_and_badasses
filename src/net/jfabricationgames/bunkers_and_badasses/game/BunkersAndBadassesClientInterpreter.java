@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerLogoutMessage;
@@ -39,6 +40,10 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		else if (message instanceof ServerLogoutMessage) {
 			interpreteServerLogoutMessage((ServerLogoutMessage) message, client);
 		}
+		//game transfer message
+		else if (message instanceof GameTransferMessage) {
+			interpreteGameTransferMessage((GameTransferMessage) message, client);
+		}
 	}
 	
 	private void interpreteBoardTransfereMessage(BoardTransfereMessage message, JFGClient client) {
@@ -55,5 +60,9 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	
 	private void interpreteServerLogoutMessage(ServerLogoutMessage message, JFGClient client) {
 		new ServerLogoutDialog(message).setVisible(true);
+	}
+	
+	private void interpreteGameTransferMessage(GameTransferMessage message, JFGClient client) {
+		gameStartDialog.receiveGame(message.getGame());
 	}
 }
