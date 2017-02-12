@@ -31,6 +31,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgdatabaselogin.message.Cryptographer;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
+import net.jfabricationgames.jfgserver.server.JFGConnectionGroup;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 public class BunkersAndBadassesServer extends JFGLoginServer {
@@ -60,6 +61,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		}
 		loadUsers();
 		pingManager = new ServerPingManager(this);
+		setGroupFactory(new BunkersAndBadassesConnectionGroup());
 	}
 	
 	/**
@@ -632,6 +634,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			}
 		}
 		//add the game to the message and send it back to the client
+		//the board image is loaded separately by the GameStartDialog via a BoardRequestMessage
 		message.setLoadedGame(loadedGame);
 		message.setLoadedSuccessful(loadedGame != null);
 		connection.sendMessage(message);
@@ -647,6 +650,23 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		List<User> players = message.getPlayers();
 		for (int i = 0; i < players.size(); i++) {
 			userMap.get(players.get(i)).sendMessage(message);
+		}
+	}
+	
+	/**
+	 * Create a group for the players of the game.
+	 * 
+	 * @param message
+	 * 		The message that starts the game and contains all the players.
+	 */
+	public void createGameGroup(GameStartMessage message) {
+		List<JFGConnection> connections = new ArrayList<JFGConnection>();
+		for (User player : message.getPlayers()) {
+			connections.add(userMap.get(player));
+		}
+		JFGConnectionGroup group = createGroup(connections);
+		for (JFGConnection connection : connections) {
+			connection.setGroup(group);
 		}
 	}
 	

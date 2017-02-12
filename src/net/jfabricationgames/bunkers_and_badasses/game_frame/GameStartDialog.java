@@ -44,6 +44,8 @@ public class GameStartDialog extends JDialog {
 	private int gameId = -1;
 	private Game game;
 	
+	private boolean isLoaded;
+	
 	public GameStartDialog() {
 		setResizable(false);
 		setTitle("Bunkers and Badasses");
@@ -134,8 +136,14 @@ public class GameStartDialog extends JDialog {
 	 */
 	private void startGameFrame() {
 		if (board != null && game != null && gameId != -1) {
-			game.setBoard(board);
-			game.setId(gameId);
+			if (!isLoaded) {
+				game.setBoard(board);
+				game.setId(gameId);				
+			}
+			else {
+				//set only the image because it's not included in the loaded board
+				game.getBoard().setBaseImage(board.getBaseImage());
+			}
 			//TODO start the game frame			
 		}
 	}
@@ -154,6 +162,7 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void startGameMaster(JFGClient client, List<User> players, Board board) {
 		this.client = client;
+		this.isLoaded = false;
 		changeClientInterpreter(client);
 		//send a game start message containing the board id to all players
 		//this message is received by the MainMenuClientInterpreter and starts the GameStartDialog that adds the BunkersAndBadassesClientInterpreter
@@ -214,6 +223,7 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void loadGameMaster(JFGClient client, List<User> players, Board board, GameOverview overview) {
 		this.client = client;
+		this.isLoaded = true;
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		//send a game start message containing the board id to all players
@@ -223,6 +233,11 @@ public class GameStartDialog extends JDialog {
 		message.setPlayers(players);
 		message.setLoaded(true);
 		client.sendMessage(message);
+		//load the board (image) from the server
+		BoardRequestMessage boardRequest = new BoardRequestMessage();
+		boardRequest.setId(board.getBoardId());
+		boardRequest.setPlayers(players.size());
+		client.sendMessage(boardRequest);
 		//load the game from the server using the GameStore
 		Thread gameLoadingThread = new Thread(new Runnable() {
 			@Override
@@ -238,7 +253,7 @@ public class GameStartDialog extends JDialog {
 					gse.printStackTrace();
 				}
 			}
-		});
+		}, "GameLoadingThread");
 		gameLoadingThread.start();
 	}
 	
@@ -262,6 +277,7 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview) {
 		this.client = client;
+		this.isLoaded = loadedGame;
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		if (loadedGame) {
@@ -281,17 +297,15 @@ public class GameStartDialog extends JDialog {
 						gse.printStackTrace();
 					}
 				}
-			});
+			}, "GameLoadingThread");
 			gameLoadingThread.start();
 		}
-		else {
-			//load the board from the server
-			BoardRequestMessage boardRequest = new BoardRequestMessage();
-			boardRequest.setId(boardId);
-			boardRequest.setPlayers(players);
-			client.sendMessage(boardRequest);
-			//wait for the server to send the game id
-		}
+		//load the board from the server (for loaded games only the image is used)
+		BoardRequestMessage boardRequest = new BoardRequestMessage();
+		boardRequest.setId(boardId);
+		boardRequest.setPlayers(players);
+		client.sendMessage(boardRequest);
+		//wait for the server to send the game id
 	}
 	
 	private BunkersAndBadassesClientInterpreter changeClientInterpreter(JFGClient client) {

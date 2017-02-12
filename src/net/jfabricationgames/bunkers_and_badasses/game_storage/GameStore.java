@@ -27,6 +27,9 @@ public class GameStore {
 	 * @param overview
 	 * 		The GameOverview the player got from the server as the game was started.
 	 * 
+	 * @param players
+	 * 		The number of players that will probably load the game to continue it.
+	 * 
 	 * @return
 	 * 		The loaded game from the database.
 	 * 
@@ -71,8 +74,10 @@ public class GameStore {
 	 * 		A GameStorageException is thrown when the game couldn't be stored.
 	 */
 	public void storeGame(Game game, boolean gameEnded) throws GameStorageException {
+		game.getBoard().setStoreImage(false);//don't send the image to the server
 		GameSaveMessage save = new GameSaveMessage(game, gameEnded);
 		client.sendMessage(save);//send the game to the server
+		game.getBoard().setStoreImage(true);//enable the image sending again after sending the game 
 		long timestamp = System.currentTimeMillis();
 		try {
 			//wait for the servers answer or abort after 30 seconds

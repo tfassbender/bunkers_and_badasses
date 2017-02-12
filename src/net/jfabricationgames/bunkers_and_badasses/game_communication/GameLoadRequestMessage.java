@@ -11,6 +11,7 @@ public class GameLoadRequestMessage implements JFGServerMessage, JFGClientMessag
 	
 	private Game loadedGame;
 	private boolean loadedSuccessful;
+	//private int players;
 	
 	private GameOverview overview;//identifies the game to be loaded by it's id in the database
 	
@@ -31,6 +32,13 @@ public class GameLoadRequestMessage implements JFGServerMessage, JFGClientMessag
 	public void setOverview(GameOverview overview) {
 		this.overview = overview;
 	}
+	
+	/*public int getPlayers() {
+		return players;
+	}
+	public void setPlayers(int players) {
+		this.players = players;
+	}*/
 	
 	public boolean isLoadedSuccessful() {
 		return loadedSuccessful;
