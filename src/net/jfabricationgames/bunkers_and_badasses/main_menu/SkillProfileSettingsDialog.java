@@ -25,7 +25,9 @@ import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
+import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
 public class SkillProfileSettingsDialog extends JDialog {
@@ -43,12 +45,16 @@ public class SkillProfileSettingsDialog extends JDialog {
 	private Map<JCheckBox, SkillTreeNode> skillMap;
 	private Map<String, SkillTreeNode> nameMap;
 	
-	public SkillProfileSettingsDialog(MainMenuFrame callingFrame) {
+	private JFGClient client;
+	
+	public SkillProfileSettingsDialog(MainMenuFrame callingFrame, JFGClient client) {
 		setTitle("Bunkers and Badasses - Skill-Profil");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1100, 550);
 		setMinimumSize(new Dimension(1100, 550));
 		setLocationRelativeTo(callingFrame);
+		
+		this.client = client;
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
@@ -774,9 +780,33 @@ public class SkillProfileSettingsDialog extends JDialog {
 		enableSkills();
 	}
 	
+	public void addSkills(int eridium, int credits, int ammo, int eridiumBuilding, int creditsBuilding, int ammoBuilding, int heros, int points) {
+		List<SkillTreeNode> leafs = new ArrayList<SkillTreeNode>();
+		leafs.add(nameMap.get("e" + eridium));
+		leafs.add(nameMap.get("c" + credits));
+		leafs.add(nameMap.get("a" + ammo));
+		leafs.add(nameMap.get("eb" + eridiumBuilding));
+		leafs.add(nameMap.get("cb" + creditsBuilding));
+		leafs.add(nameMap.get("ab" + ammoBuilding));
+		leafs.add(nameMap.get("h" + heros));
+		leafs.add(nameMap.get("p" + points));
+		for (SkillTreeNode node : leafs) {
+			selectPreviouse(node);
+		}
+		enableSkills();
+	}
+	
+	private void selectPreviouse(SkillTreeNode node) {
+		node.setSelected(true);
+		for (int i = 0; i < node.getPrev().size(); i++) {
+			selectPreviouse(node.getPrev().get(i));
+		}
+	}
 	
 	private void submitSkills() {
-		//TODO submit the skill points to the database
+		SkillProfileTransfereMessage message = new SkillProfileTransfereMessage();
+		//TODO add the selected skills
+		client.sendMessage(message);
 	}
 	
 	private void enableSkills() {

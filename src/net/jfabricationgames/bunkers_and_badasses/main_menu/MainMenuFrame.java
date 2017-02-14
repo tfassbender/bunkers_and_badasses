@@ -323,7 +323,7 @@ public class MainMenuFrame extends JFrame {
 			skillProfileSettingsDialog.requestFocus();
 		}
 		else {
-			skillProfileSettingsDialog = new SkillProfileSettingsDialog(this);
+			skillProfileSettingsDialog = new SkillProfileSettingsDialog(this, client);
 			skillProfileSettingsDialog.setVisible(true);
 		}
 	}
