@@ -57,6 +57,7 @@ public class MainMenuFrame extends JFrame {
 	private GameCreationDialog gameCreationDialog;
 	private GameLoadingDialog gameLoadingDialog;
 	private AccountSettingsDialog accountSettingsDialog;
+	private SkillProfileSettingsDialog skillProfileSettingsDialog;
 	
 	private static ImageLoader imageLoader;
 	
@@ -117,7 +118,11 @@ public class MainMenuFrame extends JFrame {
 		mnProfil.add(mntmProfilEinstellungen);
 		
 		JMenuItem mntmSkillProfil = new JMenuItem("Skill Profil");
-		mntmSkillProfil.setEnabled(false);
+		mntmSkillProfil.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showSkillProfileSettings();
+			}
+		});
 		mnProfil.add(mntmSkillProfil);
 		
 		JMenuItem mntmStatistiken = new JMenuItem("Statistiken");
@@ -234,6 +239,7 @@ public class MainMenuFrame extends JFrame {
 		gameCreationDialog.dispose();
 		gameLoadingDialog.dispose();
 		accountSettingsDialog.dispose();
+		skillProfileSettingsDialog.dispose();
 		super.dispose();
 	}
 	
@@ -310,6 +316,16 @@ public class MainMenuFrame extends JFrame {
 		}
 		requestDialogs.put(startingPlayer, request);
 		request.setVisible(true);
+	}
+	private void showSkillProfileSettings() {
+		if (skillProfileSettingsDialog != null) {
+			skillProfileSettingsDialog.setVisible(true);
+			skillProfileSettingsDialog.requestFocus();
+		}
+		else {
+			skillProfileSettingsDialog = new SkillProfileSettingsDialog(this);
+			skillProfileSettingsDialog.setVisible(true);
+		}
 	}
 	
 	protected void disposeGameCreationDialog() {

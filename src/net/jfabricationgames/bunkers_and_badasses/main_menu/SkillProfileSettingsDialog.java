@@ -2,13 +2,17 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -21,6 +25,7 @@ import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.miginfocom.swing.MigLayout;
 
 public class SkillProfileSettingsDialog extends JDialog {
@@ -32,17 +37,19 @@ public class SkillProfileSettingsDialog extends JDialog {
 	private JTextField textField;
 	
 	private int startSkillPoints;
-	private int skillPointsLeft;
 	
 	private SkillTreeNode root;
 	
 	private Map<JCheckBox, SkillTreeNode> skillMap;
 	private Map<String, SkillTreeNode> nameMap;
 	
-	public SkillProfileSettingsDialog() {
+	public SkillProfileSettingsDialog(MainMenuFrame callingFrame) {
 		setTitle("Bunkers and Badasses - Skill-Profil");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setBounds(100, 100, 1000, 550);
+		setBounds(100, 100, 1100, 550);
+		setMinimumSize(new Dimension(1100, 550));
+		setLocationRelativeTo(callingFrame);
+		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -50,7 +57,6 @@ public class SkillProfileSettingsDialog extends JDialog {
 		contentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
 		startSkillPoints = 25;//TODO better load from database
-		skillPointsLeft = startSkillPoints;
 		
 		root = new SkillTreeNode(0, null);
 		root.setEnabled(true);
@@ -102,21 +108,21 @@ public class SkillProfileSettingsDialog extends JDialog {
 				panel_skills.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 				panel_skills.setBackground(Color.GRAY);
 				panel.add(panel_skills, "cell 0 2 3 2,grow");
-				panel_skills.setLayout(new MigLayout("", "[center][10px][center][center][center][grow][center][center][center][center][grow][center][10px]", "[][][5px][][25px][][25px][][25px][][25px][]"));
+				panel_skills.setLayout(new MigLayout("", "[center][10px][center][center][center][center][center][grow][:60px:60px,center][center][center][center][center][center][grow][center][10px]", "[][][5px][][25px][][25px][][25px][][25px][]"));
 				{
 					JLabel lblEridium = new JLabel("Eridium");
 					lblEridium.setFont(new Font("Tahoma", Font.PLAIN, 16));
-					panel_skills.add(lblEridium, "cell 2 0 3 1");
+					panel_skills.add(lblEridium, "cell 2 0 5 1");
 				}
 				{
 					JLabel lblCreditsammo = new JLabel("Credits/Munition");
 					lblCreditsammo.setFont(new Font("Tahoma", Font.PLAIN, 16));
-					panel_skills.add(lblCreditsammo, "cell 6 0 4 1,alignx center");
+					panel_skills.add(lblCreditsammo, "cell 8 0 6 1,alignx center");
 				}
 				{
 					JLabel lblPunkte = new JLabel("Punkte");
 					lblPunkte.setFont(new Font("Tahoma", Font.PLAIN, 16));
-					panel_skills.add(lblPunkte, "cell 11 0,alignx center");
+					panel_skills.add(lblPunkte, "cell 15 0,alignx center");
 				}
 				{
 					JLabel lblLevel = new JLabel("Level");
@@ -130,24 +136,72 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxEridium = new JCheckBox("Eridium 1");
+					chckbxEridium.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxEridium.setBackground(Color.GRAY);
-					panel_skills.add(chckbxEridium, "cell 3 3");
+					panel_skills.add(chckbxEridium, "cell 3 3 2 1");
 					e1 = new SkillTreeNode(1, chckbxEridium);
 					skillMap.put(chckbxEridium, e1);
 				}
 				{
 					JCheckBox chckbxCredits = new JCheckBox("Credits 1");
+					chckbxCredits.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxCredits.setBackground(Color.GRAY);
-					panel_skills.add(chckbxCredits, "cell 7 3");
+					panel_skills.add(chckbxCredits, "cell 10 3");
 					c1 = new SkillTreeNode(1, chckbxCredits);
 					skillMap.put(chckbxCredits, c1);
 				}
 				{
 					JCheckBox chckbxPunkte = new JCheckBox("Punkte 1");
+					chckbxPunkte.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxPunkte.setBackground(Color.GRAY);
-					panel_skills.add(chckbxPunkte, "cell 11 3");
+					panel_skills.add(chckbxPunkte, "cell 15 3");
 					p1 = new SkillTreeNode(1, chckbxPunkte);
 					skillMap.put(chckbxPunkte, p1);
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 3 4 2 1");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dr.png")));
+					panel_skills.add(label, "cell 5 4,alignx right");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dl.png")));
+					panel_skills.add(label, "cell 9 4,alignx right");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 10 4");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dr.png")));
+					panel_skills.add(label, "cell 11 4,alignx left");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 15 4");
 				}
 				{
 					JLabel label = new JLabel("2");
@@ -156,45 +210,131 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxEridium_1 = new JCheckBox("Eridium 2");
+					chckbxEridium_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxEridium_1.setBackground(Color.GRAY);
-					panel_skills.add(chckbxEridium_1, "cell 3 5");
+					panel_skills.add(chckbxEridium_1, "cell 3 5 2 1");
 					e2 = new SkillTreeNode(2, chckbxEridium_1);
 					skillMap.put(chckbxEridium_1, e2);
 				}
 				{
 					JCheckBox chckbxEridiumGebude = new JCheckBox("E. Geb\u00E4ude 1");
+					chckbxEridiumGebude.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxEridiumGebude.setBackground(Color.GRAY);
-					panel_skills.add(chckbxEridiumGebude, "cell 4 5");
+					panel_skills.add(chckbxEridiumGebude, "cell 5 5 2 1");
 					eb1 = new SkillTreeNode(2, chckbxEridiumGebude);
 					skillMap.put(chckbxEridiumGebude, eb1);
 				}
 				{
 					JCheckBox chckbxCGebude = new JCheckBox("C. Geb\u00E4ude 1");
+					chckbxCGebude.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxCGebude.setBackground(Color.GRAY);
-					panel_skills.add(chckbxCGebude, "cell 6 5");
+					panel_skills.add(chckbxCGebude, "cell 8 5 2 1");
 					cb1 = new SkillTreeNode(2, chckbxCGebude);
 					skillMap.put(chckbxCGebude, cb1);
 				}
 				{
 					JCheckBox chckbxCredits_1 = new JCheckBox("Credits 2");
+					chckbxCredits_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxCredits_1.setBackground(Color.GRAY);
-					panel_skills.add(chckbxCredits_1, "cell 7 5");
+					panel_skills.add(chckbxCredits_1, "cell 10 5");
 					c2 = new SkillTreeNode(2, chckbxCredits_1);
 					skillMap.put(chckbxCredits_1, c2);
 				}
 				{
 					JCheckBox chckbxMunition = new JCheckBox("Munition 1");
+					chckbxMunition.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxMunition.setBackground(Color.GRAY);
-					panel_skills.add(chckbxMunition, "cell 8 5");
+					panel_skills.add(chckbxMunition, "cell 11 5");
 					a1 = new SkillTreeNode(2, chckbxMunition);
 					skillMap.put(chckbxMunition, a1);
 				}
 				{
 					JCheckBox chckbxPunkte_1 = new JCheckBox("Punkte 2");
+					chckbxPunkte_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxPunkte_1.setBackground(Color.GRAY);
-					panel_skills.add(chckbxPunkte_1, "cell 11 5");
+					panel_skills.add(chckbxPunkte_1, "cell 15 5");
 					p2 = new SkillTreeNode(2, chckbxPunkte_1);
 					skillMap.put(chckbxPunkte_1, p2);
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dl.png")));
+					panel_skills.add(label, "cell 2 6,alignx right");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 3 6 2 1");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dr.png")));
+					panel_skills.add(label, "cell 5 6");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 6 6");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 8 6");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dl.png")));
+					panel_skills.add(label, "cell 9 6,alignx right");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 10 6");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 11 6");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dr.png")));
+					panel_skills.add(label, "cell 12 6 2 1,alignx left");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 15 6");
 				}
 				{
 					JLabel label = new JLabel("3");
@@ -203,6 +343,12 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxHeld = new JCheckBox("Held 1");
+					chckbxHeld.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxHeld.setBackground(Color.GRAY);
 					panel_skills.add(chckbxHeld, "cell 2 7");
 					h1 = new SkillTreeNode(3, chckbxHeld);
@@ -210,52 +356,144 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxEridium_2 = new JCheckBox("Eridium 3");
+					chckbxEridium_2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxEridium_2.setBackground(Color.GRAY);
-					panel_skills.add(chckbxEridium_2, "cell 3 7");
+					panel_skills.add(chckbxEridium_2, "cell 3 7 2 1");
 					e3 = new SkillTreeNode(3, chckbxEridium_2);
 					skillMap.put(chckbxEridium_2, e3);
 				}
 				{
 					JCheckBox chckbxEridiumGebude_1 = new JCheckBox("E. Geb\u00E4ude 2");
+					chckbxEridiumGebude_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxEridiumGebude_1.setBackground(Color.GRAY);
-					panel_skills.add(chckbxEridiumGebude_1, "cell 4 7");
+					panel_skills.add(chckbxEridiumGebude_1, "cell 5 7 2 1");
 					eb2 = new SkillTreeNode(3, chckbxEridiumGebude_1);
 					skillMap.put(chckbxEridiumGebude_1, eb2);
 				}
 				{
 					JCheckBox chckbxCGebude_1 = new JCheckBox("C. Geb\u00E4ude 2");
+					chckbxCGebude_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxCGebude_1.setBackground(Color.GRAY);
-					panel_skills.add(chckbxCGebude_1, "cell 6 7");
+					panel_skills.add(chckbxCGebude_1, "cell 8 7 2 1");
 					cb2 = new SkillTreeNode(3, chckbxCGebude_1);
 					skillMap.put(chckbxCGebude_1, cb2);
 				}
 				{
 					JCheckBox chckbxCredits_2 = new JCheckBox("Credits 3");
+					chckbxCredits_2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxCredits_2.setBackground(Color.GRAY);
-					panel_skills.add(chckbxCredits_2, "cell 7 7");
+					panel_skills.add(chckbxCredits_2, "cell 10 7");
 					c3 = new SkillTreeNode(3, chckbxCredits_2);
 					skillMap.put(chckbxCredits_2, c3);
 				}
 				{
 					JCheckBox chckbxMunition_1 = new JCheckBox("Munition 2");
+					chckbxMunition_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxMunition_1.setBackground(Color.GRAY);
-					panel_skills.add(chckbxMunition_1, "cell 8 7");
+					panel_skills.add(chckbxMunition_1, "cell 11 7");
 					a2 = new SkillTreeNode(3, chckbxMunition_1);
 					skillMap.put(chckbxMunition_1, a2);
 				}
 				{
 					JCheckBox chckbxMGebude = new JCheckBox("M. Geb\u00E4ude 1");
+					chckbxMGebude.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxMGebude.setBackground(Color.GRAY);
-					panel_skills.add(chckbxMGebude, "cell 9 7");
+					panel_skills.add(chckbxMGebude, "cell 12 7 2 1");
 					ab1 = new SkillTreeNode(3, chckbxMGebude);
 					skillMap.put(chckbxMGebude, ab1);
 				}
 				{
 					JCheckBox chckbxPunkte_2 = new JCheckBox("Punkte 3");
+					chckbxPunkte_2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxPunkte_2.setBackground(Color.GRAY);
-					panel_skills.add(chckbxPunkte_2, "cell 11 7");
+					panel_skills.add(chckbxPunkte_2, "cell 15 7");
 					p3 = new SkillTreeNode(3, chckbxPunkte_2);
 					skillMap.put(chckbxPunkte_2, p3);
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 2 8");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dl.png")));
+					panel_skills.add(label, "cell 3 8");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dr.png")));
+					panel_skills.add(label, "cell 4 8,alignx right");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 6 8");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 8 8");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dl.png")));
+					panel_skills.add(label, "cell 10 8,alignx left");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 11 8");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_dr.png")));
+					panel_skills.add(label, "cell 12 8");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 13 8");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 15 8");
 				}
 				{
 					JLabel label = new JLabel("4");
@@ -264,6 +502,12 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxHeld_1 = new JCheckBox("Held 2");
+					chckbxHeld_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxHeld_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxHeld_1, "cell 2 9");
 					h2 = new SkillTreeNode(4, chckbxHeld_1);
@@ -271,38 +515,83 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxEridiumGebude_2 = new JCheckBox("E. Geb\u00E4ude 3");
+					chckbxEridiumGebude_2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxEridiumGebude_2.setBackground(Color.GRAY);
-					panel_skills.add(chckbxEridiumGebude_2, "cell 4 9");
+					panel_skills.add(chckbxEridiumGebude_2, "cell 5 9 2 1");
 					eb3 = new SkillTreeNode(4, chckbxEridiumGebude_2);
 					skillMap.put(chckbxEridiumGebude_2, eb3);
 				}
 				{
 					JCheckBox chckbxCGebude_2 = new JCheckBox("C. Geb\u00E4ude 3");
+					chckbxCGebude_2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxCGebude_2.setBackground(Color.GRAY);
-					panel_skills.add(chckbxCGebude_2, "cell 6 9");
+					panel_skills.add(chckbxCGebude_2, "cell 8 9 2 1");
 					cb3 = new SkillTreeNode(4, chckbxCGebude_2);
 					skillMap.put(chckbxCGebude_2, cb3);
 				}
 				{
 					JCheckBox chckbxMunition_2 = new JCheckBox("Munition 3");
+					chckbxMunition_2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxMunition_2.setBackground(Color.GRAY);
-					panel_skills.add(chckbxMunition_2, "cell 8 9");
+					panel_skills.add(chckbxMunition_2, "cell 11 9");
 					a3 = new SkillTreeNode(4, chckbxMunition_2);
 					skillMap.put(chckbxMunition_2, a3);
 				}
 				{
 					JCheckBox chckbxMgebude = new JCheckBox("M. Geb\u00E4ude 2");
+					chckbxMgebude.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxMgebude.setBackground(Color.GRAY);
-					panel_skills.add(chckbxMgebude, "cell 9 9");
+					panel_skills.add(chckbxMgebude, "cell 12 9 2 1");
 					ab2 = new SkillTreeNode(4, chckbxMgebude);
 					skillMap.put(chckbxMgebude, ab2);
 				}
 				{
 					JCheckBox chckbxPunkte_3 = new JCheckBox("Punkte 4");
+					chckbxPunkte_3.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxPunkte_3.setBackground(Color.GRAY);
-					panel_skills.add(chckbxPunkte_3, "cell 11 9");
+					panel_skills.add(chckbxPunkte_3, "cell 15 9");
 					p4 = new SkillTreeNode(4, chckbxPunkte_3);
 					skillMap.put(chckbxPunkte_3, p4);
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 2 10");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 13 10");
+				}
+				{
+					JLabel label = new JLabel("");
+					label.setIcon(new ImageIcon(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/main_menu/line_d.png")));
+					panel_skills.add(label, "cell 15 10");
 				}
 				{
 					JLabel label = new JLabel("5");
@@ -311,6 +600,12 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxHeld_2 = new JCheckBox("Held 3");
+					chckbxHeld_2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxHeld_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxHeld_2, "cell 2 11");
 					h3 = new SkillTreeNode(5, chckbxHeld_2);
@@ -318,15 +613,27 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 				{
 					JCheckBox chckbxMgebude_1 = new JCheckBox("M. Geb\u00E4ude 3");
+					chckbxMgebude_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxMgebude_1.setBackground(Color.GRAY);
-					panel_skills.add(chckbxMgebude_1, "cell 9 11");
+					panel_skills.add(chckbxMgebude_1, "cell 12 11 2 1");
 					ab3 = new SkillTreeNode(5, chckbxMgebude_1);
 					skillMap.put(chckbxMgebude_1, ab3);
 				}
 				{
 					JCheckBox chckbxPunkte_4 = new JCheckBox("Punkte 5");
+					chckbxPunkte_4.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							skillMap.get(e.getSource()).setSelected(false);
+							enableSkills();
+						}
+					});
 					chckbxPunkte_4.setBackground(Color.GRAY);
-					panel_skills.add(chckbxPunkte_4, "cell 11 11");
+					panel_skills.add(chckbxPunkte_4, "cell 15 11");
 					p5 = new SkillTreeNode(5, chckbxPunkte_4);
 					skillMap.put(chckbxPunkte_4, p5);
 				}
@@ -362,7 +669,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 				}
 			}
 			{
-				ImagePanel panel_img = new ImagePanel(MainMenuFrame.getImageLoader().loadImage("main_menu/angel_1.png"));
+				ImagePanel panel_img = new ImagePanel(GameFrame.getImageLoader().loadImage("main_menu/angel_1.png"));
 				panel_img.setAdaptSizeKeepProportion(true);
 				panel_img.setCentered(true);
 				panel_img.setBackground(Color.GRAY);
@@ -375,11 +682,22 @@ public class SkillProfileSettingsDialog extends JDialog {
 				panel_1.setLayout(new MigLayout("", "[grow][][][grow]", "[]"));
 				{
 					JButton btnOk = new JButton("Ok");
+					btnOk.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							submitSkills();
+							dispose();
+						}
+					});
 					panel_1.add(btnOk, "cell 1 0");
 					btnOk.setBackground(Color.GRAY);
 				}
 				{
 					JButton btnAbbrechen = new JButton("Abbrechen");
+					btnAbbrechen.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							dispose();
+						}
+					});
 					panel_1.add(btnAbbrechen, "cell 2 0");
 					btnAbbrechen.setBackground(Color.GRAY);
 				}
@@ -419,10 +737,6 @@ public class SkillProfileSettingsDialog extends JDialog {
 		root.addNext(e1);
 		root.addNext(c1);
 		root.addNext(p1);
-		//line 1 previous
-		e1.addPrev(root);
-		c1.addPrev(root);
-		p1.addPrev(root);
 		//line 1 next
 		e1.addNext(e2);
 		e1.addNext(eb1);
@@ -430,13 +744,6 @@ public class SkillProfileSettingsDialog extends JDialog {
 		c1.addNext(c2);
 		c1.addNext(a1);
 		p1.addNext(p2);
-		//line 2 previous
-		e2.addPrev(e1);
-		eb1.addPrev(e1);
-		cb1.addPrev(c1);
-		c2.addPrev(c1);
-		a1.addPrev(c1);
-		p2.addPrev(p1);
 		//line 2 next
 		e2.addNext(h1);
 		e2.addNext(e3);
@@ -448,17 +755,6 @@ public class SkillProfileSettingsDialog extends JDialog {
 		a1.addNext(a2);
 		a1.addNext(ab1);
 		p2.addNext(p3);
-		//line 3 previous
-		h1.addPrev(e2);
-		e3.addPrev(e2);
-		eb2.addPrev(e2);
-		eb2.addPrev(eb1);
-		cb2.addPrev(cb1);
-		cb2.addPrev(c2);
-		c3.addPrev(c2);
-		a2.addPrev(a1);
-		ab1.addPrev(a1);
-		p3.addPrev(p2);
 		//line 3 next
 		h1.addNext(h2);
 		e3.addNext(h2);
@@ -470,25 +766,63 @@ public class SkillProfileSettingsDialog extends JDialog {
 		a2.addNext(ab2);
 		ab1.addNext(ab2);
 		p3.addNext(p4);
-		//line 4 previous
-		h2.addPrev(h1);
-		h2.addPrev(e3);
-		eb3.addPrev(e3);
-		eb3.addPrev(eb2);
-		cb3.addPrev(cb2);
-		cb3.addPrev(c3);
-		a3.addPrev(a2);
-		ab2.addPrev(a2);
-		ab2.addPrev(ab1);
-		p4.addPrev(p3);
 		//line 4 next
 		h2.addNext(h3);
 		ab2.addNext(ab3);
 		p4.addNext(p5);
-		//line 5 previous
-		h3.addPrev(h2);
-		ab3.addPrev(ab2);
-		p5.addPrev(p4);
+		
+		enableSkills();
+	}
+	
+	
+	private void submitSkills() {
+		//TODO submit the skill points to the database
+	}
+	
+	private void enableSkills() {
+		int skillPointsLeft = getSkillPointsLeft();
+		enableSkills(root);
+		enableSkillsByPoints(skillPointsLeft);
+		textField.setText(Integer.toString(skillPointsLeft));
+	}
+	
+	/**
+	 * Enable the skill check boxes recursively
+	 * 
+	 * @param node
+	 * 		The recursive node
+	 */
+	private void enableSkills(SkillTreeNode node) {
+		boolean enable = true;
+		for (int i = 0; i < node.getPrev().size(); i++) {
+			enable &= node.getPrev().get(i).isSelected();
+		}
+		if (enable) {
+			node.getCheck().setEnabled(true);
+		}
+		else {
+			node.getCheck().setEnabled(false);
+			node.getCheck().setSelected(false);
+		}
+		for (int i = 0; i < node.getNext().size(); i++) {
+			enableSkills(node.getNext().get(i));
+		}
+	}
+	private void enableSkillsByPoints(int skillPoints) {
+		for (SkillTreeNode node : skillMap.values()) {
+			if (node.getCost() > skillPoints && !node.isSelected()) {
+				node.setEnabled(false);
+			}
+		}
+	}
+	private int getSkillPointsLeft() {
+		int skillPoints = startSkillPoints;
+		for (SkillTreeNode node : skillMap.values()) {
+			if (node.isSelected()) {
+				skillPoints -= node.getCost();
+			}
+		}
+		return skillPoints;
 	}
 	
 	private class SkillTreeNode {
@@ -496,13 +830,11 @@ public class SkillProfileSettingsDialog extends JDialog {
 		public SkillTreeNode(int cost, JCheckBox check) {
 			this.cost = cost;
 			this.check = check;
-			enabled = false;
 			selected = false;
 			prev = new ArrayList<SkillTreeNode>();
 			next = new ArrayList<SkillTreeNode>();
 		}
 		
-		private boolean enabled;
 		private boolean selected;
 		
 		private int cost;
@@ -519,11 +851,8 @@ public class SkillProfileSettingsDialog extends JDialog {
 			this.selected = selected;
 		}
 		
-		public boolean isEnabled() {
-			return enabled;
-		}
 		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
+			check.setEnabled(enabled);
 		}
 		
 		public int getCost() {
@@ -537,14 +866,12 @@ public class SkillProfileSettingsDialog extends JDialog {
 		public List<SkillTreeNode> getPrev() {
 			return prev;
 		}
-		public void addPrev(SkillTreeNode node) {
-			prev.add(node);
-		}
 		
 		public List<SkillTreeNode> getNext() {
 			return next;
 		}
 		public void addNext(SkillTreeNode node) {
+			node.getPrev().add(this);
 			next.add(node);
 		}
 	}
