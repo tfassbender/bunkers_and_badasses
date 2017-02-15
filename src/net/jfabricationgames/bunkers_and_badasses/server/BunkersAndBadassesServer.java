@@ -32,6 +32,7 @@ import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgdatabaselogin.message.Cryptographer;
+import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
 import net.jfabricationgames.jfgserver.server.JFGConnectionGroup;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
@@ -857,6 +858,12 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		message.setProfiles(skillProfiles);
 		connection.sendMessage(message);
 	}
+	/**
+	 * Update a user's skill profile in the database.
+	 *   
+	 * @param message
+	 * 		The update message containing the new skill profile.
+	 */
 	public void updateSkillProfile(SkillProfileTransferMessage message) {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		SkillProfile update = message.getUpdate();
@@ -867,6 +874,37 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		try (Statement statement = con.createStatement()) {
 			if (!statement.execute(query)) {
 				throw new SQLException();
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+	}
+	/**
+	 * Generate the default skill profiles for a new user.
+	 * 
+	 * @param message
+	 * 		The message that was sent to sign up the user.
+	 */
+	public void generateUserSkills(JFGDatabaseLoginMessage message) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		SkillProfile defaultProfile = SkillProfileManager.getDefaultSkillProfile();
+		String query = "INSERT INTO bunkers_and_badasses.skills (id, name, points, eridium, credits, ammo, eridium_building, credits_building, ammo_building, heroes) VALUES (0, " + 
+				message.getUsername() + ", " + defaultProfile.getPoints() + ", " + defaultProfile.getEridium() + ", " + defaultProfile.getCredits() + ", " + defaultProfile.getAmmo() + 
+				", " + defaultProfile.getEridiumBuilding() + ", " + defaultProfile.getCreditsBuilding() + ", " + defaultProfile.getAmmoBuilding() + ", " + defaultProfile.getHero() + ");";
+		try (Statement statement = con.createStatement()) {
+			for (int i = 0; i < 5; i++) {//insert 5 default skill profiles
+				if (!statement.execute(query)) {
+					throw new SQLException();
+				}
 			}
 		}
 		catch (SQLException sqle) {

@@ -12,11 +12,29 @@ public class SkillProfileManager {
 
 	public static final int[] CREDITS_BUILDING_SKILL_LEVEL = new int[] {};
 	public static final int[] AMMO_BUILDING_SKILL_LEVEL = new int[] {};
-	public static final int[] ERIDIUM_BUILDING_SKILL_LEVEL = new int[] {}; 
+	public static final int[] ERIDIUM_BUILDING_SKILL_LEVEL = new int[] {};
 	
 	public static final int[] POINTS = new int[] {};
 	
 	public static final int[] HEROES = new int[] {};
+	
+	private static SkillProfile defaultSkillProfile;
+	
+	static {
+		defaultSkillProfile = new SkillProfile();
+		defaultSkillProfile.setEridium(2);
+		defaultSkillProfile.setCredits(2);
+		defaultSkillProfile.setAmmo(2);
+		defaultSkillProfile.setEridiumBuilding(1);
+		defaultSkillProfile.setCreditsBuilding(2);
+		defaultSkillProfile.setAmmoBuilding(2);
+		defaultSkillProfile.setPoints(0);
+		defaultSkillProfile.setHero(0);
+	}
+	
+	public static SkillProfile getDefaultSkillProfile() {
+		return defaultSkillProfile;
+	}
 	
 	private SkillProfile[] skillProfiles;
 	
