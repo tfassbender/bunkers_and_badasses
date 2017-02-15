@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
-import net.jfabricationgames.bunkers_and_badasses.game.SkillTreeProfit;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
@@ -25,6 +26,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadReq
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -175,25 +177,16 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void updatePassword(MainMenuMessage message, JFGConnection conn) {
 		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
-		Statement statement = null;
 		boolean result = false;
 		String password = getPasswordHash(message.getPassword());
 		String sql = "UPDATE bunkers_and_badasses." + loginTable + " SET passwd = '"  + password + "' WHERE username = '" + message.getLastUsername() + "'";
-		try {
-			statement = connection.createStatement();
-			statement.execute(sql);
-			result = true;
+		try (Statement statement = connection.createStatement()) {
+			result = statement.execute(sql);
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
 		finally {
-			try {
-				statement.close();
-			}
-			catch (SQLException sqle) {
-				sqle.printStackTrace();
-			}
 			try {
 				connection.close();
 			}
@@ -219,24 +212,15 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void updateUsername(MainMenuMessage message, JFGConnection conn) {
 		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
-		Statement statement = null;
 		boolean result = false;
 		String sql = "UPDATE bunkers_and_badasses." + loginTable + " SET username = '"  + message.getUsername() + "' WHERE username = '" + message.getLastUsername() + "'";
-		try {
-			statement = connection.createStatement();
-			statement.execute(sql);
-			result = true;
+		try (Statement statement = connection.createStatement()) {
+			result = statement.execute(sql);
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
 		finally {
-			try {
-				statement.close();
-			}
-			catch (SQLException sqle) {
-				sqle.printStackTrace();
-			}
 			try {
 				connection.close();
 			}
@@ -266,27 +250,17 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void updateUser(MainMenuMessage message, JFGConnection conn) {
 		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
-		Statement statement = null;
 		boolean result = false;
 		String password = getPasswordHash(message.getPassword());
 		String sql = "UPDATE bunkers_and_badasses." + loginTable + " SET passwd = '"  + password + "' WHERE username = '" + message.getLastUsername() + "'";
 		String sql2 = "UPDATE bunkers_and_badasses." + loginTable + " SET username = '"  + message.getUsername() + "' WHERE username = '" + message.getLastUsername() + "'";
-		try {
-			statement = connection.createStatement();
-			statement.execute(sql);
-			statement.execute(sql2);
-			result = true;
+		try (Statement statement = connection.createStatement()) {
+			result = !statement.execute(sql) && !statement.execute(sql2);
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
 		finally {
-			try {
-				statement.close();
-			}
-			catch (SQLException sqle) {
-				sqle.printStackTrace();
-			}
 			try {
 				connection.close();
 			}
@@ -731,7 +705,9 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		}
 		try (Statement statement = con.createStatement()) {
 			for (String s : sql) {
-				statement.execute(s);
+				if (!statement.execute(s)) {
+					throw new SQLException();
+				}
 			}
 		}
 		catch (SQLException sqle) {
@@ -780,15 +756,15 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				result = statement.executeQuery(query);//load the skill profile
 				if (result.next()) {
 					UserResource resource = new UserResource();
-					resource.setEridium(SkillTreeProfit.ERIDIUM_SKILL_LEVEL[result.getInt(4)]);
-					resource.setCredits(SkillTreeProfit.CREDITS_SKILL_LEVEL[result.getInt(5)]);
-					resource.setAmmo(SkillTreeProfit.AMMO_SKILL_LEVEL[result.getInt(6)]);
-					resource.setEridiumBuilding(SkillTreeProfit.ERIDIUM_BUILDING_SKILL_LEVEL[result.getInt(7)]);
-					resource.setCreditsBuilding(SkillTreeProfit.CREDITS_BUILDING_SKILL_LEVEL[result.getInt(8)]);
-					resource.setAmmoBuilding(SkillTreeProfit.AMMO_BUILDING_SKILL_LEVEL[result.getInt(9)]);
+					resource.setEridium(SkillProfileManager.ERIDIUM_SKILL_LEVEL[result.getInt(4)]);
+					resource.setCredits(SkillProfileManager.CREDITS_SKILL_LEVEL[result.getInt(5)]);
+					resource.setAmmo(SkillProfileManager.AMMO_SKILL_LEVEL[result.getInt(6)]);
+					resource.setEridiumBuilding(SkillProfileManager.ERIDIUM_BUILDING_SKILL_LEVEL[result.getInt(7)]);
+					resource.setCreditsBuilding(SkillProfileManager.CREDITS_BUILDING_SKILL_LEVEL[result.getInt(8)]);
+					resource.setAmmoBuilding(SkillProfileManager.AMMO_BUILDING_SKILL_LEVEL[result.getInt(9)]);
 					userResources.put(user, resource);
-					game.getPointManager().addPoints(user, SkillTreeProfit.POINTS[result.getInt(3)]);
-					game.getHeroCardManager().takeCards(user, SkillTreeProfit.HEROES[result.getInt(10)]);
+					game.getPointManager().addPoints(user, SkillProfileManager.POINTS[result.getInt(3)]);
+					game.getHeroCardManager().takeCards(user, SkillProfileManager.HEROES[result.getInt(10)]);
 				}
 			}
 			catch (SQLException sqle) {
@@ -811,6 +787,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
+		//the message is sent back from the interpreter
 	}
 	/**
 	 * Send the game transfer message to all players joining the game.
@@ -821,6 +798,87 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	public void sendGameTransferMessage(GameTransferMessage message) {
 		for (User user : message.getGame().getPlayers()) {
 			userMap.get(user).sendMessage(message);
+		}
+	}
+	
+	/**
+	 * Load the skill profiles for a user and send them to the client.
+	 * 
+	 * @param message
+	 * 		The transfer message from the client (also send back to the client).
+	 * 
+	 * @param connection
+	 * 		The connection that sent the request.
+	 */
+	public void loadSkillProfiles(SkillProfileTransferMessage message, JFGConnection connection) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		String username = connectionMap.get(connection).getUsername();
+		String query = "SELECT * FROM bunkers_and_badasses.skills WHERE name = " + username;
+		SkillProfile[] skillProfiles = new SkillProfile[5];//every user has 5 skill profiles
+		try (Statement statement = con.createStatement()) {
+			result = statement.executeQuery(query);//load the skill profile
+			int index = 0;
+			while (result.next() && index < skillProfiles.length) {
+				SkillProfile profile = new SkillProfile();
+				profile.setEridium(result.getInt(4));
+				profile.setCredits(result.getInt(5));
+				profile.setAmmo(result.getInt(6));
+				profile.setEridiumBuilding(result.getInt(7));
+				profile.setCreditsBuilding(result.getInt(8));
+				profile.setAmmoBuilding(result.getInt(9));
+				profile.setHero(result.getInt(10));
+				profile.setPoints(result.getInt(3));
+				profile.setId(result.getInt(1));
+				skillProfiles[index] = profile;
+				index++;
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		//send the profiles back to the client
+		message.setProfiles(skillProfiles);
+		connection.sendMessage(message);
+	}
+	public void updateSkillProfile(SkillProfileTransferMessage message) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		SkillProfile update = message.getUpdate();
+		String query = "UPDATE bunkers_and_badasses.skills SET points = " + update.getPoints() + ",  eridium = " + update.getEridium() + 
+				", credits = " + update.getCredits() + ", ammo = " + update.getAmmo() + ", eridium_building = " + update.getEridiumBuilding() + 
+				", credits_building = " + update.getCreditsBuilding() + ", ammo_building = " + update.getAmmoBuilding() + ", heroes = " + update.getHero() + 
+				" WHERE id = " + update.getId();
+		try (Statement statement = con.createStatement()) {
+			if (!statement.execute(query)) {
+				throw new SQLException();
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
 		}
 	}
 	

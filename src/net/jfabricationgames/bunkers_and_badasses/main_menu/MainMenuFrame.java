@@ -30,8 +30,11 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.bunkers_and_badasses.game.ClientPingManager;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
@@ -50,6 +53,8 @@ public class MainMenuFrame extends JFrame {
 	//private List<User> playersInGame;
 	
 	private GameStore gameStore;
+	
+	private SkillProfileManager skillProfileManager;
 	
 	private List<Board> playableBoards;//no complete boards; only name and image
 	
@@ -77,6 +82,7 @@ public class MainMenuFrame extends JFrame {
 		this.client = client;
 		
 		gameStore = new GameStore(client);
+		skillProfileManager = new SkillProfileManager();
 		dynamicLoader = new MainMenuDynamicLoader(client);
 		chatClient = new ChatClient(client);
 		MainMenuClientInterpreter interpreter = new MainMenuClientInterpreter(chatClient, dynamicLoader, this, gameStore);
@@ -229,6 +235,7 @@ public class MainMenuFrame extends JFrame {
 		
 		updateUserList();
 		requireBoards();
+		requireSkillProfiles();
 	}
 	
 	@Override
@@ -277,6 +284,11 @@ public class MainMenuFrame extends JFrame {
 		BoardOverviewRequestMessage message = new BoardOverviewRequestMessage();
 		client.sendMessage(message);
 	}
+	private void requireSkillProfiles() {
+		SkillProfileTransferMessage message = new SkillProfileTransferMessage();
+		message.setRequest(true);
+		client.sendMessage(message);
+	}
 	
 	private void startGameCreationDialog() {
 		if (gameCreationDialog == null) {
@@ -323,7 +335,7 @@ public class MainMenuFrame extends JFrame {
 			skillProfileSettingsDialog.requestFocus();
 		}
 		else {
-			skillProfileSettingsDialog = new SkillProfileSettingsDialog(this, client);
+			skillProfileSettingsDialog = new SkillProfileSettingsDialog(this, client, skillProfileManager);
 			skillProfileSettingsDialog.setVisible(true);
 		}
 	}
@@ -369,6 +381,10 @@ public class MainMenuFrame extends JFrame {
 	}
 	public void receiveBoardOverviews(List<Board> boards) {
 		this.playableBoards = boards;
+	}
+	
+	public void receiveSkillProfiles(SkillProfile[] profiles) {
+		skillProfileManager.setSkillProfiles(profiles);
 	}
 	
 	public static ImageLoader getImageLoader() {

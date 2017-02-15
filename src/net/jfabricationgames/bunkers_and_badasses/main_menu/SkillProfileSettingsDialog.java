@@ -25,20 +25,37 @@ import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
-import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransfereMessage;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class SkillProfileSettingsDialog extends JDialog {
 	
 	private static final long serialVersionUID = -6176020670400001990L;
+	
+	private static final int SKILL_ERIDIUM = 1;
+	private static final int SKILL_CREDITS = 2;
+	private static final int SKILL_AMMO = 3;
+	private static final int SKILL_ERIDIUM_BUILDING = 4;
+	private static final int SKILL_CREDITS_BUILDING = 5;
+	private static final int SKILL_AMMO_BUILDING = 6;
+	private static final int SKILL_HERO = 7;
+	private static final int SKILL_POINTS = 8;
 	
 	private final JPanel contentPanel = new JPanel();
 	
 	private JTextField textField;
 	
 	private int startSkillPoints;
+	
+	private int selectedSkillIndex;
 	
 	private SkillTreeNode root;
 	
@@ -47,7 +64,9 @@ public class SkillProfileSettingsDialog extends JDialog {
 	
 	private JFGClient client;
 	
-	public SkillProfileSettingsDialog(MainMenuFrame callingFrame, JFGClient client) {
+	private SkillProfileManager profileManager;
+	
+	public SkillProfileSettingsDialog(MainMenuFrame callingFrame, JFGClient client, SkillProfileManager profileManager) {
 		setTitle("Bunkers and Badasses - Skill-Profil");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1100, 550);
@@ -55,6 +74,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 		setLocationRelativeTo(callingFrame);
 		
 		this.client = client;
+		this.profileManager = profileManager;
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
@@ -64,7 +84,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 		
 		startSkillPoints = 25;//TODO better load from database
 		
-		root = new SkillTreeNode(0, null);
+		root = new SkillTreeNode(0, null, 0, 0);
 		root.setEnabled(true);
 		root.setSelected(true);
 		
@@ -150,7 +170,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxEridium.setBackground(Color.GRAY);
 					panel_skills.add(chckbxEridium, "cell 3 3 2 1");
-					e1 = new SkillTreeNode(1, chckbxEridium);
+					e1 = new SkillTreeNode(1, chckbxEridium, SKILL_ERIDIUM, 1);
 					skillMap.put(chckbxEridium, e1);
 				}
 				{
@@ -163,7 +183,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxCredits.setBackground(Color.GRAY);
 					panel_skills.add(chckbxCredits, "cell 10 3");
-					c1 = new SkillTreeNode(1, chckbxCredits);
+					c1 = new SkillTreeNode(1, chckbxCredits, SKILL_CREDITS, 1);
 					skillMap.put(chckbxCredits, c1);
 				}
 				{
@@ -176,7 +196,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxPunkte.setBackground(Color.GRAY);
 					panel_skills.add(chckbxPunkte, "cell 15 3");
-					p1 = new SkillTreeNode(1, chckbxPunkte);
+					p1 = new SkillTreeNode(1, chckbxPunkte, SKILL_POINTS, 1);
 					skillMap.put(chckbxPunkte, p1);
 				}
 				{
@@ -224,7 +244,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxEridium_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxEridium_1, "cell 3 5 2 1");
-					e2 = new SkillTreeNode(2, chckbxEridium_1);
+					e2 = new SkillTreeNode(2, chckbxEridium_1, SKILL_ERIDIUM, 2);
 					skillMap.put(chckbxEridium_1, e2);
 				}
 				{
@@ -237,7 +257,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxEridiumGebude.setBackground(Color.GRAY);
 					panel_skills.add(chckbxEridiumGebude, "cell 5 5 2 1");
-					eb1 = new SkillTreeNode(2, chckbxEridiumGebude);
+					eb1 = new SkillTreeNode(2, chckbxEridiumGebude, SKILL_ERIDIUM_BUILDING, 1);
 					skillMap.put(chckbxEridiumGebude, eb1);
 				}
 				{
@@ -250,7 +270,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxCGebude.setBackground(Color.GRAY);
 					panel_skills.add(chckbxCGebude, "cell 8 5 2 1");
-					cb1 = new SkillTreeNode(2, chckbxCGebude);
+					cb1 = new SkillTreeNode(2, chckbxCGebude, SKILL_CREDITS_BUILDING, 1);
 					skillMap.put(chckbxCGebude, cb1);
 				}
 				{
@@ -263,7 +283,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxCredits_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxCredits_1, "cell 10 5");
-					c2 = new SkillTreeNode(2, chckbxCredits_1);
+					c2 = new SkillTreeNode(2, chckbxCredits_1, SKILL_CREDITS, 2);
 					skillMap.put(chckbxCredits_1, c2);
 				}
 				{
@@ -276,7 +296,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxMunition.setBackground(Color.GRAY);
 					panel_skills.add(chckbxMunition, "cell 11 5");
-					a1 = new SkillTreeNode(2, chckbxMunition);
+					a1 = new SkillTreeNode(2, chckbxMunition, SKILL_AMMO, 1);
 					skillMap.put(chckbxMunition, a1);
 				}
 				{
@@ -289,7 +309,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxPunkte_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxPunkte_1, "cell 15 5");
-					p2 = new SkillTreeNode(2, chckbxPunkte_1);
+					p2 = new SkillTreeNode(2, chckbxPunkte_1, SKILL_POINTS, 2);
 					skillMap.put(chckbxPunkte_1, p2);
 				}
 				{
@@ -357,7 +377,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxHeld.setBackground(Color.GRAY);
 					panel_skills.add(chckbxHeld, "cell 2 7");
-					h1 = new SkillTreeNode(3, chckbxHeld);
+					h1 = new SkillTreeNode(3, chckbxHeld, SKILL_HERO, 1);
 					skillMap.put(chckbxHeld, h1);
 				}
 				{
@@ -370,7 +390,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxEridium_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxEridium_2, "cell 3 7 2 1");
-					e3 = new SkillTreeNode(3, chckbxEridium_2);
+					e3 = new SkillTreeNode(3, chckbxEridium_2, SKILL_ERIDIUM, 3);
 					skillMap.put(chckbxEridium_2, e3);
 				}
 				{
@@ -383,7 +403,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxEridiumGebude_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxEridiumGebude_1, "cell 5 7 2 1");
-					eb2 = new SkillTreeNode(3, chckbxEridiumGebude_1);
+					eb2 = new SkillTreeNode(3, chckbxEridiumGebude_1, SKILL_ERIDIUM_BUILDING, 2);
 					skillMap.put(chckbxEridiumGebude_1, eb2);
 				}
 				{
@@ -396,7 +416,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxCGebude_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxCGebude_1, "cell 8 7 2 1");
-					cb2 = new SkillTreeNode(3, chckbxCGebude_1);
+					cb2 = new SkillTreeNode(3, chckbxCGebude_1, SKILL_CREDITS_BUILDING, 2);
 					skillMap.put(chckbxCGebude_1, cb2);
 				}
 				{
@@ -409,7 +429,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxCredits_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxCredits_2, "cell 10 7");
-					c3 = new SkillTreeNode(3, chckbxCredits_2);
+					c3 = new SkillTreeNode(3, chckbxCredits_2, SKILL_CREDITS, 3);
 					skillMap.put(chckbxCredits_2, c3);
 				}
 				{
@@ -422,7 +442,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxMunition_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxMunition_1, "cell 11 7");
-					a2 = new SkillTreeNode(3, chckbxMunition_1);
+					a2 = new SkillTreeNode(3, chckbxMunition_1, SKILL_AMMO, 2);
 					skillMap.put(chckbxMunition_1, a2);
 				}
 				{
@@ -435,7 +455,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxMGebude.setBackground(Color.GRAY);
 					panel_skills.add(chckbxMGebude, "cell 12 7 2 1");
-					ab1 = new SkillTreeNode(3, chckbxMGebude);
+					ab1 = new SkillTreeNode(3, chckbxMGebude, SKILL_AMMO_BUILDING, 1);
 					skillMap.put(chckbxMGebude, ab1);
 				}
 				{
@@ -448,7 +468,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxPunkte_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxPunkte_2, "cell 15 7");
-					p3 = new SkillTreeNode(3, chckbxPunkte_2);
+					p3 = new SkillTreeNode(3, chckbxPunkte_2, SKILL_POINTS, 3);
 					skillMap.put(chckbxPunkte_2, p3);
 				}
 				{
@@ -516,7 +536,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxHeld_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxHeld_1, "cell 2 9");
-					h2 = new SkillTreeNode(4, chckbxHeld_1);
+					h2 = new SkillTreeNode(4, chckbxHeld_1, SKILL_HERO, 2);
 					skillMap.put(chckbxHeld_1, h2);
 				}
 				{
@@ -529,7 +549,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxEridiumGebude_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxEridiumGebude_2, "cell 5 9 2 1");
-					eb3 = new SkillTreeNode(4, chckbxEridiumGebude_2);
+					eb3 = new SkillTreeNode(4, chckbxEridiumGebude_2, SKILL_ERIDIUM_BUILDING, 3);
 					skillMap.put(chckbxEridiumGebude_2, eb3);
 				}
 				{
@@ -542,7 +562,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxCGebude_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxCGebude_2, "cell 8 9 2 1");
-					cb3 = new SkillTreeNode(4, chckbxCGebude_2);
+					cb3 = new SkillTreeNode(4, chckbxCGebude_2, SKILL_CREDITS_BUILDING, 3);
 					skillMap.put(chckbxCGebude_2, cb3);
 				}
 				{
@@ -555,7 +575,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxMunition_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxMunition_2, "cell 11 9");
-					a3 = new SkillTreeNode(4, chckbxMunition_2);
+					a3 = new SkillTreeNode(4, chckbxMunition_2, SKILL_AMMO, 3);
 					skillMap.put(chckbxMunition_2, a3);
 				}
 				{
@@ -568,7 +588,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxMgebude.setBackground(Color.GRAY);
 					panel_skills.add(chckbxMgebude, "cell 12 9 2 1");
-					ab2 = new SkillTreeNode(4, chckbxMgebude);
+					ab2 = new SkillTreeNode(4, chckbxMgebude, SKILL_AMMO_BUILDING, 2);
 					skillMap.put(chckbxMgebude, ab2);
 				}
 				{
@@ -581,7 +601,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxPunkte_3.setBackground(Color.GRAY);
 					panel_skills.add(chckbxPunkte_3, "cell 15 9");
-					p4 = new SkillTreeNode(4, chckbxPunkte_3);
+					p4 = new SkillTreeNode(4, chckbxPunkte_3, SKILL_POINTS, 4);
 					skillMap.put(chckbxPunkte_3, p4);
 				}
 				{
@@ -614,7 +634,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxHeld_2.setBackground(Color.GRAY);
 					panel_skills.add(chckbxHeld_2, "cell 2 11");
-					h3 = new SkillTreeNode(5, chckbxHeld_2);
+					h3 = new SkillTreeNode(5, chckbxHeld_2, SKILL_HERO, 3);
 					skillMap.put(chckbxHeld_2, h3);
 				}
 				{
@@ -627,7 +647,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxMgebude_1.setBackground(Color.GRAY);
 					panel_skills.add(chckbxMgebude_1, "cell 12 11 2 1");
-					ab3 = new SkillTreeNode(5, chckbxMgebude_1);
+					ab3 = new SkillTreeNode(5, chckbxMgebude_1, SKILL_AMMO_BUILDING, 3);
 					skillMap.put(chckbxMgebude_1, ab3);
 				}
 				{
@@ -640,7 +660,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					});
 					chckbxPunkte_4.setBackground(Color.GRAY);
 					panel_skills.add(chckbxPunkte_4, "cell 15 11");
-					p5 = new SkillTreeNode(5, chckbxPunkte_4);
+					p5 = new SkillTreeNode(5, chckbxPunkte_4, SKILL_POINTS, 5);
 					skillMap.put(chckbxPunkte_4, p5);
 				}
 			}
@@ -649,7 +669,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 				panel_info.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 				panel_info.setBackground(Color.GRAY);
 				panel.add(panel_info, "cell 3 2,grow");
-				panel_info.setLayout(new MigLayout("", "[][grow]", "[][10px][][10px][][grow]"));
+				panel_info.setLayout(new MigLayout("", "[][grow]", "[][10px][][10px][][10px][][grow]"));
 				{
 					JLabel lblInfo = new JLabel("Info:");
 					lblInfo.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -669,9 +689,26 @@ public class SkillProfileSettingsDialog extends JDialog {
 					textField.setColumns(10);
 				}
 				{
+					JLabel lblSkillProfilNummer = new JLabel("Skill Profil Nummer:");
+					lblSkillProfilNummer.setFont(new Font("Tahoma", Font.PLAIN, 14));
+					panel_info.add(lblSkillProfilNummer, "cell 0 4");
+				}
+				{
+					JSpinner spinner = new JSpinner();
+					spinner.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent arg0) {
+							selectedSkillIndex = (Integer) spinner.getValue();
+							selectedSkillIndex -= 1;//set first index to 0
+							setSelectedProfile(selectedSkillIndex);
+						}
+					});
+					spinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
+					panel_info.add(spinner, "cell 1 4,growx");
+				}
+				{
 					JButton btnHilfe = new JButton("Hilfe");
 					btnHilfe.setBackground(Color.GRAY);
-					panel_info.add(btnHilfe, "cell 0 4 2 1,alignx center");
+					panel_info.add(btnHilfe, "cell 0 6 2 1,alignx center");
 				}
 			}
 			{
@@ -778,9 +815,17 @@ public class SkillProfileSettingsDialog extends JDialog {
 		p4.addNext(p5);
 		
 		enableSkills();
+		
+		selectedSkillIndex = 0;
+		addSkills(profileManager.getSkillProfiles()[0]);
+		
 	}
 	
-	public void addSkills(int eridium, int credits, int ammo, int eridiumBuilding, int creditsBuilding, int ammoBuilding, int heros, int points) {
+	private void addSkills(SkillProfile profile) {
+		addSkills(profile.getEridium(), profile.getCredits(), profile.getAmmo(), profile.getEridiumBuilding(), 
+				profile.getCreditsBuilding(), profile.getAmmoBuilding(), profile.getHero(), profile.getPoints());
+	}
+	private void addSkills(int eridium, int credits, int ammo, int eridiumBuilding, int creditsBuilding, int ammoBuilding, int heros, int points) {
 		List<SkillTreeNode> leafs = new ArrayList<SkillTreeNode>();
 		leafs.add(nameMap.get("e" + eridium));
 		leafs.add(nameMap.get("c" + credits));
@@ -796,6 +841,10 @@ public class SkillProfileSettingsDialog extends JDialog {
 		enableSkills();
 	}
 	
+	private void setSelectedProfile(int profile) {
+		addSkills(profileManager.getSkillProfiles()[profile]);
+	}
+	
 	private void selectPreviouse(SkillTreeNode node) {
 		node.setSelected(true);
 		for (int i = 0; i < node.getPrev().size(); i++) {
@@ -804,9 +853,29 @@ public class SkillProfileSettingsDialog extends JDialog {
 	}
 	
 	private void submitSkills() {
-		SkillProfileTransfereMessage message = new SkillProfileTransfereMessage();
-		//TODO add the selected skills
+		SkillProfileTransferMessage message = new SkillProfileTransferMessage();
+		int[] skills = new int[9];
+		for (SkillTreeNode node : skillMap.values()) {
+			if (skills[node.getType()] < node.getLevel()) {
+				skills[node.getType()] = node.getLevel();
+			}
+		}
+		SkillProfile skillProfile = new SkillProfile();
+		skillProfile.setEridium(skills[SKILL_ERIDIUM]);
+		skillProfile.setCredits(skills[SKILL_CREDITS]);
+		skillProfile.setAmmo(skills[SKILL_AMMO]);
+		skillProfile.setEridiumBuilding(skills[SKILL_ERIDIUM_BUILDING]);
+		skillProfile.setCreditsBuilding(skills[SKILL_CREDITS_BUILDING]);
+		skillProfile.setAmmoBuilding(skills[SKILL_AMMO_BUILDING]);
+		skillProfile.setHero(skills[SKILL_HERO]);
+		skillProfile.setPoints(skills[SKILL_POINTS]);
+		skillProfile.setId(profileManager.getSkillProfiles()[selectedSkillIndex].getId());
+		message.setUpdate(skillProfile);
+		message.setRequest(false);
+		//send the message to the server
 		client.sendMessage(message);
+		//update in the local
+		
 	}
 	
 	private void enableSkills() {
@@ -857,9 +926,11 @@ public class SkillProfileSettingsDialog extends JDialog {
 	
 	private class SkillTreeNode {
 		
-		public SkillTreeNode(int cost, JCheckBox check) {
+		public SkillTreeNode(int cost, JCheckBox check, int type, int level) {
 			this.cost = cost;
 			this.check = check;
+			this.type = type;
+			this.level = level;
 			selected = false;
 			prev = new ArrayList<SkillTreeNode>();
 			next = new ArrayList<SkillTreeNode>();
@@ -868,6 +939,8 @@ public class SkillProfileSettingsDialog extends JDialog {
 		private boolean selected;
 		
 		private int cost;
+		private int type;
+		private int level;
 		
 		private JCheckBox check;
 		
@@ -885,6 +958,12 @@ public class SkillProfileSettingsDialog extends JDialog {
 			check.setEnabled(enabled);
 		}
 		
+		public int getType() {
+			return type;
+		}
+		public int getLevel() {
+			return level;
+		}
 		public int getCost() {
 			return cost;
 		}

@@ -1,6 +1,8 @@
 Bunkers and Badasses - Tasks
 
 
+- create skill profiles for the user at sign up
+- improve resource selection at game start (after skill profile selection)
 - implement GameTurnManager
 - implement hero and building functions
 - create the statistics of a game and store them in the database when the game ends

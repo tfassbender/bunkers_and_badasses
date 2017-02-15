@@ -1,28 +1,28 @@
-package net.jfabricationgames.bunkers_and_badasses.game_communication;
+package net.jfabricationgames.bunkers_and_badasses.game;
 
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
-
-public class SkillProfileTransfereMessage implements JFGServerMessage, JFGClientMessage {
+/**
+ * A single skill profile for a player.
+ */
+public class SkillProfile {
 	
-	private static final long serialVersionUID = -7001194875613444068L;
-	
-	private String username;
+	private int id;//the id in the database
 	
 	private int eridium;
 	private int credits;
 	private int ammo;
+	
 	private int eridiumBuilding;
 	private int creditsBuilding;
 	private int ammoBuilding;
-	private int heros;
+	
+	private int hero;
 	private int points;
 	
-	public String getUsername() {
-		return username;
+	public int getId() {
+		return id;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public int getEridium() {
@@ -67,11 +67,11 @@ public class SkillProfileTransfereMessage implements JFGServerMessage, JFGClient
 		this.ammoBuilding = ammoBuilding;
 	}
 	
-	public int getHeros() {
-		return heros;
+	public int getHero() {
+		return hero;
 	}
-	public void setHeros(int heros) {
-		this.heros = heros;
+	public void setHero(int hero) {
+		this.hero = hero;
 	}
 	
 	public int getPoints() {

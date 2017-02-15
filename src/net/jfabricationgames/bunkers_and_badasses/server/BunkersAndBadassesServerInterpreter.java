@@ -15,6 +15,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOvervie
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
@@ -90,6 +91,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		//game transfer messages
 		else if (message instanceof GameTransferMessage) {
 			interpreteGameTransferMessage((GameTransferMessage) message, connection);
+		}
+		//skill profile transfer message
+		else if (message instanceof SkillProfileTransferMessage) {
+			interpreteSkillProfileTransferMessage((SkillProfileTransferMessage) message, connection);
 		}
 	}
 	
@@ -248,5 +253,14 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			server.sendGameTransferMessage(message);
 		}
 		//TODO add other cases
+	}
+	
+	private void interpreteSkillProfileTransferMessage(SkillProfileTransferMessage message, JFGConnection connection) {
+		if (message.isRequest()) {
+			server.loadSkillProfiles(message, connection);
+		}
+		else {
+			server.updateSkillProfile(message);
+		}
 	}
 }
