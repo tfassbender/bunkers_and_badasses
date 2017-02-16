@@ -1,6 +1,7 @@
 Bunkers and Badasses - Tasks
 
 
+- implement turn bonuses and turn goals 
 - create skill profiles for the user at sign up
 - improve resource selection at game start (after skill profile selection)
 - implement GameTurnManager
