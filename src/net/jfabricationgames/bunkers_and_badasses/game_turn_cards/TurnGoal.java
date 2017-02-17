@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import java.awt.image.BufferedImage;
 
+import com.jfabricationgames.toolbox.graphic.ImageLoader;
+
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
@@ -17,15 +19,26 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
  */
 public abstract class TurnGoal {
 	
+	protected static ImageLoader loader;
+	
+	static {
+		loader = new ImageLoader();
+		loader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/turn_goals/");
+	}
+	
 	protected PointManager pointManager;
 	
 	protected transient BufferedImage image;
 	
+	protected String imagePath;
+	
 	public TurnGoal() {
-		loadImage();
+		
 	}
 	
-	protected abstract void loadImage();
+	protected void loadImage() {
+		loader.loadImage(imagePath);
+	}
 	
 	public void receivePointsFight(User user, Fight fight) {
 		
