@@ -37,7 +37,7 @@ public abstract class TurnGoal {
 	}
 	
 	protected void loadImage() {
-		loader.loadImage(imagePath);
+		image = loader.loadImage(imagePath);
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {

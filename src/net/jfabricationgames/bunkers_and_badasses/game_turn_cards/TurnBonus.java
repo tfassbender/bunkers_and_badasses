@@ -55,7 +55,7 @@ public abstract class TurnBonus {
 	}
 	
 	protected void loadImage() {
-		loader.loadImage(imagePath);
+		image = loader.loadImage(imagePath);
 	}
 	
 	public void receiveAdditionalResources(User user, Game game) {
