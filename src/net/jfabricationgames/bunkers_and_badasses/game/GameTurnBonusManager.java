@@ -5,6 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusAmmo;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusAmmoBuild;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusAmmoRetreat;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCreditsFight;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCredits;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCreditsRaid;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusDefendFight;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusEridium;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusEridiumSupport;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusEridiumSupportCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusMarch;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusMineNeutrals;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusRecruit;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class GameTurnBonusManager {
@@ -23,7 +36,19 @@ public class GameTurnBonusManager {
 	
 	private static List<TurnBonus> createTurnBonusList() {
 		List<TurnBonus> turnBonuses = new ArrayList<TurnBonus>();
-		//TODO add the turn bonuses to the list when known
+		turnBonuses.add(new TurnBonusAmmo());
+		turnBonuses.add(new TurnBonusAmmoBuild());
+		turnBonuses.add(new TurnBonusAmmoRetreat());
+		turnBonuses.add(new TurnBonusCreditsFight());
+		turnBonuses.add(new TurnBonusCredits());
+		turnBonuses.add(new TurnBonusCreditsRaid());
+		turnBonuses.add(new TurnBonusDefendFight());
+		turnBonuses.add(new TurnBonusEridium());
+		turnBonuses.add(new TurnBonusEridiumSupport());
+		turnBonuses.add(new TurnBonusEridiumSupportCommand());
+		turnBonuses.add(new TurnBonusMarch());
+		turnBonuses.add(new TurnBonusMineNeutrals());
+		turnBonuses.add(new TurnBonusRecruit());
 		return turnBonuses;
 	}
 	

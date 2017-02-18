@@ -5,6 +5,19 @@ import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalArmAGeddon;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalBlitzkrieg;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalBolwerk;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCapitalism;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCatchARide;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalConquer;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalRecruit;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalSpecialForces;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalStrategy;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalSupport;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalTroopUnion;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalWildHunt;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class GameTurnGoalManager {
@@ -24,7 +37,19 @@ public class GameTurnGoalManager {
 	
 	private static List<TurnGoal> createTurnGoalList() {
 		List<TurnGoal> goals = new ArrayList<TurnGoal>();
-		//TODO add the turn goal classes when implemented.
+		goals.add(new TurnGoalArmAGeddon());
+		goals.add(new TurnGoalBlitzkrieg());
+		goals.add(new TurnGoalBolwerk());
+		goals.add(new TurnGoalBuilding());
+		goals.add(new TurnGoalCapitalism());
+		goals.add(new TurnGoalCatchARide());
+		goals.add(new TurnGoalConquer());
+		goals.add(new TurnGoalRecruit());
+		goals.add(new TurnGoalSpecialForces());
+		goals.add(new TurnGoalStrategy());
+		goals.add(new TurnGoalSupport());
+		goals.add(new TurnGoalTroopUnion());
+		goals.add(new TurnGoalWildHunt());
 		return goals;
 	}
 	
