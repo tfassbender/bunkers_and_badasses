@@ -14,6 +14,11 @@ public class PlayerOrder implements Serializable {
 	private Map<Integer, User> order;//player order starting with 0
 	private int move;
 	private int passed;
+	private GameTurnBonusManager gameTurnBonusManager;
+	
+	public PlayerOrder(GameTurnBonusManager gameTurnBonusManager) {
+		this.gameTurnBonusManager = gameTurnBonusManager;
+	}
 	
 	/**
 	 * Select a random order for the first turn.

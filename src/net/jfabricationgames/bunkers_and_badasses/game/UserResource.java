@@ -7,7 +7,7 @@ public class UserResource {
 	private int ammo;
 	private int eridium;
 	
-	//the amounts of resources added to every buildings collections
+	//the amounts of resources added to every buildings collections from the skill profiles
 	private int eridiumBuilding;
 	private int ammoBuilding;
 	private int creditsBuilding;

@@ -28,8 +28,7 @@ public class GameTurnGoalManager {
 	
 	private GameTurnManager gameTurnManager;
 	
-	public GameTurnGoalManager(GameTurnManager gameTurnManager, PointManager pointManager) {
-		this.gameTurnManager = gameTurnManager;
+	public GameTurnGoalManager(PointManager pointManager) {
 		for (TurnGoal goal : TURN_GOALS) {
 			goal.setPointManager(pointManager);
 		}
@@ -87,5 +86,9 @@ public class GameTurnGoalManager {
 	}
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
 		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsMoving(user, startField, fieldConquered);
+	}
+	
+	public void setGameTurnManager(GameTurnManager gameTurnManager) {
+		this.gameTurnManager = gameTurnManager;
 	}
 }

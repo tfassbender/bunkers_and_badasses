@@ -8,7 +8,14 @@ public class GameTurnManager implements Serializable {
 	
 	private int turn;
 	
-	public GameTurnManager() {
+	private PlayerOrder playerOrder;
+	private GameTurnGoalManager gameTurnGoalManager;
+	private UserResourceManager resourceManager;
+	
+	public GameTurnManager(PlayerOrder playerOrder, GameTurnGoalManager gameTurnGoalManager, UserResourceManager resourceManager) {
+		this.playerOrder = playerOrder;
+		this.gameTurnGoalManager = gameTurnGoalManager;
+		this.resourceManager = resourceManager;
 		turn = 1;
 	}
 	

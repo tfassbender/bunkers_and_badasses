@@ -100,13 +100,14 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpreteDatabaseLoginMessage(JFGDatabaseLoginMessage message, JFGConnection connection) {
 		loginInterpreter.interpreteServerMessage(message, connection);
-		//if the user signs up add him to the user list
+		//if the user signs up add him to the user list and create his skill profiles
 		if (message.getMessageType().equals(JFGDatabaseLoginMessageType.SIGN_UP)) {
 			User user = new User(message.getUsername());
 			if (!server.getUsers().contains(user)) {
 				server.getUsers().add(user);
 				server.generateUserSkills(message);
 			}
+			server.generateUserSkills(message);
 		}
 	}
 	

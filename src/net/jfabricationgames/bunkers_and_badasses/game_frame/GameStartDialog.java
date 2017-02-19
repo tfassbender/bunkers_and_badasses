@@ -15,12 +15,6 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
-import net.jfabricationgames.bunkers_and_badasses.game.GameState;
-import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
-import net.jfabricationgames.bunkers_and_badasses.game.HeroCardManager;
-import net.jfabricationgames.bunkers_and_badasses.game.PlayerOrder;
-import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
-import net.jfabricationgames.bunkers_and_badasses.game.UserColorManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
@@ -181,23 +175,9 @@ public class GameStartDialog extends JDialog {
 		creationMessage.setBoardId(board.getBoardId());
 		creationMessage.setPlayers(players);
 		client.sendMessage(creationMessage);
-		//create a game object with the game managers
-		Game game = new Game();
+		//create a game object
+		Game game = new Game(client, players);
 		//board and id are not sent to the server (added later by the clients)
-		game.setState(GameState.PLAN);
-		game.setPlayers(players);
-		game.setTurnManager(new GameTurnManager());
-		UserColorManager colorManager = new UserColorManager();
-		colorManager.chooseRandomColors(players);//select random colors for all users
-		game.setColorManager(colorManager);
-		PlayerOrder playerOrder = new PlayerOrder();
-		playerOrder.chooseRandomOrder(players);
-		game.setOrder(playerOrder);
-		PointManager pointManager = new PointManager();
-		pointManager.initialize(players);
-		game.setPointManager(pointManager);
-		HeroCardManager heroCardMananger = new HeroCardManager();
-		heroCardMananger.intitialize(players);
 		//resources are added by the server because of the skills
 		GameTransferMessage gameTransferMessage = new GameTransferMessage();
 		gameTransferMessage.setGame(game);

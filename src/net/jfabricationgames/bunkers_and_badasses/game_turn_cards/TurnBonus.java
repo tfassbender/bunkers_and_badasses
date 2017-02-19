@@ -59,7 +59,7 @@ public abstract class TurnBonus {
 	}
 	
 	public void receiveAdditionalResources(User user, Game game) {
-		UserResource resource = game.getResources().get(user);
+		UserResource resource = game.getResourceManager().getResources().get(user);
 		resource.setAmmo(resource.getAmmo() + ammo);
 		resource.setCredits(resource.getCredits() + credits);
 		resource.setEridium(resource.getEridium() + eridium);
