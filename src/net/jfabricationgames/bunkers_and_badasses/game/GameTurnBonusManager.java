@@ -25,6 +25,7 @@ public class GameTurnBonusManager {
 	private Map<User, TurnBonus> usersBonuses;
 	
 	private List<TurnBonus> choosableTurnBonuses;
+	private List<TurnBonus> turnBonusesGame;//all the turn bonuses for the whole game
 	
 	private static final List<TurnBonus> TURN_BONUSES = createTurnBonusList();
 	
@@ -69,6 +70,7 @@ public class GameTurnBonusManager {
 			bonuses[random] = bonuses[i];
 			bonuses[i] = swap;
 			choosableTurnBonuses.add(bonuses[i]);
+			turnBonusesGame.add(bonuses[i]);
 		}
 	}
 	
@@ -87,6 +89,10 @@ public class GameTurnBonusManager {
 		choosableTurnBonuses.remove(chosen);
 		choosableTurnBonuses.add(back);
 		usersBonuses.put(user, chosen);
+	}
+	
+	public List<TurnBonus> getBonuses() {
+		return turnBonusesGame;
 	}
 	
 	public void receiveAdditionalResources(User user, Game game) {

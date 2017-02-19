@@ -60,13 +60,26 @@ public class GameTurnGoalManager {
 		TurnGoal swap;
 		int choosable = goals.length;
 		int random;
-		for (int i = 0; i < 10; i++) {//TODO change from 10 to turn number when known
+		for (int i = 0; i < GameTurnManager.getNumTurns(); i++) {
 			random = (int) (Math.random() * (choosable- i)) + i;//select a random integer from i to choosable
 			swap = goals[random];//swap the chosen color to position i
 			goals[random] = goals[i];
 			goals[i] = swap;
 			turnGoals.add(goals[i]);
 		}
+	}
+	
+	/**
+	 * Get the TurnGoal object for a game turn.
+	 * 
+	 * @param turn
+	 * 		The games turn (starting by 0)
+	 * 
+	 * @return
+	 * 		The TurnGoal object.
+	 */
+	public TurnGoal getTurnGoal(int turn) {
+		return turnGoals.get(turn);
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {

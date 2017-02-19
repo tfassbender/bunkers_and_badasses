@@ -41,4 +41,8 @@ public class UserColorManager implements Serializable {
 	public void setUserColors(Map<User, UserColor> userColors) {
 		this.userColors = userColors;
 	}
+	
+	public UserColor getColor(User user) {
+		return userColors.get(user);
+	}
 }

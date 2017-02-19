@@ -76,4 +76,8 @@ public abstract class TurnBonus {
 	public void setPointManager(PointManager pointManager) {
 		this.pointManager = pointManager;
 	}
+	
+	public BufferedImage getImage() {
+		return image;
+	}
 }
