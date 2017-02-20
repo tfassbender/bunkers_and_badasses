@@ -5,6 +5,9 @@ public class TurnGoalConquer extends TurnGoal {
 	public TurnGoalConquer() {
 		imagePath = "turn_goal_conquer.png";
 		loadImage();
+		description = "<html>Mein Land:<br/>"
+				+ "Die Armeen müssen an Boden gewinnen! [2 Punkte für jedes<br/>"
+				+ "eroberte Gebiet (Auch neutrale Gebiete)]</html>";
 	}
 	
 	//TODO override methods

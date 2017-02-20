@@ -1,10 +1,13 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
+
 public class TurnBonusCredits extends TurnBonus {
 	
 	public TurnBonusCredits() {
 		//TODO
 		imagePath = "turn_bonus_credits_2.png";
 		loadImage();
+		description = "<html>Zusätzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[2] + " Credits zu Beginn der Runde.</html>";
 	}
 }

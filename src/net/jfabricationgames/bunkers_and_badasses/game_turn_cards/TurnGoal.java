@@ -27,10 +27,9 @@ public abstract class TurnGoal {
 	}
 	
 	protected PointManager pointManager;
-	
 	protected transient BufferedImage image;
-	
 	protected String imagePath;
+	protected String description;
 	
 	public TurnGoal() {
 		
@@ -57,6 +56,13 @@ public abstract class TurnGoal {
 	}
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
 		
+	}
+	
+	/**
+	 * Get a description in html format for a tooltip text.
+	 */
+	public String getDescription() {
+		return description;
 	}
 	
 	public BufferedImage getImage() {

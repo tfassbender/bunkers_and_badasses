@@ -764,8 +764,8 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 					resource.setCreditsBuilding(SkillProfileManager.CREDITS_BUILDING_SKILL_LEVEL[result.getInt(8)]);
 					resource.setAmmoBuilding(SkillProfileManager.AMMO_BUILDING_SKILL_LEVEL[result.getInt(9)]);
 					userResources.put(user, resource);
-					game.getPointManager().addPoints(user, SkillProfileManager.POINTS[result.getInt(3)]);
-					game.getHeroCardManager().takeCards(user, SkillProfileManager.HEROES[result.getInt(10)]);
+					game.getPointManager().addPoints(user, SkillProfileManager.POINTS_SKILL_LEVEL[result.getInt(3)]);
+					game.getHeroCardManager().takeCards(user, SkillProfileManager.HEROES_SKILL_LEVEL[result.getInt(10)]);
 				}
 			}
 			catch (SQLException sqle) {

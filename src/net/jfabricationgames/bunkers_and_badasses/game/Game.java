@@ -28,6 +28,7 @@ public class Game implements Serializable {
 	private HeroCardManager heroCardManager;
 	private PointManager pointManager;
 	private UserColorManager colorManager;
+	private SkillProfileManager skillProfileManager;
 	private transient GameFrame gameFrame;
 	
 	private int id;//the game id in the database
@@ -150,6 +151,13 @@ public class Game implements Serializable {
 	}
 	public void setColorManager(UserColorManager colorManager) {
 		this.colorManager = colorManager;
+	}
+	
+	public SkillProfileManager getSkillProfileManager() {
+		return skillProfileManager;
+	}
+	public void setSkillProfileManager(SkillProfileManager skillProfileManager) {
+		this.skillProfileManager = skillProfileManager;
 	}
 	
 	public GameFrame getGameFrame() {

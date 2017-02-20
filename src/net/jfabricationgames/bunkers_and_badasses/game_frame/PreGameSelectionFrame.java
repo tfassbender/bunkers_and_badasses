@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -14,29 +16,52 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class PreGameSelectionFrame extends JFrame {
 	
 	private static final long serialVersionUID = 3805066039018442763L;
 	
+	private static final String SKILL_SELECTION_PANEL = "skill_selection";
+	private static final String TROOP_POSITIONING_PANEL = "troop_positioning";
+	
 	private JPanel contentPane;
 	private JPanel panel_turn_goals;
+	
+	private boolean fieldOverview = false;
+	private JPanel panel_board_capture;
+	private final String SCROLL_BOARD = "scroll_board";
+	private final String OVERVIEW_BOARD = "overview_board";
+	private JPanel panel_scroll_board;
+	private JPanel panel_board_overview;
+	private JScrollPane scrollPane_board;
 	
 	private Game game;
 	private JPanel panel_turn_bonuses;
 	private JPanel panel_player_order;
+	private JList<String> list_skill_profiles;
+	private JTextArea txtrSkillProfile;
+	private JPanel panel_6;
+	private JTextField txtBase;
+	private JTextField txtPlayerturn;
+	private JTextField txtTroopsLeft;
+	private JTextField txtPosition_1;
+	private JTextField txtPosition_2;
+	private JTextField txtPosition_3;
 	
 	public PreGameSelectionFrame(Game game) {
 		this.game = game;
@@ -53,19 +78,157 @@ public class PreGameSelectionFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[100px:n,grow][grow]", "[grow]"));
 		
-		JPanel panel_6 = new JPanel();
+		panel_6 = new JPanel();
 		panel_6.setBackground(Color.GRAY);
 		contentPane.add(panel_6, "cell 0 0,grow");
 		panel_6.setLayout(new CardLayout(0, 0));
 		
+		JPanel panel_troop_positioning = new JPanel();
+		panel_troop_positioning.setBackground(Color.GRAY);
+		panel_6.add(panel_troop_positioning, SKILL_SELECTION_PANEL);
+		panel_troop_positioning.setLayout(new MigLayout("", "[800px,grow][:300px:300px,grow]", "[grow]"));
+		
+		JPanel panel_skill_selection = new JPanel();
+		panel_6.add(panel_skill_selection, TROOP_POSITIONING_PANEL);
+		panel_skill_selection.setBackground(Color.GRAY);
+		panel_skill_selection.setLayout(new MigLayout("", "[350px,grow][350px,grow][500px,grow]", "[grow]"));
+		
+		panel_board_capture = new JPanel();
+		panel_board_capture.setBackground(Color.GRAY);
+		panel_troop_positioning.add(panel_board_capture, "cell 0 0,grow");
+		panel_board_capture.setLayout(new CardLayout(0, 0));
+		
+		JPanel panel_scroll_board_capture = new JPanel();
+		panel_scroll_board_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
+		panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		
+		scrollPane_board = new JScrollPane();
+		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
+		
+		panel_scroll_board = new JPanel();
+		panel_scroll_board.setBackground(Color.GRAY);
+		scrollPane_board.setViewportView(panel_scroll_board);
+		
+		JPanel panel_board_overview_capture = new JPanel();
+		panel_board_overview_capture.setBackground(Color.GRAY);
+		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
+		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		
+		panel_board_overview = new JPanel();
+		panel_board_overview.setBackground(Color.GRAY);
+		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
+		
 		JPanel panel = new JPanel();
-		panel_6.add(panel, "name_14012148608106");
 		panel.setBackground(Color.GRAY);
-		panel.setLayout(new MigLayout("", "[350px,grow][350px,grow][500px,grow]", "[grow]"));
+		panel_troop_positioning.add(panel, "cell 1 0,grow");
+		panel.setLayout(new MigLayout("", "[][][10px][30px][30px,grow][grow]", "[][30px][][][30px][][][][30px][][5px][][5px][][][][][grow][]"));
+		
+		JLabel lblStartpositionen = new JLabel("Startpositionen:");
+		lblStartpositionen.setFont(new Font("Tahoma", Font.BOLD, 20));
+		panel.add(lblStartpositionen, "cell 0 0 6 1,alignx center");
+		
+		JLabel lblAktuellerSpieler = new JLabel("Am Zug:");
+		lblAktuellerSpieler.setFont(new Font("Tahoma", Font.BOLD, 16));
+		panel.add(lblAktuellerSpieler, "cell 0 2 6 1");
+		
+		txtPlayerturn = new JTextField();
+		txtPlayerturn.setBackground(Color.LIGHT_GRAY);
+		txtPlayerturn.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtPlayerturn.setEditable(false);
+		panel.add(txtPlayerturn, "cell 0 3 6 1,growx");
+		txtPlayerturn.setColumns(10);
+		
+		JLabel lblBasisPosition = new JLabel("Basis Position:");
+		lblBasisPosition.setFont(new Font("Tahoma", Font.BOLD, 16));
+		panel.add(lblBasisPosition, "cell 0 5 6 1");
+		
+		txtBase = new JTextField();
+		txtBase.setBackground(Color.LIGHT_GRAY);
+		txtBase.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtBase.setEditable(false);
+		panel.add(txtBase, "cell 0 6 6 1,growx");
+		txtBase.setColumns(10);
+		
+		JButton btnBasisBesttigen = new JButton("Basis Best\u00E4tigen");
+		btnBasisBesttigen.setBackground(Color.GRAY);
+		panel.add(btnBasisBesttigen, "cell 0 7 6 1");
+		
+		JLabel lblStartTruppen = new JLabel("Start Truppen:");
+		lblStartTruppen.setFont(new Font("Tahoma", Font.BOLD, 16));
+		panel.add(lblStartTruppen, "cell 0 9 6 1");
+		
+		JLabel lblTruppenbrig = new JLabel("Truppen \u00DCbrig:");
+		lblTruppenbrig.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel.add(lblTruppenbrig, "cell 0 11 2 1,alignx trailing");
+		
+		txtTroopsLeft = new JTextField();
+		txtTroopsLeft.setBackground(Color.LIGHT_GRAY);
+		txtTroopsLeft.setEditable(false);
+		txtTroopsLeft.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel.add(txtTroopsLeft, "cell 3 11,growx");
+		txtTroopsLeft.setColumns(10);
+		
+		JLabel lblTruppen = new JLabel("Truppen:");
+		lblTruppen.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel.add(lblTruppen, "cell 5 11");
+		
+		JLabel lblPosition = new JLabel("Position 1:");
+		lblPosition.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel.add(lblPosition, "cell 0 13");
+		
+		txtPosition_1 = new JTextField();
+		txtPosition_1.setBackground(Color.LIGHT_GRAY);
+		txtPosition_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtPosition_1.setEditable(false);
+		panel.add(txtPosition_1, "cell 1 13 4 1,growx");
+		txtPosition_1.setColumns(10);
+		
+		JSpinner spinner_troops_1 = new JSpinner();
+		spinner_troops_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel.add(spinner_troops_1, "cell 5 13,growx");
+		
+		JLabel lblPosition_1 = new JLabel("Position 2:");
+		lblPosition_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel.add(lblPosition_1, "cell 0 14");
+		
+		txtPosition_2 = new JTextField();
+		txtPosition_2.setBackground(Color.LIGHT_GRAY);
+		txtPosition_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtPosition_2.setEditable(false);
+		panel.add(txtPosition_2, "cell 1 14 4 1,growx");
+		txtPosition_2.setColumns(10);
+		
+		JSpinner spinner_troops_2 = new JSpinner();
+		spinner_troops_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel.add(spinner_troops_2, "cell 5 14,growx");
+		
+		JLabel lblPosition_2 = new JLabel("Position 3:");
+		lblPosition_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel.add(lblPosition_2, "cell 0 15");
+		
+		txtPosition_3 = new JTextField();
+		txtPosition_3.setBackground(Color.LIGHT_GRAY);
+		txtPosition_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtPosition_3.setEditable(false);
+		panel.add(txtPosition_3, "cell 1 15 4 1,growx");
+		txtPosition_3.setColumns(10);
+		
+		JSpinner spinner_troops_3 = new JSpinner();
+		spinner_troops_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel.add(spinner_troops_3, "cell 5 15,growx");
+		
+		JButton btnStartTruppenBesttigen = new JButton("Start Truppen Best\u00E4tigen");
+		btnStartTruppenBesttigen.setBackground(Color.GRAY);
+		panel.add(btnStartTruppenBesttigen, "cell 0 16 6 1");
+		
+		JButton btnSpielfeldbersicht = new JButton("Spielfeld \u00DCbersicht");
+		btnSpielfeldbersicht.setBackground(Color.GRAY);
+		panel.add(btnSpielfeldbersicht, "cell 0 18 6 1");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.GRAY);
-		panel.add(panel_1, "cell 0 0,grow");
+		panel_skill_selection.add(panel_1, "cell 0 0,grow");
 		panel_1.setLayout(new MigLayout("", "[grow]", "[][grow]"));
 		
 		JLabel lblSpielRunden = new JLabel("Spiel Runden:");
@@ -82,7 +245,7 @@ public class PreGameSelectionFrame extends JFrame {
 		
 		JPanel panel_4 = new JPanel();
 		panel_4.setBackground(Color.GRAY);
-		panel.add(panel_4, "cell 1 0,grow");
+		panel_skill_selection.add(panel_4, "cell 1 0,grow");
 		panel_4.setLayout(new MigLayout("", "[grow]", "[][grow]"));
 		
 		JLabel lblRundenBoni = new JLabel("Runden Boni:");
@@ -99,7 +262,7 @@ public class PreGameSelectionFrame extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.GRAY);
-		panel.add(panel_2, "cell 2 0,grow");
+		panel_skill_selection.add(panel_2, "cell 2 0,grow");
 		panel_2.setLayout(new MigLayout("", "[grow]", "[300px,grow][300px,grow][]"));
 		
 		JPanel panel_3 = new JPanel();
@@ -132,7 +295,12 @@ public class PreGameSelectionFrame extends JFrame {
 		panel_5.add(scrollPane_3, "cell 0 2,grow");
 		
 		DefaultListModel<String> model = new DefaultListModel<String>();
-		JList<String> list_skill_profiles = new JList<String>(model);
+		list_skill_profiles = new JList<String>(model);
+		list_skill_profiles.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				describeSkillProfile(list_skill_profiles.getSelectedIndex());
+			}
+		});
 		list_skill_profiles.setBackground(Color.LIGHT_GRAY);
 		scrollPane_3.setViewportView(list_skill_profiles);
 		model.addElement("Profil 1");
@@ -144,7 +312,7 @@ public class PreGameSelectionFrame extends JFrame {
 		JScrollPane scrollPane_4 = new JScrollPane();
 		panel_5.add(scrollPane_4, "cell 1 2,grow");
 		
-		JTextArea txtrSkillProfile = new JTextArea();
+		txtrSkillProfile = new JTextArea();
 		txtrSkillProfile.setBackground(Color.LIGHT_GRAY);
 		txtrSkillProfile.setEditable(false);
 		scrollPane_4.setViewportView(txtrSkillProfile);
@@ -158,6 +326,8 @@ public class PreGameSelectionFrame extends JFrame {
 		});
 		btnWeiter.setBackground(Color.GRAY);
 		panel_2.add(btnWeiter, "cell 0 2,alignx center");
+		
+		list_skill_profiles.setSelectedIndex(0);
 		
 		addGameTurns(panel_turn_goals);
 		addTurnBonuses(panel_turn_bonuses);
@@ -176,10 +346,7 @@ public class PreGameSelectionFrame extends JFrame {
 			JLabel label = new JLabel(Integer.toString(i+1));
 			label.setFont(font);
 			panel.add(label, "cell 0 " + i + ",alignx center");
-			ImagePanel imagePanel = new ImagePanel(game.getTurnManager().getGameTurnGoalManager().getTurnGoal(i).getImage());
-			imagePanel.setCentered(true);
-			imagePanel.setAdaptSizeKeepProportion(true);
-			imagePanel.setBackground(Color.GRAY);
+			TurnGoalCardPanel imagePanel = new TurnGoalCardPanel(game.getTurnManager().getGameTurnGoalManager().getTurnGoal(i));
 			panel.add(imagePanel, "cell 1 " + i + ",grow");
 		}
 	}
@@ -192,10 +359,7 @@ public class PreGameSelectionFrame extends JFrame {
 		panel.setLayout(new MigLayout("", "[grow]", sb.toString()));
 		List<TurnBonus> bonusCards = game.getGameTurnBonusManager().getBonuses();
 		for (int i = 0; i < bonuses; i++) {
-			ImagePanel imagePanel = new ImagePanel(bonusCards.get(i).getImage());
-			imagePanel.setCentered(true);
-			imagePanel.setAdaptSizeKeepProportion(true);
-			imagePanel.setBackground(Color.GRAY);
+			TurnBonusCardPanel imagePanel = new TurnBonusCardPanel(bonusCards.get(i));
 			panel.add(imagePanel, "cell 0 " + i + ",grow");
 		}
 	}
@@ -221,13 +385,19 @@ public class PreGameSelectionFrame extends JFrame {
 		}
 	}
 	
+	private void describeSkillProfile(int profile) {
+		txtrSkillProfile.setText(game.getSkillProfileManager().getSkillProfiles()[list_skill_profiles.getSelectedIndex()].describe());
+	}
+	
 	/**
 	 * Select a skill profile.
 	 */
 	private void selectProfile() {
-		//TODO
+		SkillProfileManager manager = game.getSkillProfileManager();
+		manager.setSelectedProfile(game.getLocalUser(), manager.getSkillProfiles()[list_skill_profiles.getSelectedIndex()]);
 	}
 	private void startTroopPositioning() {
-		//TODO
+		CardLayout layout = (CardLayout) panel_6.getLayout();
+		layout.show(panel_6, "");
 	}
 }

@@ -40,6 +40,7 @@ public abstract class TurnBonus {
 	protected int collectCommand;
 	
 	protected String imagePath;
+	protected String description;
 	
 	public TurnBonus() {
 		credits = 0;
@@ -71,6 +72,13 @@ public abstract class TurnBonus {
 	}
 	public void receivePointsBuild(User user) {
 		//fixed points for building or upgrading a building
+	}
+	
+	/**
+	 * Get a description in html format for a tooltip text.
+	 */
+	public String getDescription() {
+		return description;
 	}
 	
 	public void setPointManager(PointManager pointManager) {

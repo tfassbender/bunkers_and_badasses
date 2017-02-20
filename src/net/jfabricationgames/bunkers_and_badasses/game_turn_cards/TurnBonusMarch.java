@@ -6,5 +6,6 @@ public class TurnBonusMarch extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_march_command.png";
 		loadImage();
+		description = "<html>1 zusätzlicher Marschbefehl.</html>";
 	}
 }

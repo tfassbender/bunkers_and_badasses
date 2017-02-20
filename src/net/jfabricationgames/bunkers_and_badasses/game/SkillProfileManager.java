@@ -1,5 +1,9 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.util.Map;
+
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 /**
  * A collection of the players skill profiles and the profits for every skill in a skill tree.
  */
@@ -14,11 +18,15 @@ public class SkillProfileManager {
 	public static final int[] AMMO_BUILDING_SKILL_LEVEL = new int[] {};
 	public static final int[] ERIDIUM_BUILDING_SKILL_LEVEL = new int[] {};
 	
-	public static final int[] POINTS = new int[] {};
+	public static final int[] POINTS_SKILL_LEVEL = new int[] {};
 	
-	public static final int[] HEROES = new int[] {};
+	public static final int[] HEROES_SKILL_LEVEL = new int[] {};
 	
 	private static SkillProfile defaultSkillProfile;
+	
+	private transient SkillProfile[] skillProfiles;//local skill profiles (not sent to others)
+	
+	private Map<User, SkillProfile> selectedProfile;
 	
 	static {
 		defaultSkillProfile = new SkillProfile();
@@ -36,12 +44,17 @@ public class SkillProfileManager {
 		return defaultSkillProfile;
 	}
 	
-	private SkillProfile[] skillProfiles;
-	
 	public SkillProfile[] getSkillProfiles() {
 		return skillProfiles;
 	}
 	public void setSkillProfiles(SkillProfile[] skillProfiles) {
 		this.skillProfiles = skillProfiles;
+	}
+	
+	public void setSelectedProfile(User user, SkillProfile profile) {
+		selectedProfile.put(user, profile);
+	}
+	public SkillProfile getSelectedProfile(User user) {
+		return selectedProfile.get(user);
 	}
 }

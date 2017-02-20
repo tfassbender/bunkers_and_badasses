@@ -6,5 +6,6 @@ public class TurnBonusMineNeutrals extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_mine_command_neutrals.png";
 		loadImage();
+		description = "<html>1 zusätzlicher Resourcen-Gewinnungsbefehl.<br/>1 Punkt Bonus für getötete neutrale Einheit.</html>";
 	}
 }
