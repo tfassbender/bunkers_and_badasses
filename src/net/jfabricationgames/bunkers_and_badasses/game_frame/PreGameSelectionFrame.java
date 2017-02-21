@@ -33,9 +33,11 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.PreGameDataMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
@@ -582,7 +584,13 @@ public class PreGameSelectionFrame extends JFrame {
 	 */
 	private void selectProfile() {
 		SkillProfileManager manager = game.getSkillProfileManager();
-		manager.setSelectedProfile(game.getLocalUser(), manager.getSkillProfiles()[list_skill_profiles.getSelectedIndex()]);
+		SkillProfile profile = manager.getSkillProfiles()[list_skill_profiles.getSelectedIndex()];
+		manager.setSelectedProfile(game.getLocalUser(), profile);
+		PreGameDataMessage message = new PreGameDataMessage();
+		message.setData(PreGameDataMessage.DATA_SKILL_PROFILE);
+		message.setUser(game.getLocalUser());
+		message.setSelectedProfile(profile);
+		game.getClient().sendMessage(message);
 	}
 	private void startTroopPositioning() {
 		CardLayout layout = (CardLayout) panel_6.getLayout();
