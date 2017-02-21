@@ -54,6 +54,20 @@ public abstract class Building {
 		image = staticImage;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Building) {
+			Building building = (Building) obj;
+			return recruitableTroops == building.recruitableTroops && ammoMining == building.ammoMining && creditMining == building.creditMining && 
+					eridiumMining == building.eridiumMining && landMineVictims == building.landMineVictims && additionalDefence == building.additionalDefence && 
+					moveDistance == building.moveDistance && points == building.points && attackable == building.attackable && 
+					badassTroopsRecruitable == building.badassTroopsRecruitable && advanced == building.advanced && extendable == building.extendable;
+		}
+		else {
+			return super.equals(obj);
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}

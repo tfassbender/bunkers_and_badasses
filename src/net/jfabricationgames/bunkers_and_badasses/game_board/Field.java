@@ -11,6 +11,7 @@ import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -50,6 +51,7 @@ public class Field implements Serializable {
 	public Field() {
 		neighbours = new ArrayList<Field>();
 		troops = new ArrayList<Troop>();
+		building = new EmptyBuilding();
 	}
 	
 	/**
@@ -135,6 +137,22 @@ public class Field implements Serializable {
 	@Override
 	public String toString() {
 		return name;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Field) {
+			Field field = (Field) obj;
+			boolean troopsEqual = getTroops().size() == field.getTroops().size();
+			if (troopsEqual) {
+				for (int i = 0; i < getTroops().size(); i++) {
+					troopsEqual &= getTroops().get(i).getType() == field.getTroops().get(i).getType() && getTroops().get(i).getStrength() == field.getTroops().get(i).getStrength();
+				}				
+			}
+			return field.getAffiliation().equals(getAffiliation()) && field.getBuilding().equals(getBuilding()) && field.getName().equals(getName()) && troopsEqual;
+		}
+		else {
+			return super.equals(obj);
+		}
 	}
 	
 	public static BufferedImage getNormalTroopImage() {
