@@ -31,12 +31,15 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Bandit;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.PreGameDataMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
@@ -70,8 +73,8 @@ public class PreGameSelectionFrame extends JFrame {
 	private Field selectedBaseField;
 	private final Field[] selectedStartFields = new Field[3];
 	private final int[] startTroops = new int[] {1, 1, 1};
-	private int troopsLeft;
 	private final int startingTroops = 6;
+	private int troopsLeft;
 	
 	private boolean usersTurn = false;
 	
@@ -95,6 +98,9 @@ public class PreGameSelectionFrame extends JFrame {
 	
 	public PreGameSelectionFrame(Game game) {
 		this.game = game;
+		//Add a reference to this frame to the client interpreter 
+		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
+		
 		setTitle("Bunkers and Badasses - Spiel Start");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PreGameSelectionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -472,6 +478,76 @@ public class PreGameSelectionFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * Receive the data from the other clients and add it to the current field.
+	 */
+	public void receivePreGameData(PreGameDataMessage message) {
+		int index = -1;
+		User[] order = game.getPlayerOrder().getOrder();
+		Field field;
+		for (int i = 0; i < order.length; i++) {
+			if (message.getUser().equals(order[i])) {
+				index = i;
+			}
+		}
+		switch (message.getData()) {
+			case PreGameDataMessage.DATA_SKILL_PROFILE:
+				game.getSkillProfileManager().setSelectedProfile(message.getUser(), message.getSelectedProfile());
+				break;
+			case PreGameDataMessage.DATA_BASE_POSITION:
+				//set the affiliation and the building on the local board
+				field = game.getBoard().getFieldByName(message.getBasePosition().getName()); 
+				field.setAffiliation(message.getUser());
+				field.setBuilding(new ArschgaulsPalace());
+				if (index == 0) {
+					//every user has chosen his start position -> go on to the troop positions
+					//the next selection type is set when the user is set
+					setPlayersTurn(order[0]);
+				}
+				else {
+					//let the next user choose his base position
+					setPlayersTurn(order[index-1]);
+				}
+				break;
+			case PreGameDataMessage.DATA_STARTING_POSITION:
+				//set the troops on the local board
+				for (int i = 0; i < message.getStartingTroopPositions().length; i++) {
+					if (message.getStartingTroopPositions()[i] != null) {
+						field = game.getBoard().getFieldByName(message.getStartingTroopPositions()[i].getName());
+						field.setAffiliation(message.getUser());
+						for (int j = 0; j < message.getStartingTroops()[i]; j++) {
+							field.getTroops().add(new Bandit());
+						}
+					}
+				}
+				if (index == order.length-1) {
+					//all players have chosen their starting troops
+					startGame();
+				}
+				else {
+					//let the next use choose his starting troops
+					setPlayersTurn(order[index+1]);
+				}
+				break;
+		}
+	}
+	
+	/**
+	 * Start the game frame after the troops are positioned.
+	 */
+	private void startGame() {
+		//TODO start the game
+	}
+	
+	/**
+	 * Check whether the spinners have values that are valid.
+	 * 
+	 * @param spinner
+	 * 		The spinner that was changed.
+	 * 
+	 * @param position
+	 * 		The number of this spinner.
+	 */
 	private void checkSpinnerState(JSpinner spinner, int position) {
 		int val = (int) spinner.getValue();
 		if (startingTroops - startTroops[0] - startTroops[1] - startTroops[2] - val + startTroops[position] < 0) {
@@ -484,10 +560,16 @@ public class PreGameSelectionFrame extends JFrame {
 		updateStartTroops();
 	}
 	
+	/**
+	 * Add a description of the skill profile to the text area.
+	 */
 	private void describeSkillProfile(int profile) {
 		txtrSkillProfile.setText(game.getSkillProfileManager().getSkillProfiles()[list_skill_profiles.getSelectedIndex()].describe());
 	}
 	
+	/**
+	 * Select the field underneath the mouse and add it as base or troop position.
+	 */
 	private void selectField() {
 		if (usersTurn) {
 			Field field = game.getBoard().getFieldAtMousePosition();
@@ -496,6 +578,7 @@ public class PreGameSelectionFrame extends JFrame {
 				for (Field neighbour : field.getNeighbours()) {
 					fieldSelectable &= neighbour.getBuilding() instanceof EmptyBuilding;
 				}
+				fieldSelectable &= field.getBuilding() instanceof EmptyBuilding;
 				if (fieldSelectable) {
 					selectedBaseField = field;
 					txtBase.setText(field.getName());
@@ -516,6 +599,9 @@ public class PreGameSelectionFrame extends JFrame {
 			}
 		}
 	}
+	/**
+	 * Update some panels and text fields.
+	 */
 	private void updateStartTroops() {
 		if (selectedStartFields[0] != null) {
 			txtPosition_1.setText(selectedStartFields[0].getName());			
@@ -533,11 +619,48 @@ public class PreGameSelectionFrame extends JFrame {
 		txtTroopsLeft.setText(Integer.toString(troopsLeft));
 	}
 	
+	/**
+	 * Confirm the position of the base and send an update to all users.
+	 */
 	private void confirmBase() {
-		//TODO
+		if (selectedBaseField != null && selectedBaseField.getBuilding() instanceof EmptyBuilding) {
+			selectedBaseField.setAffiliation(game.getLocalUser());
+			selectedBaseField.setBuilding(new ArschgaulsPalace());
+		}
+		//send an update to all users
+		PreGameDataMessage message = new PreGameDataMessage();
+		message.setData(PreGameDataMessage.DATA_BASE_POSITION);
+		message.setBasePosition(selectedBaseField);
+		game.getClient().sendMessage(message);
 	}
+	/**
+	 * Confirm the position of the start troops and send an update to all users.
+	 */
 	private void confirmStartTroops() {
-		//TODO
+		if (selectedStartFields[0] != null && startTroops[0] > 0) {
+			selectedStartFields[0].setAffiliation(game.getLocalUser());
+			for (int i = 0; i < startTroops[0]; i++) {
+				selectedStartFields[0].getTroops().add(new Bandit());
+			}
+		}
+		if (selectedStartFields[1] != null && startTroops[1] > 0) {
+			selectedStartFields[1].setAffiliation(game.getLocalUser());
+			for (int i = 0; i < startTroops[1]; i++) {
+				selectedStartFields[1].getTroops().add(new Bandit());
+			}
+		}
+		if (selectedStartFields[2] != null && startTroops[2] > 0) {
+			selectedStartFields[2].setAffiliation(game.getLocalUser());
+			for (int i = 0; i < startTroops[2]; i++) {
+				selectedStartFields[2].getTroops().add(new Bandit());
+			}
+		}
+		//send an update to all users
+		PreGameDataMessage message = new PreGameDataMessage();
+		message.setData(PreGameDataMessage.DATA_STARTING_POSITION);
+		message.setStartingTroopPositions(selectedStartFields);
+		message.setStartingTroops(startTroops);
+		game.getClient().sendMessage(message);
 	}
 	
 	/**
@@ -559,6 +682,11 @@ public class PreGameSelectionFrame extends JFrame {
 		repaint();
 	}
 	
+	/**
+	 * Let the next player make his turn.
+	 * If it's not the local player all buttons are disabled.
+	 * Otherwise the right buttons for the case are enabled.
+	 */
 	public void setPlayersTurn(User user) {
 		if (user.equals(game.getLocalUser())) {
 			if (selectionType == 0) {
@@ -592,8 +720,13 @@ public class PreGameSelectionFrame extends JFrame {
 		message.setSelectedProfile(profile);
 		game.getClient().sendMessage(message);
 	}
+	/**
+	 * Change to the troop positioning panel and enable the buttons for the first user.
+	 */
 	private void startTroopPositioning() {
 		CardLayout layout = (CardLayout) panel_6.getLayout();
 		layout.show(panel_6, "");
+		User[] playerOrder = game.getPlayerOrder().getOrder();
+		setPlayersTurn(playerOrder[playerOrder.length-1]);
 	}
 }

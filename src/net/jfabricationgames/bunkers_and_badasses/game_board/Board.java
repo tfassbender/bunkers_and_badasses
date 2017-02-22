@@ -111,6 +111,25 @@ public class Board implements Serializable {
 	}
 	
 	/**
+	 * Get a Field by it's field name.
+	 * 
+	 * @param name
+	 * 		The name that is searched for.
+	 * 
+	 * @return
+	 * 		The field with the searched name.
+	 */
+	public Field getFieldByName(String name) {
+		Field field = null;
+		for (Field f : fields) {
+			if (f.getName().equals(name)) {
+				field = f;
+			}
+		}
+		return field;
+	}
+	
+	/**
 	 * Write the object to a serialized file. The not-serializabel parts (the buffered image) is stored separately at the end of the file.
 	 * This method is somehow used by the Serializable interface.
 	 * 

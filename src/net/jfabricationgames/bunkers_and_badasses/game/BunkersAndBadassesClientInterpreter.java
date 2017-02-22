@@ -4,7 +4,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransf
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.PreGameDataMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.PreGameSelectionFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerLogoutMessage;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -15,6 +17,7 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	
 	private GameStore gameStore;
 	private GameStartDialog gameStartDialog;
+	private PreGameSelectionFrame preGameSelectionFrame;
 	
 	public BunkersAndBadassesClientInterpreter(GameStore gameStore, GameStartDialog gameStartDialog) {
 		this.gameStore = gameStore;
@@ -44,6 +47,9 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		else if (message instanceof GameTransferMessage) {
 			interpreteGameTransferMessage((GameTransferMessage) message, client);
 		}
+		else if (message instanceof PreGameDataMessage) {
+			interpretePreGameDataMessage((PreGameDataMessage) message, client);
+		}
 	}
 	
 	private void interpreteBoardTransfereMessage(BoardTransfereMessage message, JFGClient client) {
@@ -66,10 +72,21 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		gameStartDialog.receiveGame(message.getGame());
 	}
 	
+	private void interpretePreGameDataMessage(PreGameDataMessage message, JFGClient client) {
+		preGameSelectionFrame.receivePreGameData(message);
+	}
+	
+	public PreGameSelectionFrame getPreGameSelectionFrame() {
+		return preGameSelectionFrame;
+	}
+	public void setPreGameSelectionFrame(PreGameSelectionFrame preGameSelectionFrame) {
+		this.preGameSelectionFrame = preGameSelectionFrame;
+	}
+	
 	public GameStore getGameStore() {
 		return gameStore;
 	}
 	public void setGameStore(GameStore gameStore) {
 		this.gameStore = gameStore;
-	}
+	}	
 }

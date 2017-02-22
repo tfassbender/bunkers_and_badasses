@@ -44,6 +44,13 @@ public class SkillProfileManager {
 		return defaultSkillProfile;
 	}
 	
+	/**
+	 * Add the start resources for all users to their resource managers.
+	 */
+	public void addStartResources() {
+		
+	}
+	
 	public SkillProfile[] getSkillProfiles() {
 		return skillProfiles;
 	}
