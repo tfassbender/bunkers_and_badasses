@@ -53,9 +53,11 @@ public class PreGameSelectionFrame extends JFrame {
 	
 	private static final String SKILL_SELECTION_PANEL = "skill_selection";
 	private static final String TROOP_POSITIONING_PANEL = "troop_positioning";
+	private static final String BONUS_SELECTION_PANEL = "bonus_selection";
 	
 	private static final int SELECTION_TYPE_BASE = 1;
 	private static final int SELECTION_TYPE_FIELDS = 2;
+	private static final int SELECTION_TYPE_BONUS = 3;
 	
 	private JPanel contentPane;
 	private JPanel panel_turn_goals;
@@ -78,6 +80,8 @@ public class PreGameSelectionFrame extends JFrame {
 	
 	private boolean usersTurn = false;
 	
+	private TurnGoalTurnBonusDialog turnDialog;
+	
 	private Game game;
 	private JPanel panel_turn_bonuses;
 	private JPanel panel_player_order;
@@ -95,11 +99,14 @@ public class PreGameSelectionFrame extends JFrame {
 	private JSpinner spinner_troops;
 	private JSpinner spinner_troops_1;
 	private JSpinner spinner_troops_2;
+	private JButton btnWeiter_1;
 	
 	public PreGameSelectionFrame(Game game) {
 		this.game = game;
 		//Add a reference to this frame to the client interpreter 
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
+		
+		turnDialog = new TurnGoalTurnBonusDialog(game);
 		
 		setTitle("Bunkers and Badasses - Spiel Start");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PreGameSelectionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -171,7 +178,7 @@ public class PreGameSelectionFrame extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		panel_troop_positioning.add(panel, "cell 1 0,grow");
-		panel.setLayout(new MigLayout("", "[][][10px][30px][30px,grow][grow]", "[][30px][][][30px][][][][30px][][5px][][5px][][][][][grow][]"));
+		panel.setLayout(new MigLayout("", "[][][10px][30px][30px,grow][grow]", "[][30px][][][30px][][][][30px][][5px][][5px][][][][][10px][][grow][]"));
 		
 		JLabel lblStartpositionen = new JLabel("Startpositionen:");
 		lblStartpositionen.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -314,8 +321,26 @@ public class PreGameSelectionFrame extends JFrame {
 				fieldOverview = !fieldOverview;
 			}
 		});
+		
+		JButton btnSpielrundenAnzeigen = new JButton("Spielrunden Anzeigen");
+		btnSpielrundenAnzeigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				turnDialog.setVisible(true);
+			}
+		});
+		btnSpielrundenAnzeigen.setBackground(Color.GRAY);
+		panel.add(btnSpielrundenAnzeigen, "cell 0 18 6 1");
 		btnSpielfeldbersicht.setBackground(Color.GRAY);
-		panel.add(btnSpielfeldbersicht, "cell 0 18 6 1");
+		panel.add(btnSpielfeldbersicht, "flowx,cell 0 20 4 1");
+		
+		btnWeiter_1 = new JButton("Weiter");
+		btnWeiter_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				startTurnBonusSelection();
+			}
+		});
+		btnWeiter_1.setBackground(Color.GRAY);
+		panel.add(btnWeiter_1, "cell 4 20 2 1,alignx right");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.GRAY);
@@ -424,6 +449,11 @@ public class PreGameSelectionFrame extends JFrame {
 		addTurnBonuses(panel_turn_bonuses);
 		addPlayers(panel_player_order);
 		
+		JPanel panel_turn_bonus_selection = new JPanel();
+		panel_turn_bonus_selection.setBackground(Color.GRAY);
+		panel_6.add(panel_turn_bonus_selection, BONUS_SELECTION_PANEL);
+		panel_turn_bonus_selection.setLayout(new MigLayout("", "[]", "[]"));
+		
 		updateBoardImage();
 	}
 	
@@ -522,7 +552,8 @@ public class PreGameSelectionFrame extends JFrame {
 				}
 				if (index == order.length-1) {
 					//all players have chosen their starting troops
-					startGame();
+					//choose the game turn bonuses next
+					btnWeiter_1.setEnabled(true);
 				}
 				else {
 					//let the next use choose his starting troops
@@ -725,7 +756,16 @@ public class PreGameSelectionFrame extends JFrame {
 	 */
 	private void startTroopPositioning() {
 		CardLayout layout = (CardLayout) panel_6.getLayout();
-		layout.show(panel_6, "");
+		layout.show(panel_6, TROOP_POSITIONING_PANEL);
+		User[] playerOrder = game.getPlayerOrder().getOrder();
+		setPlayersTurn(playerOrder[playerOrder.length-1]);
+	}
+	/**
+	 * Change to the turn bonus selection panel.
+	 */
+	private void startTurnBonusSelection() {
+		CardLayout layout = (CardLayout) panel_6.getLayout();
+		layout.show(panel_6, BONUS_SELECTION_PANEL);
 		User[] playerOrder = game.getPlayerOrder().getOrder();
 		setPlayersTurn(playerOrder[playerOrder.length-1]);
 	}
