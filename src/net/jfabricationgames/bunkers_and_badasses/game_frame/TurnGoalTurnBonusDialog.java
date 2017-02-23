@@ -50,9 +50,11 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	private JPanel panel_user_bonus;
 	private JPanel panel_turn_goal_list;
 	private JPanel panel_choosable_bonuses;
+	private JButton btnBonusAuswhlen;
 	
 	public TurnGoalTurnBonusDialog(Game game, boolean selectable, boolean turnBonusChangeEnabled) {
 		this.game = game;
+		this.selectable = selectable;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnGoalTurnBonusDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Runden Ziele");
@@ -154,7 +156,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 					panel_user_bonus.setLayout(new BorderLayout(0, 0));
 				}
 				{
-					JButton btnBonusAuswhlen = new JButton("Bonus Ausw\u00E4hlen");
+					btnBonusAuswhlen = new JButton("Bonus Ausw\u00E4hlen");
 					btnBonusAuswhlen.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							chooseNewTurnBonus();
@@ -259,5 +261,19 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	public void update() {
 		addTurnGoals();
 		addTurnBonuses();
+	}
+	
+	public boolean isTurnBonusSelectable() {
+		return selectable;
+	}
+	public void setTurnBonusSelectable(boolean selectable) {
+		this.selectable = selectable;
+	}
+	
+	public boolean isTurnBonusChangeEnabled() {
+		return btnBonusAuswhlen.isEnabled();
+	}
+	public void setTurnBonusChangeEnabled(boolean enabled) {
+		btnBonusAuswhlen.setEnabled(enabled);
 	}
 }

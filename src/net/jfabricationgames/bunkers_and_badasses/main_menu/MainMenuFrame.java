@@ -391,6 +391,10 @@ public class MainMenuFrame extends JFrame {
 		return imageLoader;
 	}
 	
+	public SkillProfileManager getSkillProfileManager() {
+		return skillProfileManager;
+	}
+	
 	public JFGClient getClient() {
 		return client;
 	}

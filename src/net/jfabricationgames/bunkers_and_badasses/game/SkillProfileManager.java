@@ -28,6 +28,8 @@ public class SkillProfileManager {
 	
 	private Map<User, SkillProfile> selectedProfile;
 	
+	private UserResourceManager userResourceManager;
+	
 	static {
 		defaultSkillProfile = new SkillProfile();
 		defaultSkillProfile.setEridium(2);
@@ -45,10 +47,19 @@ public class SkillProfileManager {
 	}
 	
 	/**
-	 * Add the start resources for all users to their resource managers.
+	 * Add the start resources (from the skill profile) for all users to their resource managers.
 	 */
-	public void addStartResources() {
-		
+	public void collectSkillResources(User user) {
+		UserResource resource = userResourceManager.getResources().get(user);
+		SkillProfile skill = selectedProfile.get(user);
+		//add the starting resources
+		resource.addCredits(CREDITS_SKILL_LEVEL[skill.getCredits()]);
+		resource.addAmmo(AMMO_SKILL_LEVEL[skill.getAmmo()]);
+		resource.addEridium(ERIDIUM_SKILL_LEVEL[skill.getEridium()]);
+		//set the building resources
+		resource.setCreditsBuilding(CREDITS_BUILDING_SKILL_LEVEL[skill.getCreditsBuilding()]);
+		resource.setAmmoBuilding(AMMO_BUILDING_SKILL_LEVEL[skill.getAmmoBuilding()]);
+		resource.setEridiumBuilding(ERIDIUM_BUILDING_SKILL_LEVEL[skill.getEridiumBuilding()]);
 	}
 	
 	public SkillProfile[] getSkillProfiles() {
@@ -63,5 +74,9 @@ public class SkillProfileManager {
 	}
 	public SkillProfile getSelectedProfile(User user) {
 		return selectedProfile.get(user);
+	}
+	
+	public void setUserResourceManager(UserResourceManager userResourceManager) {
+		this.userResourceManager = userResourceManager;
 	}
 }

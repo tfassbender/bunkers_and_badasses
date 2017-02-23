@@ -15,6 +15,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
@@ -33,10 +34,12 @@ public class GameStartDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	
-	private JFGClient client;
+	//private JFGClient client;
 	private Board board;
 	private int gameId = -1;
 	private Game game;
+	
+	private SkillProfileManager skillProfileManager;
 	
 	private boolean isLoaded;
 	
@@ -138,7 +141,10 @@ public class GameStartDialog extends JDialog {
 				//set only the image because it's not included in the loaded board
 				game.getBoard().setBaseImage(board.getBaseImage());
 			}
-			//TODO start the game frame			
+			//add the skill profile manager from the main menu
+			game.setSkillProfileManager(skillProfileManager);
+			new PreGameSelectionFrame(game).setVisible(true);
+			dispose();
 		}
 	}
 	
@@ -153,10 +159,14 @@ public class GameStartDialog extends JDialog {
 	 * 
 	 * @param board
 	 * 		The board on which is played. Needs to be loaded by the server because it's incomplete.
+	 * 
+	 * @param skillProfileManager
+	 * 		The SkillProfileManager passed on from the main menu (added to the game when it's started in the startGameFrame method).
 	 */
-	public void startGameMaster(JFGClient client, List<User> players, Board board) {
-		this.client = client;
+	public void startGameMaster(JFGClient client, List<User> players, Board board, SkillProfileManager skillProfileManager) {
+		//this.client = client;
 		this.isLoaded = false;
+		this.skillProfileManager = skillProfileManager;
 		changeClientInterpreter(client);
 		//send a game start message containing the board id to all players
 		//this message is received by the MainMenuClientInterpreter and starts the GameStartDialog that adds the BunkersAndBadassesClientInterpreter
@@ -201,9 +211,10 @@ public class GameStartDialog extends JDialog {
 	 * @param overview
 	 * 		The GameOverview to identify the game that is to be loaded from the server.
 	 */
-	public void loadGameMaster(JFGClient client, List<User> players, Board board, GameOverview overview) {
-		this.client = client;
+	public void loadGameMaster(JFGClient client, List<User> players, Board board, GameOverview overview, SkillProfileManager skillProfileManager) {
+		//this.client = client;
 		this.isLoaded = true;
+		this.skillProfileManager = skillProfileManager;
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		//send a game start message containing the board id to all players
@@ -255,9 +266,10 @@ public class GameStartDialog extends JDialog {
 	 * @param overview
 	 * 		The GameOverview to identify the game that is to be loaded (or null if the game is new).
 	 */
-	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview) {
-		this.client = client;
+	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview, SkillProfileManager skillProfileManager) {
+		//this.client = client;
 		this.isLoaded = loadedGame;
+		this.skillProfileManager = skillProfileManager;
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		if (loadedGame) {

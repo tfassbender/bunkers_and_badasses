@@ -175,7 +175,7 @@ public class GameRequestDialog extends JDialog {
 		GameStartDialog startDialog = new GameStartDialog();
 		startDialog.setVisible(true);
 		mainMenu.dispose();
-		startDialog.startGame(client, boardId, players, loadedGame, overview);
+		startDialog.startGame(client, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager());
 	}
 	
 	private void addInvitedPlayers(List<User> players) {

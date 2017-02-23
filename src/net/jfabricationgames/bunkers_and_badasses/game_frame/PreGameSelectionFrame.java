@@ -446,8 +446,12 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		JButton btnWeiter = new JButton("Weiter");
 		btnWeiter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//select the skill profile
 				selectProfile();
 				startTroopPositioning();
+				//collect the starting resources after the skill profile was chosen
+				game.getResourceManager().collectStartingResources(game.getLocalUser());
+				game.getSkillProfileManager().collectSkillResources(game.getLocalUser());
 			}
 		});
 		btnWeiter.setBackground(Color.GRAY);
@@ -644,6 +648,9 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		switch (message.getData()) {
 			case PreGameDataMessage.DATA_SKILL_PROFILE:
 				game.getSkillProfileManager().setSelectedProfile(message.getUser(), message.getSelectedProfile());
+				//collect the starting and skill resources of the player
+				game.getResourceManager().collectStartingResources(message.getUser());
+				game.getSkillProfileManager().collectSkillResources(message.getUser());
 				break;
 			case PreGameDataMessage.DATA_BASE_POSITION:
 				//set the affiliation and the building on the local board
@@ -846,18 +853,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		}
 	}
 	
-	/**
-	 * Update the game to add the choices of the other users.
-	 * 
-	 * @param game
-	 * 		The new Game object.
-	 */
-	public void setGame(Game game) {
-		this.game = game;
-		updateBoardImage();
-	}
-	
-	public void updateBoardImage() {
+	private void updateBoardImage() {
 		BufferedImage field = game.getBoard().displayField();
 		panel_board_overview.setImage(field);
 		panel_scroll_board.setImage(field);
@@ -870,7 +866,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 * If it's not the local player all buttons are disabled.
 	 * Otherwise the right buttons for the case are enabled.
 	 */
-	public void setPlayersTurn(User user) {
+	private void setPlayersTurn(User user) {
 		if (user.equals(game.getLocalUser())) {
 			if (selectionType == 0) {
 				selectionType = SELECTION_TYPE_BASE;
@@ -898,9 +894,11 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 * Select a skill profile.
 	 */
 	private void selectProfile() {
+		//select the skill profile
 		SkillProfileManager manager = game.getSkillProfileManager();
 		SkillProfile profile = manager.getSkillProfiles()[list_skill_profiles.getSelectedIndex()];
 		manager.setSelectedProfile(game.getLocalUser(), profile);
+		//send a message to the other users
 		PreGameDataMessage message = new PreGameDataMessage();
 		message.setData(PreGameDataMessage.DATA_SKILL_PROFILE);
 		message.setUser(game.getLocalUser());

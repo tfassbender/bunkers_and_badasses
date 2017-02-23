@@ -233,7 +233,7 @@ public class GameCreationDialog extends JDialog {
 				players.add(user);
 			}
 		}
-		startDialog.startGameMaster(client, players, selectedBoard);
+		startDialog.startGameMaster(client, players, selectedBoard, mainMenu.getSkillProfileManager());
 	}
 	
 	private DefaultListModel<User> createUserListModel() {

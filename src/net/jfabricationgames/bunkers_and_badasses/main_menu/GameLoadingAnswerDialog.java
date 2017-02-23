@@ -211,6 +211,6 @@ public class GameLoadingAnswerDialog extends JDialog {
 		startDialog.setVisible(true);
 		mainMenu.dispose();// dispose all frames of the main menu
 		//startDialog.startGameMaster(client, players, selectedBoard);
-		startDialog.loadGameMaster(client, players, selectedBoard, overview);
+		startDialog.loadGameMaster(client, players, selectedBoard, overview, mainMenu.getSkillProfileManager());
 	}
 }

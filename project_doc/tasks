@@ -1,10 +1,7 @@
 Bunkers and Badasses - Tasks
 
 
-- implement turn bonuses and turn goals 
-- improve resource selection at game start (after skill profile selection)
-- implement GameTurnManager
+- implement some values of the game to be loaded from the database (like number of turns, starting resources)
 - implement hero and building functions
 - create the statistics of a game and store them in the database when the game ends
-- implement player skills (front- and back-end)
 - frame functions

@@ -41,7 +41,7 @@ public class Game implements Serializable {
 		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
 		playerOrder = new PlayerOrder(gameTurnBonusManager);
 		playerOrder.chooseRandomOrder(players);
-		resourceManager = new UserResourceManager();
+		resourceManager = new UserResourceManager(players);
 		planManager = new UserPlanManager(localUser, resourceManager);
 		pointManager = new PointManager();
 		pointManager.initialize(players);
@@ -158,6 +158,7 @@ public class Game implements Serializable {
 	}
 	public void setSkillProfileManager(SkillProfileManager skillProfileManager) {
 		this.skillProfileManager = skillProfileManager;
+		skillProfileManager.setUserResourceManager(resourceManager);
 	}
 	
 	public GameFrame getGameFrame() {
