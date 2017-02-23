@@ -6,6 +6,7 @@ public class TurnBonusDefendFight extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_defend_command_fight.png";
 		loadImage();
+		name = "Verteidungungs Befehl - Kampf";
 		description = "<html>1 zusätzlicher Verteidigungsbefehl.<br/>2 Punkte Bonus für jeden gewonnenen Kampf.</html>";
 	}
 }

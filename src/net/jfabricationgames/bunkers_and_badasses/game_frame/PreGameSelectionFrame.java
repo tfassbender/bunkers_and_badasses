@@ -43,11 +43,12 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Bandit;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.PreGameDataMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
-public class PreGameSelectionFrame extends JFrame {
+public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelectionListener {
 	
 	private static final long serialVersionUID = 3805066039018442763L;
 	
@@ -78,6 +79,8 @@ public class PreGameSelectionFrame extends JFrame {
 	private final int startingTroops = 6;
 	private int troopsLeft;
 	
+	private TurnBonus selectedBonus;
+	
 	private boolean usersTurn = false;
 	
 	private TurnGoalTurnBonusDialog turnDialog;
@@ -100,6 +103,13 @@ public class PreGameSelectionFrame extends JFrame {
 	private JSpinner spinner_troops_1;
 	private JSpinner spinner_troops_2;
 	private JButton btnWeiter_1;
+	private JPanel panel_selectable_turn_bonuses;
+	private JTextField txtBonus;
+	private JTextArea txtrChosen;
+	private JPanel panel_10;
+	private JTextArea txtrBonusDescription;
+	private JButton btnAusgewhltenBonusBesttigen;
+	private JButton btnSpielStarten;
 	
 	public PreGameSelectionFrame(Game game) {
 		this.game = game;
@@ -306,7 +316,7 @@ public class PreGameSelectionFrame extends JFrame {
 		});
 		btnStartTruppenBesttigen.setEnabled(false);
 		btnStartTruppenBesttigen.setBackground(Color.GRAY);
-		panel.add(btnStartTruppenBesttigen, "cell 0 16 6 1");
+		panel.add(btnStartTruppenBesttigen, "cell 0 16 5 1");
 		
 		JButton btnSpielfeldbersicht = new JButton("Spielfeld \u00DCbersicht");
 		btnSpielfeldbersicht.addActionListener(new ActionListener() {
@@ -445,19 +455,124 @@ public class PreGameSelectionFrame extends JFrame {
 		
 		list_skill_profiles.setSelectedIndex(0);
 		
-		addGameTurns(panel_turn_goals);
-		addTurnBonuses(panel_turn_bonuses);
-		addPlayers(panel_player_order);
-		
 		JPanel panel_turn_bonus_selection = new JPanel();
 		panel_turn_bonus_selection.setBackground(Color.GRAY);
 		panel_6.add(panel_turn_bonus_selection, BONUS_SELECTION_PANEL);
-		panel_turn_bonus_selection.setLayout(new MigLayout("", "[]", "[]"));
+		panel_turn_bonus_selection.setLayout(new MigLayout("", "[300px,grow][350px,grow][450px,grow]", "[grow]"));
+		
+		JPanel panel_11 = new JPanel();
+		panel_11.setBackground(Color.GRAY);
+		panel_turn_bonus_selection.add(panel_11, "cell 0 0,grow");
+		panel_11.setLayout(new MigLayout("", "[grow]", "[][grow]"));
+		
+		JLabel lblRundenZiele = new JLabel("Runden Ziele:");
+		lblRundenZiele.setFont(new Font("Tahoma", Font.BOLD, 20));
+		panel_11.add(lblRundenZiele, "cell 0 0,alignx center");
+		
+		JScrollPane scrollPane_7 = new JScrollPane();
+		panel_11.add(scrollPane_7, "cell 0 1,grow");
+		
+		panel_10 = new JPanel();
+		panel_10.setBackground(Color.GRAY);
+		scrollPane_7.setViewportView(panel_10);
+		
+		JPanel panel_7 = new JPanel();
+		panel_7.setBackground(Color.GRAY);
+		panel_turn_bonus_selection.add(panel_7, "cell 1 0,grow");
+		panel_7.setLayout(new MigLayout("", "[grow]", "[][grow]"));
+		
+		JLabel lblRundenBoni_1 = new JLabel("Runden Boni:");
+		lblRundenBoni_1.setFont(new Font("Tahoma", Font.BOLD, 20));
+		panel_7.add(lblRundenBoni_1, "cell 0 0,alignx center");
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		panel_7.add(scrollPane_5, "cell 0 1,grow");
+		
+		panel_selectable_turn_bonuses = new JPanel();
+		panel_selectable_turn_bonuses.setBackground(Color.GRAY);
+		scrollPane_5.setViewportView(panel_selectable_turn_bonuses);
+		panel_selectable_turn_bonuses.setLayout(new MigLayout("", "[]", "[]"));
+		
+		JPanel panel_9 = new JPanel();
+		panel_9.setBackground(Color.GRAY);
+		panel_turn_bonus_selection.add(panel_9, "cell 2 0,grow");
+		panel_9.setLayout(new MigLayout("", "[][150px][grow]", "[][grow][][][100px][][][][grow][grow]"));
+		
+		JLabel lblAusgewhlteBoni = new JLabel("Ausgew\u00E4hlte Boni:");
+		lblAusgewhlteBoni.setFont(new Font("Tahoma", Font.BOLD, 20));
+		panel_9.add(lblAusgewhlteBoni, "cell 0 0 3 1,alignx center");
+		
+		JLabel lblAusgewhlterBonus = new JLabel("Ausgew\u00E4hlter Bonus:");
+		lblAusgewhlterBonus.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_9.add(lblAusgewhlterBonus, "cell 0 2,alignx trailing");
+		
+		txtBonus = new JTextField();
+		txtBonus.setBackground(Color.LIGHT_GRAY);
+		txtBonus.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtBonus.setEditable(false);
+		panel_9.add(txtBonus, "cell 1 2 2 1,growx");
+		txtBonus.setColumns(10);
+		
+		JLabel lblBeschreibung = new JLabel("Beschreibung:");
+		lblBeschreibung.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_9.add(lblBeschreibung, "cell 0 3 3 1");
+		
+		txtrBonusDescription = new JTextArea();
+		txtrBonusDescription.setBackground(Color.LIGHT_GRAY);
+		txtrBonusDescription.setEditable(false);
+		panel_9.add(txtrBonusDescription, "cell 0 4 2 1,grow");
+		
+		btnAusgewhltenBonusBesttigen = new JButton("Ausgew\u00E4hlten Bonus Best\u00E4tigen");
+		btnAusgewhltenBonusBesttigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				confirmBonus();
+			}
+		});
+		btnAusgewhltenBonusBesttigen.setEnabled(false);
+		btnAusgewhltenBonusBesttigen.setBackground(Color.GRAY);
+		panel_9.add(btnAusgewhltenBonusBesttigen, "cell 0 5 3 1");
+		
+		JLabel lblBereitsGewhlt = new JLabel("Bereits Gew\u00E4hlt:");
+		lblBereitsGewhlt.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_9.add(lblBereitsGewhlt, "cell 0 7");
+		
+		JScrollPane scrollPane_6 = new JScrollPane();
+		panel_9.add(scrollPane_6, "cell 0 8 2 1,grow");
+		
+		txtrChosen = new JTextArea();
+		txtrChosen.setBackground(Color.LIGHT_GRAY);
+		txtrChosen.setEditable(false);
+		scrollPane_6.setViewportView(txtrChosen);
+		
+		btnSpielStarten = new JButton("Spiel Starten");
+		btnSpielStarten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				startGame();
+			}
+		});
+		btnSpielStarten.setEnabled(false);
+		btnSpielStarten.setBackground(Color.GRAY);
+		panel_9.add(btnSpielStarten, "cell 2 9,alignx right,aligny bottom");
+		
+
+		addGameTurns(panel_turn_goals);
+		addGameTurns(panel_10);
+		addTurnBonuses(panel_turn_bonuses, false);
+		addTurnBonuses(panel_selectable_turn_bonuses, true);
+		addPlayers(panel_player_order);
 		
 		updateBoardImage();
 	}
 	
+	@Override
+	public void turnBonusCardSelected(TurnBonus bonus) {
+		selectedBonus = bonus;
+		txtBonus.setText(bonus.getName());
+		txtrBonusDescription.setText(bonus.getDescription());
+	}
+	
 	private void addGameTurns(JPanel panel) {
+		panel.removeAll();
 		int turns = GameTurnManager.getNumTurns();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < turns; i++) {
@@ -473,20 +588,26 @@ public class PreGameSelectionFrame extends JFrame {
 			panel.add(imagePanel, "cell 1 " + i + ",grow");
 		}
 	}
-	private void addTurnBonuses(JPanel panel) {
-		int bonuses = game.getPlayers().size() + 3;
+	private void addTurnBonuses(JPanel panel, boolean selectable) {
+		panel.removeAll();
+		List<TurnBonus> bonusCards = game.getGameTurnBonusManager().getBonuses();
+		int bonuses = bonusCards.size();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < bonuses; i++) {
 			sb.append("[150px]");
 		}
 		panel.setLayout(new MigLayout("", "[grow]", sb.toString()));
-		List<TurnBonus> bonusCards = game.getGameTurnBonusManager().getBonuses();
 		for (int i = 0; i < bonuses; i++) {
 			TurnBonusCardPanel imagePanel = new TurnBonusCardPanel(bonusCards.get(i));
+			if (selectable) {
+				imagePanel.setSelectionListener(this);
+				imagePanel.setChangeColorOnFocusEvent(true);
+			}
 			panel.add(imagePanel, "cell 0 " + i + ",grow");
 		}
 	}
 	private void addPlayers(JPanel panel) {
+		panel.removeAll();
 		int players = game.getPlayers().size();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < players; i++) {
@@ -554,10 +675,23 @@ public class PreGameSelectionFrame extends JFrame {
 					//all players have chosen their starting troops
 					//choose the game turn bonuses next
 					btnWeiter_1.setEnabled(true);
+					setPlayersTurn(order[index]);//last player chooses the bonus first
 				}
 				else {
 					//let the next use choose his starting troops
 					setPlayersTurn(order[index+1]);
+				}
+				break;
+			case PreGameDataMessage.DATA_TURN_BONUS:
+				//select the bonuses for the users
+				game.getGameTurnBonusManager().chooseFirstTurnBonus(message.getUser(), message.getSelectedBonus());
+				if (index == 0) {
+					//all players have chosen their bonuses
+					//game can be started now
+					btnSpielStarten.setEnabled(true);
+				}
+				else {
+					setPlayersTurn(order[index-1]);
 				}
 				break;
 		}
@@ -668,30 +802,48 @@ public class PreGameSelectionFrame extends JFrame {
 	 * Confirm the position of the start troops and send an update to all users.
 	 */
 	private void confirmStartTroops() {
-		if (selectedStartFields[0] != null && startTroops[0] > 0) {
-			selectedStartFields[0].setAffiliation(game.getLocalUser());
-			for (int i = 0; i < startTroops[0]; i++) {
-				selectedStartFields[0].getTroops().add(new Bandit());
+		if (selectedStartFields[0] != null && startTroops[0] + startTroops[1] + startTroops[2] == startingTroops) {
+			//the user chose at least one field and the six starting troops
+			if (selectedStartFields[0] != null && startTroops[0] > 0) {
+				selectedStartFields[0].setAffiliation(game.getLocalUser());
+				for (int i = 0; i < startTroops[0]; i++) {
+					selectedStartFields[0].getTroops().add(new Bandit());
+				}
 			}
-		}
-		if (selectedStartFields[1] != null && startTroops[1] > 0) {
-			selectedStartFields[1].setAffiliation(game.getLocalUser());
-			for (int i = 0; i < startTroops[1]; i++) {
-				selectedStartFields[1].getTroops().add(new Bandit());
+			if (selectedStartFields[1] != null && startTroops[1] > 0) {
+				selectedStartFields[1].setAffiliation(game.getLocalUser());
+				for (int i = 0; i < startTroops[1]; i++) {
+					selectedStartFields[1].getTroops().add(new Bandit());
+				}
 			}
-		}
-		if (selectedStartFields[2] != null && startTroops[2] > 0) {
-			selectedStartFields[2].setAffiliation(game.getLocalUser());
-			for (int i = 0; i < startTroops[2]; i++) {
-				selectedStartFields[2].getTroops().add(new Bandit());
+			if (selectedStartFields[2] != null && startTroops[2] > 0) {
+				selectedStartFields[2].setAffiliation(game.getLocalUser());
+				for (int i = 0; i < startTroops[2]; i++) {
+					selectedStartFields[2].getTroops().add(new Bandit());
+				}
 			}
+			//send an update to all users
+			PreGameDataMessage message = new PreGameDataMessage();
+			message.setData(PreGameDataMessage.DATA_STARTING_POSITION);
+			message.setStartingTroopPositions(selectedStartFields);
+			message.setStartingTroops(startTroops);
+			game.getClient().sendMessage(message);			
 		}
-		//send an update to all users
-		PreGameDataMessage message = new PreGameDataMessage();
-		message.setData(PreGameDataMessage.DATA_STARTING_POSITION);
-		message.setStartingTroopPositions(selectedStartFields);
-		message.setStartingTroops(startTroops);
-		game.getClient().sendMessage(message);
+	}
+	/**
+	 * Confirm the selected turn bonus and send an update to all users.
+	 */
+	private void confirmBonus() {
+		if (selectedBonus != null) {
+			game.getGameTurnBonusManager().chooseFirstTurnBonus(game.getLocalUser(), selectedBonus);
+			addTurnBonuses(panel_selectable_turn_bonuses, true);
+			turnDialog.update();
+			PreGameDataMessage message = new PreGameDataMessage();
+			message.setData(PreGameDataMessage.DATA_TURN_BONUS);
+			message.setUser(game.getLocalUser());
+			message.setSelectedBonus(selectedBonus);
+			game.getClient().sendMessage(message);
+		}
 	}
 	
 	/**
@@ -727,6 +879,10 @@ public class PreGameSelectionFrame extends JFrame {
 			else if (selectionType == SELECTION_TYPE_BASE) {
 				selectionType = SELECTION_TYPE_FIELDS;
 				btnStartTruppenBesttigen.setEnabled(true);
+			}
+			else if (selectionType == SELECTION_TYPE_FIELDS) {
+				selectionType = SELECTION_TYPE_BONUS;
+				btnAusgewhltenBonusBesttigen.setEnabled(true);
 			}
 			usersTurn = true;
 		}
@@ -766,7 +922,5 @@ public class PreGameSelectionFrame extends JFrame {
 	private void startTurnBonusSelection() {
 		CardLayout layout = (CardLayout) panel_6.getLayout();
 		layout.show(panel_6, BONUS_SELECTION_PANEL);
-		User[] playerOrder = game.getPlayerOrder().getOrder();
-		setPlayersTurn(playerOrder[playerOrder.length-1]);
 	}
 }

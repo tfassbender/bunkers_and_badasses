@@ -8,8 +8,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusAmmo;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusAmmoBuild;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusAmmoRetreat;
-import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCreditsFight;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCredits;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCreditsFight;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCreditsRaid;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusDefendFight;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusEridium;
@@ -93,6 +93,9 @@ public class GameTurnBonusManager {
 	
 	public List<TurnBonus> getBonuses() {
 		return turnBonusesGame;
+	}
+	public List<TurnBonus> getSelectableBonuses() {
+		return choosableTurnBonuses;
 	}
 	
 	public void receiveAdditionalResources(User user, Game game) {

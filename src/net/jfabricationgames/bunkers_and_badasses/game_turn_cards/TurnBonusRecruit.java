@@ -6,6 +6,7 @@ public class TurnBonusRecruit extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_recruit_command.png";
 		loadImage();
+		name = "Rekrutierungs Befehl";
 		description = "<html>1 zusätzlicher Rekrutierungsbefehl.</html>";
 	}
 }

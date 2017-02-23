@@ -8,6 +8,7 @@ public class TurnBonusCredits extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_credits_2.png";
 		loadImage();
+		name = "Credits 2";
 		description = "<html>Zusätzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[2] + " Credits zu Beginn der Runde.</html>";
 	}
 }

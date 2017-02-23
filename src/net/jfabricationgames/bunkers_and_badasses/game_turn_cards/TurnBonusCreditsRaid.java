@@ -8,6 +8,7 @@ public class TurnBonusCreditsRaid extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_credits_1_raid_command.png";
 		loadImage();
+		name = "Credits - Überfall Befehl";
 		description = "<html>Zusätzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[1] + " Credits zu Beginn der Runde.<br/>1 zusätzlicher Überfallbefehl</html>";
 	}
 }

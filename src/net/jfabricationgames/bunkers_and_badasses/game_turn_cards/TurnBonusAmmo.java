@@ -8,6 +8,7 @@ public class TurnBonusAmmo extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_ammo_2.png";
 		loadImage();
+		name = "Munition 2";
 		description = "<html>Zusätzliche " + SkillProfileManager.AMMO_SKILL_LEVEL[2] + " Munition zu Beginn der Runde.</html>";
 	}
 }

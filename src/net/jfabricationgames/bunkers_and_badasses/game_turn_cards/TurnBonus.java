@@ -41,6 +41,7 @@ public abstract class TurnBonus {
 	
 	protected String imagePath;
 	protected String description;
+	protected String name;
 	
 	public TurnBonus() {
 		credits = 0;
@@ -79,6 +80,10 @@ public abstract class TurnBonus {
 	 */
 	public String getDescription() {
 		return description;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public void setPointManager(PointManager pointManager) {

@@ -8,6 +8,7 @@ public class TurnBonusAmmoBuild extends TurnBonus {
 		//TODO
 		imagePath = "turn_bonus_ammo_1_build.png";
 		loadImage();
+		name = "Munition - Aufbau";
 		description = "<html>Zusätzliche " + SkillProfileManager.AMMO_SKILL_LEVEL[1] + " Munition zu Beginn der Runde.<br/>2 Punkte Bonus für jedes Bauen oder Aufrüsten eines Gebäudes.</html>";
 	}
 }

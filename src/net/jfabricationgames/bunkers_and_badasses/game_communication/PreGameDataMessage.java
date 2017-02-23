@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
@@ -16,17 +17,19 @@ public class PreGameDataMessage implements JFGClientMessage, JFGServerMessage {
 	public static final int DATA_SKILL_PROFILE = 1;
 	public static final int DATA_BASE_POSITION = 2;
 	public static final int DATA_STARTING_POSITION = 3;
+	public static final int DATA_TURN_BONUS = 4;
 	
 	private int data;
 	
 	private User user;
 	
 	private SkillProfile selectedProfile;
+	private TurnBonus selectedBonus;
 	
 	private Field basePosition;
 	private Field[] startingTroopPositions;
 	private int[] startingTroops;
-
+	
 	public int getData() {
 		return data;
 	}
@@ -46,6 +49,13 @@ public class PreGameDataMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setSelectedProfile(SkillProfile selectedProfile) {
 		this.selectedProfile = selectedProfile;
+	}
+	
+	public TurnBonus getSelectedBonus() {
+		return selectedBonus;
+	}
+	public void setSelectedBonus(TurnBonus selectedBonus) {
+		this.selectedBonus = selectedBonus;
 	}
 	
 	public Field getBasePosition() {
