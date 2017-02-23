@@ -3,38 +3,62 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardSelectionListener;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
 
-public class TurnGoalTurnBonusDialog extends JDialog {
+public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSelectionListener {
 	
 	private static final long serialVersionUID = 852713388137185228L;
 	
 	private static final String TURN_BONUS_PANEL = "turn_bonus";
 	private static final String TURN_GOAL_PANEL = "turn_goal";
 	
+	private Game game;
+	private boolean selectable;
+	
+	private TurnBonus selectedTurnBonus;
+	
+	private DefaultListModel<User> model;
+	
 	private final JPanel contentPanel = new JPanel();
 	private JPanel panel;
 	private JPanel panel_user_bonus;
+	private JPanel panel_turn_goal_list;
+	private JPanel panel_choosable_bonuses;
 	
-	public TurnGoalTurnBonusDialog(Game game) {
+	public TurnGoalTurnBonusDialog(Game game, boolean selectable, boolean turnBonusChangeEnabled) {
+		this.game = game;
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnGoalTurnBonusDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Runden Ziele");
-		setBounds(100, 100, 1000, 350);
+		setBounds(100, 100, 1000, 300);
+		setMinimumSize(new Dimension(1000, 300));
+		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,10 +82,10 @@ public class TurnGoalTurnBonusDialog extends JDialog {
 					JScrollPane scrollPane = new JScrollPane();
 					panel_turn_goals.add(scrollPane, "cell 0 1,grow");
 					{
-						JPanel panel_1 = new JPanel();
-						panel_1.setBackground(Color.GRAY);
-						scrollPane.setViewportView(panel_1);
-						panel_1.setLayout(new MigLayout("", "[]", "[]"));
+						panel_turn_goal_list = new JPanel();
+						panel_turn_goal_list.setBackground(Color.GRAY);
+						scrollPane.setViewportView(panel_turn_goal_list);
+						panel_turn_goal_list.setLayout(new MigLayout("", "[]", "[]"));
 					}
 				}
 				{
@@ -94,10 +118,10 @@ public class TurnGoalTurnBonusDialog extends JDialog {
 					JScrollPane scrollPane = new JScrollPane();
 					panel_turn_bonuses.add(scrollPane, "cell 0 2,grow");
 					{
-						JPanel panel_1 = new JPanel();
-						panel_1.setBackground(Color.GRAY);
-						scrollPane.setViewportView(panel_1);
-						panel_1.setLayout(new MigLayout("", "[]", "[]"));
+						panel_choosable_bonuses = new JPanel();
+						panel_choosable_bonuses.setBackground(Color.GRAY);
+						scrollPane.setViewportView(panel_choosable_bonuses);
+						panel_choosable_bonuses.setLayout(new MigLayout("", "[]", "[]"));
 					}
 				}
 				{
@@ -109,7 +133,14 @@ public class TurnGoalTurnBonusDialog extends JDialog {
 					JScrollPane scrollPane = new JScrollPane();
 					panel_turn_bonuses.add(scrollPane, "cell 2 2,grow");
 					{
-						JList list = new JList();
+						model = new DefaultListModel<User>();
+						JList<User> list = new JList<User>(model);
+						list.addListSelectionListener(new ListSelectionListener() {
+							public void valueChanged(ListSelectionEvent arg0) {
+								User user = list.getSelectedValue();
+								showUsersBonus(user);
+							}
+						});
 						list.setBackground(Color.LIGHT_GRAY);
 						list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 						list.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -124,7 +155,12 @@ public class TurnGoalTurnBonusDialog extends JDialog {
 				}
 				{
 					JButton btnBonusAuswhlen = new JButton("Bonus Ausw\u00E4hlen");
-					btnBonusAuswhlen.setEnabled(false);
+					btnBonusAuswhlen.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							chooseNewTurnBonus();
+						}
+					});
+					btnBonusAuswhlen.setEnabled(turnBonusChangeEnabled);
 					btnBonusAuswhlen.setBackground(Color.GRAY);
 					panel_turn_bonuses.add(btnBonusAuswhlen, "cell 0 3");
 				}
@@ -140,6 +176,15 @@ public class TurnGoalTurnBonusDialog extends JDialog {
 				}
 			}
 		}
+		
+		addTurnGoals();
+		addTurnBonuses();
+		addUsers();
+	}
+	
+	@Override
+	public void turnBonusCardSelected(TurnBonus bonus) {
+		selectedTurnBonus = bonus;
 	}
 	
 	private void showPanel(String name) {
@@ -147,10 +192,72 @@ public class TurnGoalTurnBonusDialog extends JDialog {
 		layout.show(panel, name);
 	}
 	
+	private void addTurnGoals() {
+		panel_turn_goal_list.removeAll();
+		int turns = GameTurnManager.getNumTurns();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < turns; i++) {
+			sb.append("[200px]");
+		}
+		panel_turn_goal_list.setLayout(new MigLayout("", sb.toString(), "[30px][grow]"));
+		Font font = new Font("Tahoma", Font.BOLD, 18);
+		for (int i = 0; i < turns; i++) {
+			JLabel label = new JLabel(Integer.toString(i+1));
+			label.setFont(font);
+			panel_turn_goal_list.add(label, "cell " + i + " 0,alignx center");
+			TurnGoalCardPanel imagePanel = new TurnGoalCardPanel(game.getTurnManager().getGameTurnGoalManager().getTurnGoal(i));
+			panel_turn_goal_list.add(imagePanel, "cell " + i + " 1,grow");
+		}
+	}
+	private void addTurnBonuses() {
+		panel_choosable_bonuses.removeAll();
+		List<TurnBonus> bonusCards = game.getGameTurnBonusManager().getBonuses();
+		int bonuses = bonusCards.size();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < bonuses; i++) {
+			sb.append("[200px]");
+		}
+		panel_choosable_bonuses.setLayout(new MigLayout("", sb.toString(), "[grow]"));
+		for (int i = 0; i < bonuses; i++) {
+			TurnBonusCardPanel imagePanel = new TurnBonusCardPanel(bonusCards.get(i));
+			if (selectable) {
+				imagePanel.setSelectionListener(this);
+				imagePanel.setChangeColorOnFocusEvent(true);
+			}
+			panel_choosable_bonuses.add(imagePanel, "cell 0 " + i + ",grow");
+		}
+	}
+	private void addUsers() {
+		model.removeAllElements();
+		for (User user : game.getPlayers()) {
+			model.addElement(user);
+		}
+		repaint();
+	}
+	
+	/**
+	 * Choose a turn bonus for the user and change it in the games manager.
+	 */
+	private void chooseNewTurnBonus() {
+		if (selectedTurnBonus != null) {
+			game.getGameTurnBonusManager().chooseTurnBonus(game.getLocalUser(), selectedTurnBonus);
+		}
+	}
+	
+	/**
+	 * Show the users bonus on the panel.
+	 */
+	private void showUsersBonus(User user) {
+		panel_user_bonus.removeAll();
+		panel_user_bonus.add(new TurnBonusCardPanel(game.getGameTurnBonusManager().getUsersBonus(user)), BorderLayout.CENTER);
+		repaint();
+	}
+	
 	/**
 	 * Update all shown elements.
 	 */
 	public void update() {
-		//TODO
+		addTurnGoals();
+		addTurnBonuses();
 	}
 }

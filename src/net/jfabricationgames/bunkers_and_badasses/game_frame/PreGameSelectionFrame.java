@@ -116,7 +116,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		//Add a reference to this frame to the client interpreter 
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
 		
-		turnDialog = new TurnGoalTurnBonusDialog(game);
+		turnDialog = new TurnGoalTurnBonusDialog(game, false, false);
 		
 		setTitle("Bunkers and Badasses - Spiel Start");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PreGameSelectionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));

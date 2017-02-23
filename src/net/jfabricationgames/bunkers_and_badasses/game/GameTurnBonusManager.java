@@ -85,9 +85,9 @@ public class GameTurnBonusManager {
 	/**
 	 * Choose a turn bonus for the next round and lay back one.
 	 */
-	public void chooseTurnBonus(User user, TurnBonus chosen, TurnBonus back) {
+	public void chooseTurnBonus(User user, TurnBonus chosen) {
 		choosableTurnBonuses.remove(chosen);
-		choosableTurnBonuses.add(back);
+		choosableTurnBonuses.add(usersBonuses.get(user));
 		usersBonuses.put(user, chosen);
 	}
 	
@@ -96,6 +96,9 @@ public class GameTurnBonusManager {
 	}
 	public List<TurnBonus> getSelectableBonuses() {
 		return choosableTurnBonuses;
+	}
+	public TurnBonus getUsersBonus(User user) {
+		return usersBonuses.get(user);
 	}
 	
 	public void receiveAdditionalResources(User user, Game game) {
