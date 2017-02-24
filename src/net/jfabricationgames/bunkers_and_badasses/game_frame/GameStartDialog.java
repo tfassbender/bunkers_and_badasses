@@ -17,7 +17,10 @@ import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientI
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
@@ -42,6 +45,7 @@ public class GameStartDialog extends JDialog {
 	private SkillProfileManager skillProfileManager;
 	
 	private boolean isLoaded;
+	private boolean dynamicVariablesLoaded;
 	
 	public GameStartDialog() {
 		setResizable(false);
@@ -103,7 +107,7 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void receiveGameId(int id) {
 		this.gameId = id;
-		if (board != null && game != null) {
+		if (board != null && game != null && dynamicVariablesLoaded) {
 			startGameFrame();
 		}
 	}
@@ -116,14 +120,37 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void receiveBoard(Board board) {
 		this.board = board;
-		if (gameId != -1 && game != null) {
+		if (gameId != -1 && game != null && dynamicVariablesLoaded) {
 			startGameFrame();
 		}
 	}
 	
+	/**
+	 * Receive the game from the server.
+	 * 
+	 * @param game
+	 * 		The game that was sent by the starting player.
+	 */
 	public void receiveGame(Game game) {
 		this.game = game;
-		if (board != null && gameId != -1) {
+		if (board != null && gameId != -1 && dynamicVariablesLoaded) {
+			startGameFrame();
+		}
+	}
+	
+	/**
+	 * Receive the dynamic variables from the server.
+	 * 
+	 * @param message
+	 * 		The message containing the dynamically loaded variables from the server database.
+	 */
+	public void receiveDynamicVariables(DynamicVariableRequestMessage message) {
+		Building.setStorage(message.getBuildingStorage());
+		Troop.setStorage(message.getTroopStorage());
+		Game.setGameVariableStorage(message.getGameStorage());
+		//TODO add the variables before the game is created
+		dynamicVariablesLoaded = true;
+		if (board != null && gameId != -1 && game != null) {
 			startGameFrame();
 		}
 	}
@@ -185,6 +212,10 @@ public class GameStartDialog extends JDialog {
 		creationMessage.setBoardId(board.getBoardId());
 		creationMessage.setPlayers(players);
 		client.sendMessage(creationMessage);
+		//load the dynamic variables for the game from the database (for all players)
+		DynamicVariableRequestMessage dynamicVariableRequestMessage = new DynamicVariableRequestMessage();
+		dynamicVariableRequestMessage.setPlayers(players);
+		client.sendMessage(dynamicVariableRequestMessage);
 		//create a game object
 		Game game = new Game(client, players);
 		//board and id are not sent to the server (added later by the clients)
@@ -229,6 +260,10 @@ public class GameStartDialog extends JDialog {
 		boardRequest.setId(board.getBoardId());
 		boardRequest.setPlayers(players.size());
 		client.sendMessage(boardRequest);
+		//load the dynamic variables for the game from the database (for all players)
+		DynamicVariableRequestMessage dynamicVariableRequestMessage = new DynamicVariableRequestMessage();
+		dynamicVariableRequestMessage.setPlayers(players);
+		client.sendMessage(dynamicVariableRequestMessage);
 		//load the game from the server using the GameStore
 		Thread gameLoadingThread = new Thread(new Runnable() {
 			@Override

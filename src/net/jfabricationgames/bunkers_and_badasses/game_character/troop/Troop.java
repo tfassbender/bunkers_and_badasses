@@ -47,6 +47,7 @@ public abstract class Troop {
 	protected void writeObject(ObjectOutputStream out) throws IOException {
 		out.defaultWriteObject();
 	}
+	
 	/**
 	 * Read the object without the transient parts (the images that are not stored in the database)
 	 * 
@@ -75,5 +76,12 @@ public abstract class Troop {
 	}
 	public int getRecruitCostsEridium() {
 		return recruitCostsEridium;
+	}
+	
+	public static TroopStorage getStorage() {
+		return storage;
+	}
+	public static void setStorage(TroopStorage storage) {
+		Troop.storage = storage;
 	}
 }

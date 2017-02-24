@@ -30,6 +30,7 @@ public class Game implements Serializable {
 	private UserColorManager colorManager;
 	private SkillProfileManager skillProfileManager;
 	private transient GameFrame gameFrame;
+	private static transient GameVariableStorage gameVariableStorage;
 	
 	private int id;//the game id in the database
 	
@@ -159,6 +160,13 @@ public class Game implements Serializable {
 	public void setSkillProfileManager(SkillProfileManager skillProfileManager) {
 		this.skillProfileManager = skillProfileManager;
 		skillProfileManager.setUserResourceManager(resourceManager);
+	}
+	
+	public static GameVariableStorage getGameVariableStorage() {
+		return gameVariableStorage;
+	}
+	public static void setGameVariableStorage(GameVariableStorage gameVariableStorage) {
+		Game.gameVariableStorage = gameVariableStorage;
 	}
 	
 	public GameFrame getGameFrame() {
