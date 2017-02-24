@@ -30,10 +30,14 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.bunkers_and_badasses.game.ClientPingManager;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
@@ -58,6 +62,8 @@ public class MainMenuFrame extends JFrame {
 	
 	private List<Board> playableBoards;//no complete boards; only name and image
 	
+	private boolean dynamicVariablesLoaded;
+	
 	private Map<User, GameRequestDialog> requestDialogs = new HashMap<User, GameRequestDialog>();
 	private GameCreationDialog gameCreationDialog;
 	private GameLoadingDialog gameLoadingDialog;
@@ -71,6 +77,10 @@ public class MainMenuFrame extends JFrame {
 	private ChatClient chatClient;
 	private JTextArea txtrPlayers;
 	private ChatPanel chatPanel;
+	private JMenuItem mntmSpielErstellen;
+	private JMenuItem mntmSpielLaden;
+	private JButton btnSpielErstellen;
+	private JMenuItem mntmSkillProfil;
 	
 	public MainMenuFrame(JFGClient client) {
 		addWindowListener(new WindowAdapter() {
@@ -123,7 +133,8 @@ public class MainMenuFrame extends JFrame {
 		});
 		mnProfil.add(mntmProfilEinstellungen);
 		
-		JMenuItem mntmSkillProfil = new JMenuItem("Skill Profil");
+		mntmSkillProfil = new JMenuItem("Skill Profil");
+		mntmSkillProfil.setEnabled(false);
 		mntmSkillProfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showSkillProfileSettings();
@@ -138,7 +149,8 @@ public class MainMenuFrame extends JFrame {
 		JMenu mnSpiel = new JMenu("Spiel");
 		menuBar.add(mnSpiel);
 		
-		JMenuItem mntmSpielErstellen = new JMenuItem("Spiel Erstellen");
+		mntmSpielErstellen = new JMenuItem("Spiel Erstellen");
+		mntmSpielErstellen.setEnabled(false);
 		mntmSpielErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				startGameCreationDialog();
@@ -146,7 +158,8 @@ public class MainMenuFrame extends JFrame {
 		});
 		mnSpiel.add(mntmSpielErstellen);
 		
-		JMenuItem mntmSpielLaden = new JMenuItem("Spiel Laden");
+		mntmSpielLaden = new JMenuItem("Spiel Laden");
+		mntmSpielLaden.setEnabled(false);
 		mntmSpielLaden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				startGameLoadingDialog();
@@ -224,7 +237,8 @@ public class MainMenuFrame extends JFrame {
 		panel_content.add(panel_buttons, "cell 3 4,grow");
 		panel_buttons.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JButton btnSpielErstellen = new JButton("Spiel Erstellen");
+		btnSpielErstellen = new JButton("Spiel Erstellen");
+		btnSpielErstellen.setEnabled(false);
 		btnSpielErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				startGameCreationDialog();
@@ -236,6 +250,7 @@ public class MainMenuFrame extends JFrame {
 		updateUserList();
 		requireBoards();
 		requireSkillProfiles();
+		requireDynamicVariables();
 	}
 	
 	@Override
@@ -288,6 +303,13 @@ public class MainMenuFrame extends JFrame {
 		SkillProfileTransferMessage message = new SkillProfileTransferMessage();
 		message.setRequest(true);
 		client.sendMessage(message);
+	}
+	/**
+	 * load the dynamic variables for the game from the database.
+	 */
+	private void requireDynamicVariables() {
+		DynamicVariableRequestMessage dynamicVariableRequestMessage = new DynamicVariableRequestMessage();
+		client.sendMessage(dynamicVariableRequestMessage);
 	}
 	
 	private void startGameCreationDialog() {
@@ -346,6 +368,28 @@ public class MainMenuFrame extends JFrame {
 	protected void disposeGameLoadingDialog() {
 		gameLoadingDialog = null;
 	}
+	
+	/**
+	 * Receive the dynamic variables from the server.
+	 * 
+	 * @param message
+	 * 		The message containing the dynamically loaded variables from the server database.
+	 */
+	public void receiveDynamicVariables(DynamicVariableRequestMessage message) {
+		Building.setStorage(message.getBuildingStorage());
+		Troop.setStorage(message.getTroopStorage());
+		Game.setGameVariableStorage(message.getGameStorage());
+		dynamicVariablesLoaded = true;
+		//enable the game start buttons
+		btnSpielErstellen.setEnabled(true);
+		mntmSpielErstellen.setEnabled(true);
+		mntmSpielLaden.setEnabled(true);
+		//enable the buttons in the request dialogs
+		for (GameRequestDialog request : requestDialogs.values()) {
+			request.enableGameStart();
+		}
+	}
+	
 	public void receiveGameCreationAnswer(User player, boolean joining) {
 		if (gameCreationDialog != null) {
 			gameCreationDialog.receiveClientAnswer(player, joining);
@@ -385,10 +429,16 @@ public class MainMenuFrame extends JFrame {
 	
 	public void receiveSkillProfiles(SkillProfile[] profiles) {
 		skillProfileManager.setSkillProfiles(profiles);
+		//enable the skill menu
+		mntmSkillProfil.setEnabled(true);
 	}
 	
 	public static ImageLoader getImageLoader() {
 		return imageLoader;
+	}
+	
+	public boolean isDynamicVariablesLoaded() {
+		return dynamicVariablesLoaded;
 	}
 	
 	public SkillProfileManager getSkillProfileManager() {

@@ -144,6 +144,7 @@ public class GameRequestDialog extends JDialog {
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{
 				okButton = new JButton("Annehmen");
+				okButton.setEnabled(callingFrame.isDynamicVariablesLoaded());
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						sendAnswer(true);
@@ -202,5 +203,9 @@ public class GameRequestDialog extends JDialog {
 	public void receiveAbort(String abortMessage) {
 		okButton.setEnabled(false);
 		lblMessage_1.setText(abortMessage);
+	}
+	
+	public void enableGameStart() {
+		okButton.setEnabled(true);
 	}
 }
