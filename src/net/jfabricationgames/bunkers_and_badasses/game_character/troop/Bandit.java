@@ -4,6 +4,8 @@ public class Bandit extends Troop {
 	
 	public Bandit() {
 		strength = 1;
+		troopId = 1;
 		type = Troop.PLAYER_TROOP;
+		loadVariables();
 	}
 }

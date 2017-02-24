@@ -4,6 +4,8 @@ public class CrimsonRaider extends Troop {
 	
 	public CrimsonRaider() {
 		strength = 2;
+		troopId = 2;
 		type = Troop.PLAYER_TROOP;
+		loadVariables();
 	}
 }

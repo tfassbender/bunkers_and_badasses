@@ -2,12 +2,9 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 
 public class ArschgaulsPalace extends Building {
 	
-	static {
-		staticImage = imageLoader.loadImage("arschgaul_1_small.png");
-	}
-	
 	public ArschgaulsPalace() {
 		super();
+		buildingId = 0;
 		recruitableTroops = 3;
 		//TODO change to real values when known
 		ammoMining = 1;
@@ -15,5 +12,7 @@ public class ArschgaulsPalace extends Building {
 		eridiumMining = 1;
 		points = 1;
 		//Unsure if attackable
+		image = imageLoader.loadImage("arschgaul_1_small.png");
+		loadVariables();
 	}
 }

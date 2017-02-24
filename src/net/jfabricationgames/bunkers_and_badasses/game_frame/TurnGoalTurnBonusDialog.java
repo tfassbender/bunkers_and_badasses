@@ -261,6 +261,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	public void update() {
 		addTurnGoals();
 		addTurnBonuses();
+		repaint();
 	}
 	
 	public boolean isTurnBonusSelectable() {

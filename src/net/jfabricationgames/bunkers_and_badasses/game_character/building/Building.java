@@ -9,6 +9,7 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 public abstract class Building {
 	
+	//this variables are set to the loaded values from the database
 	protected int recruitableTroops;
 	protected int ammoMining;
 	protected int creditMining;
@@ -18,18 +19,24 @@ public abstract class Building {
 	protected int moveDistance;
 	protected int points;//winning points for holding bases
 	
+	protected int[] buildingPrice;//the price (credits, ammo, eridium) to build the building
 	protected int[] extensionPrice;//the prices (credits, ammo, eridium) to extend the building
 	
+	//this variables are fixed
 	protected boolean attackable;
 	protected boolean badassTroopsRecruitable;
 	protected boolean advanced;
 	protected boolean extendable;
 	
+	protected int buildingId;
+	protected int extendedBuildingId;
+	
 	protected BufferedImage image;
 	
 	protected String name;
 	
-	protected static BufferedImage staticImage;//load the image in a static content in the subclasses
+	protected static BuildingStorage storage;
+	
 	protected static ImageLoader imageLoader;
 	
 	static {
@@ -51,7 +58,6 @@ public abstract class Building {
 		badassTroopsRecruitable = false;
 		advanced = false;
 		extendable = false;
-		image = staticImage;
 	}
 	
 	@Override
@@ -68,6 +74,22 @@ public abstract class Building {
 		}
 	}
 	
+	protected void loadVariables() {
+		int[][] variables = storage.getBuildingVariables();
+		int[][] buildingPricesStorage = storage.getBuildingPrices();
+		int[][] buildingExtensionPrices = storage.getBuildingExtensionPrices();
+		recruitableTroops = variables[buildingId][BuildingStorage.RECRUITABLE_TROOPS];
+		ammoMining = variables[buildingId][BuildingStorage.MINING_AMMO];
+		creditMining = variables[buildingId][BuildingStorage.MINING_CREDITS];
+		eridiumMining = variables[buildingId][BuildingStorage.MINING_ERIDIUM];
+		landMineVictims = variables[buildingId][BuildingStorage.LAND_MINE_VICTIMS];
+		additionalDefence = variables[buildingId][BuildingStorage.ADDITIONAL_DEFENCE];
+		moveDistance = variables[buildingId][BuildingStorage.MOVE_DISTANCE];
+		points = variables[buildingId][BuildingStorage.POINTS];
+		extensionPrice = buildingExtensionPrices[buildingId];
+		buildingPrice = buildingPricesStorage[buildingId];
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -77,6 +99,15 @@ public abstract class Building {
 	 * The default implementation does nothing because not all buildings can be extended.
 	 */
 	public void extend() {
+		buildingId = extendedBuildingId;
+		loadVariables();
+		loadExtendedImage();
+	}
+	
+	/**
+	 * Load the extended image for this building. (Override in subclasses)
+	 */
+	protected void loadExtendedImage() {
 		
 	}
 	
@@ -101,5 +132,58 @@ public abstract class Building {
 	
 	public BufferedImage getImage() {
 		return image;
+	}
+	
+	public static BuildingStorage getStorage() {
+		return storage;
+	}
+	public static void setStorage(BuildingStorage storage) {
+		Building.storage = storage;
+	}
+	
+	public int getEridiumMining() {
+		return eridiumMining;
+	}
+	public void setEridiumMining(int eridiumMining) {
+		this.eridiumMining = eridiumMining;
+	}
+	public int getRecruitableTroops() {
+		return recruitableTroops;
+	}
+	public int getAmmoMining() {
+		return ammoMining;
+	}
+	public int getCreditMining() {
+		return creditMining;
+	}
+	public int getLandMineVictims() {
+		return landMineVictims;
+	}
+	public int getAdditionalDefence() {
+		return additionalDefence;
+	}
+	public int getMoveDistance() {
+		return moveDistance;
+	}
+	public int getPoints() {
+		return points;
+	}
+	public int[] getBuildingPrice() {
+		return buildingPrice;
+	}
+	public int[] getExtensionPrice() {
+		return extensionPrice;
+	}
+	public boolean isAttackable() {
+		return attackable;
+	}
+	public boolean isBadassTroopsRecruitable() {
+		return badassTroopsRecruitable;
+	}
+	public boolean isAdvanced() {
+		return advanced;
+	}
+	public boolean isExtendable() {
+		return extendable;
 	}
 }
