@@ -9,18 +9,17 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
  */
 public class SkillProfileManager {
 	
-	//TODO add the amount of credits, ammo or eridium for every skill level
-	public static final int[] CREDITS_SKILL_LEVEL = new int[] {};
-	public static final int[] AMMO_SKILL_LEVEL = new int[] {};
-	public static final int[] ERIDIUM_SKILL_LEVEL = new int[] {};
+	public static int[] CREDITS_SKILL_LEVEL;
+	public static int[] AMMO_SKILL_LEVEL;
+	public static int[] ERIDIUM_SKILL_LEVEL;
 
-	public static final int[] CREDITS_BUILDING_SKILL_LEVEL = new int[] {};
-	public static final int[] AMMO_BUILDING_SKILL_LEVEL = new int[] {};
-	public static final int[] ERIDIUM_BUILDING_SKILL_LEVEL = new int[] {};
+	public static int[] CREDITS_BUILDING_SKILL_LEVEL;
+	public static int[] AMMO_BUILDING_SKILL_LEVEL;
+	public static int[] ERIDIUM_BUILDING_SKILL_LEVEL;
 	
-	public static final int[] POINTS_SKILL_LEVEL = new int[] {};
+	public static int[] POINTS_SKILL_LEVEL;
 	
-	public static final int[] HEROES_SKILL_LEVEL = new int[] {};
+	public static int[] HEROS_SKILL_LEVEL;
 	
 	private static SkillProfile defaultSkillProfile;
 	
@@ -40,6 +39,18 @@ public class SkillProfileManager {
 		defaultSkillProfile.setAmmoBuilding(2);
 		defaultSkillProfile.setPoints(0);
 		defaultSkillProfile.setHero(0);
+	}
+	
+	public SkillProfileManager() {
+		GameVariableStorage storage = Game.getGameVariableStorage();
+		CREDITS_SKILL_LEVEL = storage.getCreditsSkillLevel();
+		AMMO_SKILL_LEVEL = storage.getAmmoSkillLevel();
+		ERIDIUM_SKILL_LEVEL = storage.getEridiumSkillLevel();
+		CREDITS_BUILDING_SKILL_LEVEL = storage.getCreditsBuildingSkillLevel();
+		AMMO_BUILDING_SKILL_LEVEL = storage.getAmmoBuildingSkillLevel();
+		ERIDIUM_BUILDING_SKILL_LEVEL = storage.getEridiumBuildingSkillLevel();
+		POINTS_SKILL_LEVEL = storage.getPointsSkillLevel();
+		HEROS_SKILL_LEVEL = storage.getHerosSkillLevel();
 	}
 	
 	public static SkillProfile getDefaultSkillProfile() {

@@ -25,6 +25,7 @@ import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
@@ -82,7 +83,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		startSkillPoints = 25;//TODO better load from database
+		startSkillPoints = Game.getGameVariableStorage().getSkillPoints();
 		
 		root = new SkillTreeNode(0, null, 0, 0);
 		root.setEnabled(true);

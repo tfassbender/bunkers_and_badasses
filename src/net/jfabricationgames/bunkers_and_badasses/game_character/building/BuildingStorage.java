@@ -11,6 +11,10 @@ public class BuildingStorage {
 	public static final int MOVE_DISTANCE = 6;
 	public static final int POINTS = 7;
 	
+	public static final int PRICE_CREDITS = 0;
+	public static final int PRICE_AMMO = 1;
+	public static final int PRICE_ERIDIUM = 2;
+	
 	//store the variables (loaded from the database) by the building id and the variable id
 	private int[][] buildingVariables;
 	private int[][] buildingPrices;

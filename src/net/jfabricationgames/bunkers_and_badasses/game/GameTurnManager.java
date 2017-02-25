@@ -8,7 +8,7 @@ public class GameTurnManager implements Serializable {
 	
 	private int turn;
 	
-	private static int numTurns = 10;//the number of turns in the game
+	private static int numTurns = Game.getGameVariableStorage().getGameTurns();
 	
 	private PlayerOrder playerOrder;
 	private GameTurnGoalManager gameTurnGoalManager;

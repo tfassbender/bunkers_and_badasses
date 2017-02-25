@@ -56,7 +56,7 @@ public class SkillProfile {
 		sb.append("Helden: ");
 		sb.append(hero);
 		sb.append(" [");
-		sb.append(SkillProfileManager.HEROES_SKILL_LEVEL[hero]);
+		sb.append(SkillProfileManager.HEROS_SKILL_LEVEL[hero]);
 		sb.append(" Helden-Karten zusätzlich (zu Spielbeginn)]\n\n");
 		sb.append("Punkte: ");
 		sb.append(points);

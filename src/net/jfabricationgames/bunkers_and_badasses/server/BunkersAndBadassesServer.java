@@ -13,14 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameVariableStorage;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.BuildingStorage;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.TroopStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
@@ -765,7 +769,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 					resource.setAmmoBuilding(SkillProfileManager.AMMO_BUILDING_SKILL_LEVEL[result.getInt(9)]);
 					userResources.put(user, resource);
 					game.getPointManager().addPoints(user, SkillProfileManager.POINTS_SKILL_LEVEL[result.getInt(3)]);
-					game.getHeroCardManager().takeCards(user, SkillProfileManager.HEROES_SKILL_LEVEL[result.getInt(10)]);
+					game.getHeroCardManager().takeCards(user, SkillProfileManager.HEROS_SKILL_LEVEL[result.getInt(10)]);
 				}
 			}
 			catch (SQLException sqle) {
@@ -918,6 +922,140 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				sqle.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * Load the dynamic variables from the database and send them back to the client.
+	 * 
+	 * @param message
+	 * 		The request message that is sent back to the client.
+	 * 
+	 * @param connection
+	 * 		The connection that sent the request.
+	 */
+	public void loadDynamicVariables(DynamicVariableRequestMessage message, JFGConnection connection) {
+		GameVariableStorage gameStorage = new GameVariableStorage();
+		BuildingStorage buildingStorage = new BuildingStorage();
+		TroopStorage troopStorage = new TroopStorage();
+		String gameVariablesQuery = "SELECT * FROM bunkers_and_badasses.game_variables WHERE used = true";
+		String skillResourcesQuery = "SELECT * FROM bunkser_and_badasses.skill_resources";
+		String startResourcesQuery = "SELECT * FROM bunkers_and_badasses.start_resources WHERE used = true";
+		String buildingQuery = "SELECT * FROM bunkers_and_badasses.buliding_variables";
+		String buildingCostQuery = "SELECT * FROM bunkers_and_badasses.costs_building";
+		String troopCostQuery = "SELECT * FROM bunkers_and_badasses.costs_troop";
+		ResultSet result;
+		//load the variables from the database
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		try (Statement statement = con.createStatement()) {
+			result = statement.executeQuery(gameVariablesQuery);
+			if (result.next()) {
+				gameStorage.setSkillPoints(result.getInt(3));
+				gameStorage.setGameTurns(result.getInt(4));
+				gameStorage.setMaxHerosCards(result.getInt(5));
+				gameStorage.setStartTroops(result.getInt(6));
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			result = statement.executeQuery(skillResourcesQuery);
+			while (result.next()) {
+				gameStorage.getCreditsSkillLevel()[result.getInt(2)] = result.getInt(3);
+				gameStorage.getCreditsBuildingSkillLevel()[result.getInt(2)] = result.getInt(4);
+				gameStorage.getAmmoSkillLevel()[result.getInt(2)] = result.getInt(5);
+				gameStorage.getAmmoBuildingSkillLevel()[result.getInt(2)] = result.getInt(6);
+				gameStorage.getEridiumSkillLevel()[result.getInt(2)] = result.getInt(7);
+				gameStorage.getEridiumBuildingSkillLevel()[result.getInt(2)] = result.getInt(8);
+				gameStorage.getHerosSkillLevel()[result.getInt(2)] = result.getInt(9);
+				gameStorage.getPointsSkillLevel()[result.getInt(2)] = result.getInt(10);
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			result = statement.executeQuery(startResourcesQuery);
+			if (result.next()) {
+				gameStorage.setStartCredits(result.getInt(3));
+				gameStorage.setStartAmmo(result.getInt(4));
+				gameStorage.setStartEridium(result.getInt(5));
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			result = statement.executeQuery(buildingQuery);
+			int[][] buildingVariables = buildingStorage.getBuildingVariables();
+			while (result.next()) {
+				buildingVariables[result.getInt(1)][BuildingStorage.RECRUITABLE_TROOPS] = result.getInt(2);
+				buildingVariables[result.getInt(1)][BuildingStorage.MINING_CREDITS] = result.getInt(3);
+				buildingVariables[result.getInt(1)][BuildingStorage.MINING_AMMO] = result.getInt(4);
+				buildingVariables[result.getInt(1)][BuildingStorage.MINING_ERIDIUM] = result.getInt(5);
+				buildingVariables[result.getInt(1)][BuildingStorage.LAND_MINE_VICTIMS] = result.getInt(6);
+				buildingVariables[result.getInt(1)][BuildingStorage.ADDITIONAL_DEFENCE] = result.getInt(7);
+				buildingVariables[result.getInt(1)][BuildingStorage.MOVE_DISTANCE] = result.getInt(8);
+				buildingVariables[result.getInt(1)][BuildingStorage.POINTS] = result.getInt(9);
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			result = statement.executeQuery(buildingCostQuery);
+			int[][] buildingPrices = buildingStorage.getBuildingPrices();
+			int[][] extensionPrices = buildingStorage.getBuildingExtensionPrices();
+			while (result.next()) {
+				buildingPrices[result.getInt(1)][BuildingStorage.PRICE_CREDITS] = result.getInt(2);
+				buildingPrices[result.getInt(1)][BuildingStorage.PRICE_AMMO] = result.getInt(3);
+				buildingPrices[result.getInt(1)][BuildingStorage.PRICE_ERIDIUM] = result.getInt(4);
+				extensionPrices[result.getInt(1)][BuildingStorage.PRICE_CREDITS] = result.getInt(5);
+				extensionPrices[result.getInt(1)][BuildingStorage.PRICE_AMMO] = result.getInt(6);
+				extensionPrices[result.getInt(1)][BuildingStorage.PRICE_ERIDIUM] = result.getInt(7);
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			result = statement.executeQuery(troopCostQuery);
+			int[][] troopPrices = troopStorage.getTroopCosts();
+			while (result.next()) {
+				troopPrices[result.getInt(1)][TroopStorage.BASE_COSTS_CREDITS] = result.getInt(2);
+				troopPrices[result.getInt(1)][TroopStorage.BASE_COSTS_AMMO] = result.getInt(3);
+				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_CREDITS] = result.getInt(4);
+				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_AMMO] = result.getInt(5);
+				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_ERIDIUM] = result.getInt(6);
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		//add the loaded variables and send back the message
+		message.setGameStorage(gameStorage);
+		message.setBuildingStorage(buildingStorage);
+		message.setTroopStorage(troopStorage);
+		connection.sendMessage(message);
 	}
 	
 	public Map<User, JFGConnection> getUserMap() {

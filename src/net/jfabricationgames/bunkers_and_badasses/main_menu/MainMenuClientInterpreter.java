@@ -4,6 +4,7 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.game.ServerLogoutDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
@@ -59,6 +60,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 		}
 		else if (message instanceof SkillProfileTransferMessage) {
 			interpreteSkillProfileTransferMessage((SkillProfileTransferMessage) message, client);
+		}
+		else if (message instanceof DynamicVariableRequestMessage) {
+			interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, client);
 		}
 	}
 	
@@ -132,5 +136,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	
 	private void interpreteSkillProfileTransferMessage(SkillProfileTransferMessage message, JFGClient client) {
 		mainMenu.receiveSkillProfiles(message.getProfiles());
+	}
+	
+	private void interpreteDynamicVariableRequestMessage(DynamicVariableRequestMessage message, JFGClient client) {
+		mainMenu.receiveDynamicVariables(message);
 	}
 }

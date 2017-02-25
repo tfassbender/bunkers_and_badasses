@@ -9,6 +9,7 @@ import java.util.List;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
@@ -100,6 +101,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		//pre game message
 		else if (message instanceof PreGameDataMessage) {
 			interpretePreGameDataMessage((PreGameDataMessage) message, connection);
+		}
+		//dynamic variables request message
+		else if (message instanceof DynamicVariableRequestMessage) {
+			interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, connection);
 		}
 	}
 	
@@ -272,5 +277,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpretePreGameDataMessage(PreGameDataMessage message, JFGConnection connection) {
 		connection.getGroup().sendMessage(message, connection);
+	}
+	
+	private void interpreteDynamicVariableRequestMessage(DynamicVariableRequestMessage message, JFGConnection connection) {
+		server.loadDynamicVariables(message, connection);
 	}
 }

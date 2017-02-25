@@ -41,6 +41,12 @@ public class HeroCardManager {
 	
 	private List<Hero> heroCardStack;
 	
+	private int maxCardsPerPlayer;
+	
+	public HeroCardManager() {
+		maxCardsPerPlayer = Game.getGameVariableStorage().getMaxHerosCards();
+	}
+	
 	private static List<Class<? extends Hero>> createHeroClassList() {
 		List<Class<? extends Hero>> heroClasses = new ArrayList<Class<? extends Hero>>();
 		heroClasses.add(Angel.class);
@@ -76,13 +82,16 @@ public class HeroCardManager {
 			heroCards.put(user, new ArrayList<Hero>());
 		}
 		heroCardStack = new ArrayList<Hero>();
-		for (Class<? extends Hero> hero : HERO_CLASSES) {
-			try {
-				heroCardStack.add(hero.newInstance());
-			}
-			catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
+		//if there are to many players add every card twice or more
+		while (heroCardStack.size() < maxCardsPerPlayer * players.size()) {
+			for (Class<? extends Hero> hero : HERO_CLASSES) {
+				try {
+					heroCardStack.add(hero.newInstance());
+				}
+				catch (InstantiationException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}			
 		}
 		Collections.shuffle(heroCardStack);
 	}
@@ -98,6 +107,9 @@ public class HeroCardManager {
 	 */
 	public void takeCards(User user, int cards) {
 		List<Hero> playersCards = heroCards.get(user);
+		if (playersCards.size() + cards > maxCardsPerPlayer) {
+			throw new IllegalArgumentException("The player want's to take more cards than allowed.");
+		}
 		for (int i = 0; i < cards; i++) {
 			//take the last element to avoid moving the whole array list
 			playersCards.add(heroCardStack.get(heroCardStack.size()-1));

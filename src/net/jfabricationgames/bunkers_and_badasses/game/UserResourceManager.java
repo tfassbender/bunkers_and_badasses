@@ -13,6 +13,12 @@ public class UserResourceManager {
 	
 	private Map<User, UserResource> resources;
 	
+	public UserResourceManager() {
+		startingCredits = Game.getGameVariableStorage().getStartCredits();
+		startingAmmo = Game.getGameVariableStorage().getStartAmmo();
+		startingEridium = Game.getGameVariableStorage().getStartEridium();
+	}
+	
 	public UserResourceManager(List<User> players) {
 		for (User u : players) {
 			resources.put(u, new UserResource());

@@ -76,7 +76,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	private Field selectedBaseField;
 	private final Field[] selectedStartFields = new Field[3];
 	private final int[] startTroops = new int[] {1, 1, 1};
-	private final int startingTroops = 6;
+	private final int startingTroops;
 	private int troopsLeft;
 	
 	private TurnBonus selectedBonus;
@@ -115,6 +115,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		this.game = game;
 		//Add a reference to this frame to the client interpreter 
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
+		
+		startingTroops = Game.getGameVariableStorage().getStartTroops();
 		
 		turnDialog = new TurnGoalTurnBonusDialog(game, false, false);
 		
