@@ -962,14 +962,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			}
 			result = statement.executeQuery(skillResourcesQuery);
 			while (result.next()) {
-				gameStorage.getCreditsSkillLevel()[result.getInt(2)] = result.getInt(3);
-				gameStorage.getCreditsBuildingSkillLevel()[result.getInt(2)] = result.getInt(4);
-				gameStorage.getAmmoSkillLevel()[result.getInt(2)] = result.getInt(5);
-				gameStorage.getAmmoBuildingSkillLevel()[result.getInt(2)] = result.getInt(6);
-				gameStorage.getEridiumSkillLevel()[result.getInt(2)] = result.getInt(7);
-				gameStorage.getEridiumBuildingSkillLevel()[result.getInt(2)] = result.getInt(8);
-				gameStorage.getHerosSkillLevel()[result.getInt(2)] = result.getInt(9);
-				gameStorage.getPointsSkillLevel()[result.getInt(2)] = result.getInt(10);
+				gameStorage.getCreditsSkillLevel()[result.getInt(1)] = result.getInt(2);
+				gameStorage.getCreditsBuildingSkillLevel()[result.getInt(1)] = result.getInt(3);
+				gameStorage.getAmmoSkillLevel()[result.getInt(1)] = result.getInt(4);
+				gameStorage.getAmmoBuildingSkillLevel()[result.getInt(1)] = result.getInt(5);
+				gameStorage.getEridiumSkillLevel()[result.getInt(1)] = result.getInt(6);
+				gameStorage.getEridiumBuildingSkillLevel()[result.getInt(1)] = result.getInt(7);
+				gameStorage.getHerosSkillLevel()[result.getInt(1)] = result.getInt(8);
+				gameStorage.getPointsSkillLevel()[result.getInt(1)] = result.getInt(9);
 			}
 			try {
 				result.close();

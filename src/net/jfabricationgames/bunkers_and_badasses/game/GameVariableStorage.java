@@ -26,14 +26,14 @@ public class GameVariableStorage {
 	private int startEridium;
 
 	public GameVariableStorage() {
-		creditsSkillLevel = new int[4];
-		ammoSkillLevel = new int[4];
-		eridiumSkillLevel = new int[4];
-		creditsBuildingSkillLevel = new int[4];
-		ammoBuildingSkillLevel = new int[4];
-		eridiumBuildingSkillLevel = new int[4];
+		creditsSkillLevel = new int[6];
+		ammoSkillLevel = new int[6];
+		eridiumSkillLevel = new int[6];
+		creditsBuildingSkillLevel = new int[6];
+		ammoBuildingSkillLevel = new int[6];
+		eridiumBuildingSkillLevel = new int[6];
 		pointsSkillLevel = new int[6];
-		herosSkillLevel = new int[4];
+		herosSkillLevel = new int[6];
 	}
 	
 	public int[] getCreditsSkillLevel() {
