@@ -10,17 +10,22 @@ public class TurnGoalCardPanel extends ImagePanel {
 	
 	private TurnGoal turnGoal;
 	
+	public TurnGoalCardPanel() {
+		this(null);
+	}
 	public TurnGoalCardPanel(TurnGoal turnGoal) {
 		this.turnGoal = turnGoal;
 		setBackground(Color.GRAY);
 		setCentered(true);
 		setAdaptSizeKeepProportion(true);
-		setImage(turnGoal.getImage());
-		setToolTipText(turnGoal.getDescription());
+		if (turnGoal != null) {
+			setImage(turnGoal.getImage());
+			setToolTipText(turnGoal.getDescription());			
+		}
 		repaint();
 	}
 	
-	public void setTurnBonus(TurnGoal turnGoal) {
+	public void setTurnGoal(TurnGoal turnGoal) {
 		this.turnGoal = turnGoal;
 		setImage(turnGoal.getImage());
 		setToolTipText(turnGoal.getDescription());

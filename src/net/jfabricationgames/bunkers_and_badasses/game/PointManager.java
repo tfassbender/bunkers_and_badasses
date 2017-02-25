@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +11,7 @@ public class PointManager {
 	
 	private Map<User, Integer> points;
 	
-	public class UserPoints {
+	public class UserPoints implements Comparable<UserPoints> {
 		
 		private User user;
 		private int points;
@@ -30,6 +32,11 @@ public class PointManager {
 		public String toString() {
 			return user.getUsername() + ": " + points;
 		}
+
+		@Override
+		public int compareTo(UserPoints userPoints) {
+			return points - userPoints.getPoints();
+		}
 	}
 	
 	public void initialize(List<User> players) {
@@ -38,12 +45,34 @@ public class PointManager {
 		}
 	}
 	
-	public void addPoints(User player, int points) {
-		//TODO
+	public List<UserPoints> getSortedPointList() {
+		List<UserPoints> userPoints = new ArrayList<UserPoints>();
+		for (User user : points.keySet()) {
+			userPoints.add(new UserPoints(user, points.get(user)));
+		}
+		Collections.sort(userPoints);
+		return userPoints;
 	}
 	
+	public int getPosition(User player) {
+		List<UserPoints> sortedPoints = getSortedPointList();
+		int position = -1;
+		for (int i = 0; i < sortedPoints.size(); i++) {
+			if (sortedPoints.get(i).equals(player)) {
+				position = i;
+			}
+		}
+		return position;
+	}
+	
+	public void addPoints(User player, int points) {
+		int current = this.points.get(player);
+		this.points.put(player, current + points);
+	}
+	public void setPoints(User player, int points) {
+		this.points.put(player, points);
+	}
 	public int getPoints(User player) {
-		//TODO
-		return 0;
+		return points.get(player);
 	}
 }

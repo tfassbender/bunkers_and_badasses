@@ -16,12 +16,15 @@ public class TurnBonusCardPanel extends ImagePanel {
 	
 	private boolean changeColorOnFocusEvent = false;
 	
+	public TurnBonusCardPanel() {
+		this(null);
+	}
 	public TurnBonusCardPanel(TurnBonus turnBonus) {
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
 				if (selectionListener != null) {
-					selectionListener.turnBonusCardSelected(turnBonus);
+					selectionListener.turnBonusCardSelected(TurnBonusCardPanel.this.turnBonus);
 				}
 				if (changeColorOnFocusEvent) {
 					setBackground(Color.LIGHT_GRAY);
@@ -36,8 +39,10 @@ public class TurnBonusCardPanel extends ImagePanel {
 		setBackground(Color.GRAY);
 		setCentered(true);
 		setAdaptSizeKeepProportion(true);
-		setImage(turnBonus.getImage());
-		setToolTipText(turnBonus.getDescription());
+		if (turnBonus != null) {
+			setImage(turnBonus.getImage());
+			setToolTipText(turnBonus.getDescription());			
+		}
 		repaint();
 	}
 	

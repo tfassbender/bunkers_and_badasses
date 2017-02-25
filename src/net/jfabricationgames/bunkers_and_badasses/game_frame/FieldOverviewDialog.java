@@ -30,6 +30,8 @@ public class FieldOverviewDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	
+	private ResourceInfoPanel resourcePanel;
+	
 	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldNeighbourListModel = new DefaultListModel<Field>();
@@ -269,69 +271,8 @@ public class FieldOverviewDialog extends JDialog {
 			list_neighbours.setBackground(Color.LIGHT_GRAY);
 			scrollPane_1.setViewportView(list_neighbours);
 			
-			JPanel panel_resources = new JPanel();
-			panel_resources.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-			panel_resources.setBackground(Color.GRAY);
-			panel.add(panel_resources, "cell 0 2,grow");
-			panel_resources.setLayout(new MigLayout("", "[right][grow,center][grow,center][grow,center]", "[][grow][][grow][grow][grow][grow]"));
-			
-			JLabel lblResourcen = new JLabel("Resourcen:");
-			lblResourcen.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			panel_resources.add(lblResourcen, "cell 0 0 4 1,alignx center");
-			
-			JLabel lblbrigeResourcen = new JLabel("\u00DCbrig:");
-			lblbrigeResourcen.setToolTipText("Im Moment vorhandene Resourcen");
-			lblbrigeResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_resources.add(lblbrigeResourcen, "cell 1 2");
-			
-			JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-			lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
-			lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
-			
-			JLabel lblVerbrauchletzteRunde = new JLabel("Verbrauch:");
-			lblVerbrauchletzteRunde.setToolTipText("<html>\r\nVerbrauchte Resourcen (f\u00FCr <br>\r\nBefehle) in der letzten Runde\r\n</html>");
-			lblVerbrauchletzteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_resources.add(lblVerbrauchletzteRunde, "cell 3 2");
-			
-			JLabel labelCredits = new JLabel("Credits:");
-			labelCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_resources.add(labelCredits, "cell 0 3");
-			
-			JLabel lblLC = new JLabel("");
-			panel_resources.add(lblLC, "cell 1 3");
-			
-			JLabel lblGC = new JLabel("");
-			panel_resources.add(lblGC, "cell 2 3");
-			
-			JLabel lblUC = new JLabel("");
-			panel_resources.add(lblUC, "cell 3 3");
-			
-			JLabel labelMunition = new JLabel("Munition:");
-			labelMunition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_resources.add(labelMunition, "cell 0 4");
-			
-			JLabel lblLA = new JLabel("");
-			panel_resources.add(lblLA, "cell 1 4");
-			
-			JLabel lblGA = new JLabel("");
-			panel_resources.add(lblGA, "cell 2 4");
-			
-			JLabel lblUA = new JLabel("");
-			panel_resources.add(lblUA, "cell 3 4");
-			
-			JLabel labelEridium = new JLabel("Eridium:");
-			labelEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_resources.add(labelEridium, "cell 0 5");
-			
-			JLabel lblLE = new JLabel("");
-			panel_resources.add(lblLE, "cell 1 5");
-			
-			JLabel lblGE = new JLabel("");
-			panel_resources.add(lblGE, "cell 2 5");
-			
-			JLabel lblUE = new JLabel("");
-			panel_resources.add(lblUE, "cell 3 5");
+			resourcePanel = new ResourceInfoPanel();
+			panel.add(resourcePanel, "cell 0 2,grow");
 		}
 	}
 }

@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -23,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -31,17 +34,17 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.game.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
-import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
 
 public class TurnPlaningFrame extends JFrame {
 	
 	private static final long serialVersionUID = -4935074259881358736L;
 	
 	private final JPanel contentPanel = new JPanel();
+	
+	private ResourceInfoPanel resourcePanel;
+	private FieldDescriptionPanel fieldPanel;
+	private PlayerOrderPanel orderPanel;
 	
 	private JTextField txtField;
 	private JTextField txtCurrcommand;
@@ -53,19 +56,11 @@ public class TurnPlaningFrame extends JFrame {
 	private JTextField txtRekrutierungen;
 	private JTextField txtResourcen;
 	
-	private JTextField txtSpieler;
-	private JTextField txtBefehl;
-	private JTextField txtGebude;
-	private JTextField txtTruppennormal;
-	private JTextField txtTruppenbadass;
-	
 	private ListModel<Field> fieldNoCommandListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldCommandListModel = new DefaultListModel<Field>();
 	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldNeighboursListModel = new DefaultListModel<Field>();
 	private ListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
 	private ListModel<FieldBuilding> buildingsAllListModel = new DefaultListModel<FieldBuilding>();
-	private ListModel<User> userListModel = new DefaultListModel<User>();
 	
 	private ComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
 	
@@ -73,8 +68,6 @@ public class TurnPlaningFrame extends JFrame {
 	private JPanel panel_board_capture;
 	private final String SCROLL_BOARD = "scroll_board";
 	private final String OVERVIEW_BOARD = "overview_board";
-	private JTextField txtFeld;
-	private JTextField txtRegion;
 	
 	public TurnPlaningFrame() {
 		setTitle("Bunkers and Badasses - Zug Planung");
@@ -217,109 +210,9 @@ public class TurnPlaningFrame extends JFrame {
 		list_buildings_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_buildings_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_buildings_all.setViewportView(list_buildings_all);
-		
-		JPanel panel_field_info = new JPanel();
-		panel_field_info.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_field_info.setBackground(Color.GRAY);
-		panel_side_bar.add(panel_field_info, "cell 0 2 2 1,grow");
-		panel_field_info.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px][][][][][][5px][][50px,grow]"));
-		
-		JLabel lblFeldbersicht = new JLabel("Feld \u00DCbersicht:");
-		lblFeldbersicht.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_field_info.add(lblFeldbersicht, "cell 0 0 4 1,alignx center");
-		
-		JLabel lblFeld_1 = new JLabel("Feld:");
-		lblFeld_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblFeld_1, "cell 0 2,alignx trailing");
-		
-		txtFeld = new JTextField();
-		txtFeld.setBackground(Color.LIGHT_GRAY);
-		txtFeld.setEditable(false);
-		txtFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtFeld, "cell 1 2 3 1,growx");
-		txtFeld.setColumns(10);
-		
-		JLabel lblRegion = new JLabel("Region:");
-		lblRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblRegion, "cell 0 3,alignx trailing");
-		
-		txtRegion = new JTextField();
-		txtRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtRegion.setBackground(Color.LIGHT_GRAY);
-		txtRegion.setEditable(false);
-		panel_field_info.add(txtRegion, "cell 1 3 3 1,growx");
-		txtRegion.setColumns(10);
-		
-		JLabel lblSpieler = new JLabel("Spieler:");
-		lblSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblSpieler, "cell 0 4,alignx trailing");
-		
-		txtSpieler = new JTextField();
-		txtSpieler.setBackground(Color.LIGHT_GRAY);
-		txtSpieler.setEditable(false);
-		txtSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtSpieler, "cell 1 4 3 1,growx");
-		txtSpieler.setColumns(10);
-		
-		JLabel lblBefehl_1 = new JLabel("Befehl:");
-		lblBefehl_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBefehl_1, "cell 0 5,alignx trailing");
-		
-		txtBefehl = new JTextField();
-		txtBefehl.setBackground(Color.LIGHT_GRAY);
-		txtBefehl.setEditable(false);
-		txtBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtBefehl, "cell 1 5,growx");
-		txtBefehl.setColumns(10);
-		
-		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
-		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblNormaleTruppen, "cell 2 5,alignx trailing");
-		
-		txtTruppennormal = new JTextField();
-		txtTruppennormal.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
-		txtTruppennormal.setEditable(false);
-		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtTruppennormal, "cell 3 5,growx");
-		txtTruppennormal.setColumns(10);
-		
-		JLabel lblGebude = new JLabel("Geb\u00E4ude:");
-		lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblGebude, "cell 0 6,alignx trailing");
-		
-		txtGebude = new JTextField();
-		txtGebude.setBackground(Color.LIGHT_GRAY);
-		txtGebude.setEditable(false);
-		txtGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtGebude, "cell 1 6,growx");
-		txtGebude.setColumns(10);
-		
-		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
-		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblBadassTruppen, "cell 2 6,alignx trailing");
-		
-		txtTruppenbadass = new JTextField();
-		txtTruppenbadass.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
-		txtTruppenbadass.setEditable(false);
-		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(txtTruppenbadass, "cell 3 6,growx");
-		txtTruppenbadass.setColumns(10);
-		
-		JLabel lblNachbarn = new JLabel("Nachbarn:");
-		lblNachbarn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field_info.add(lblNachbarn, "cell 0 8 4 1,alignx center");
-		
-		JScrollPane scrollPane_neighbours = new JScrollPane();
-		panel_field_info.add(scrollPane_neighbours, "cell 0 9 4 1,grow");
-		
-		JList<Field> list_neighbours = new JList<Field>(fieldNeighboursListModel);
-		list_neighbours.setToolTipText("<html>\r\nBenachbarte Felder\r\n</html>");
-		list_neighbours.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_neighbours.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		list_neighbours.setBackground(Color.LIGHT_GRAY);
-		scrollPane_neighbours.setViewportView(list_neighbours);
+
+		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
+		panel_side_bar.add(fieldPanel, "cell 0 2 2 1,grow");
 		
 		JPanel panel_low_bar = new JPanel();
 		panel_low_bar.setBackground(Color.GRAY);
@@ -497,89 +390,11 @@ public class TurnPlaningFrame extends JFrame {
 		panel_image.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_image, "cell 3 0,grow");
 		
-		JPanel panel_resources = new JPanel();
-		panel_resources.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_resources.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_resources, "cell 0 1,grow");
-		panel_resources.setLayout(new MigLayout("", "[right][grow,center][grow,center][grow,center]", "[][grow][][grow][grow][grow][grow]"));
-		
-		JLabel lblResourcen_headline = new JLabel("Resourcen:");
-		lblResourcen_headline.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_resources.add(lblResourcen_headline, "cell 0 0 4 1,alignx center");
-		
-		JLabel lblbrigeResourcen = new JLabel("\u00DCbrig:");
-		lblbrigeResourcen.setToolTipText("Im Moment vorhandene Resourcen");
-		lblbrigeResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(lblbrigeResourcen, "cell 1 2");
-		
-		JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
-		lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
-		
-		JLabel lblVerbrauchletzteRunde = new JLabel("Verbrauch:");
-		lblVerbrauchletzteRunde.setToolTipText("<html>\r\nVerbrauchte Resourcen (f\u00FCr <br>\r\nBefehle) in der letzten Runde\r\n</html>");
-		lblVerbrauchletzteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(lblVerbrauchletzteRunde, "cell 3 2");
-		
-		JLabel labelCredits = new JLabel("Credits:");
-		labelCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(labelCredits, "cell 0 3");
-		
-		JLabel lblLC = new JLabel("");
-		panel_resources.add(lblLC, "cell 1 3");
-		
-		JLabel lblGC = new JLabel("");
-		panel_resources.add(lblGC, "cell 2 3");
-		
-		JLabel lblUC = new JLabel("");
-		panel_resources.add(lblUC, "cell 3 3");
-		
-		JLabel labelMunition = new JLabel("Munition:");
-		labelMunition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(labelMunition, "cell 0 4");
-		
-		JLabel lblLA = new JLabel("");
-		panel_resources.add(lblLA, "cell 1 4");
-		
-		JLabel lblGA = new JLabel("");
-		panel_resources.add(lblGA, "cell 2 4");
-		
-		JLabel lblUA = new JLabel("");
-		panel_resources.add(lblUA, "cell 3 4");
-		
-		JLabel labelEridium = new JLabel("Eridium:");
-		labelEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(labelEridium, "cell 0 5");
-		
-		JLabel lblLE = new JLabel("");
-		panel_resources.add(lblLE, "cell 1 5");
-		
-		JLabel lblGE = new JLabel("");
-		panel_resources.add(lblGE, "cell 2 5");
-		
-		JLabel lblUE = new JLabel("");
-		panel_resources.add(lblUE, "cell 3 5");
-		
-		JPanel panel_order = new JPanel();
-		panel_low_bar.add(panel_order, "cell 1 1 3 1,grow");
-		panel_order.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_order.setBackground(Color.GRAY);
-		panel_order.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
-		
-		JLabel lblReihenfolge = new JLabel("Reihenfolge:");
-		lblReihenfolge.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_order.add(lblReihenfolge, "cell 0 0,alignx center");
-		
-		JScrollPane scrollPane_order = new JScrollPane();
-		panel_order.add(scrollPane_order, "cell 0 2,grow");
-		
-		JList<User> list_order = new JList<User>(userListModel);
-		list_order.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_order.setToolTipText("<html>\r\nDie Reihenfolge der Spieler <br>\r\n(F\u00FCr diese Runde)\r\n</html>");
-		scrollPane_order.setViewportView(list_order);
-		list_order.setBackground(Color.LIGHT_GRAY);
-		list_order.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		resourcePanel = new ResourceInfoPanel();
+		panel_low_bar.add(resourcePanel, "cell 0 1,grow");
+
+		orderPanel = new PlayerOrderPanel();
+		panel_low_bar.add(orderPanel, "cell 1 1 3 1,grow");
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

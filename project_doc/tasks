@@ -1,7 +1,7 @@
 Bunkers and Badasses - Tasks
 
 
-- implement some values of the game to be loaded from the database (like number of turns, starting resources)
+- implement the storing of the used resources
 - implement hero and building functions
 - create the statistics of a game and store them in the database when the game ends
 - frame functions

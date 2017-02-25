@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ public class UserResourceManager {
 	private static int startingEridium;
 	
 	private Map<User, UserResource> resources;
+	private Map<User, Map<Integer, UserResource>> resourceUse;//store the resources the used used in every turn
 	
 	public UserResourceManager() {
 		startingCredits = Game.getGameVariableStorage().getStartCredits();
@@ -20,8 +22,11 @@ public class UserResourceManager {
 	}
 	
 	public UserResourceManager(List<User> players) {
+		resources = new HashMap<User, UserResource>();
+		resourceUse = new HashMap<User, Map<Integer, UserResource>>();
 		for (User u : players) {
 			resources.put(u, new UserResource());
+			resourceUse.put(u, new HashMap<Integer, UserResource>());
 		}
 	}
 	
@@ -41,8 +46,8 @@ public class UserResourceManager {
 	public Map<User, UserResource> getResources() {
 		return resources;
 	}
-	public void setResources(Map<User, UserResource> resources) {
-		this.resources = resources;
+	public Map<User, Map<Integer, UserResource>> getResourceUse() {
+		return resourceUse;
 	}
 	
 	public static int getStartingCredits() {

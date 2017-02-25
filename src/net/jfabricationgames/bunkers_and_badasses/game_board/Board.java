@@ -10,11 +10,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Board implements Serializable {
 	
@@ -55,7 +59,7 @@ public class Board implements Serializable {
 	 * @return
 	 * 		The board image.
 	 */
-	public BufferedImage displayField() {
+	public BufferedImage displayBoard() {
 		//create a new BufferedImage and draw the basic image on it.
 		BufferedImage board = new BufferedImage(baseImage.getWidth(), baseImage.getHeight(), baseImage.getType());
 	    Graphics g = board.getGraphics();
@@ -127,6 +131,45 @@ public class Board implements Serializable {
 			}
 		}
 		return field;
+	}
+	
+	/**
+	 * Get a list of all fields of a player.
+	 * 
+	 * @param user
+	 * 		The user who owns the fields.
+	 * 
+	 * @return
+	 * 		A list of all fields the user owns.
+	 */
+	public List<Field> getUsersFields(User user) {
+		List<Field> usersFields = new ArrayList<Field>();
+		for (Field f : fields) {
+			if (f.getAffiliation().equals(user)) {
+				usersFields.add(f);
+			}
+		}
+		return usersFields;
+	}
+	
+	/**
+	 * Get all buildings of a player (except the EmptyBuilding instances).
+	 * 
+	 * @param user
+	 * 		The user that owns the buildings.
+	 * 
+	 * @return
+	 * 		The user's buildings.
+	 */
+	public List<Building> getUsersBuildings(User user) {
+		List<Building> buildings = new ArrayList<Building>();
+		List<Field> fields = getUsersFields(user);
+		for (Field f : fields) {
+			if (!(f.getBuilding() instanceof EmptyBuilding)) {
+				buildings.add(f.getBuilding());
+			}
+		}
+		return buildings;
 	}
 	
 	/**

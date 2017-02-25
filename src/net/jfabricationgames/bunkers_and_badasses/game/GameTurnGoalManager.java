@@ -81,6 +81,15 @@ public class GameTurnGoalManager {
 	public TurnGoal getTurnGoal(int turn) {
 		return turnGoals.get(turn);
 	}
+	/**
+	 * Get the TurnGoals object for the current game turn.
+	 * 
+	 * @return
+	 * 		The current turn's TurnGoal.
+	 */
+	public TurnGoal getTurnGoal() {
+		return turnGoals.get(gameTurnManager.getTurn());
+	}
 	
 	public void receivePointsFight(User user, Fight fight) {
 		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsFight(user, fight);

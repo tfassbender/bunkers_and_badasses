@@ -35,8 +35,8 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	
 	private static final long serialVersionUID = 852713388137185228L;
 	
-	private static final String TURN_BONUS_PANEL = "turn_bonus";
-	private static final String TURN_GOAL_PANEL = "turn_goal";
+	public static final String TURN_BONUS_PANEL = "turn_bonus";
+	public static final String TURN_GOAL_PANEL = "turn_goal";
 	
 	private Game game;
 	private boolean selectable;
@@ -189,7 +189,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 		selectedTurnBonus = bonus;
 	}
 	
-	private void showPanel(String name) {
+	public void showPanel(String name) {
 		CardLayout layout = (CardLayout) panel.getLayout();
 		layout.show(panel, name);
 	}

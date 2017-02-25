@@ -856,7 +856,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	}
 	
 	private void updateBoardImage() {
-		BufferedImage field = game.getBoard().displayField();
+		BufferedImage field = game.getBoard().displayBoard();
 		panel_board_overview.setImage(field);
 		panel_scroll_board.setImage(field);
 		panel_scroll_board.setPreferredSize(new Dimension(field.getWidth(), field.getHeight()));

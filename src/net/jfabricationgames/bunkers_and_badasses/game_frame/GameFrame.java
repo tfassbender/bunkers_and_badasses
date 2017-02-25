@@ -8,6 +8,9 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -20,12 +23,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
@@ -38,14 +38,13 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
-import net.jfabricationgames.bunkers_and_badasses.game.PointManager.UserPoints;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColorManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLogMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
-import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
 public class GameFrame extends JFrame {
@@ -56,7 +55,14 @@ public class GameFrame extends JFrame {
 
 	private ChatClient chatClient;
 	private ChatPanel chatPanel;
-	private JFGClient client;
+	private ResourceInfoPanel resourcePanel;
+	private FieldDescriptionPanel fieldPanel;
+	private PlayerOrderPanel orderPanel;
+	private PointPanel pointPanel;
+	
+	private Game game;
+	
+	private TurnGoalTurnBonusDialog turnGoalTurnBonusDialog;
 	
 	private JTextField txtPhase;
 	private JTextField txtActiveplayer;
@@ -70,40 +76,30 @@ public class GameFrame extends JFrame {
 		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/");
 	}
 
-	private ListModel<Hero> heroesListModel = new DefaultListModel<Hero>();
-	private ListModel<Field> fieldListModel = new DefaultListModel<Field>();
-	private ListModel<User> userListModel = new DefaultListModel<User>();
-	private ListModel<GameLogMessage> logListModel = new DefaultListModel<GameLogMessage>();
-	private ListModel<UserPoints> pointListModel = new DefaultListModel<UserPoints>();
+	private DefaultListModel<Hero> heroesListModel = new DefaultListModel<Hero>();
+	//private DefaultListModel<GameLogMessage> logListModel = new DefaultListModel<GameLogMessage>();
 	
 	private boolean fieldOverview = false;
 	private JPanel panel_board_capture;
 	private final String SCROLL_BOARD = "scroll_board";
 	private final String OVERVIEW_BOARD = "overview_board";
-
-	private JTextField txtFeld;
-	private JTextField txtRegion;
-	private JTextField txtSpieler;
-	private JTextField txtBefehl;
-	private JTextField txtGebude;
-	private JTextField txtTruppennormal;
-	private JTextField txtTruppenbadass;
 	
-	private JTextField txtYourPoints;
-	private JTextField txtYourPosition;
-	private JPanel panel_scroll_board;
-	private JPanel panel_board_overview;
+	private ImagePanel panel_scroll_board;
+	private ImagePanel panel_board_overview;
 	private JScrollPane scrollPane_board;
+	private JPanel panel_colors_1;
+	private TurnGoalCardPanel panel_turn_goal;
+	private TurnBonusCardPanel panel_turn_bonus;
 	
-	public static void main(String[] args) {
-		new GameFrame(null, null).setVisible(true);
-	}
-	
-	public GameFrame(JFGClient client, Game game) {
+	public GameFrame(Game game) {
+		this.game = game;
+		
+		turnGoalTurnBonusDialog = new TurnGoalTurnBonusDialog(game, true, false);
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1250, 750);
+		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1250, 750));
 		
 		try {
@@ -155,6 +151,26 @@ public class GameFrame extends JFrame {
 				new GameOverviewFrame().setVisible(true);
 			}
 		});
+		
+		JMenuItem mntmRundenZiele = new JMenuItem("Runden Ziele");
+		mntmRundenZiele.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				turnGoalTurnBonusDialog.setVisible(true);
+				turnGoalTurnBonusDialog.requestFocus();
+				turnGoalTurnBonusDialog.showPanel(TurnGoalTurnBonusDialog.TURN_GOAL_PANEL);
+			}
+		});
+		mnDialog.add(mntmRundenZiele);
+		
+		JMenuItem mntmRundenBoni = new JMenuItem("Runden Boni");
+		mntmRundenBoni.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				turnGoalTurnBonusDialog.setVisible(true);
+				turnGoalTurnBonusDialog.requestFocus();
+				turnGoalTurnBonusDialog.showPanel(TurnGoalTurnBonusDialog.TURN_BONUS_PANEL);
+			}
+		});
+		mnDialog.add(mntmRundenBoni);
 		mnDialog.add(mntmSpielbersicht);
 		
 		JMenuItem mntmGebietsbersicht = new JMenuItem("Gebiets\u00FCbersicht");
@@ -226,7 +242,7 @@ public class GameFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		chatClient = new ChatClient(client);
+		chatClient = new ChatClient(game.getClient());
 		chatPanel = new ChatPanel(chatClient);
 		chatPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		chatClient.addChatPanel(chatPanel);
@@ -249,7 +265,13 @@ public class GameFrame extends JFrame {
 		scrollPane_board = new JScrollPane();
 		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
 		
-		panel_scroll_board = new JPanel();
+		panel_scroll_board = new ImagePanel();
+		panel_scroll_board.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				selectCurrentField();
+			}
+		});
 		panel_scroll_board.setBackground(Color.GRAY);
 		scrollPane_board.setViewportView(panel_scroll_board);
 		
@@ -258,148 +280,50 @@ public class GameFrame extends JFrame {
 		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
 		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		panel_board_overview = new JPanel();
+		panel_board_overview = new ImagePanel();
+		panel_board_overview.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				selectCurrentField();
+			}
+		});
+		panel_board_overview.setCentered(true);
+		panel_board_overview.setAdaptSizeKeepProportion(true);
 		panel_board_overview.setBackground(Color.GRAY);
 		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
 		
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
 		panel.add(panel_side_bar, "cell 1 0,grow");
-		panel_side_bar.setLayout(new MigLayout("", "[grow]", "[grow][::250px,grow][::250px,grow]"));
+		panel_side_bar.setLayout(new MigLayout("", "[grow]", "[150px,grow][:150px:350px,grow][:300px:300px,grow]"));
 		
 		chatPanel.setBackground(Color.GRAY);
 		panel_side_bar.add(chatPanel, "cell 0 0,grow");
 		
-		JPanel panel_log = new JPanel();
-		panel_log.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_log.setBackground(Color.GRAY);
-		panel_side_bar.add(panel_log, "cell 0 1,grow");
-		panel_log.setLayout(new MigLayout("", "[grow]", "[][25px,grow][50px,grow]"));
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_1.setBackground(Color.GRAY);
+		panel_side_bar.add(panel_1, "cell 0 1,grow");
+		panel_1.setLayout(new MigLayout("", "[100px,grow][100px,grow]", "[][grow]"));
 		
-		JLabel lblSpielLog = new JLabel("Spiel Log:");
-		lblSpielLog.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_log.add(lblSpielLog, "cell 0 0,alignx center");
+		JLabel lblRundenZiel = new JLabel("Runden Ziel:");
+		lblRundenZiel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_1.add(lblRundenZiel, "cell 0 0,alignx center");
 		
-		JScrollPane scrollPane_log_detail = new JScrollPane();
-		panel_log.add(scrollPane_log_detail, "cell 0 1,grow");
+		JLabel lblRundenBonus = new JLabel("Runden Bonus:");
+		lblRundenBonus.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_1.add(lblRundenBonus, "cell 1 0,alignx center");
 		
-		JTextArea txtrLogdetail = new JTextArea();
-		txtrLogdetail.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtrLogdetail.setBackground(Color.LIGHT_GRAY);
-		scrollPane_log_detail.setViewportView(txtrLogdetail);
+		panel_turn_goal = new TurnGoalCardPanel();
+		panel_turn_goal.setBackground(Color.GRAY);
+		panel_1.add(panel_turn_goal, "cell 0 1,grow");
 		
-		JScrollPane scrollPane_log = new JScrollPane();
-		panel_log.add(scrollPane_log, "cell 0 2,grow");
+		panel_turn_bonus = new TurnBonusCardPanel();
+		panel_turn_bonus.setBackground(Color.GRAY);
+		panel_1.add(panel_turn_bonus, "cell 1 1,grow");
 		
-		JList<GameLogMessage> list_log = new JList<GameLogMessage>(logListModel);
-		list_log.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_log.setToolTipText("<html>\r\n\u00DCbersicht \u00FCber die letzten Aktionen\r\n</html>");
-		list_log.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		list_log.setBackground(Color.LIGHT_GRAY);
-		scrollPane_log.setViewportView(list_log);
-		
-		JPanel panel_field = new JPanel();
-		panel_field.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_field.setBackground(Color.GRAY);
-		panel_side_bar.add(panel_field, "cell 0 2,grow");
-		panel_field.setLayout(new MigLayout("", "[][grow][][grow]", "[][5px][][][][][][5px][][50px,grow]"));
-		
-		JLabel lblFeldbersicht = new JLabel("Feld \u00DCbersicht:");
-		lblFeldbersicht.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_field.add(lblFeldbersicht, "cell 0 0 4 1,alignx center");
-		
-		JLabel lblFeld = new JLabel("Feld:");
-		lblFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblFeld, "cell 0 2,alignx trailing");
-		
-		txtFeld = new JTextField();
-		txtFeld.setEditable(false);
-		txtFeld.setBackground(Color.LIGHT_GRAY);
-		txtFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(txtFeld, "cell 1 2 3 1,growx");
-		txtFeld.setColumns(10);
-		
-		JLabel lblRegion = new JLabel("Region:");
-		lblRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblRegion, "cell 0 3,alignx trailing");
-		
-		txtRegion = new JTextField();
-		txtRegion.setEditable(false);
-		txtRegion.setBackground(Color.LIGHT_GRAY);
-		txtRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(txtRegion, "cell 1 3 3 1,growx");
-		txtRegion.setColumns(10);
-		
-		JLabel lblSpieler = new JLabel("Spieler:");
-		lblSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblSpieler, "cell 0 4,alignx trailing");
-		
-		txtSpieler = new JTextField();
-		txtSpieler.setBackground(Color.LIGHT_GRAY);
-		txtSpieler.setEditable(false);
-		txtSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(txtSpieler, "cell 1 4 3 1,growx");
-		txtSpieler.setColumns(10);
-		
-		JLabel lblBefehl_1 = new JLabel("Befehl:");
-		lblBefehl_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblBefehl_1, "cell 0 5,alignx trailing");
-		
-		txtBefehl = new JTextField();
-		txtBefehl.setBackground(Color.LIGHT_GRAY);
-		txtBefehl.setEditable(false);
-		txtBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(txtBefehl, "cell 1 5,growx");
-		txtBefehl.setColumns(10);
-		
-		JLabel lblNormaleTruppen = new JLabel("Normale Truppen:");
-		lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblNormaleTruppen, "cell 2 5,alignx trailing");
-		
-		txtTruppennormal = new JTextField();
-		txtTruppennormal.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTruppennormal.setBackground(Color.LIGHT_GRAY);
-		txtTruppennormal.setEditable(false);
-		txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(txtTruppennormal, "cell 3 5,growx");
-		txtTruppennormal.setColumns(10);
-		
-		JLabel lblGebude = new JLabel("Geb\u00E4ude:");
-		lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblGebude, "cell 0 6,alignx trailing");
-		
-		txtGebude = new JTextField();
-		txtGebude.setBackground(Color.LIGHT_GRAY);
-		txtGebude.setEditable(false);
-		txtGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(txtGebude, "cell 1 6,growx");
-		txtGebude.setColumns(10);
-		
-		JLabel lblBadassTruppen = new JLabel("Badass Truppen:");
-		lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblBadassTruppen, "cell 2 6,alignx trailing");
-		
-		txtTruppenbadass = new JTextField();
-		txtTruppenbadass.setHorizontalAlignment(SwingConstants.CENTER);
-		txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
-		txtTruppenbadass.setEditable(false);
-		txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(txtTruppenbadass, "cell 3 6,growx");
-		txtTruppenbadass.setColumns(10);
-		
-		JLabel lblNachbarn = new JLabel("Nachbarn:");
-		lblNachbarn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_field.add(lblNachbarn, "cell 0 8 4 1,alignx center");
-		
-		JScrollPane scrollPane_neighbours = new JScrollPane();
-		panel_field.add(scrollPane_neighbours, "cell 0 9 4 1,grow");
-		
-		JList<Field> list_neighbours = new JList<Field>(fieldListModel);
-		list_neighbours.setToolTipText("<html>\r\nBenachbarte Felder\r\n</html>");
-		list_neighbours.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_neighbours.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		list_neighbours.setBackground(Color.LIGHT_GRAY);
-		scrollPane_neighbours.setViewportView(list_neighbours);
+		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
+		panel_side_bar.add(fieldPanel, "cell 0 2,grow");
 		
 		JPanel panel_low_bar = new JPanel();
 		panel_low_bar.setBackground(Color.GRAY);
@@ -434,6 +358,7 @@ public class GameFrame extends JFrame {
 		panel_turn.add(btnSpielfeldbersicht, "cell 0 2,alignx center");
 		
 		JButton btnSpielzugAusfhren = new JButton("Spielzug Ausf\u00FChren");
+		btnSpielzugAusfhren.setEnabled(false);
 		btnSpielzugAusfhren.setToolTipText("<html>\r\nDen Spielzug des ausgew\u00E4hlten <br>\r\nFeldes ausf\u00FChren (Wie der Befehl <br>\r\nausgef\u00FChrt wird, wird im Folgenden <br>\r\nDialog festgelegt\r\n</html>");
 		btnSpielzugAusfhren.setBackground(Color.GRAY);
 		panel_turn.add(btnSpielzugAusfhren, "cell 1 2,alignx center");
@@ -482,69 +407,8 @@ public class GameFrame extends JFrame {
 		panel_turn.add(txtCommand, "cell 1 7,growx");
 		txtCommand.setColumns(10);
 		
-		JPanel panel_resources = new JPanel();
-		panel_resources.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_resources.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_resources, "cell 1 0,grow");
-		panel_resources.setLayout(new MigLayout("", "[right][grow,center][grow,center][grow,center]", "[][grow][][grow][grow][grow][grow]"));
-		
-		JLabel lblResourcen = new JLabel("Resourcen:");
-		lblResourcen.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_resources.add(lblResourcen, "cell 0 0 4 1,alignx center");
-		
-		JLabel lblbrigeResourcen = new JLabel("\u00DCbrig:");
-		lblbrigeResourcen.setToolTipText("Im Moment vorhandene Resourcen");
-		lblbrigeResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(lblbrigeResourcen, "cell 1 2");
-		
-		JLabel lblErhaltnchsteRunde = new JLabel("Erhalt:");
-		lblErhaltnchsteRunde.setToolTipText("<html>\r\nMomentaner Erhalt an Resourcen zu<br>\r\nBeginn der n\u00E4chsten Runde. (Resourcen<br>\r\nGewinnungsbefehle nicht ber\u00FCcksichtigt)<br>\r\n</html>");
-		lblErhaltnchsteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(lblErhaltnchsteRunde, "cell 2 2");
-		
-		JLabel lblVerbrauchletzteRunde = new JLabel("Verbrauch:");
-		lblVerbrauchletzteRunde.setToolTipText("<html>\r\nVerbrauchte Resourcen (f\u00FCr <br>\r\nBefehle) in der letzten Runde\r\n</html>");
-		lblVerbrauchletzteRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(lblVerbrauchletzteRunde, "cell 3 2");
-		
-		JLabel labelCredits = new JLabel("Credits:");
-		labelCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(labelCredits, "cell 0 3");
-		
-		JLabel lblLC = new JLabel("");
-		panel_resources.add(lblLC, "cell 1 3");
-		
-		JLabel lblGC = new JLabel("");
-		panel_resources.add(lblGC, "cell 2 3");
-		
-		JLabel lblUC = new JLabel("");
-		panel_resources.add(lblUC, "cell 3 3");
-		
-		JLabel labelMunition = new JLabel("Munition:");
-		labelMunition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(labelMunition, "cell 0 4");
-		
-		JLabel lblLA = new JLabel("");
-		panel_resources.add(lblLA, "cell 1 4");
-		
-		JLabel lblGA = new JLabel("");
-		panel_resources.add(lblGA, "cell 2 4");
-		
-		JLabel lblUA = new JLabel("");
-		panel_resources.add(lblUA, "cell 3 4");
-		
-		JLabel labelEridium = new JLabel("Eridium:");
-		labelEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_resources.add(labelEridium, "cell 0 5");
-		
-		JLabel lblLE = new JLabel("");
-		panel_resources.add(lblLE, "cell 1 5");
-		
-		JLabel lblGE = new JLabel("");
-		panel_resources.add(lblGE, "cell 2 5");
-		
-		JLabel lblUE = new JLabel("");
-		panel_resources.add(lblUE, "cell 3 5");
+		resourcePanel = new ResourceInfoPanel();
+		panel_low_bar.add(resourcePanel, "cell 1 0,grow");
 		
 		JPanel panel_heroes = new JPanel();
 		panel_heroes.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -572,6 +436,7 @@ public class GameFrame extends JFrame {
 		panel_heroes.add(btnbersicht, "cell 0 3,alignx center");
 		
 		JButton btnEinsetzen = new JButton("Einsetzen");
+		btnEinsetzen.setEnabled(false);
 		btnEinsetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//TODO delete after tests
@@ -582,69 +447,11 @@ public class GameFrame extends JFrame {
 		btnEinsetzen.setBackground(Color.GRAY);
 		panel_heroes.add(btnEinsetzen, "cell 1 3,alignx center");
 		
-		JPanel panel_order = new JPanel();
-		panel_order.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_order.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_order, "cell 3 0,grow");
-		panel_order.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
+		orderPanel = new PlayerOrderPanel();
+		panel_low_bar.add(orderPanel, "cell 3 0,grow");
 		
-		JLabel lblReihenfolge = new JLabel("Reihenfolge:");
-		lblReihenfolge.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_order.add(lblReihenfolge, "cell 0 0,alignx center");
-		
-		JScrollPane scrollPane_order = new JScrollPane();
-		panel_order.add(scrollPane_order, "cell 0 2,grow");
-		
-		JList<User> list_order = new JList<User>(userListModel);
-		list_order.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_order.setToolTipText("<html>\r\nDie Reihenfolge der Spieler <br>\r\n(F\u00FCr diese Runde)\r\n</html>");
-		scrollPane_order.setViewportView(list_order);
-		list_order.setBackground(Color.LIGHT_GRAY);
-		list_order.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
-		JPanel panel_points = new JPanel();
-		panel_points.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_points.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_points, "cell 4 0,grow");
-		panel_points.setLayout(new MigLayout("", "[][5px][grow]", "[][5px][grow][][]"));
-		
-		JLabel lblPunkte = new JLabel("Punkte:");
-		lblPunkte.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_points.add(lblPunkte, "cell 0 0 3 1,alignx center");
-		
-		JScrollPane scrollPane_points = new JScrollPane();
-		panel_points.add(scrollPane_points, "cell 0 2 3 1,grow");
-		
-		JList<UserPoints> list_points = new JList<UserPoints>(pointListModel);
-		list_points.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_points.setToolTipText("<html>\r\nDie Siegpunkte aller Spieler\r\n</html>");
-		list_points.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		list_points.setBackground(Color.LIGHT_GRAY);
-		scrollPane_points.setViewportView(list_points);
-		
-		JLabel lblDeinePunkte = new JLabel("Deine Punkte:");
-		lblDeinePunkte.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_points.add(lblDeinePunkte, "cell 0 3");
-		
-		txtYourPoints = new JTextField();
-		txtYourPoints.setHorizontalAlignment(SwingConstants.CENTER);
-		txtYourPoints.setBackground(Color.LIGHT_GRAY);
-		txtYourPoints.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtYourPoints.setEditable(false);
-		panel_points.add(txtYourPoints, "cell 2 3,growx");
-		txtYourPoints.setColumns(10);
-		
-		JLabel lblDeinePosition = new JLabel("Deine Position:");
-		lblDeinePosition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_points.add(lblDeinePosition, "cell 0 4");
-		
-		txtYourPosition = new JTextField();
-		txtYourPosition.setHorizontalAlignment(SwingConstants.CENTER);
-		txtYourPosition.setBackground(Color.LIGHT_GRAY);
-		txtYourPosition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtYourPosition.setEditable(false);
-		panel_points.add(txtYourPosition, "cell 2 4,growx");
-		txtYourPosition.setColumns(10);
+		pointPanel = new PointPanel();
+		panel_low_bar.add(pointPanel, "cell 4 0,grow");
 		
 		JPanel panel_player_colors = new JPanel();
 		panel_player_colors.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -659,12 +466,9 @@ public class GameFrame extends JFrame {
 		JScrollPane scrollPane_colors = new JScrollPane();
 		panel_player_colors.add(scrollPane_colors, "cell 0 1,grow");
 		
-		JPanel panel_colors = new JPanel();
-		panel_colors.setBackground(Color.GRAY);
-		scrollPane_colors.setViewportView(panel_colors);
-		
-		//TODO delete comment after tests; while testing game will be null
-		//addPlayerColors(panel_colors, game.getPlayers(), game.getColorManager());
+		panel_colors_1 = new JPanel();
+		panel_colors_1.setBackground(Color.GRAY);
+		scrollPane_colors.setViewportView(panel_colors_1);
 		
 		JPanel panel_logo_capture = new JPanel();
 		panel_logo_capture.setBackground(Color.GRAY);
@@ -678,6 +482,14 @@ public class GameFrame extends JFrame {
 		panel_logo.setAdaptSizeKeepProportion(true);
 		panel_logo.setBackground(Color.GRAY);
 		panel_logo_capture.add(panel_logo, "cell 0 1,grow");
+		
+		addPlayerColors(panel_colors_1, game.getPlayers(), game.getColorManager());
+		updateBoard();
+		updateTurnCards();
+		updateHeroCards();
+		updateTurnOrder();
+		updatePoints();
+		updateResources();
 	}
 	
 	/**
@@ -720,10 +532,11 @@ public class GameFrame extends JFrame {
 			rows.append(singleRow);
 		}
 		panel_colors.setLayout(new MigLayout("", "[grow][25px:n:25px]", rows.toString()));//set the layout
-		
+		Font font = new Font("Tahoma", Font.PLAIN, 12);
 		for (int i = 0; i < players.size(); i++) {
 			//create a label for the players name and a panel for his color
 			JLabel lblName = new JLabel(players.get(i).getUsername());
+			lblName.setFont(font);
 			UserColorPanel colorPanel = new UserColorPanel(colorManager.getUserColors().get(players.get(i)));
 			colorPanel.setBackground(Color.GRAY);
 			
@@ -731,6 +544,50 @@ public class GameFrame extends JFrame {
 			panel_colors.add(lblName, "cell 0 " + i);
 			panel_colors.add(colorPanel, "cell 1 " + i + ",grow");
 		}
+	}
+	
+	/**
+	 * Select the field that was selected using the mouse.
+	 */
+	private void selectCurrentField() {
+		Field field = game.getBoard().getFieldAtMousePosition();
+		fieldPanel.updateField(field);
+	}
+	
+	private void updateBoard() {
+		BufferedImage boardImage = game.getBoard().displayBoard();
+		panel_scroll_board.setImage(boardImage);
+		panel_scroll_board.setPreferredSize(new Dimension(boardImage.getWidth(), boardImage.getHeight()));
+		panel_board_overview.setImage(boardImage);
+		repaint();
+	}
+	
+	private void updateTurnCards() {
+		panel_turn_bonus.setTurnBonus(game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser()));
+		panel_turn_goal.setTurnGoal(game.getTurnManager().getGameTurnGoalManager().getTurnGoal());
+		repaint();
+	}
+	
+	private void updateHeroCards() {
+		heroesListModel.removeAllElements();
+		List<Hero> heros = game.getHeroCardManager().getHeroCards(game.getLocalUser());
+		for (int i = 0; i < heros.size(); i++) {
+			heroesListModel.addElement(heros.get(i));
+		}
+		repaint();
+	}
+	
+	private void updateTurnOrder() {
+		orderPanel.updateTurnOrder(game);
+	}
+	
+	private void updateResources() {
+		resourcePanel.updateResources(game, game.getLocalUser());
+		repaint();
+	}
+	
+	private void updatePoints() {
+		pointPanel.updatePoints(game);
 	}
 	
 	public static ImageLoader getImageLoader() {
