@@ -41,4 +41,83 @@ public class Fight {
 	public void executeHerosEffect(Hero hero) {
 		//TODO
 	}
+	
+	public int getAttackingStrength() {
+		//TODO
+		return 0;
+	}
+	public int getDefendingStrength() {
+		//TODO
+		return 0;
+	}
+	
+	public User getAttackingPlayer() {
+		return attackingPlayer;
+	}
+	public void setAttackingPlayer(User attackingPlayer) {
+		this.attackingPlayer = attackingPlayer;
+	}
+	
+	public User getDefendingPlayer() {
+		return defendingPlayer;
+	}
+	public void setDefendingPlayer(User defendingPlayer) {
+		this.defendingPlayer = defendingPlayer;
+	}
+	
+	public List<Field> getAttackSupporters() {
+		return attackSupporters;
+	}
+	public void setAttackSupporters(List<Field> attackSupporters) {
+		this.attackSupporters = attackSupporters;
+	}
+	
+	public List<Field> getDefenceSupporters() {
+		return defenceSupporters;
+	}
+	public void setDefenceSupporters(List<Field> defenceSupporters) {
+		this.defenceSupporters = defenceSupporters;
+	}
+	
+	public Hero getAttackingHero() {
+		return attackingHero;
+	}
+	public void setAttackingHero(Hero attackingHero) {
+		this.attackingHero = attackingHero;
+	}
+	
+	public Hero getDefendingHero() {
+		return defendingHero;
+	}
+	public void setDefendingHero(Hero defendingHero) {
+		this.defendingHero = defendingHero;
+	}
+	
+	public boolean isUseAttackingHeroEffect() {
+		return useAttackingHeroEffect;
+	}
+	public void setUseAttackingHeroEffect(boolean useAttackingHeroEffect) {
+		this.useAttackingHeroEffect = useAttackingHeroEffect;
+	}
+	
+	public boolean isUseDefendingHeroEffect() {
+		return useDefendingHeroEffect;
+	}
+	public void setUseDefendingHeroEffect(boolean useDefendingHeroEffect) {
+		this.useDefendingHeroEffect = useDefendingHeroEffect;
+	}
+	
+	public Field getAttackingField() {
+		return attackingField;
+	}
+	public void setAttackingField(Field attackingField) {
+		this.attackingField = attackingField;
+	}
+	
+	public Field getDefendingField() {
+		return defendingField;
+	}
+	public void setDefendingField(Field defendingField) {
+		this.defendingField = defendingField;
+	}
 }

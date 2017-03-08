@@ -6,13 +6,12 @@ public class Athena extends Hero {
 	
 	private static final long serialVersionUID = -2811444506343891702L;
 
-	static {
-		staticImage = imageLoader.loadImage("athena_1.png");
-	}
-	
 	public Athena() {
 		attack = 3;
 		defence = 5;
+		name = "Athena";
+		image = imageLoader.loadImage("athena_1.png");
+		effectDescription = "Aspis:\n\nBei einer Niederlage können keine deiner Truppen getötet werden";
 	}
 	
 	@Override

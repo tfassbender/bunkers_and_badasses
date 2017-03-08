@@ -4,13 +4,12 @@ public class CrazyEarl extends Hero {
 	
 	private static final long serialVersionUID = -1504504671280272179L;
 
-	static {
-		staticImage = imageLoader.loadImage("earl_1.png");
-	}
-	
 	public CrazyEarl() {
 		attack = 0;
 		defence = 1;
+		name = "Crazy Earl";
+		image = imageLoader.loadImage("earl_1.png");
+		effectDescription = "Schwarzmarkt:\n\nDu erhälltst gratis Eridium";
 	}
 	
 	@Override

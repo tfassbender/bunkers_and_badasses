@@ -1,11 +1,11 @@
 package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
@@ -14,44 +14,49 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
-public class FieldOverviewDialog extends JDialog {
+public class FieldOverviewDialog extends JDialog implements BoardPanelListener {
 	
 	private static final long serialVersionUID = -7613818198003965951L;
 	
 	private final JPanel contentPanel = new JPanel();
 	
+	private Game game;
+	
 	private ResourceInfoPanel resourcePanel;
 	
-	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldNeighbourListModel = new DefaultListModel<Field>();
+	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
+	private DefaultListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
+	private DefaultListModel<Field> fieldNeighbourListModel = new DefaultListModel<Field>();
 	
-	private JPanel panel_board_capture;
-	private final String SCROLL_BOARD = "scroll_board";
-	private final String OVERVIEW_BOARD = "overview_board";
+	private BoardPanel boardPanel;
 	
 	private JTextField txtSpieler;
 	private JTextField txtFeld;
 	private JTextField txtRegion;
 	private JTextField txtBefehl;
 	private JTextField txtGebude;
-	private JTextField txtNormaleTruppen;
-	private JTextField txtBadassTruppen;
+	private JTextField txtTruppennormal;
+	private JTextField txtTruppenbadass;
 	private JTextField txtGrenzenkontrolliert;
 	private JTextField txtGrenzenneutral;
 	private JTextField txtGrenzenfeindlich;
 	
-	public FieldOverviewDialog() {
+	public FieldOverviewDialog(Game game) {
+		this.game = game;
+		
 		setTitle("Bunkers and Badasses - Gebiets \u00DCbersicht");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FieldOverviewDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1150, 500);
@@ -68,31 +73,9 @@ public class FieldOverviewDialog extends JDialog {
 			contentPanel.add(panel, "cell 0 0,grow");
 			panel.setLayout(new MigLayout("", "[400px,grow][:200px:300px][:200px:300px,grow][:200px:300px,grow]", "[200px,grow][:100px:100px,grow][:200px:300px,grow]"));
 			
-			panel_board_capture = new JPanel();
-			panel_board_capture.setBackground(Color.GRAY);
-			panel.add(panel_board_capture, "cell 0 0 1 2,grow");
-			panel_board_capture.setLayout(new CardLayout(0, 0));
-			
-			JPanel panel_scroll_board_capture = new JPanel();
-			panel_scroll_board_capture.setBackground(Color.GRAY);
-			panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
-			panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
-			
-			JScrollPane scrollPane_board = new JScrollPane();
-			panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
-			
-			JPanel panel_scroll_board = new JPanel();
-			panel_scroll_board.setBackground(Color.GRAY);
-			scrollPane_board.setViewportView(panel_scroll_board);
-			
-			JPanel panel_board_overview_capture = new JPanel();
-			panel_board_overview_capture.setBackground(Color.GRAY);
-			panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
-			panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
-			
-			JPanel panel_board_overview = new JPanel();
-			panel_board_overview.setBackground(Color.GRAY);
-			panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
+			boardPanel = new BoardPanel();
+			boardPanel.addBoardPanelListener(this);
+			panel.add(boardPanel, "cell 0 0 1 2,grow");
 			
 			JPanel panel_fields_all = new JPanel();
 			panel_fields_all.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -108,6 +91,11 @@ public class FieldOverviewDialog extends JDialog {
 			panel_fields_all.add(scrollPane_fields_all, "cell 0 2,grow");
 			
 			JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+			list_fields_all.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent arg0) {
+					selectField(list_fields_all.getSelectedValue());
+				}
+			});
 			list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			list_fields_all.setBackground(Color.LIGHT_GRAY);
@@ -121,6 +109,11 @@ public class FieldOverviewDialog extends JDialog {
 			panel_fields_all.add(scrollPane, "cell 0 6,grow");
 			
 			JList<Field> list = new JList<Field>(fieldControlledListModel);
+			list.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+					selectField(list.getSelectedValue());
+				}
+			});
 			list.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list.setBackground(Color.LIGHT_GRAY);
@@ -173,12 +166,12 @@ public class FieldOverviewDialog extends JDialog {
 			lblNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_field_description.add(lblNormaleTruppen, "cell 4 3 2 1");
 			
-			txtNormaleTruppen = new JTextField();
-			txtNormaleTruppen.setEditable(false);
-			txtNormaleTruppen.setBackground(Color.LIGHT_GRAY);
-			txtNormaleTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_description.add(txtNormaleTruppen, "cell 6 3,growx");
-			txtNormaleTruppen.setColumns(10);
+			txtTruppennormal = new JTextField();
+			txtTruppennormal.setEditable(false);
+			txtTruppennormal.setBackground(Color.LIGHT_GRAY);
+			txtTruppennormal.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(txtTruppennormal, "cell 6 3,growx");
+			txtTruppennormal.setColumns(10);
 			
 			JLabel lblBefehl = new JLabel("Befehl:");
 			lblBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -195,12 +188,12 @@ public class FieldOverviewDialog extends JDialog {
 			lblBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_field_description.add(lblBadassTruppen, "cell 4 4 2 1");
 			
-			txtBadassTruppen = new JTextField();
-			txtBadassTruppen.setEditable(false);
-			txtBadassTruppen.setBackground(Color.LIGHT_GRAY);
-			txtBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_field_description.add(txtBadassTruppen, "cell 6 4,growx");
-			txtBadassTruppen.setColumns(10);
+			txtTruppenbadass = new JTextField();
+			txtTruppenbadass.setEditable(false);
+			txtTruppenbadass.setBackground(Color.LIGHT_GRAY);
+			txtTruppenbadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_description.add(txtTruppenbadass, "cell 6 4,growx");
+			txtTruppenbadass.setColumns(10);
 			
 			JLabel lblGebude = new JLabel("Geb\u00E4ude:");
 			lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -273,6 +266,90 @@ public class FieldOverviewDialog extends JDialog {
 			
 			resourcePanel = new ResourceInfoPanel();
 			panel.add(resourcePanel, "cell 0 2,grow");
+			
+			addFields();
+		}
+	}
+	
+	@Override
+	public void receiveBoardMouseClick(MouseEvent event) {
+		Field field = game.getBoard().getFieldAtMousePosition();
+		selectField(field);
+	}
+	
+	private void addFields() {
+		fieldAllListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			fieldAllListModel.addElement(field);
+		}
+		updateControlledFields();
+	}
+	
+	public void update() {
+		updateControlledFields();
+		updateResources();
+	}
+	public void updateControlledFields() {
+		fieldControlledListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation().equals(game.getLocalUser())) {
+				fieldControlledListModel.addElement(field);
+			}
+		}
+	}
+	public void updateResources() {
+		resourcePanel.updateResources(game, game.getLocalUser());
+	}
+
+	/**
+	 * Select the field that was selected using the mouse.
+	 */
+	private void selectField(Field field) {
+		if (field != null) {
+			txtFeld.setText(field.getName());
+			txtRegion.setText(field.getRegion().getName());
+			if (field.getAffiliation() != null) {
+				txtSpieler.setText(field.getAffiliation().getUsername());			
+			}
+			else {
+				txtSpieler.setText("-----");
+			}
+			//TODO add the field command to txtBefehl
+			txtTruppennormal.setText(Integer.toString(field.getNormalTroops()));
+			txtTruppenbadass.setText(Integer.toString(field.getBadassTroops()));
+			txtGebude.setText(field.getBuilding().getName());
+			fieldNeighbourListModel.removeAllElements();
+			int neighboursControlled = 0;
+			int neighboursNeutral = 0;
+			int neighboursEnemy = 0;
+			for (Field neighbour : field.getNeighbours()) {
+				fieldNeighbourListModel.addElement(neighbour);
+				if (neighbour.getAffiliation() == null) {
+					neighboursNeutral++;
+				}
+				else if (neighbour.getAffiliation().equals(game.getLocalUser())) {
+					neighboursControlled++;
+				}
+				else {
+					neighboursEnemy++;
+				}
+			}
+			txtGrenzenkontrolliert.setText(Integer.toString(neighboursControlled));
+			txtGrenzenneutral.setText(Integer.toString(neighboursNeutral));
+			txtGrenzenfeindlich.setText(Integer.toString(neighboursEnemy));
+		}
+		else {
+			txtFeld.setText("");
+			txtRegion.setText("");
+			txtSpieler.setText("");
+			//TODO add the field command to txtBefehl
+			txtTruppennormal.setText("");
+			txtTruppenbadass.setText("");
+			txtGebude.setText("");
+			fieldNeighbourListModel.removeAllElements();
+			txtGrenzenkontrolliert.setText("");
+			txtGrenzenneutral.setText("");
+			txtGrenzenfeindlich.setText("");
 		}
 	}
 }

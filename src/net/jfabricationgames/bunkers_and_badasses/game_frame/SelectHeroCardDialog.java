@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -13,17 +14,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.ListSelectionModel;
-import java.awt.Toolkit;
 
 public class SelectHeroCardDialog extends JDialog {
 	
@@ -31,15 +33,23 @@ public class SelectHeroCardDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	
+	private Game game;
+	
 	private JTextField txtHero;
 	private JTextField txtHeroAttack;
 	private JTextField txtHerodefence;
 	
 	private ImagePanel panel_image;
 	
-	private ListModel<Hero> heroListModel = new DefaultListModel<Hero>();
+	private Hero selectedHero;
 	
-	public SelectHeroCardDialog(boolean cardPlayable) {
+	private DefaultListModel<Hero> heroListModel = new DefaultListModel<Hero>();
+	private JButton btnAuswhlen;
+	private JTextArea txtrSpecialeffect;
+	
+	public SelectHeroCardDialog(Game game, boolean cardPlayable) {
+		this.game = game;
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
 		setBounds(100, 100, 450, 601);
@@ -68,6 +78,12 @@ public class SelectHeroCardDialog extends JDialog {
 			panel_heroes.add(scrollPane_heroes, "cell 0 1,grow");
 			
 			JList<Hero> list_heroes = new JList<Hero>(heroListModel);
+			list_heroes.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent arg0) {
+					selectedHero = list_heroes.getSelectedValue();
+					updateHero();
+				}
+			});
 			list_heroes.setToolTipText("<html>\r\nAlle Heldenkarten die du<br>\r\nauf der Hand hast\r\n</html>");
 			list_heroes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list_heroes.setBackground(Color.LIGHT_GRAY);
@@ -134,7 +150,7 @@ public class SelectHeroCardDialog extends JDialog {
 			JScrollPane scrollPane_special_effect = new JScrollPane();
 			panel_selected.add(scrollPane_special_effect, "cell 0 6 5 1,grow");
 			
-			JTextArea txtrSpecialeffect = new JTextArea();
+			txtrSpecialeffect = new JTextArea();
 			txtrSpecialeffect.setWrapStyleWord(true);
 			txtrSpecialeffect.setLineWrap(true);
 			txtrSpecialeffect.setEditable(false);
@@ -147,7 +163,7 @@ public class SelectHeroCardDialog extends JDialog {
 			panel_selected.add(panel_buttons, "cell 0 7 5 1,grow");
 			panel_buttons.setLayout(new MigLayout("", "[grow][][][grow]", "[]"));
 			
-			JButton btnAuswhlen = new JButton("Ausw\u00E4hlen");
+			btnAuswhlen = new JButton("Ausw\u00E4hlen");
 			btnAuswhlen.setEnabled(cardPlayable);
 			btnAuswhlen.setBackground(Color.GRAY);
 			panel_buttons.add(btnAuswhlen, "cell 1 0");
@@ -156,5 +172,39 @@ public class SelectHeroCardDialog extends JDialog {
 			btnAbbrechen.setBackground(Color.GRAY);
 			panel_buttons.add(btnAbbrechen, "cell 2 0");
 		}
+	}
+	
+	public void update() {
+		updateHeroList();
+		updateHero();
+	}
+	
+	private void updateHeroList() {
+		heroListModel.removeAllElements();
+		for (Hero hero : game.getHeroCardManager().getHeroCards(game.getLocalUser())) {
+			heroListModel.addElement(hero);
+		}
+		if (!heroListModel.contains(selectedHero)) {
+			selectedHero = null;
+		}
+	}
+	
+	private void updateHero() {
+		if (selectedHero == null) {
+			txtHero.setText("");
+			txtHeroAttack.setText("");
+			txtHerodefence.setText("");
+			txtrSpecialeffect.setText("");
+		}
+		else {
+			txtHero.setText(selectedHero.getName());
+			txtHeroAttack.setText(Integer.toString(selectedHero.getAttack()));
+			txtHerodefence.setText(Integer.toString(selectedHero.getDefence()));
+			txtrSpecialeffect.setText(selectedHero.getEffectDescription());
+		}
+	}
+	
+	public void setCardSelectionEnabled(boolean enabled) {
+		btnAuswhlen.setEnabled(enabled);
 	}
 }

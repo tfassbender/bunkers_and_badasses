@@ -4,13 +4,12 @@ public class SirHammerlock extends Hero {
 	
 	private static final long serialVersionUID = 6591200292813086025L;
 
-	static {
-		staticImage = imageLoader.loadImage("hammerlock_1.png");
-	}
-	
 	public SirHammerlock() {
 		attack = 1;
 		defence = 2;
+		name = "Sir Hammerlock";
+		image = imageLoader.loadImage("hammerlock_1.png");
+		effectDescription = "Großwildjagt:\n\nBis zu 3 beliebige Neutrale Einheiten werden getötet";
 	}
 	
 	@Override

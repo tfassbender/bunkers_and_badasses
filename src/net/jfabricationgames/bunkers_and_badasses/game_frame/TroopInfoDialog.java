@@ -13,7 +13,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -21,12 +20,18 @@ import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
 public class TroopInfoDialog extends JDialog {
 	
 	private static final long serialVersionUID = 8964222516995478087L;
+	
+	private Game game;
+	
+	private Field selectedField;
 	
 	private ResourceInfoPanel resourcePanel;
 	
@@ -39,9 +44,6 @@ public class TroopInfoDialog extends JDialog {
 	private JTextField txtBadassTruppen;
 	private JTextField txtGesammtKostenCredits;
 	private JTextField txtGesammtKostenMunition;
-	
-	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
 	private JTextField txtNormaleTruppen_1;
 	private JTextField txtBadassTruppen_1;
 	private JTextField txtGesammtKostenCredits_1;
@@ -51,7 +53,12 @@ public class TroopInfoDialog extends JDialog {
 	private JTextField txtField;
 	private JTextField txtRegion;
 	
-	public TroopInfoDialog() {
+	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
+	private DefaultListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
+	
+	public TroopInfoDialog(Game game) {
+		this.game = game;
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Truppen Info");
 		setBounds(100, 100, 900, 600);
@@ -293,6 +300,10 @@ public class TroopInfoDialog extends JDialog {
 			panel_field_info.add(txtNormaleTruppen_1, "cell 3 5,growx");
 			txtNormaleTruppen_1.setColumns(10);
 			
+			JLabel lblBadassTruppen_1 = new JLabel("Badass Truppen:");
+			lblBadassTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_field_info.add(lblBadassTruppen_1, "cell 2 6,alignx trailing");
+			
 			txtBadassTruppen_1 = new JTextField();
 			txtBadassTruppen_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			txtBadassTruppen_1.setEditable(false);
@@ -324,5 +335,81 @@ public class TroopInfoDialog extends JDialog {
 			lblMunition_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_field_info.add(lblMunition_1, "cell 4 8");
 		}
+	}
+	
+	public void update() {
+		updateTroopInfo();
+		updateFieldLists();
+		updateSelectedField();
+		updateResources();
+	}
+	
+	private void updateTroopInfo() {
+		int fieldsWithTroops = 0;
+		int fieldsWithoutTroops = 0;
+		int troopStrength = 0;
+		int troopsAll = 0;
+		int troopsNormal = 0;
+		int troopsBadass = 0;
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation().equals(game.getLocalUser())) {
+				if (field.getTroopStrength() > 0) {
+					fieldsWithTroops++;
+				}
+				else {
+					fieldsWithoutTroops++;
+				}
+				troopStrength += field.getTroopStrength();
+				troopsNormal += field.getNormalTroops();
+				troopsBadass += field.getBadassTroops();
+			}
+		}
+		troopsAll = troopsNormal + troopsBadass;
+		txtGebieteMitTruppen.setText(Integer.toString(fieldsWithTroops));
+		txtGebieteOhneTruppen.setText(Integer.toString(fieldsWithoutTroops));
+		txtGesammteTruppenstrke.setText(Integer.toString(troopStrength));
+		txtGesamtzahlTruppen.setText(Integer.toString(troopsAll));
+		txtNormaleTruppen.setText(Integer.toString(troopsNormal));
+		txtBadassTruppen.setText(Integer.toString(troopsBadass));
+		//TODO add the costs
+	}
+	
+	private void updateFieldLists() {
+		fieldAllListModel.removeAllElements();
+		fieldControlledListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			fieldAllListModel.addElement(field);
+			if (field.getAffiliation().equals(game.getLocalUser())) {
+				fieldControlledListModel.addElement(field);
+			}
+		}
+	}
+	
+	private void updateSelectedField() {
+		if (selectedField != null) {
+			txtField.setText(selectedField.getName());
+			txtRegion.setText(selectedField.getRegion().getName());
+			User affiliation = selectedField.getAffiliation();
+			if (affiliation == null) {
+				txtSpieler.setText("Neutral");
+			}
+			else {
+				txtSpieler.setText(affiliation.getUsername());
+			}
+			txtNormaleTruppen_1.setText(Integer.toString(selectedField.getNormalTroops()));
+			txtBadassTruppen_1.setText(Integer.toString(selectedField.getBadassTroops()));
+			//TODO set the costs
+		}
+		else {
+			txtField.setText("");
+			txtRegion.setText("");
+			txtSpieler.setText("");
+			txtNormaleTruppen_1.setText("");
+			txtBadassTruppen_1.setText("");
+		}
+	}
+	
+	private void updateResources() {
+		resourcePanel.updateResources(game, game.getLocalUser());
 	}
 }

@@ -4,13 +4,12 @@ public class Moxxi extends Hero {
 	
 	private static final long serialVersionUID = -4123023043047504302L;
 
-	static {
-		staticImage = imageLoader.loadImage("moxxi_1.png");
-	}
-	
 	public Moxxi() {
 		attack = 3;
 		defence = 2;
+		name = "Moxxi";
+		image = imageLoader.loadImage("moxxi_1.png");
+		effectDescription = "Anwerbung:\n\n3 neu rekrutierte Truppen können beliebig auf dem Feld verteilt werden";
 	}
 	
 	@Override

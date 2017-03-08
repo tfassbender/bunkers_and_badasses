@@ -8,7 +8,7 @@ import java.awt.Toolkit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -16,11 +16,16 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
 
-public class SupportRequestDialog extends JDialog {
+public class SupportRequestFrame extends JFrame {
 	
 	private static final long serialVersionUID = -702644470055482751L;
+	
+	private Game game;
 	
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtAttacked;
@@ -30,9 +35,13 @@ public class SupportRequestDialog extends JDialog {
 	private JTextField txtAttacker;
 	private JTextField txtDefender;
 	private JTextField txtSupporttroups;
+	private JRadioButton rdbtnAngreifer;
+	private JRadioButton rdbtnVerteidiger;
 	
-	public SupportRequestDialog() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(SupportRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+	public SupportRequestFrame(Game game) {
+		this.game = game;
+		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(SupportRequestFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Unterst\u00FCtzungs Anfrage");
 		setBounds(100, 100, 400, 500);
 		setMinimumSize(new Dimension(400, 500));
@@ -167,13 +176,13 @@ public class SupportRequestDialog extends JDialog {
 		
 		ButtonGroup group = new ButtonGroup();
 		
-		JRadioButton rdbtnAngreifer = new JRadioButton("Angreifer");
+		rdbtnAngreifer = new JRadioButton("Angreifer");
 		panel_5.add(rdbtnAngreifer, "cell 1 3");
 		rdbtnAngreifer.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rdbtnAngreifer.setBackground(Color.GRAY);
 		group.add(rdbtnAngreifer);
 		
-		JRadioButton rdbtnVerteidiger = new JRadioButton("Verteidiger");
+		rdbtnVerteidiger = new JRadioButton("Verteidiger");
 		panel_5.add(rdbtnVerteidiger, "cell 2 3");
 		rdbtnVerteidiger.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rdbtnVerteidiger.setBackground(Color.GRAY);
@@ -191,5 +200,21 @@ public class SupportRequestDialog extends JDialog {
 		JButton btnUntersttzungVerweigern = new JButton("Unterst\u00FCtzung verweigern");
 		panel_6.add(btnUntersttzungVerweigern, "cell 2 1");
 		btnUntersttzungVerweigern.setBackground(Color.GRAY);
+	}
+	
+	public void updateRequest(Fight fight, Field support) {
+		txtAttacked.setText(fight.getDefendingField().getName());
+		txtSupport.setText(support.getName());
+		txtAttacker.setText(fight.getAttackingPlayer().getUsername());
+		txtDefender.setText(fight.getDefendingPlayer().getUsername());
+		txtPoweratk.setText(Integer.toString(fight.getAttackingStrength()));
+		txtPowerdef.setText(Integer.toString(fight.getDefendingStrength()));
+		txtSupporttroups.setText(Integer.toString(support.getTroopStrength()));
+		if (fight.getDefendingPlayer().equals(game.getLocalUser())) {
+			rdbtnAngreifer.setEnabled(false);
+		}
+		else if (fight.getAttackingPlayer().equals(game.getLocalUser())) {
+			rdbtnVerteidiger.setEnabled(false);
+		}
 	}
 }

@@ -13,16 +13,18 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
-import net.jfabricationgames.bunkers_and_badasses.game_frame.TurnPlaningFrame.FieldBuilding;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 public class ResourceInfoDialog extends JDialog {
 	
@@ -30,11 +32,13 @@ public class ResourceInfoDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	
+	private Game game;
+	
 	private ResourceInfoPanel resourcePanel;
 	private FieldDescriptionPanel fieldPanel;
 	
-	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
-	private ListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
+	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
+	private DefaultListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
 	
 	private JTextField txtCredits;
 	private JTextField txtAmmo;
@@ -46,7 +50,9 @@ public class ResourceInfoDialog extends JDialog {
 	private JTextField txtAmmo_1;
 	private JTextField txtEridium_1;
 	
-	public ResourceInfoDialog() {
+	public ResourceInfoDialog(Game game) {
+		this.game = game;
+		
 		setTitle("Bunkers and Badasses - Resourcen Info");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ResourceInfoDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1000, 600);
@@ -181,6 +187,7 @@ public class ResourceInfoDialog extends JDialog {
 			panel_resource_buildings.add(lblCredits_3, "cell 1 3,alignx trailing");
 			
 			txtCredits_1 = new JTextField();
+			txtCredits_1.setHorizontalAlignment(SwingConstants.CENTER);
 			txtCredits_1.setBackground(Color.LIGHT_GRAY);
 			txtCredits_1.setEditable(false);
 			txtCredits_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -192,6 +199,7 @@ public class ResourceInfoDialog extends JDialog {
 			panel_resource_buildings.add(lblMunition_2, "cell 3 3,alignx trailing");
 			
 			txtAmmo_1 = new JTextField();
+			txtAmmo_1.setHorizontalAlignment(SwingConstants.CENTER);
 			txtAmmo_1.setBackground(Color.LIGHT_GRAY);
 			txtAmmo_1.setEditable(false);
 			txtAmmo_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -203,6 +211,7 @@ public class ResourceInfoDialog extends JDialog {
 			panel_resource_buildings.add(lblEridium_1, "cell 5 3,alignx trailing");
 			
 			txtEridium_1 = new JTextField();
+			txtEridium_1.setHorizontalAlignment(SwingConstants.CENTER);
 			txtEridium_1.setBackground(Color.LIGHT_GRAY);
 			txtEridium_1.setEditable(false);
 			txtEridium_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -226,6 +235,11 @@ public class ResourceInfoDialog extends JDialog {
 			panel_fields.add(scrollPane_fields_all, "cell 0 2,grow");
 			
 			JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+			list_fields_all.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+					updateField(list_fields_all.getSelectedValue());
+				}
+			});
 			list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			list_fields_all.setBackground(Color.LIGHT_GRAY);
@@ -239,5 +253,51 @@ public class ResourceInfoDialog extends JDialog {
 			panel_image.setBackground(Color.GRAY);
 			panel.add(panel_image, "cell 4 1,grow");
 		}
+		
+		update();
+	}
+	
+	public void update() {
+		updateResources();
+		updateFields();
+		updateCosts();
+		updateBuildings();
+	}
+	
+	private void updateCosts() {
+		//TODO count the costs for fields, commands, hero cards, ...
+	}
+	
+	private void updateField(Field field) {
+		fieldPanel.updateField(field);
+	}
+	
+	private void updateResources() {
+		resourcePanel.updateResources(game, game.getLocalUser());
+	}
+	
+	private void updateFields() {
+		fieldAllListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			fieldAllListModel.addElement(field);
+		}
+	}
+	
+	private void updateBuildings() {
+		int credits = 0;
+		int ammo = 0;
+		int eridium = 0;
+		buildingsPlayerListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation().equals(game.getLocalUser())) {
+				credits += field.getBuilding().getCreditMining();
+				ammo += field.getBuilding().getAmmoMining();
+				eridium += field.getBuilding().getEridiumMining();
+				buildingsPlayerListModel.addElement(new FieldBuilding(field, field.getBuilding()));
+			}
+		}
+		txtCredits_1.setText(Integer.toString(credits));
+		txtAmmo_1.setText(Integer.toString(ammo));
+		txtEridium_1.setText(Integer.toString(eridium));
 	}
 }

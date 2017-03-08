@@ -1,13 +1,13 @@
 package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -17,13 +17,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -32,19 +28,28 @@ import javax.swing.border.EtchedBorder;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Command;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
-import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
-public class TurnPlaningFrame extends JFrame {
+public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 	
 	private static final long serialVersionUID = -4935074259881358736L;
 	
 	private final JPanel contentPanel = new JPanel();
 	
+	private Game game;
+	
+	private Field selectedField;
+	
 	private ResourceInfoPanel resourcePanel;
 	private FieldDescriptionPanel fieldPanel;
 	private PlayerOrderPanel orderPanel;
+	private BoardPanel boardPanel;
 	
 	private JTextField txtField;
 	private JTextField txtCurrcommand;
@@ -56,20 +61,19 @@ public class TurnPlaningFrame extends JFrame {
 	private JTextField txtRekrutierungen;
 	private JTextField txtResourcen;
 	
-	private ListModel<Field> fieldNoCommandListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldCommandListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
-	private ListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
-	private ListModel<FieldBuilding> buildingsAllListModel = new DefaultListModel<FieldBuilding>();
+	private DefaultListModel<Field> fieldNoCommandListModel = new DefaultListModel<Field>();
+	private DefaultListModel<FieldCommand> fieldCommandListModel = new DefaultListModel<FieldCommand>();
+	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
+	private DefaultListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
+	private DefaultListModel<FieldBuilding> buildingsAllListModel = new DefaultListModel<FieldBuilding>();
 	
 	private ComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
+	private JButton btnLschen;
+	private JButton btnHinzufgen;
 	
-	private boolean fieldOverview = false;
-	private JPanel panel_board_capture;
-	private final String SCROLL_BOARD = "scroll_board";
-	private final String OVERVIEW_BOARD = "overview_board";
-	
-	public TurnPlaningFrame() {
+	public TurnPlaningFrame(Game game) {
+		this.game = game;
+		
 		setTitle("Bunkers and Badasses - Zug Planung");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1150, 700);
@@ -84,32 +88,10 @@ public class TurnPlaningFrame extends JFrame {
 		panel.setBackground(Color.GRAY);
 		contentPanel.add(panel, "cell 0 0,grow");
 		panel.setLayout(new MigLayout("", "[450px,grow][:600px:800px,grow]", "[300px,grow][:400px:400px,grow]"));
-			
-		panel_board_capture = new JPanel();
-		panel_board_capture.setBackground(Color.GRAY);
-		panel.add(panel_board_capture, "cell 0 0,grow");
-		panel_board_capture.setLayout(new CardLayout(0, 0));
 		
-		JPanel panel_scroll_board_capture = new JPanel();
-		panel_scroll_board_capture.setBackground(Color.GRAY);
-		panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
-		panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		JScrollPane scrollPane_board = new JScrollPane();
-		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
-		
-		JPanel panel_scroll_board = new JPanel();
-		panel_scroll_board.setBackground(Color.GRAY);
-		scrollPane_board.setViewportView(panel_scroll_board);
-		
-		JPanel panel_board_overview_capture = new JPanel();
-		panel_board_overview_capture.setBackground(Color.GRAY);
-		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
-		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		JPanel panel_board_overview = new JPanel();
-		panel_board_overview.setBackground(Color.GRAY);
-		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
+		boardPanel = new BoardPanel();
+		boardPanel.addBoardPanelListener(this);
+		panel.add(boardPanel, "cell 0 0,grow");
 		
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
@@ -130,6 +112,12 @@ public class TurnPlaningFrame extends JFrame {
 		panel_fields_no_command.add(scrollPane_fields_no_command, "cell 0 2,grow");
 		
 		JList<Field> list_fields_no_command = new JList<Field>(fieldNoCommandListModel);
+		list_fields_no_command.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				selectedField = list_fields_no_command.getSelectedValue();
+				updateField();
+			}
+		});
 		list_fields_no_command.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_no_command.setToolTipText("<html>\r\nDiese Gebiete haben noch <br>\r\nkeinen Befehl erhalten.\r\n</html>");
 		list_fields_no_command.setBackground(Color.LIGHT_GRAY);
@@ -149,7 +137,13 @@ public class TurnPlaningFrame extends JFrame {
 		JScrollPane scrollPane_fields_command = new JScrollPane();
 		panel_fields_command.add(scrollPane_fields_command, "cell 0 2,grow");
 		
-		JList<Field> list_fields_command = new JList<Field>(fieldCommandListModel);
+		JList<FieldCommand> list_fields_command = new JList<FieldCommand>(fieldCommandListModel);
+		list_fields_command.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				selectedField = list_fields_command.getSelectedValue().getField();
+				updateField();
+			}
+		});
 		list_fields_command.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_command.setToolTipText("<html>\r\nDiese Gebiete haben bereits <br>\r\neinen Befehl erhalten\r\n</html>");
 		list_fields_command.setBackground(Color.LIGHT_GRAY);
@@ -170,6 +164,12 @@ public class TurnPlaningFrame extends JFrame {
 		panel_fields_all.add(scrollPane_fields_all, "cell 0 2,grow");
 		
 		JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+		list_fields_all.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				selectedField = list_fields_all.getSelectedValue();
+				updateField();
+			}
+		});
 		list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
@@ -193,6 +193,12 @@ public class TurnPlaningFrame extends JFrame {
 		panel_buildings.add(scrollPane_buildings_player, "cell 0 3,grow");
 		
 		JList<FieldBuilding> list_buildings_player = new JList<FieldBuilding>(buildingsPlayerListModel);
+		list_buildings_player.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				selectedField = list_buildings_player.getSelectedValue().getField();
+				updateField();
+			}
+		});
 		list_buildings_player.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_buildings_player.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_buildings_player.setBackground(Color.LIGHT_GRAY);
@@ -206,6 +212,12 @@ public class TurnPlaningFrame extends JFrame {
 		panel_buildings.add(scrollPane_buildings_all, "cell 0 6,grow");
 		
 		JList<FieldBuilding> list_buildings_all = new JList<FieldBuilding>(buildingsAllListModel);
+		list_buildings_all.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				selectedField = list_buildings_all.getSelectedValue().getField();
+				updateField();
+			}
+		});
 		list_buildings_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_buildings_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_buildings_all.setBackground(Color.LIGHT_GRAY);
@@ -243,14 +255,7 @@ public class TurnPlaningFrame extends JFrame {
 		JButton btnbersicht = new JButton("\u00DCbersicht");
 		btnbersicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CardLayout layout = (CardLayout) panel_board_capture.getLayout();
-				if (fieldOverview) {
-					layout.show(panel_board_capture, SCROLL_BOARD);
-				}
-				else {
-					layout.show(panel_board_capture, OVERVIEW_BOARD);
-				}
-				fieldOverview = !fieldOverview;
+				boardPanel.showOtherView();
 			}
 		});
 		btnbersicht.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
@@ -268,7 +273,7 @@ public class TurnPlaningFrame extends JFrame {
 		panel_command.add(txtCurrcommand, "cell 1 3,growx");
 		txtCurrcommand.setColumns(10);
 		
-		JButton btnLschen = new JButton("L\u00F6schen");
+		btnLschen = new JButton("L\u00F6schen");
 		btnLschen.setToolTipText("<html>\r\nDen bestehenden Befehl f\u00FCr <br>\r\ndas ausgew\u00E4hlte Feld entfernen\r\n</html>");
 		btnLschen.setBackground(Color.GRAY);
 		panel_command.add(btnLschen, "cell 2 3");
@@ -282,7 +287,7 @@ public class TurnPlaningFrame extends JFrame {
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command.add(comboBox, "cell 1 4,growx");
 		
-		JButton btnHinzufgen = new JButton("Hinzuf\u00FCgen");
+		btnHinzufgen = new JButton("Hinzuf\u00FCgen");
 		btnHinzufgen.setToolTipText("<html>\r\nDen ausgew\u00E4hlten Befehl dem <br>\r\nausgew\u00E4hlten Feld zuweisen\r\n</html>");
 		btnHinzufgen.setBackground(Color.GRAY);
 		panel_command.add(btnHinzufgen, "cell 2 4");
@@ -395,59 +400,75 @@ public class TurnPlaningFrame extends JFrame {
 
 		orderPanel = new PlayerOrderPanel();
 		panel_low_bar.add(orderPanel, "cell 1 1 3 1,grow");
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu mnDialog = new JMenu("Dialog");
-		menuBar.add(mnDialog);
-		
-		JMenuItem menuItem = new JMenuItem("Zug Ausf\u00FChren");
-		mnDialog.add(menuItem);
-		
-		JMenuItem mntmSpielbersicht = new JMenuItem("Spiel\u00FCbersicht");
-		mnDialog.add(mntmSpielbersicht);
-		
-		JMenuItem mntmGebietsbersicht = new JMenuItem("Gebiets\u00FCbersicht");
-		mnDialog.add(mntmGebietsbersicht);
-		
-		JMenuItem mntmInfoDialogffnen = new JMenuItem("Allgemein Info");
-		mnDialog.add(mntmInfoDialogffnen);
-		
-		JMenuItem mntmTruppenInfoDialog = new JMenuItem("Truppen Info");
-		mnDialog.add(mntmTruppenInfoDialog);
-		
-		JMenuItem mntmResourcenInfoDialog = new JMenuItem("Resourcen Info");
-		mnDialog.add(mntmResourcenInfoDialog);
-		
-		JMenuItem mntmHeldenInfoDialog = new JMenuItem("Helden Info");
-		mnDialog.add(mntmHeldenInfoDialog);
-		
-		JMenuItem mntmChatDialog = new JMenuItem("Chat Dialog");
-		mnDialog.add(mntmChatDialog);
-		
-		JMenu mnHilfe = new JMenu("Hilfe");
-		menuBar.add(mnHilfe);
-		
-		JMenuItem mntmSpiel = new JMenuItem("Spiel");
-		mnHilfe.add(mntmSpiel);
-		
-		JMenuItem mntmSpielFunktionen = new JMenuItem("Spiel Funktionen");
-		mnHilfe.add(mntmSpielFunktionen);
+	}
+
+	@Override
+	public void receiveBoardMouseClick(MouseEvent event) {
+		selectedField = game.getBoard().getFieldAtMousePosition();
+		updateField();
 	}
 	
-	public class FieldBuilding {
-		
-		private Field field;
-		private Building building;
-		
-		public FieldBuilding(Field field, Building building) {
-			this.field = field;
-			this.building = building;
+	public void update() {
+		updateField();
+		updateResources();
+		updatePlayerOrder();
+		updateFieldLists();
+		updateBuildings();
+	}
+	
+	private void updateField() {
+		if (selectedField != null) {
+			fieldPanel.updateField(selectedField);
+			txtField.setText(selectedField.getName());
+			if (selectedField.getAffiliation().equals(game.getLocalUser())) {
+				//TODO add commands and costs
+				//txtCurrcommand.setText(selectedField.getCommand());
+				//txtKosts.setText("");
+				btnLschen.setEnabled(true);
+				btnHinzufgen.setEnabled(true);
+			}
+			else {
+				btnLschen.setEnabled(false);
+				btnHinzufgen.setEnabled(false);
+			}
 		}
-		
-		public String toString() {
-			return field.getName() + ": " + building.getName();
+		else {
+			//TODO
 		}
+	}
+	
+	private void updateFieldLists() {
+		fieldNoCommandListModel.removeAllElements();
+		fieldCommandListModel.removeAllElements();
+		fieldAllListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			fieldAllListModel.addElement(field);
+			if (field.getAffiliation().equals(game.getLocalUser())) {
+				//TODO check for existing command
+				fieldCommandListModel.addElement(new FieldCommand(field, null));//TODO add the command
+				fieldNoCommandListModel.addElement(field);
+			}
+		}
+	}
+	
+	private void updateBuildings() {
+		buildingsPlayerListModel.removeAllElements();
+		buildingsAllListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			if (!(field.getBuilding() instanceof EmptyBuilding)) {
+				buildingsAllListModel.addElement(new FieldBuilding(field, field.getBuilding()));
+				if (field.getAffiliation().equals(game.getLocalUser())) {
+					buildingsPlayerListModel.addElement(new FieldBuilding(field, field.getBuilding()));
+				}
+			}
+		}
+	}
+	
+	private void updateResources() {
+		resourcePanel.updateResources(game, game.getLocalUser());
+	}
+	
+	private void updatePlayerOrder() {
+		orderPanel.updateTurnOrder(game);
 	}
 }

@@ -10,6 +10,7 @@ public class MoxxisUnderdome extends Building {
 		creditMining = 1;
 		extensionPrice = new int[] {1, 0, 1};
 		extendable = true;
+		name = "Mad Moxxis' Underdome";
 		image = imageLoader.loadImage("underdome_1_small.png");
 		loadVariables();
 	}

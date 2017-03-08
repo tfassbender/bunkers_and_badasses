@@ -10,6 +10,7 @@ public class MoxxisTavern extends Building {
 		recruitableTroops = 2;
 		extensionPrice = new int[] {1, 1, 1};
 		extendable = true;
+		name = "Moxxis' Taverne";
 		image = imageLoader.loadImage("moxxis_1_small.png");
 		loadVariables();
 	}

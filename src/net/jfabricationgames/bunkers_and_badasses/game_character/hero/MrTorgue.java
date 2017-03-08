@@ -4,13 +4,12 @@ public class MrTorgue extends Hero {
 	
 	private static final long serialVersionUID = 2488254569700119667L;
 
-	static {
-		staticImage = imageLoader.loadImage("mr_torgue_1.png");
-	}
-	
 	public MrTorgue() {
 		attack = 3;
 		defence = 3;
+		name = "Mr. Trogue";
+		image = imageLoader.loadImage("mr_torgue_1.png");
+		effectDescription = "EXPLOSIONSGERÄUSCH:\n\n3 normale Truppen (irgentwo auf dem Feld) werden zu Badasses aufgerüstet";
 	}
 	
 	@Override

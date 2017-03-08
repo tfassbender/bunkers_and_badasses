@@ -4,13 +4,12 @@ public class Marcus extends Hero {
 	
 	private static final long serialVersionUID = -2964770085479731401L;
 
-	static {
-		staticImage = imageLoader.loadImage("marcus_1.png");
-	}
-	
 	public Marcus() {
 		attack = 1;
 		defence = 2;
+		name = "Marcus";
+		image = imageLoader.loadImage("marcus_1.png");
+		effectDescription = "Nachladen:\n\nDu erhällst gratis Munition";
 	}
 	
 	@Override

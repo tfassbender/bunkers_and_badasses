@@ -6,18 +6,17 @@ public class Roland extends Hero {
 	
 	private static final long serialVersionUID = -1123087849222660325L;
 
-	static {
-		staticImage = imageLoader.loadImage("roland_1.png");
-	}
-	
 	public Roland() {
 		attack = 4;
 		defence = 4;
+		name = "Roland";
+		image = imageLoader.loadImage("roland_1.png");
+		effectDescription = "Anführer:\n\nBeim Sieg werden bis zu 3 kämpfenden Einheiten aufgerüstet (nicht die unterstützenden Einheiten)";
 	}
 	
 	@Override
 	public void executeFight(Fight fight) {
 		//TODO
-		//Anführer: Beim Sieg werden alle (begrenzt ?) kämpfenden Einheiten aufgerüstet (nicht die unterstützenden Einheiten)
+		//Anführer: Beim Sieg werden bis zu 3 kämpfenden Einheiten aufgerüstet (nicht die unterstützenden Einheiten)
 	}
 }

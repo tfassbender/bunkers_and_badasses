@@ -93,35 +93,48 @@ public class ResourceInfoPanel extends JPanel {
 	}
 	
 	public void updateResources(Game game, User user) {
-		//update the resources left
-		UserResource resource = game.getResourceManager().getResources().get(user);
-		lblLC.setText(Integer.toString(resource.getCredits()));
-		lblLA.setText(Integer.toString(resource.getAmmo()));
-		lblLE.setText(Integer.toString(resource.getEridium()));
-		//update the resources the user gets through buildings
-		List<Building> usersBuildings = game.getBoard().getUsersBuildings(user);
-		int credits = 0;
-		int ammo = 0;
-		int eridium = 0;
-		for (Building building : usersBuildings) {
-			credits += building.getCreditMining();
-			ammo += building.getAmmoMining();
-			eridium += building.getEridiumMining();
-		}
-		lblGC.setText(Integer.toString(credits));
-		lblGA.setText(Integer.toString(ammo));
-		lblGE.setText(Integer.toString(eridium));
-		//update the resources the user used in the last turn
-		UserResource resourcesUsed = game.getResourceManager().getResourceUse().get(user).get(game.getTurnManager().getTurn());
-		if (resourcesUsed != null) {
-			lblUC.setText(Integer.toString(resourcesUsed.getCredits()));
-			lblUA.setText(Integer.toString(resourcesUsed.getAmmo()));
-			lblUE.setText(Integer.toString(resourcesUsed.getEridium()));			
+		if (game == null || user == null) {
+			lblLC.setText("");
+			lblLA.setText("");
+			lblLE.setText("");
+			lblGC.setText("");
+			lblGA.setText("");
+			lblGE.setText("");
+			lblUC.setText("");
+			lblUA.setText("");
+			lblUE.setText("");
 		}
 		else {
-			lblUC.setText("-");
-			lblUA.setText("-");
-			lblUE.setText("-");
+			//update the resources left
+			UserResource resource = game.getResourceManager().getResources().get(user);
+			lblLC.setText(Integer.toString(resource.getCredits()));
+			lblLA.setText(Integer.toString(resource.getAmmo()));
+			lblLE.setText(Integer.toString(resource.getEridium()));
+			//update the resources the user gets through buildings
+			List<Building> usersBuildings = game.getBoard().getUsersBuildings(user);
+			int credits = 0;
+			int ammo = 0;
+			int eridium = 0;
+			for (Building building : usersBuildings) {
+				credits += building.getCreditMining();
+				ammo += building.getAmmoMining();
+				eridium += building.getEridiumMining();
+			}
+			lblGC.setText(Integer.toString(credits));
+			lblGA.setText(Integer.toString(ammo));
+			lblGE.setText(Integer.toString(eridium));
+			//update the resources the user used in the last turn
+			UserResource resourcesUsed = game.getResourceManager().getResourceUse().get(user).get(game.getTurnManager().getTurn());
+			if (resourcesUsed != null) {
+				lblUC.setText(Integer.toString(resourcesUsed.getCredits()));
+				lblUA.setText(Integer.toString(resourcesUsed.getAmmo()));
+				lblUE.setText(Integer.toString(resourcesUsed.getEridium()));			
+			}
+			else {
+				lblUC.setText("-");
+				lblUA.setText("-");
+				lblUE.setText("-");
+			}			
 		}
 	}
 }

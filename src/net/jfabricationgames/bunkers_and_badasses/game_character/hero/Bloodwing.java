@@ -6,13 +6,12 @@ public class Bloodwing extends Hero {
 	
 	private static final long serialVersionUID = 5514081444025611690L;
 
-	static {
-		staticImage = imageLoader.loadImage("bloodwing_1.png");
-	}
-	
 	public Bloodwing() {
 		attack = 2;
 		defence = 1;
+		name = "Bloodwing";
+		image = imageLoader.loadImage("bloodwing_1.png");
+		effectDescription = "Luftunterstützung:\n\nDie Kampfstärke der gegnerischen Karte wird um 3 gesenkt (Angriff und Verteidigung; Der wert kann nicht unter 0 fallen)";
 	}
 	
 	@Override

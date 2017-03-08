@@ -22,9 +22,11 @@ public abstract class Hero implements Serializable {
 	protected int usedAttack;
 	protected int usedDefence;
 	
+	protected String name;
+	protected String effectDescription;
+	
 	public transient BufferedImage image;
 	
-	protected static BufferedImage staticImage;//load the image in a static content in the subclasses
 	protected static ImageLoader imageLoader;
 	
 	static {
@@ -37,7 +39,16 @@ public abstract class Hero implements Serializable {
 		defence = 0;
 		usedAttack = 0;
 		usedDefence = 0;
-		image = staticImage;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Hero) {
+			return name.equals(((Hero) obj).getName());
+		}
+		else {
+			return super.equals(obj);
+		}
 	}
 	
 	/**
@@ -76,5 +87,19 @@ public abstract class Hero implements Serializable {
 	 */
 	protected void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
+	}
+	
+	public int getAttack() {
+		return attack;
+	}
+	public int getDefence() {
+		return defence;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public String getEffectDescription() {
+		return effectDescription;
 	}
 }

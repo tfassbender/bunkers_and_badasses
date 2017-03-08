@@ -6,6 +6,7 @@ public class TinyTinasMine extends Building {
 		super();
 		buildingId = 15;
 		landMineVictims = 2;
+		name = "Tiny Tina's Landmienen";
 		image = imageLoader.loadImage("mine_1_small.png");
 		loadVariables();
 	}

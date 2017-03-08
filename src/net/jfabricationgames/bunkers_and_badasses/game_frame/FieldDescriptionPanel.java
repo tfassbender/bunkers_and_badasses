@@ -141,21 +141,33 @@ public class FieldDescriptionPanel extends JPanel {
 	}
 	
 	public void updateField(Field field) {
-		txtFeld.setText(field.getName());
-		txtRegion.setText(field.getRegion().getName());
-		if (field.getAffiliation() != null) {
-			txtSpieler.setText(field.getAffiliation().getUsername());			
+		if (field != null) {
+			txtFeld.setText(field.getName());
+			txtRegion.setText(field.getRegion().getName());
+			if (field.getAffiliation() != null) {
+				txtSpieler.setText(field.getAffiliation().getUsername());			
+			}
+			else {
+				txtSpieler.setText("-----");
+			}
+			//TODO add the field command to txtBefehl
+			txtTruppennormal.setText(Integer.toString(field.getNormalTroops()));
+			txtTruppenbadass.setText(Integer.toString(field.getBadassTroops()));
+			txtGebude.setText(field.getBuilding().getName());
+			fieldListModel.removeAllElements();
+			for (Field neighbour : field.getNeighbours()) {
+				fieldListModel.addElement(neighbour);
+			}
 		}
 		else {
-			txtSpieler.setText("-----");
-		}
-		//TODO add the field command to txtBefehl
-		txtTruppennormal.setText(Integer.toString(field.getNormalTroops()));
-		txtTruppenbadass.setText(Integer.toString(field.getBadassTroops()));
-		txtGebude.setText(field.getBuilding().getName());
-		fieldListModel.removeAllElements();
-		for (Field neighbour : field.getNeighbours()) {
-			fieldListModel.addElement(neighbour);
+			txtFeld.setText("");
+			txtRegion.setText("");
+			txtSpieler.setText("");
+			//TODO add the field command to txtBefehl
+			txtTruppennormal.setText("");
+			txtTruppenbadass.setText("");
+			txtGebude.setText("");
+			fieldListModel.removeAllElements();
 		}
 	}
 }

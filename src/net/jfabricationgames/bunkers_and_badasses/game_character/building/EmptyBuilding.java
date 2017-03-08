@@ -6,6 +6,7 @@ public class EmptyBuilding extends Building {
 		super();
 		buildingId = 3;
 		image = imageLoader.loadImage("empty.png");
+		name = "-----";
 		loadVariables();
 	}
 }

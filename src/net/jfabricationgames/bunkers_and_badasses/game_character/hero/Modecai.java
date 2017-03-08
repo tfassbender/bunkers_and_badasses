@@ -6,19 +6,17 @@ public class Modecai extends Hero {
 	
 	private static final long serialVersionUID = -3664578792584135642L;
 
-	static {
-		staticImage = imageLoader.loadImage("modecai_1.png");
-	}
-	
 	public Modecai() {
 		attack = 4;
 		defence = 2;
+		name = "Modecai";
+		image = imageLoader.loadImage("modecai_1.png");
+		effectDescription = "Sniper:\n\nZwei beliebige (normale) Einheiten dürfen irgentwo vom Feld genommen werden (auch aus mehreren Feldern; die Felder dürfen dannach nicht leer sein)";
 	}
 	
 	@Override
 	public void executeFight(Fight fight) {
-		//TODO
-		//Sniper: Zwei beliebige (normale) Einheiten dürfen irgentwo vom Feld genommen werden (auch mehrere Felder; die Felder dürfen dannach nicht leer sein)
+		
 	}
 	
 	@Override

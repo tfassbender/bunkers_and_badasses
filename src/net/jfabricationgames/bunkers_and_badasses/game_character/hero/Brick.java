@@ -6,13 +6,12 @@ public class Brick extends Hero {
 	
 	private static final long serialVersionUID = -5807273048228466283L;
 
-	static {
-		staticImage = imageLoader.loadImage("brick_1.png");
-	}
-	
 	public Brick() {
 		attack = 5;
 		defence = 3;
+		name = "Brick";
+		image = imageLoader.loadImage("brick_1.png");
+		effectDescription = "Klopp Sie:\n\nBeim Sieg sterben beim Verlierer 3 Einheiten mehr als beim Sieger";
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ public class ArschgaulsPalace extends Building {
 		creditMining = 1;
 		eridiumMining = 1;
 		points = 1;
+		name = "Arschgaul's Palast";
 		//Unsure if attackable
 		image = imageLoader.loadImage("arschgaul_1_small.png");
 		loadVariables();

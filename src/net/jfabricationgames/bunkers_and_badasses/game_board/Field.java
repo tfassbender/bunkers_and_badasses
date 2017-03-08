@@ -134,6 +134,14 @@ public class Field implements Serializable {
 		return badassTroops/2;
 	}
 	
+	public int getTroopStrength() {
+		int strength = 0;
+		for (Troop troop : troops) {
+			strength += troop.getStrength();
+		}
+		return strength;
+	}
+	
 	@Override
 	public String toString() {
 		return name;

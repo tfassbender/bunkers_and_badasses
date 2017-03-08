@@ -6,13 +6,12 @@ public class Wilhelm extends Hero {
 	
 	private static final long serialVersionUID = -3924768912224518016L;
 
-	static {
-		staticImage = imageLoader.loadImage("wilhelm_1.png");
-	}
-	
 	public Wilhelm() {
 		attack = 4;
 		defence = 3;
+		name = "Wilhelm";
+		image = imageLoader.loadImage("wilhelm_1.png");
+		effectDescription = "Krieg:\n\nBei erfolgreichem Kampf darf der Marschbefehl mitgenommen werden";
 	}
 	
 	@Override

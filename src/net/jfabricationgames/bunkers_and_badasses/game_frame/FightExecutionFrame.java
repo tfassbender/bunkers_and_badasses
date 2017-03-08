@@ -13,9 +13,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -23,6 +20,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -30,7 +28,6 @@ import javax.swing.border.EtchedBorder;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.ListSelectionModel;
 
 public class FightExecutionFrame extends JFrame {
 	
@@ -82,59 +79,6 @@ public class FightExecutionFrame extends JFrame {
 		setTitle("Bunkers and Badasses - Kampf Ausf\u00FChrung");
 		setBounds(100, 100, 1250, 825);
 		setMinimumSize(new Dimension(1200, 775));
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu mnSpiel = new JMenu("Spiel");
-		menuBar.add(mnSpiel);
-		
-		JMenuItem mntmStatistik = new JMenuItem("Statistik");
-		mntmStatistik.setEnabled(false);
-		mnSpiel.add(mntmStatistik);
-		
-		JMenuItem mntmBeenden = new JMenuItem("Beenden");
-		mntmBeenden.setEnabled(false);
-		mnSpiel.add(mntmBeenden);
-		
-		JMenu mnDialog = new JMenu("Dialog");
-		menuBar.add(mnDialog);
-		
-		JMenuItem mntmPlanungsDialogffnen = new JMenuItem("Zug Planung");
-		mnDialog.add(mntmPlanungsDialogffnen);
-		
-		JMenuItem mntmZugAusfhren = new JMenuItem("Zug Ausf\u00FChren");
-		mnDialog.add(mntmZugAusfhren);
-		
-		JMenuItem mntmSpielbersicht = new JMenuItem("Spiel\u00FCbersicht");
-		mnDialog.add(mntmSpielbersicht);
-		
-		JMenuItem mntmGebietsbersicht = new JMenuItem("Gebiets\u00FCbersicht");
-		mnDialog.add(mntmGebietsbersicht);
-		
-		JMenuItem mntmInfoDialogffnen = new JMenuItem("Allgemein Info");
-		mnDialog.add(mntmInfoDialogffnen);
-		
-		JMenuItem mntmTruppenInfoDialog = new JMenuItem("Truppen Info");
-		mnDialog.add(mntmTruppenInfoDialog);
-		
-		JMenuItem mntmResourcenInfoDialog = new JMenuItem("Resourcen Info");
-		mnDialog.add(mntmResourcenInfoDialog);
-		
-		JMenuItem mntmHeldenInfoDialog = new JMenuItem("Helden Info");
-		mnDialog.add(mntmHeldenInfoDialog);
-		
-		JMenuItem mntmChatDialog = new JMenuItem("Chat Dialog");
-		mnDialog.add(mntmChatDialog);
-		
-		JMenu mnHilfe = new JMenu("Hilfe");
-		menuBar.add(mnHilfe);
-		
-		JMenuItem mntmSpiel = new JMenuItem("Spiel");
-		mnHilfe.add(mntmSpiel);
-		
-		JMenuItem mntmSpielFunktionen = new JMenuItem("Spiel Funktionen");
-		mnHilfe.add(mntmSpielFunktionen);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);

@@ -7,6 +7,7 @@ public class ScootersCatchARide extends Building {
 		buildingId = 12;
 		//TODO
 		moveDistance = 2;
+		name = "Scooter's Catch-A-Ride";
 		image = imageLoader.loadImage("catch_a_ride_2_small.png");
 		loadVariables();
 	}

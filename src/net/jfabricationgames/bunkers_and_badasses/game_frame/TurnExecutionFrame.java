@@ -1,12 +1,12 @@
 package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -18,19 +18,19 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Command;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.miginfocom.swing.MigLayout;
 
-public class TurnExecutionFrame extends JFrame {
+public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	
 	private static final long serialVersionUID = 245242421914033099L;
 	
@@ -40,24 +40,35 @@ public class TurnExecutionFrame extends JFrame {
 	private FieldDescriptionPanel fieldPanel;
 	private PlayerOrderPanel orderPanel;
 	
-	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
-	private ListModel<Field> fieldTargetModel = new DefaultListModel<Field>();
-	private ListModel<Building> buildingModel = new DefaultListModel<Building>();
-	private ListModel<FieldCommand> fieldCommandModel = new DefaultListModel<FieldCommand>();
+	private Game game;
+	private Field selectedField;
+	
+	private BoardPanel boardPanel;
+	
+	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
+	private DefaultListModel<Field> fieldTargetModel = new DefaultListModel<Field>();
+	private DefaultListModel<Building> buildingModel = new DefaultListModel<Building>();
+	private DefaultListModel<FieldCommand> fieldCommandModel = new DefaultListModel<FieldCommand>();
 	
 	private JTextField txtFeld_1;
 	private JTextField txtBefehl;
 	private JTextField txtTruppenn;
-	private JTextField txtTruppenb;
 	private JTextField txtGebude;
 	private JTextField txtVerluste;
+	private JTextField txtTruppenb;
+	private JButton btnBefehlAusfhren;
+	private JRadioButton rdbtnCredits;
+	private JRadioButton rdbtnMunition;
+	private JRadioButton rdbtnEridium;
+	private JRadioButton rdbtnAufbauen;
+	private JRadioButton rdbtnAufrsten;
+	private JRadioButton rdbtnAbreien;
+	private JSpinner spinner;
+	private JSpinner spinner_1;
 	
-	private boolean fieldOverview = false;
-	private JPanel panel_board_capture;
-	private final String SCROLL_BOARD = "scroll_board";
-	private final String OVERVIEW_BOARD = "overview_board";
-	
-	public TurnExecutionFrame() {
+	public TurnExecutionFrame(Game game) {
+		this.game = game;
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Zug Ausf\u00FChrung");
 		setBounds(100, 100, 1250, 700);
@@ -73,31 +84,9 @@ public class TurnExecutionFrame extends JFrame {
 		contentPane.add(panel, "cell 0 0,grow");
 		panel.setLayout(new MigLayout("", "[650px,grow][:550px:800px,grow]", "[350px,grow][:400px:400px,grow]"));
 		
-		panel_board_capture = new JPanel();
-		panel_board_capture.setBackground(Color.GRAY);
-		panel.add(panel_board_capture, "cell 0 0,grow");
-		panel_board_capture.setLayout(new CardLayout(0, 0));
-		
-		JPanel panel_scroll_board_capture = new JPanel();
-		panel_scroll_board_capture.setBackground(Color.GRAY);
-		panel_board_capture.add(panel_scroll_board_capture, SCROLL_BOARD);
-		panel_scroll_board_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		JScrollPane scrollPane_board = new JScrollPane();
-		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
-		
-		JPanel panel_scroll_board = new JPanel();
-		panel_scroll_board.setBackground(Color.GRAY);
-		scrollPane_board.setViewportView(panel_scroll_board);
-		
-		JPanel panel_board_overview_capture = new JPanel();
-		panel_board_overview_capture.setBackground(Color.GRAY);
-		panel_board_capture.add(panel_board_overview_capture, OVERVIEW_BOARD);
-		panel_board_overview_capture.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		JPanel panel_board_overview = new JPanel();
-		panel_board_overview.setBackground(Color.GRAY);
-		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
+		boardPanel = new BoardPanel();
+		boardPanel.addBoardPanelListener(this);
+		panel.add(boardPanel, "cell 0 0,grow");
 		
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
@@ -239,14 +228,7 @@ public class TurnExecutionFrame extends JFrame {
 		JButton btnbersicht = new JButton("Spielfeld \u00DCbersicht");
 		btnbersicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CardLayout layout = (CardLayout) panel_board_capture.getLayout();
-				if (fieldOverview) {
-					layout.show(panel_board_capture, SCROLL_BOARD);
-				}
-				else {
-					layout.show(panel_board_capture, OVERVIEW_BOARD);
-				}
-				fieldOverview = !fieldOverview;
+				boardPanel.showOtherView();
 			}
 		});
 		panel_command_1.add(btnbersicht, "cell 0 8 2 1,alignx center");
@@ -258,7 +240,8 @@ public class TurnExecutionFrame extends JFrame {
 		panel_command_7.setBackground(Color.GRAY);
 		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JButton btnBefehlAusfhren = new JButton("Befehl Ausf\u00FChren");
+		btnBefehlAusfhren = new JButton("Befehl Ausf\u00FChren");
+		btnBefehlAusfhren.setEnabled(false);
 		btnBefehlAusfhren.setBackground(Color.GRAY);
 		panel_command_7.add(btnBefehlAusfhren, "cell 0 0,alignx center,aligny center");
 		
@@ -318,17 +301,20 @@ public class TurnExecutionFrame extends JFrame {
 		lblResourcenGewinnung.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_6.add(lblResourcenGewinnung, "cell 0 0 2 1,alignx center");
 		
-		JRadioButton rdbtnCredits = new JRadioButton("Credits");
+		rdbtnCredits = new JRadioButton("Credits");
+		rdbtnCredits.setEnabled(false);
 		rdbtnCredits.setBackground(Color.GRAY);
 		rdbtnCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_6.add(rdbtnCredits, "cell 0 2,alignx center");
 		
-		JRadioButton rdbtnMunition = new JRadioButton("Munition");
+		rdbtnMunition = new JRadioButton("Munition");
+		rdbtnMunition.setEnabled(false);
 		rdbtnMunition.setBackground(Color.GRAY);
 		rdbtnMunition.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_6.add(rdbtnMunition, "cell 1 2,alignx center");
 		
-		JRadioButton rdbtnEridium = new JRadioButton("Eridium");
+		rdbtnEridium = new JRadioButton("Eridium");
+		rdbtnEridium.setEnabled(false);
 		rdbtnEridium.setBackground(Color.GRAY);
 		rdbtnEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_6.add(rdbtnEridium, "cell 0 3 2 1,alignx center");
@@ -348,17 +334,20 @@ public class TurnExecutionFrame extends JFrame {
 		lblAufbau.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_5.add(lblAufbau, "cell 0 0 5 1,alignx center");
 		
-		JRadioButton rdbtnAufbauen = new JRadioButton("Aufbauen");
+		rdbtnAufbauen = new JRadioButton("Aufbauen");
+		rdbtnAufbauen.setEnabled(false);
 		rdbtnAufbauen.setBackground(Color.GRAY);
 		rdbtnAufbauen.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_5.add(rdbtnAufbauen, "cell 1 2 2 1");
 		
-		JRadioButton rdbtnAufrsten = new JRadioButton("Aufr\u00FCsten");
+		rdbtnAufrsten = new JRadioButton("Aufr\u00FCsten");
+		rdbtnAufrsten.setEnabled(false);
 		rdbtnAufrsten.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rdbtnAufrsten.setBackground(Color.GRAY);
 		panel_command_5.add(rdbtnAufrsten, "cell 3 2");
 		
-		JRadioButton rdbtnAbreien = new JRadioButton("Abrei\u00DFen");
+		rdbtnAbreien = new JRadioButton("Abrei\u00DFen");
+		rdbtnAbreien.setEnabled(false);
 		rdbtnAbreien.setBackground(Color.GRAY);
 		rdbtnAbreien.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_5.add(rdbtnAbreien, "cell 1 3 3 1,alignx center");
@@ -390,7 +379,8 @@ public class TurnExecutionFrame extends JFrame {
 		lblTruppennormal_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_3.add(lblTruppennormal_1, "cell 1 2");
 		
-		JSpinner spinner = new JSpinner();
+		spinner = new JSpinner();
+		spinner.setEnabled(false);
 		spinner.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		spinner.setForeground(Color.LIGHT_GRAY);
 		spinner.setBackground(Color.LIGHT_GRAY);
@@ -400,32 +390,91 @@ public class TurnExecutionFrame extends JFrame {
 		lblTruppenbadass_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_3.add(lblTruppenbadass_1, "cell 1 3");
 		
-		JSpinner spinner_1 = new JSpinner();
+		spinner_1 = new JSpinner();
+		spinner_1.setEnabled(false);
 		spinner_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		spinner_1.setBackground(Color.LIGHT_GRAY);
 		panel_command_3.add(spinner_1, "cell 2 3,growx");
 	}
 	
-	private class FieldCommand {
-		
-		private Field field;
-		private Command command;
-		
-		public FieldCommand(Field field, Command command) {
-			this.field = field;
-			this.command = command;
+	@Override
+	public void receiveBoardMouseClick(MouseEvent event) {
+		selectCurrentField();
+	}
+	
+	public void update() {
+		updateResources();
+		updatePlayerOrder();
+		updateField();
+		updateFieldList();
+		updateFieldCommandList();
+	}
+	
+	private void updateFieldList() {
+		fieldAllListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			fieldAllListModel.addElement(field);
 		}
-		
-		@Override
-		public String toString() {
-			return field.toString() + command.toString();
+	}
+	
+	private void updateFieldCommandList() {
+		fieldCommandModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			//TODO check for the field commands and add them
 		}
-		
-		public Field getField() {
-			return field;
+	}
+	
+	private void updateResources() {
+		resourcePanel.updateResources(game, game.getLocalUser());
+	}
+	
+	private void updatePlayerOrder() {
+		orderPanel.updateTurnOrder(game);
+	}
+
+	private void selectCurrentField() {
+		selectedField = game.getBoard().getFieldAtMousePosition();
+		updateField();
+	}
+	
+	private void updateField() {
+		fieldPanel.updateField(selectedField);
+		if (selectedField != null) {
+			txtFeld_1.setText(selectedField.getName());
+			//TODO change the text in the command panels
+			txtTruppenn.setText(Integer.toString(selectedField.getNormalTroops()));
+			txtTruppenb.setText(Integer.toString(selectedField.getBadassTroops()));
+			txtGebude.setText(selectedField.getBuilding().getName());
+			//TODO enable or disable the functions depending on the commands			
 		}
-		public Command getCommand() {
-			return command;
+		else {
+			txtFeld_1.setText("");
+			txtBefehl.setText("");
+			txtTruppenn.setText("");
+			txtTruppenb.setText("");
+			txtGebude.setText("");
+			disableAll();
 		}
+		repaint();
+	}
+	
+	private void disableAll() {
+		btnBefehlAusfhren.setEnabled(false);
+		rdbtnCredits.setEnabled(false);
+		rdbtnMunition.setEnabled(false);
+		rdbtnEridium.setEnabled(false);
+		rdbtnAufbauen.setEnabled(false);
+		rdbtnAufrsten.setEnabled(false);
+		rdbtnAbreien.setEnabled(false);
+		spinner.setEnabled(false);
+		spinner_1.setEnabled(false);
+		txtVerluste.setText("");
+		fieldTargetModel.removeAllElements();
+		buildingModel.removeAllElements();
+	}
+	
+	public void setSelectedField(Field field) {
+		selectedField = field;
+		updateField();
 	}
 }

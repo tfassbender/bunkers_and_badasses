@@ -12,16 +12,18 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
-import net.jfabricationgames.bunkers_and_badasses.game_frame.TurnPlaningFrame.FieldBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
@@ -31,15 +33,20 @@ public class GameOverviewFrame extends JFrame {
 	
 	private JPanel contentPane;
 	
+	private Game game;
+	
+	private User selectedUser;
+	
 	private ResourceInfoPanel resourcePanel;
 	private FieldDescriptionPanel fieldPanel;
 	private PointPanel pointPanel;
+	private PlayerOrderPanel orderPanel;
 	
-	private ListModel<User> userListModel = new DefaultListModel<User>();
-	private ListModel<User> selectPlayerListModel = new DefaultListModel<User>();
-	private ListModel<User> userBorderListModel = new DefaultListModel<User>();
-	private ListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
-	private ListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
+	//private DefaultListModel<User> userListModel = new DefaultListModel<User>();
+	private DefaultListModel<User> selectPlayerListModel = new DefaultListModel<User>();
+	private DefaultListModel<User> userBorderListModel = new DefaultListModel<User>();
+	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
+	private DefaultListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
 	
 	private JTextField txtSpieler_1;
 	private JTextField txtTruppenstrke;
@@ -51,7 +58,10 @@ public class GameOverviewFrame extends JFrame {
 	private JTextField txtGrenzen;
 	private JTextField txtGebiete;
 	
-	public GameOverviewFrame() {
+	public GameOverviewFrame(Game game) {
+		this.game = game;
+		selectedUser = game.getLocalUser();
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Spiel \u00DCbersicht");
 		setBounds(100, 100, 1100, 600);
@@ -163,6 +173,11 @@ public class GameOverviewFrame extends JFrame {
 		panel_player_info.add(scrollPane_borders_users, "cell 4 5 4 6,grow");
 		
 		JList<User> list_borders_users = new JList<User>(userBorderListModel);
+		list_borders_users.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				countBordersTo(list_borders_users.getSelectedValue());
+			}
+		});
 		list_borders_users.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_borders_users.setBackground(Color.LIGHT_GRAY);
 		scrollPane_borders_users.setViewportView(list_borders_users);
@@ -217,30 +232,20 @@ public class GameOverviewFrame extends JFrame {
 		panel_players.add(scrollPane_player, "cell 0 1,grow");
 		
 		JList<User> list_player = new JList<User>(selectPlayerListModel);
+		list_player.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				selectedUser = list_player.getSelectedValue();
+				selectPlayer(selectedUser);
+				updateResources();
+			}
+		});
 		list_player.setBackground(Color.LIGHT_GRAY);
 		list_player.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_player.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		scrollPane_player.setViewportView(list_player);
-		
-		JPanel panel_order = new JPanel();
-		panel_order.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_order.setBackground(Color.GRAY);
-		panel.add(panel_order, "cell 0 2 1 2,grow");
-		panel_order.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
-		
-		JLabel lblReihenfolge = new JLabel("Reihenfolge:");
-		lblReihenfolge.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_order.add(lblReihenfolge, "cell 0 0,alignx center");
-		
-		JScrollPane scrollPane_order = new JScrollPane();
-		panel_order.add(scrollPane_order, "cell 0 2,grow");
-		
-		JList<User> list_order = new JList<User>(userListModel);
-		list_order.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_order.setToolTipText("<html>\r\nDie Reihenfolge der Spieler <br>\r\n(F\u00FCr diese Runde)\r\n</html>");
-		scrollPane_order.setViewportView(list_order);
-		list_order.setBackground(Color.LIGHT_GRAY);
-		list_order.setFont(new Font("Tahoma", Font.PLAIN, 12));
+
+		orderPanel = new PlayerOrderPanel();
+		panel.add(orderPanel, "cell 0 2 1 2,grow");
 		
 		resourcePanel = new ResourceInfoPanel();
 		panel.add(resourcePanel, "cell 4 0 2 2,grow");
@@ -259,6 +264,11 @@ public class GameOverviewFrame extends JFrame {
 		panel_fields.add(scrollPane_fields_all, "cell 0 2,grow");
 		
 		JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+		list_fields_all.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				selectField(list_fields_all.getSelectedValue());
+			}
+		});
 		list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
@@ -271,18 +281,14 @@ public class GameOverviewFrame extends JFrame {
 		panel.add(panel_buildings, "cell 5 2 1 2,grow");
 		panel_buildings.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_buildings.setBackground(Color.GRAY);
-		panel_buildings.setLayout(new MigLayout("", "[grow]", "[][5px][][grow]"));
+		panel_buildings.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
 		
 		JLabel lblGebude_1 = new JLabel("Geb\u00E4ude:");
 		lblGebude_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_buildings.add(lblGebude_1, "cell 0 0,alignx center");
 		
-		JLabel lblDeineGebude = new JLabel("Deine Geb\u00E4ude:");
-		lblDeineGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_buildings.add(lblDeineGebude, "cell 0 2");
-		
 		JScrollPane scrollPane_buildings_player = new JScrollPane();
-		panel_buildings.add(scrollPane_buildings_player, "cell 0 3,grow");
+		panel_buildings.add(scrollPane_buildings_player, "cell 0 2,grow");
 		
 		JList<FieldBuilding> list_buildings_player = new JList<FieldBuilding>(buildingsPlayerListModel);
 		list_buildings_player.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -296,5 +302,83 @@ public class GameOverviewFrame extends JFrame {
 		panel_image_2.setCentered(true);
 		panel_image_2.setBackground(Color.GRAY);
 		panel.add(panel_image_2, "cell 1 3,grow");
+	}
+	
+	public void update() {
+		updateResources();
+		updatePoints();
+		updateTurnOrder();
+		updatePlayerBuildings();
+		selectPlayer(selectedUser);
+		repaint();
+	}
+	
+	private void selectField(Field field) {
+		fieldPanel.updateField(field);
+	}
+	
+	private void selectPlayer(User player) {
+		int buildings = 0;
+		int troops = 0;
+		int fields = 0;
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation().equals(player)) {
+				fields++;
+				troops += field.getNormalTroops();
+				troops += field.getBadassTroops()*2;//strength of the badass troops
+				if (!(field.getBuilding() instanceof EmptyBuilding)) {
+					buildings++;
+				}
+			}
+		}
+		txtSpieler_1.setText(player.getUsername());
+		txtTruppenstrke.setText(Integer.toString(troops));
+		txtGebiete.setText(Integer.toString(fields));
+		txtGebude_1.setText(Integer.toString(buildings));
+		txtHelden.setText(Integer.toString(game.getHeroCardManager().getHeroCards(player).size()));
+		txtPunkte.setText(Integer.toString(game.getPointManager().getPoints(player)));
+		txtPosition.setText(Integer.toString(game.getPointManager().getPosition(player)));
+		txtGrenzen.setText("---");
+		userBorderListModel.removeAllElements();
+		for (User user : game.getPlayers()) {
+			if (!user.equals(player)) {
+				userBorderListModel.addElement(user);
+			}
+		}
+	}
+	
+	private void updatePlayerBuildings() {
+		buildingsPlayerListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation().equals(selectedUser) && !(field.getBuilding() instanceof EmptyBuilding)) {
+				buildingsPlayerListModel.addElement(new FieldBuilding(field, field.getBuilding()));
+			}
+		}
+	}
+	
+	private void countBordersTo(User player) {
+		int borders = 0;
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation().equals(selectedUser)) {
+				for (Field neighbour : field.getNeighbours()) {
+					if (neighbour.getAffiliation().equals(player)) {
+						borders++;
+					}
+				}
+			}
+		}
+		txtGrenzen.setText(Integer.toString(borders));
+	}
+	
+	private void updateTurnOrder() {
+		orderPanel.updateTurnOrder(game);
+	}
+	
+	private void updateResources() {
+		resourcePanel.updateResources(game, selectedUser);
+	}
+	
+	private void updatePoints() {
+		pointPanel.updatePoints(game);
 	}
 }

@@ -6,13 +6,12 @@ public class Nisha extends Hero {
 	
 	private static final long serialVersionUID = -267769346062408045L;
 
-	static {
-		staticImage = imageLoader.loadImage("nisha_1.png");
-	}
-	
 	public Nisha() {
 		attack = 3;
 		defence = 2;
+		name = "Nisha";
+		image = imageLoader.loadImage("nisha_1.png");
+		effectDescription = "Blitzangriff:\n\nVerteidigt der Spieler der diese Karte einsetzt, tauschen Angreifer und Verteidiger wodurch Effekte und das Kräfteverhältniss beeinflusst werden; Nach dem Kampf darf daher keine Bewegung stattfinden (egal wer gewinnt)";
 	}
 	
 	@Override

@@ -10,6 +10,7 @@ public class RolandsTurret extends Building {
 		additionalDefence = 1;
 		extensionPrice = new int[] {1, 1, 1};
 		extendable = true;
+		name = "Roland's Geschützturm";
 		image = imageLoader.loadImage("turret_1_small.png");
 		loadVariables();
 	}
