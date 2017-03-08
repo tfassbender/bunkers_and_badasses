@@ -420,7 +420,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private void updateFieldCommandList() {
 		fieldCommandModel.removeAllElements();
 		for (Field field : game.getBoard().getFields()) {
-			//TODO check for the field commands and add them
+			if (field.getCommand() != null) {
+				fieldCommandModel.addElement(new FieldCommand(field, field.getCommand()));
+			}
 		}
 	}
 	
@@ -441,7 +443,12 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		fieldPanel.updateField(selectedField);
 		if (selectedField != null) {
 			txtFeld_1.setText(selectedField.getName());
-			//TODO change the text in the command panels
+			if (selectedField.getCommand() != null) {
+				txtBefehl.setText(selectedField.getCommand().getName());				
+			}
+			else {
+				txtBefehl.setText("-----");
+			}
 			txtTruppenn.setText(Integer.toString(selectedField.getNormalTroops()));
 			txtTruppenb.setText(Integer.toString(selectedField.getBadassTroops()));
 			txtGebude.setText(selectedField.getBuilding().getName());

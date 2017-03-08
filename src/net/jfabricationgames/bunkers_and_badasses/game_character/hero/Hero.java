@@ -25,7 +25,7 @@ public abstract class Hero implements Serializable {
 	protected String name;
 	protected String effectDescription;
 	
-	public transient BufferedImage image;
+	protected transient BufferedImage image;
 	
 	protected static ImageLoader imageLoader;
 	

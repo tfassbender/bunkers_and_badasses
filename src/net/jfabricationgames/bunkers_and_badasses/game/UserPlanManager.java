@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.TurnPlaningFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 

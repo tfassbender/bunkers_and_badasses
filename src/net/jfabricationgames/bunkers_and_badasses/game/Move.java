@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 import java.io.Serializable;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Move implements Serializable {

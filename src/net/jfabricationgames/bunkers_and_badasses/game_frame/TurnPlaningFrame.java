@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -24,17 +23,17 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Command;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 
 public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 	
@@ -67,7 +66,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 	private DefaultListModel<FieldBuilding> buildingsPlayerListModel = new DefaultListModel<FieldBuilding>();
 	private DefaultListModel<FieldBuilding> buildingsAllListModel = new DefaultListModel<FieldBuilding>();
 	
-	private ComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
+	private DefaultComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
 	private JButton btnLschen;
 	private JButton btnHinzufgen;
 	
@@ -414,15 +413,21 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		updatePlayerOrder();
 		updateFieldLists();
 		updateBuildings();
+		updateCommandList();
 	}
 	
 	private void updateField() {
+		fieldPanel.updateField(selectedField);
 		if (selectedField != null) {
-			fieldPanel.updateField(selectedField);
 			txtField.setText(selectedField.getName());
 			if (selectedField.getAffiliation().equals(game.getLocalUser())) {
-				//TODO add commands and costs
-				//txtCurrcommand.setText(selectedField.getCommand());
+				if (selectedField.getCommand() != null) {
+					txtCurrcommand.setText(selectedField.getCommand().getName());					
+				}
+				else {
+					txtCurrcommand.setText("-----");
+				}
+				//TODO add costs
 				//txtKosts.setText("");
 				btnLschen.setEnabled(true);
 				btnHinzufgen.setEnabled(true);
@@ -433,7 +438,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 			}
 		}
 		else {
-			//TODO
+			txtField.setText("");
+			txtCurrcommand.setText("");
+			txtKosts.setText("");
+			btnLschen.setEnabled(false);
+			btnHinzufgen.setEnabled(false);
 		}
 	}
 	
@@ -444,9 +453,12 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		for (Field field : game.getBoard().getFields()) {
 			fieldAllListModel.addElement(field);
 			if (field.getAffiliation().equals(game.getLocalUser())) {
-				//TODO check for existing command
-				fieldCommandListModel.addElement(new FieldCommand(field, null));//TODO add the command
-				fieldNoCommandListModel.addElement(field);
+				if (field.getCommand() != null) {
+					fieldCommandListModel.addElement(new FieldCommand(field, field.getCommand()));
+				}
+				else {
+					fieldNoCommandListModel.addElement(field);
+				}
 			}
 		}
 	}
@@ -462,6 +474,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 				}
 			}
 		}
+	}
+	
+	private void updateCommandList() {
+		commandBoxModel.removeAllElements();
+		//TODO add the commands that are still available
 	}
 	
 	private void updateResources() {

@@ -1,7 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 
 public class FieldCommand {
 
@@ -15,7 +15,7 @@ public class FieldCommand {
 	
 	@Override
 	public String toString() {
-		return field.toString() + command.toString();
+		return field.getName() + " [" + command.getName() + "]";
 	}
 	
 	public Field getField() {

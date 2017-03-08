@@ -13,6 +13,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -26,6 +27,7 @@ public class Field implements Serializable {
 	private Building building;
 	private String name;
 	private Region region;
+	private Command command;
 	
 	private Point fieldPosition;
 	private Point normalTroopsPosition;
@@ -206,6 +208,13 @@ public class Field implements Serializable {
 	}
 	public void setRegion(Region region) {
 		this.region = region;
+	}
+	
+	public Command getCommand() {
+		return command;
+	}
+	public void setCommand(Command command) {
+		this.command = command;
 	}
 	
 	public Point getFieldPosition() {
