@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_command;
 
+import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisTavern;
 
@@ -11,6 +12,8 @@ public class RecruitCommand extends Command {
 		creditsNeeded = true;
 		ammoNeeded = false;
 		executable = true;
+		removable = true;
+		identifier = UserPlanManager.COMMAND_RECRUIT;
 		executionBuildings.add(ArschgaulsPalace.class);
 		executionBuildings.add(MoxxisTavern.class);
 		image = imageLoader.loadImage("marker_recruit.png");

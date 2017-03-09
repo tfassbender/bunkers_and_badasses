@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -19,7 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
@@ -27,7 +29,25 @@ import javax.swing.border.LineBorder;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.CrazyEarlsBlackMarket;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MarcusGunshop;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisTavern;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisUnderdome;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.RolandsTurret;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ScootersCatchARide;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.TannisResearchStation;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.TinyTinasMine;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.TorguesBadassDome;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Marcus;
+import net.jfabricationgames.bunkers_and_badasses.game_command.BuildCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.CollectCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
+import net.jfabricationgames.bunkers_and_badasses.game_command.MarchCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RaidCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
 import net.miginfocom.swing.MigLayout;
 
 public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
@@ -54,7 +74,6 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private JTextField txtBefehl;
 	private JTextField txtTruppenn;
 	private JTextField txtGebude;
-	private JTextField txtVerluste;
 	private JTextField txtTruppenb;
 	private JButton btnBefehlAusfhren;
 	private JRadioButton rdbtnCredits;
@@ -63,8 +82,25 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private JRadioButton rdbtnAufbauen;
 	private JRadioButton rdbtnAufrsten;
 	private JRadioButton rdbtnAbreien;
-	private JSpinner spinner;
-	private JSpinner spinner_1;
+	private JSpinner spinnerNormalTroops;
+	private JSpinner spinnerBadassTroops;
+	
+	private static Building[] buildables;
+	private JList<Field> list_target_field;
+	private JList<Building> list_building;
+	
+	static {
+		buildables = new Building[9];
+		buildables[0] = new CrazyEarlsBlackMarket();
+		buildables[1] = new MarcusGunshop();
+		buildables[2] = new MoxxisTavern();
+		buildables[3] = new MoxxisUnderdome();
+		buildables[4] = new RolandsTurret();
+		buildables[5] = new ScootersCatchARide();
+		buildables[6] = new TannisResearchStation();
+		buildables[7] = new TinyTinasMine();
+		buildables[8] = new TorguesBadassDome();
+	}
 	
 	public TurnExecutionFrame(Game game) {
 		this.game = game;
@@ -241,6 +277,11 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
 		btnBefehlAusfhren = new JButton("Befehl Ausf\u00FChren");
+		btnBefehlAusfhren.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				executeCommand();
+			}
+		});
 		btnBefehlAusfhren.setEnabled(false);
 		btnBefehlAusfhren.setBackground(Color.GRAY);
 		panel_command_7.add(btnBefehlAusfhren, "cell 0 0,alignx center,aligny center");
@@ -248,7 +289,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		JPanel panel_command_row_2 = new JPanel();
 		panel_command_row_2.setBackground(Color.GRAY);
 		panel_execution.add(panel_command_row_2, "cell 1 2,grow");
-		panel_command_row_2.setLayout(new MigLayout("", "[grow]", "[grow][3px:n:3px,grow][][3px:n:3px,grow][5px,grow]"));
+		panel_command_row_2.setLayout(new MigLayout("", "[grow]", "[grow][3px:n:3px,grow][5px,grow]"));
 		
 		JPanel panel_command_2 = new JPanel();
 		panel_command_2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -263,37 +304,14 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		JScrollPane scrollPane_target_field = new JScrollPane();
 		panel_command_2.add(scrollPane_target_field, "cell 0 2,grow");
 		
-		JList<Field> list_target_field = new JList<Field>(fieldTargetModel);
-		list_target_field.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_target_field = new JList<Field>(fieldTargetModel);
 		list_target_field.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_target_field.setBackground(Color.LIGHT_GRAY);
 		scrollPane_target_field.setViewportView(list_target_field);
 		
-		JPanel panel_command_4 = new JPanel();
-		panel_command_4.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_command_row_2.add(panel_command_4, "cell 0 2,grow");
-		panel_command_4.setBackground(Color.GRAY);
-		panel_command_4.setLayout(new MigLayout("", "[grow][][75px,grow][grow]", "[][5px][]"));
-		
-		JLabel lblRckzug = new JLabel("R\u00FCckzug:");
-		lblRckzug.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_4.add(lblRckzug, "cell 1 0 2 1,alignx center");
-		
-		JLabel lblVerluste = new JLabel("Verluste:");
-		lblVerluste.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_4.add(lblVerluste, "cell 1 2,alignx trailing");
-		
-		txtVerluste = new JTextField();
-		txtVerluste.setHorizontalAlignment(SwingConstants.CENTER);
-		txtVerluste.setEditable(false);
-		txtVerluste.setBackground(Color.LIGHT_GRAY);
-		txtVerluste.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_4.add(txtVerluste, "cell 2 2,growx");
-		txtVerluste.setColumns(10);
-		
 		JPanel panel_command_6 = new JPanel();
 		panel_command_6.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_command_row_2.add(panel_command_6, "cell 0 4,grow");
+		panel_command_row_2.add(panel_command_6, "cell 0 2,grow");
 		panel_command_6.setBackground(Color.GRAY);
 		panel_command_6.setLayout(new MigLayout("", "[grow][grow]", "[][5px][][]"));
 		
@@ -302,6 +320,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		panel_command_6.add(lblResourcenGewinnung, "cell 0 0 2 1,alignx center");
 		
 		rdbtnCredits = new JRadioButton("Credits");
+		rdbtnCredits.setSelected(true);
 		rdbtnCredits.setEnabled(false);
 		rdbtnCredits.setBackground(Color.GRAY);
 		rdbtnCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -335,6 +354,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		panel_command_5.add(lblAufbau, "cell 0 0 5 1,alignx center");
 		
 		rdbtnAufbauen = new JRadioButton("Aufbauen");
+		rdbtnAufbauen.setSelected(true);
 		rdbtnAufbauen.setEnabled(false);
 		rdbtnAufbauen.setBackground(Color.GRAY);
 		rdbtnAufbauen.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -359,7 +379,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		JScrollPane scrollPane_building = new JScrollPane();
 		panel_command_5.add(scrollPane_building, "cell 0 6 5 1,grow");
 		
-		JList<Building> list_building = new JList<Building>(buildingModel);
+		list_building = new JList<Building>(buildingModel);
 		list_building.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_building.setBackground(Color.LIGHT_GRAY);
 		list_building.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -371,35 +391,58 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		panel_command_3.setBackground(Color.GRAY);
 		panel_command_3.setLayout(new MigLayout("", "[grow][][50px][grow]", "[][5px][][]"));
 		
-		JLabel lblMarschBefehl = new JLabel("Marsch Befehl:");
+		JLabel lblMarschBefehl = new JLabel("Marsch / Rekrutierung:");
 		lblMarschBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_3.add(lblMarschBefehl, "cell 1 0 2 1,alignx center");
 		
 		JLabel lblTruppennormal_1 = new JLabel("Truppen (Normal):");
+		lblTruppennormal_1.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nNormale Truppen die bei diesem <br>\r\nMarsch bewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nNormale Truppen die neu Rekrutiert<br>\r\nwerden sollen.\r\n</html>");
 		lblTruppennormal_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_3.add(lblTruppennormal_1, "cell 1 2");
 		
-		spinner = new JSpinner();
-		spinner.setEnabled(false);
-		spinner.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		spinner.setForeground(Color.LIGHT_GRAY);
-		spinner.setBackground(Color.LIGHT_GRAY);
-		panel_command_3.add(spinner, "cell 2 2,growx");
+		spinnerNormalTroops = new JSpinner();
+		spinnerNormalTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nNormale Truppen die bei diesem <br>\r\nMarsch bewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nNormale Truppen die neu Rekrutiert<br>\r\nwerden sollen.\r\n</html>");
+		spinnerNormalTroops.setEnabled(false);
+		spinnerNormalTroops.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		spinnerNormalTroops.setForeground(Color.LIGHT_GRAY);
+		spinnerNormalTroops.setBackground(Color.LIGHT_GRAY);
+		panel_command_3.add(spinnerNormalTroops, "cell 2 2,growx");
 		
 		JLabel lblTruppenbadass_1 = new JLabel("Truppen (Badass):");
+		lblTruppenbadass_1.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nBadasses die bei diesem Marsch<br>\r\nbewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nTruppen die von normalen Truppen<br>\r\nzu Badasses aufger\u00FCstet werden sollen.\r\n</html>");
 		lblTruppenbadass_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_3.add(lblTruppenbadass_1, "cell 1 3");
 		
-		spinner_1 = new JSpinner();
-		spinner_1.setEnabled(false);
-		spinner_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		spinner_1.setBackground(Color.LIGHT_GRAY);
-		panel_command_3.add(spinner_1, "cell 2 3,growx");
+		spinnerBadassTroops = new JSpinner();
+		spinnerBadassTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nBadasses die bei diesem Marsch<br>\r\nbewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nTruppen die von normalen Truppen<br>\r\nzu Badasses aufger\u00FCstet werden sollen.\r\n</html>");
+		spinnerBadassTroops.setEnabled(false);
+		spinnerBadassTroops.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		spinnerBadassTroops.setBackground(Color.LIGHT_GRAY);
+		panel_command_3.add(spinnerBadassTroops, "cell 2 3,growx");
 	}
 	
 	@Override
 	public void receiveBoardMouseClick(MouseEvent event) {
-		selectCurrentField();
+		selectedField = game.getBoard().getFieldAtMousePosition();
+		updateField();
+	}
+	
+	private List<Field> findPossibleMovingTargets(Field field) {
+		List<Field> possibleTargets = new ArrayList<Field>();
+		List<Field> newTargets;
+		possibleTargets.add(field);
+		for (int i = 0; i < field.getBuilding().getMoveDistance(); i++) {
+			newTargets = new ArrayList<Field>();
+			for (Field start : possibleTargets) {
+				if (start.getAffiliation().equals(game.getLocalUser())) {
+					for (Field neighbour : start.getNeighbours()) {
+						newTargets.add(neighbour);
+					}
+				}
+			}
+			possibleTargets.addAll(newTargets);
+		}
+		return possibleTargets;
 	}
 	
 	public void update() {
@@ -433,18 +476,14 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private void updatePlayerOrder() {
 		orderPanel.updateTurnOrder(game);
 	}
-
-	private void selectCurrentField() {
-		selectedField = game.getBoard().getFieldAtMousePosition();
-		updateField();
-	}
 	
 	private void updateField() {
 		fieldPanel.updateField(selectedField);
+		disableAll();
 		if (selectedField != null) {
 			txtFeld_1.setText(selectedField.getName());
 			if (selectedField.getCommand() != null) {
-				txtBefehl.setText(selectedField.getCommand().getName());				
+				txtBefehl.setText(selectedField.getCommand().getName());
 			}
 			else {
 				txtBefehl.setText("-----");
@@ -452,7 +491,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 			txtTruppenn.setText(Integer.toString(selectedField.getNormalTroops()));
 			txtTruppenb.setText(Integer.toString(selectedField.getBadassTroops()));
 			txtGebude.setText(selectedField.getBuilding().getName());
-			//TODO enable or disable the functions depending on the commands			
+			enableComponents(selectedField);
 		}
 		else {
 			txtFeld_1.setText("");
@@ -460,7 +499,6 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 			txtTruppenn.setText("");
 			txtTruppenb.setText("");
 			txtGebude.setText("");
-			disableAll();
 		}
 		repaint();
 	}
@@ -473,11 +511,122 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		rdbtnAufbauen.setEnabled(false);
 		rdbtnAufrsten.setEnabled(false);
 		rdbtnAbreien.setEnabled(false);
-		spinner.setEnabled(false);
-		spinner_1.setEnabled(false);
-		txtVerluste.setText("");
+		spinnerNormalTroops.setEnabled(false);
+		spinnerBadassTroops.setEnabled(false);
 		fieldTargetModel.removeAllElements();
 		buildingModel.removeAllElements();
+	}
+	
+	/**
+	 * Enable the components depending on the command on the chosen field
+	 */
+	private void enableComponents(Field field) {
+		if (field.getAffiliation().equals(game.getLocalUser())) {
+			Command command = field.getCommand();
+			if (command.isExecutable()) {
+				btnBefehlAusfhren.setEnabled(true);
+			}
+			if (command instanceof BuildCommand) {
+				if (field.getBuilding() instanceof EmptyBuilding) {
+					rdbtnAufbauen.setEnabled(true);
+					for (Building building : buildables) {
+						buildingModel.addElement(building);
+					}
+				}
+				else {
+					rdbtnAbreien.setEnabled(true);
+					if (field.getBuilding().isExtendable()) {
+						rdbtnAufrsten.setEnabled(true);
+					}
+				}
+			}
+			else if (command instanceof CollectCommand) {
+				rdbtnCredits.setEnabled(true);
+				rdbtnMunition.setEnabled(true);
+				rdbtnEridium.setEnabled(true);
+			}
+			else if (command instanceof MarchCommand) {
+				for (Field target : findPossibleMovingTargets(field)) {
+					fieldTargetModel.addElement(target);
+				}
+				spinnerNormalTroops.setEnabled(true);
+				spinnerBadassTroops.setEnabled(true);
+				spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getNormalTroops(), 1));
+				spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBadassTroops(), 1));
+			}
+			else if (command instanceof RaidCommand) {
+				for (Field target : field.getNeighbours()) {
+					if (target.getAffiliation().equals(game.getLocalUser())) {
+						if (target.getCommand() != null && target.getCommand().isRemovable()) {
+							fieldTargetModel.addElement(target);
+						}
+					}
+				}
+			}
+			else if (command instanceof RecruitCommand) {
+				spinnerNormalTroops.setEnabled(true);
+				spinnerBadassTroops.setEnabled(true);
+				spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops(), 1));
+				spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, Math.min(field.getNormalTroops(), field.getBuilding().getRecruitableTroops()), 1));
+			}
+		}
+	}
+	
+	private void executeCommand() {
+		if (selectedField.getAffiliation().equals(game.getLocalUser())) {
+			Command command = selectedField.getCommand();
+			if (command.isExecutable()) {
+				if (command instanceof BuildCommand) {
+					if (rdbtnAufbauen.isSelected()) {
+						if (selectedField.getBuilding() instanceof EmptyBuilding) {
+							Building building = list_building.getSelectedValue();
+							if (building != null) {
+								selectedField.setBuilding(building.newInstance());
+							}
+							else {
+								//no building selected
+							}
+						}
+						else {
+							//can't build two buildings
+						}
+					}
+					else if (rdbtnAufrsten.isSelected()) {
+						Building building = selectedField.getBuilding();
+						if (building != null && building.isExtendable()) {
+							building.extend();
+						}
+						else {
+							//building isn't extendible
+						}
+					}
+					else if (rdbtnAbreien.isSelected()) {
+						Building building = selectedField.getBuilding();
+						if (building == null || building instanceof EmptyBuilding) {
+							//no building to destroy
+						}
+						else if (building instanceof ArschgaulsPalace) {
+							//can't destroy arschgauls palace
+						}
+						else {
+							selectedField.setBuilding(new EmptyBuilding());
+						}
+					}
+				}
+				else if (command instanceof CollectCommand) {
+					//TODO
+				}
+				else if (command instanceof MarchCommand) {
+					//TODO
+				}
+				else if (command instanceof RaidCommand) {
+					//TODO
+				}
+				else if (command instanceof RecruitCommand) {
+					//TODO
+				}
+			}
+		}
 	}
 	
 	public void setSelectedField(Field field) {

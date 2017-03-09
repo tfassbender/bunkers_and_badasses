@@ -10,4 +10,9 @@ public class TorguesBadassDome extends Building {
 		image = imageLoader.loadImage("torgue_1_small.png");
 		loadVariables();
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new TorguesBadassDome();
+	}
 }

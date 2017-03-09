@@ -19,4 +19,9 @@ public class CrazyEarlsBlackMarket extends Building {
 	protected void loadExtendedImage() {
 		//image = imageLoader.loadImage("earl_1_small.png");
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new CrazyEarlsBlackMarket();
+	}
 }

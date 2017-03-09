@@ -20,4 +20,9 @@ public class TannisResearchStation extends Building {
 	protected void loadExtendedImage() {
 		//image = imageLoader.loadImage("tannis_1_small.png");
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new TannisResearchStation();
+	}
 }

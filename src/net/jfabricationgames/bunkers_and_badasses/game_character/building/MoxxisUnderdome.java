@@ -19,4 +19,9 @@ public class MoxxisUnderdome extends Building {
 	protected void loadExtendedImage() {
 		//image = imageLoader.loadImage("underdome_1_small.png");
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new MoxxisUnderdome();
+	}
 }

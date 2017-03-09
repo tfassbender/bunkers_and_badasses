@@ -19,4 +19,9 @@ public class MarcusGunshop extends Building {
 	protected void loadExtendedImage() {
 		//image = imageLoader.loadImage("marcus_gunship_1_small.png");
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new MarcusGunshop();
+	}
 }

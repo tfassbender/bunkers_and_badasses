@@ -19,4 +19,9 @@ public class RolandsTurret extends Building {
 	protected void loadExtendedImage() {
 		//image = imageLoader.loadImage("turret_1_small.png");
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new RolandsTurret();
+	}
 }

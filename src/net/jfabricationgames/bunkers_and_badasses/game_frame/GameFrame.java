@@ -36,6 +36,7 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColorManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
@@ -94,6 +95,8 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	private TurnGoalCardPanel panel_turn_goal;
 	private TurnBonusCardPanel panel_turn_bonus;
 	private BoardPanel boardPanel;
+	private JButton btnSpielzugAusfhren;
+	private JButton btnEinsetzen;
 	
 	public GameFrame(Game game) {
 		this.game = game;
@@ -319,7 +322,7 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		btnSpielfeldbersicht.setBackground(Color.GRAY);
 		panel_turn.add(btnSpielfeldbersicht, "cell 0 2,alignx center");
 		
-		JButton btnSpielzugAusfhren = new JButton("Spielzug Ausf\u00FChren");
+		btnSpielzugAusfhren = new JButton("Spielzug Ausf\u00FChren");
 		btnSpielzugAusfhren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				turnExecutionFrame.setVisible(true);
@@ -411,7 +414,7 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		btnbersicht.setBackground(Color.GRAY);
 		panel_heroes.add(btnbersicht, "cell 0 3,alignx center");
 		
-		JButton btnEinsetzen = new JButton("Einsetzen");
+		btnEinsetzen = new JButton("Einsetzen");
 		btnEinsetzen.setEnabled(false);
 		btnEinsetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -461,12 +464,8 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		panel_logo_capture.add(panel_logo, "cell 0 1,grow");
 		
 		addPlayerColors(panel_colors_1, game.getPlayers(), game.getColorManager());
-		updateBoard();
-		updateTurnCards();
-		updateHeroCards();
-		updateTurnOrder();
-		updatePoints();
-		updateResources();
+
+		update();
 	}
 	
 	/**
@@ -547,6 +546,7 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 
 	public void update() {
 		updateBoard();
+		updateGameTurnPanel();
 		updateTurnCards();
 		updateHeroCards();
 		updateTurnOrder();
@@ -558,6 +558,7 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	private void selectCurrentField() {
 		selectedField = game.getBoard().getFieldAtMousePosition();
 		fieldPanel.updateField(selectedField);
+		updateGameTurnPanel();
 	}
 	
 	private void updateBoard() {
@@ -565,10 +566,40 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		boardPanel.updateBoardImage(boardImage);
 	}
 	
+	private void updateGameTurnPanel() {
+		txtPhase.setText(game.getGameState().getPhaseName());
+		if (selectedField != null) {
+			txtSelectedfield.setText(selectedField.getName());
+		}
+		else {
+			txtSelectedfield.setText("");
+		}
+		User activePlayer = game.getTurnManager().getPlayerOrder().getActivePlayer();
+		if (activePlayer != null) {
+			txtActiveplayer.setText(activePlayer.getUsername());
+		}
+		else {
+			txtActiveplayer.setText("");
+		}
+		if (selectedField != null && selectedField.getCommand() != null) {
+			txtCommand.setText(selectedField.getCommand().getName());
+		}
+		else {
+			txtCommand.setText("");
+		}
+		if (game.getGameState() == GameState.ACT && selectedField.getAffiliation().equals(game.getLocalUser())) {
+			btnSpielzugAusfhren.setEnabled(true);
+			btnEinsetzen.setEnabled(true);
+		}
+		else {
+			btnSpielzugAusfhren.setEnabled(false);
+			btnEinsetzen.setEnabled(false);
+		}
+	}
+	
 	private void updateTurnCards() {
 		panel_turn_bonus.setTurnBonus(game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser()));
 		panel_turn_goal.setTurnGoal(game.getTurnManager().getGameTurnGoalManager().getTurnGoal());
-		repaint();
 	}
 	
 	private void updateHeroCards() {
@@ -577,7 +608,6 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		for (int i = 0; i < heros.size(); i++) {
 			heroesListModel.addElement(heros.get(i));
 		}
-		repaint();
 	}
 	
 	private void updateTurnOrder() {
@@ -586,7 +616,6 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	
 	private void updateResources() {
 		resourcePanel.updateResources(game, game.getLocalUser());
-		repaint();
 	}
 	
 	private void updatePoints() {

@@ -56,6 +56,27 @@ public class Field implements Serializable {
 		building = new EmptyBuilding();
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Field) {
+			Field field = (Field) obj;
+			boolean troopsEqual = getTroops().size() == field.getTroops().size();
+			if (troopsEqual) {
+				for (int i = 0; i < getTroops().size(); i++) {
+					troopsEqual &= getTroops().get(i).getType() == field.getTroops().get(i).getType() && getTroops().get(i).getStrength() == field.getTroops().get(i).getStrength();
+				}				
+			}
+			return field.getAffiliation().equals(getAffiliation()) && field.getBuilding().equals(getBuilding()) && field.getName().equals(getName()) && troopsEqual;
+		}
+		else {
+			return super.equals(obj);
+		}
+	}
+	
 	/**
 	 * Draw the fields components to the graphics object.
 	 * The drawn components are:
@@ -142,27 +163,6 @@ public class Field implements Serializable {
 			strength += troop.getStrength();
 		}
 		return strength;
-	}
-	
-	@Override
-	public String toString() {
-		return name;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Field) {
-			Field field = (Field) obj;
-			boolean troopsEqual = getTroops().size() == field.getTroops().size();
-			if (troopsEqual) {
-				for (int i = 0; i < getTroops().size(); i++) {
-					troopsEqual &= getTroops().get(i).getType() == field.getTroops().get(i).getType() && getTroops().get(i).getStrength() == field.getTroops().get(i).getStrength();
-				}				
-			}
-			return field.getAffiliation().equals(getAffiliation()) && field.getBuilding().equals(getBuilding()) && field.getName().equals(getName()) && troopsEqual;
-		}
-		else {
-			return super.equals(obj);
-		}
 	}
 	
 	public static BufferedImage getNormalTroopImage() {

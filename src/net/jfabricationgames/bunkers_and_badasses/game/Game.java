@@ -49,6 +49,7 @@ public class Game implements Serializable {
 		GameTurnGoalManager gameTurnGoalManager = new GameTurnGoalManager(pointManager);
 		turnManager = new GameTurnManager(playerOrder, gameTurnGoalManager, resourceManager);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
+		playerOrder.setGameTurnManager(turnManager);
 		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager);
 		heroCardManager = new HeroCardManager();
 		heroCardManager.intitialize(players);
@@ -167,6 +168,7 @@ public class Game implements Serializable {
 	}
 	public static void setGameVariableStorage(GameVariableStorage gameVariableStorage) {
 		Game.gameVariableStorage = gameVariableStorage;
+		UserPlanManager.receiveStartCommands(gameVariableStorage.getUserCommands());
 	}
 	
 	public GameFrame getGameFrame() {

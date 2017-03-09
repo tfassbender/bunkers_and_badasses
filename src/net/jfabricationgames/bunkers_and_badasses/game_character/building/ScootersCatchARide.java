@@ -11,4 +11,9 @@ public class ScootersCatchARide extends Building {
 		image = imageLoader.loadImage("catch_a_ride_2_small.png");
 		loadVariables();
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new ScootersCatchARide();
+	}
 }

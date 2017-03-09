@@ -16,4 +16,9 @@ public class ArschgaulsPalace extends Building {
 		image = imageLoader.loadImage("arschgaul_1_small.png");
 		loadVariables();
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new ArschgaulsPalace();
+	}
 }

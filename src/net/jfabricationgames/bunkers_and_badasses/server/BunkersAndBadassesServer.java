@@ -16,6 +16,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameVariableStorage;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
+import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
@@ -943,6 +944,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		String buildingQuery = "SELECT * FROM bunkers_and_badasses.buliding_variables";
 		String buildingCostQuery = "SELECT * FROM bunkers_and_badasses.costs_building";
 		String troopCostQuery = "SELECT * FROM bunkers_and_badasses.costs_troop";
+		String commandQuery = "SELECT * FROM bunkers_and_badasses.commands WHERE used = true";
 		ResultSet result;
 		//load the variables from the database
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
@@ -1032,6 +1034,18 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_CREDITS] = result.getInt(4);
 				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_AMMO] = result.getInt(5);
 				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_ERIDIUM] = result.getInt(6);
+			}
+			result = statement.executeQuery(commandQuery);
+			int[] commands = gameStorage.getUserCommands();
+			if (result.next()) {
+				commands[UserPlanManager.COMMAND_RAID] = result.getInt(3);
+				commands[UserPlanManager.COMMAND_RETREAT] = result.getInt(4);
+				commands[UserPlanManager.COMMAND_MARCH] = result.getInt(5);
+				commands[UserPlanManager.COMMAND_BUILD] = result.getInt(6);
+				commands[UserPlanManager.COMMAND_RECRUIT] = result.getInt(7);
+				commands[UserPlanManager.COMMAND_COLLECT] = result.getInt(8);
+				commands[UserPlanManager.COMMAND_SUPPORT] = result.getInt(9);
+				commands[UserPlanManager.COMMAND_DEFEND] = result.getInt(10);
 			}
 			try {
 				result.close();

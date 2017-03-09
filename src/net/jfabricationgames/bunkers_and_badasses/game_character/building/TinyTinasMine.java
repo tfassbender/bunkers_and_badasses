@@ -10,4 +10,9 @@ public class TinyTinasMine extends Building {
 		image = imageLoader.loadImage("mine_1_small.png");
 		loadVariables();
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new TinyTinasMine();
+	}
 }

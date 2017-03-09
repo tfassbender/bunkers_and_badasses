@@ -10,6 +10,8 @@ public class GameVariableStorage {
 	private int maxHerosCards;
 	private int startTroops;
 	
+	private int[] userCommands;
+	
 	private int[] creditsSkillLevel;
 	private int[] ammoSkillLevel;
 	private int[] eridiumSkillLevel;
@@ -34,6 +36,7 @@ public class GameVariableStorage {
 		eridiumBuildingSkillLevel = new int[6];
 		pointsSkillLevel = new int[6];
 		herosSkillLevel = new int[6];
+		userCommands = new int[8];
 	}
 	
 	public int[] getCreditsSkillLevel() {
@@ -59,6 +62,10 @@ public class GameVariableStorage {
 	}
 	public int[] getHerosSkillLevel() {
 		return herosSkillLevel;
+	}
+	
+	public int[] getUserCommands() {
+		return userCommands;
 	}
 	
 	public int getStartCredits() {

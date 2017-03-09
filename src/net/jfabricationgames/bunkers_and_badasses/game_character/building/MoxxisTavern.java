@@ -19,4 +19,9 @@ public class MoxxisTavern extends Building {
 	protected void loadExtendedImage() {
 		//image = imageLoader.loadImage("moxxis_1_small.png");
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new MoxxisTavern();
+	}
 }

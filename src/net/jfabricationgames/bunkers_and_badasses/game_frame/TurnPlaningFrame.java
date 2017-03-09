@@ -29,10 +29,19 @@ import javax.swing.event.ListSelectionListener;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_command.BuildCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.CollectCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
+import net.jfabricationgames.bunkers_and_badasses.game_command.DefendCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.MarchCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RaidCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.SupportCommand;
 import net.miginfocom.swing.MigLayout;
 
 public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
@@ -60,6 +69,15 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 	private JTextField txtRekrutierungen;
 	private JTextField txtResourcen;
 	
+	private Command commandRaid;
+	private Command commandRetreat;
+	private Command commandMarch;
+	private Command commandBuild;
+	private Command commandRecruit;
+	private Command commandMine;
+	private Command commandSupport;
+	private Command commandDefend;
+	
 	private DefaultListModel<Field> fieldNoCommandListModel = new DefaultListModel<Field>();
 	private DefaultListModel<FieldCommand> fieldCommandListModel = new DefaultListModel<FieldCommand>();
 	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
@@ -69,13 +87,15 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 	private DefaultComboBoxModel<Command> commandBoxModel = new DefaultComboBoxModel<Command>();
 	private JButton btnLschen;
 	private JButton btnHinzufgen;
+	private JTextField txtSupport;
+	private JTextField txtVerteidigung;
 	
 	public TurnPlaningFrame(Game game) {
 		this.game = game;
 		
 		setTitle("Bunkers and Badasses - Zug Planung");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setBounds(100, 100, 1150, 700);
+		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1150, 700));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
@@ -234,7 +254,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		panel_command.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_command.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_command, "cell 0 0 2 1,grow");
-		panel_command.setLayout(new MigLayout("", "[][grow][fill]", "[][5px][grow][grow][grow][grow][grow]"));
+		panel_command.setLayout(new MigLayout("", "[][grow][fill]", "[][5px,grow][::35px,grow][::35px,grow][::35px,grow][::35px,grow][grow]"));
 		
 		JLabel lblBefehle = new JLabel("Befehle:");
 		lblBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -273,6 +293,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		txtCurrcommand.setColumns(10);
 		
 		btnLschen = new JButton("L\u00F6schen");
+		btnLschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				deleteCommand();
+			}
+		});
 		btnLschen.setToolTipText("<html>\r\nDen bestehenden Befehl f\u00FCr <br>\r\ndas ausgew\u00E4hlte Feld entfernen\r\n</html>");
 		btnLschen.setBackground(Color.GRAY);
 		panel_command.add(btnLschen, "cell 2 3");
@@ -287,6 +312,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		panel_command.add(comboBox, "cell 1 4,growx");
 		
 		btnHinzufgen = new JButton("Hinzuf\u00FCgen");
+		btnHinzufgen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addCommand((Command) comboBox.getSelectedItem());
+			}
+		});
 		btnHinzufgen.setToolTipText("<html>\r\nDen ausgew\u00E4hlten Befehl dem <br>\r\nausgew\u00E4hlten Feld zuweisen\r\n</html>");
 		btnHinzufgen.setBackground(Color.GRAY);
 		panel_command.add(btnHinzufgen, "cell 2 4");
@@ -307,7 +337,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_1.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_1, "cell 2 0,grow");
-		panel_1.setLayout(new MigLayout("", "[grow][][25px:40px][grow]", "[][5px][][][][][][]"));
+		panel_1.setLayout(new MigLayout("", "[grow][][25px:40px,grow][grow]", "[][5px][][][][][][][][]"));
 		
 		JLabel lblbrigeBefehle = new JLabel("\u00DCbrige Befehle:");
 		lblbrigeBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -385,6 +415,30 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		panel_1.add(txtResourcen, "cell 2 7,growx");
 		txtResourcen.setColumns(10);
 		
+		JLabel lblUntersttzungen = new JLabel("Unterst\u00FCtzungen:");
+		lblUntersttzungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_1.add(lblUntersttzungen, "cell 1 8,alignx trailing");
+		
+		txtSupport = new JTextField();
+		txtSupport.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSupport.setEditable(false);
+		txtSupport.setBackground(Color.LIGHT_GRAY);
+		txtSupport.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_1.add(txtSupport, "cell 2 8,growx");
+		txtSupport.setColumns(10);
+		
+		JLabel lblVerteidigungen = new JLabel("Verteidigungen:");
+		lblVerteidigungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_1.add(lblVerteidigungen, "cell 1 9,alignx trailing");
+		
+		txtVerteidigung = new JTextField();
+		txtVerteidigung.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVerteidigung.setEditable(false);
+		txtVerteidigung.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtVerteidigung.setBackground(Color.LIGHT_GRAY);
+		panel_1.add(txtVerteidigung, "cell 2 9,growx");
+		txtVerteidigung.setColumns(10);
+		
 		ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/claptrap_1.png"));
 		panel_image.setToolTipText("Claptrap: Interplanetarer Ninja Assasine");
 		panel_image.setRemoveIfToSmall(true);
@@ -399,6 +453,9 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 
 		orderPanel = new PlayerOrderPanel();
 		panel_low_bar.add(orderPanel, "cell 1 1 3 1,grow");
+		
+		initCommands();
+		update();
 	}
 
 	@Override
@@ -407,13 +464,57 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		updateField();
 	}
 	
+	/**
+	 * Delete the command from the current field
+	 */
+	private void deleteCommand() {
+		if (selectedField != null && selectedField.getAffiliation().equals(game.getLocalUser()) && selectedField.getCommand() != null) {
+			game.getPlanManager().deleteCommand(selectedField);
+			updateBoard();
+			updateResources();
+			updateFieldLists();
+			updateCommandList();
+		}
+	}
+	/**
+	 * Add a command to the current field
+	 */
+	private void addCommand(Command command) {
+		if (selectedField != null && selectedField.getAffiliation().equals(game.getLocalUser()) && selectedField.getCommand() == null && command != null) {
+			game.getPlanManager().addCommand(selectedField, command);
+			updateBoard();
+			updateResources();
+			updateFieldLists();
+			updateCommandList();
+		}
+	}
+	
+	/**
+	 * Initialize all commands once to not create new every time they are needed.
+	 */
+	private void initCommands() {
+		commandRaid = new RaidCommand();
+		commandRetreat = new RetreatCommand();
+		commandMarch = new MarchCommand();
+		commandBuild = new BuildCommand();
+		commandRecruit = new RecruitCommand();
+		commandMine = new CollectCommand();
+		commandSupport = new SupportCommand();
+		commandDefend = new DefendCommand();
+	}
+	
 	public void update() {
+		updateBoard();
 		updateField();
 		updateResources();
 		updatePlayerOrder();
 		updateFieldLists();
 		updateBuildings();
 		updateCommandList();
+	}
+	
+	private void updateBoard() {
+		boardPanel.updateBoardImage(game.getBoard().displayBoard());
 	}
 	
 	private void updateField() {
@@ -476,9 +577,51 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		}
 	}
 	
+	/**
+	 * Update the command drop-down list and the text fields 
+	 */
 	private void updateCommandList() {
+		int raid = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_RAID);
+		int retreat = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_RETREAT);
+		int march = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_MARCH);
+		int build = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_BUILD);
+		int recruit = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_RECRUIT);
+		int mine = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_COLLECT);
+		int support = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_SUPPORT);
+		int defend = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_DEFEND);
 		commandBoxModel.removeAllElements();
-		//TODO add the commands that are still available
+		txtberflle.setText(Integer.toString(raid));
+		txtRckzge.setText(Integer.toString(retreat));
+		txtMrsche.setText(Integer.toString(march));
+		txtAufbauten.setText(Integer.toString(build));
+		txtRekrutierungen.setText(Integer.toString(recruit));
+		txtResourcen.setText(Integer.toString(mine));
+		txtSupport.setText(Integer.toString(support));
+		txtVerteidigung.setText(Integer.toString(defend));
+		if (raid > 0) {
+			commandBoxModel.addElement(commandRaid);
+		}
+		if (retreat > 0) {
+			commandBoxModel.addElement(commandRetreat);
+		}
+		if (march > 0) {
+			commandBoxModel.addElement(commandMarch);
+		}
+		if (build > 0) {
+			commandBoxModel.addElement(commandBuild);
+		}
+		if (recruit > 0) {
+			commandBoxModel.addElement(commandRecruit);
+		}
+		if (mine > 0) {
+			commandBoxModel.addElement(commandMine);
+		}
+		if (support > 0) {
+			commandBoxModel.addElement(commandSupport);
+		}
+		if (defend > 0) {
+			commandBoxModel.addElement(commandDefend);
+		}
 	}
 	
 	private void updateResources() {

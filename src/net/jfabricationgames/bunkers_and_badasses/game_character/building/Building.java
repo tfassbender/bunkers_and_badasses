@@ -74,6 +74,8 @@ public abstract class Building {
 		}
 	}
 	
+	public abstract Building newInstance();
+	
 	protected void loadVariables() {
 		int[][] variables = storage.getBuildingVariables();
 		int[][] buildingPricesStorage = storage.getBuildingPrices();

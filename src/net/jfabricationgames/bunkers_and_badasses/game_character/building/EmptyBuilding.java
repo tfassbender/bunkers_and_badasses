@@ -9,4 +9,9 @@ public class EmptyBuilding extends Building {
 		name = "-----";
 		loadVariables();
 	}
+	
+	@Override
+	public Building newInstance() {
+		return new EmptyBuilding();
+	}
 }

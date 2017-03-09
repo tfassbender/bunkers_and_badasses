@@ -14,6 +14,7 @@ public class PlayerOrder implements Serializable {
 	private Map<Integer, User> order;//player order starting with 0
 	private int move;
 	private int passed;
+	private GameTurnManager gameTurnManager;
 	private GameTurnBonusManager gameTurnBonusManager;
 	
 	public PlayerOrder(GameTurnBonusManager gameTurnBonusManager) {
@@ -53,6 +54,11 @@ public class PlayerOrder implements Serializable {
 		return null;
 	}
 	
+	public User getActivePlayer() {
+		//TODO
+		return null;
+	}
+	
 	public void userPassed(User user) {
 		//TODO
 	}
@@ -68,5 +74,9 @@ public class PlayerOrder implements Serializable {
 	public boolean isTurnEnd() {
 		//TODO
 		return false;
+	}
+	
+	public void setGameTurnManager(GameTurnManager gameTurnManager) {
+		this.gameTurnManager = gameTurnManager;
 	}
 }
