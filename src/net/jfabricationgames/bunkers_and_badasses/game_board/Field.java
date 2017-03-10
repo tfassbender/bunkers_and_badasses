@@ -12,6 +12,8 @@ import java.util.List;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Bandit;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.CrimsonRaider;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
@@ -157,12 +159,64 @@ public class Field implements Serializable {
 		return badassTroops/2;
 	}
 	
+	public void addNormalTroops(int num) {
+		for (int i = 0; i < num; i++) {
+			troops.add(new Bandit());
+		}
+	}
+	public void removeNormalTroops(int num) throws IllegalArgumentException {
+		int removedTroops = 0;
+		if (getNormalTroops() < num) {
+			throw new IllegalArgumentException("Not enough normal troops to remove.");
+		}
+		for (int i = 0; i < troops.size(); i++) {
+			if (removedTroops < num && troops.get(i).getStrength() == 1) {
+				troops.remove(i);
+				i--;
+				removedTroops++;
+			}
+		}
+	}
+	public void addBadassTroops(int num) {
+		for (int i = 0; i < num; i++) {
+			troops.add(new CrimsonRaider());
+		}
+	}
+	public void removeBadassTroops(int num) throws IllegalArgumentException {
+		int removedTroops = 0;
+		if (getBadassTroops() < num) {
+			throw new IllegalArgumentException("Not enough badass troops to remove.");
+		}
+		for (int i = 0; i < troops.size(); i++) {
+			if (removedTroops < num && troops.get(i).getStrength() == 2) {
+				troops.remove(i);
+				i--;
+				removedTroops++;
+			}
+		}
+	}
+	
+	/**
+	 * Get the strength of the field only by the troops (no additional defense).
+	 * 
+	 * @return
+	 * 		The troop strength.
+	 */
 	public int getTroopStrength() {
 		int strength = 0;
 		for (Troop troop : troops) {
 			strength += troop.getStrength();
 		}
 		return strength;
+	}
+	/**
+	 * Get the strength of this field with the additional defensive strength.
+	 * 
+	 * @return
+	 * 		The total defense strength of this field.
+	 */
+	public int getDefenceStrength() {
+		return getTroopStrength() + building.getAdditionalDefence();
 	}
 	
 	public static BufferedImage getNormalTroopImage() {

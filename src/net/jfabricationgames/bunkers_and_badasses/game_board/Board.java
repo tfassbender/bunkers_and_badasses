@@ -53,6 +53,28 @@ public class Board implements Serializable {
 	}
 	
 	/**
+	 * Move troops from one field to another without checking for fights, ...
+	 * 
+	 * @param start
+	 * 		The field the troops are taken from.
+	 * 
+	 * @param end
+	 * 		The field the troops are moved to.
+	 * 
+	 * @param normalTroops
+	 * 		The number of normal troops that move to the new field.
+	 * 
+	 * @param badassTroops
+	 * 		The number of badasses that move to the new field.
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		An IllegalArgumentException is thrown if anything in the input is not correct.
+	 */
+	public void moveTroops(Field start, Field end, int normalTroops, int badassTroops) throws IllegalArgumentException {
+		//TODO
+	}
+	
+	/**
 	 * Create the field image with the basic image, the troops and buildings.
 	 * The image is created in original size. The scaling for the overview is done by the ImagePanel.
 	 * 
