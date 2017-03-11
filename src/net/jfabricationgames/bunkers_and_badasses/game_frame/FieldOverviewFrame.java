@@ -8,7 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
@@ -24,10 +26,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 
-public class FieldOverviewDialog extends JDialog implements BoardPanelListener {
+public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	
 	private static final long serialVersionUID = -7613818198003965951L;
 	
@@ -54,11 +54,11 @@ public class FieldOverviewDialog extends JDialog implements BoardPanelListener {
 	private JTextField txtGrenzenneutral;
 	private JTextField txtGrenzenfeindlich;
 	
-	public FieldOverviewDialog(Game game) {
+	public FieldOverviewFrame(Game game) {
 		this.game = game;
 		
 		setTitle("Bunkers and Badasses - Gebiets \u00DCbersicht");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(FieldOverviewDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FieldOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1150, 500);
 		setMinimumSize(new Dimension(1100, 500));
 		

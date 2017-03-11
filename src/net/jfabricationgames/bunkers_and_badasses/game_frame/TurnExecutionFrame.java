@@ -91,6 +91,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private JList<Building> list_building;
 	private JSpinner spinnerAufrstungen;
 	
+	private boolean fieldSelectionSucessfull;
+
 	static {
 		buildables = new Building[9];
 		buildables[0] = new CrazyEarlsBlackMarket();
@@ -587,11 +589,17 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 			}
 			else if (command instanceof RecruitCommand) {
 				spinnerNormalTroops.setEnabled(true);
-				spinnerBadassTroops.setEnabled(true);
-				spinnerAufrstungen.setEnabled(true);
 				spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops(), 1));
-				spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops()/2, 1));
-				spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, Math.min(field.getNormalTroops(), field.getBuilding().getRecruitableTroops()), 1));
+				boolean badassesRecruitable = false;
+				for (Field boardField : game.getBoard().getFields()) {
+					badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation().equals(game.getLocalUser());
+				}
+				if (badassesRecruitable) {
+					spinnerBadassTroops.setEnabled(true);
+					spinnerAufrstungen.setEnabled(true);
+					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops()/2, 1));
+					spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, Math.min(field.getNormalTroops(), field.getBuilding().getRecruitableTroops()), 1));
+				}
 			}
 		}
 	}
@@ -680,12 +688,17 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 						else if (troops <= 0) {
 							new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\nDas ist keine freiwillige Aktion hier.").setVisible(true);
 						}
-						else if (troops < targets.length) {
+						/*else if (troops < targets.length) {
 							new ErrorDialog("Das sind mehr Felder als du Truppen hast.\n\nDeine Truppen können sich nicht Zweiteilen.\nNaja können sie schon aber dannach sind sie meistens ein wenig... tot...").setVisible(true);
-						}
+						}*/
 						else {
-							//TODO open selection dialog (modal)
-							commandExecuted = true;
+							List<Field> targetFields = new ArrayList<Field>(targets.length);
+							for (int i : targets) {
+								targetFields.add(fieldTargetModel.getElementAt(i));
+							}
+							fieldSelectionSucessfull = false;
+							new TargetFieldSelectionDialog(this, game, selectedField, targetFields, normalTroops, badassTroops).setVisible(true);
+							commandExecuted = fieldSelectionSucessfull;
 						}
 					}
 					else if (targets.length == 1) {
@@ -766,5 +779,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	public void setSelectedField(Field field) {
 		selectedField = field;
 		updateField();
+	}
+	public void setFieldSelectionSucessfull(boolean fieldSelectionSucessfull) {
+		this.fieldSelectionSucessfull = fieldSelectionSucessfull;
 	}
 }

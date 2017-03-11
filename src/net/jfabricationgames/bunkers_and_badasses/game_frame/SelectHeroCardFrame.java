@@ -7,7 +7,7 @@ import java.awt.Toolkit;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -27,7 +27,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.miginfocom.swing.MigLayout;
 
-public class SelectHeroCardDialog extends JDialog {
+public class SelectHeroCardFrame extends JFrame {
 	
 	private static final long serialVersionUID = -6962661273110796419L;
 	
@@ -47,10 +47,10 @@ public class SelectHeroCardDialog extends JDialog {
 	private JButton btnAuswhlen;
 	private JTextArea txtrSpecialeffect;
 	
-	public SelectHeroCardDialog(Game game, boolean cardPlayable) {
+	public SelectHeroCardFrame(Game game, boolean cardPlayable) {
 		this.game = game;
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
 		setBounds(100, 100, 450, 601);
 		getContentPane().setLayout(new BorderLayout());

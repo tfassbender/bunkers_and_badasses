@@ -61,13 +61,13 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	private PlayerOrderPanel orderPanel;
 	private PointPanel pointPanel;
 	
-	private FieldOverviewDialog fieldOverviewDialog;
+	private FieldOverviewFrame fieldOverviewDialog;
 	private FightExecutionFrame fightExecutionFrame;
 	private GameOverviewFrame gameOverviewFrame;
-	private ResourceInfoDialog resourceInfoDialog;
-	private SelectHeroCardDialog selectHeroCardDialog;
+	private ResourceInfoFrame resourceInfoDialog;
+	private SelectHeroCardFrame selectHeroCardDialog;
 	private SupportRequestFrame supportRequestDialog;
-	private TroopInfoDialog troopInfoDialog;
+	private TroopInfoFrame troopInfoDialog;
 	private TurnExecutionFrame turnExecutionFrame;
 	private TurnGoalTurnBonusDialog turnGoalTurnBonusDialog;
 	private TurnPlaningFrame turnPlaningFrame;
@@ -472,13 +472,13 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	 * Initialize all the GUI elements needed for the game.
 	 */
 	private void intitGuis() {
-		fieldOverviewDialog = new FieldOverviewDialog(game);
+		fieldOverviewDialog = new FieldOverviewFrame(game);
 		fightExecutionFrame = new FightExecutionFrame();
 		gameOverviewFrame = new GameOverviewFrame(game);
-		resourceInfoDialog = new ResourceInfoDialog(game);
-		selectHeroCardDialog = new SelectHeroCardDialog(game, false);
+		resourceInfoDialog = new ResourceInfoFrame(game);
+		selectHeroCardDialog = new SelectHeroCardFrame(game, false);
 		supportRequestDialog = new SupportRequestFrame(game);
-		troopInfoDialog = new TroopInfoDialog(game);
+		troopInfoDialog = new TroopInfoFrame(game);
 		turnExecutionFrame = new TurnExecutionFrame(game);
 		turnGoalTurnBonusDialog = new TurnGoalTurnBonusDialog(game, true, false);
 		turnPlaningFrame = new TurnPlaningFrame(game);

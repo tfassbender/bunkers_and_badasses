@@ -7,13 +7,14 @@ import java.awt.Font;
 import java.awt.Toolkit;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -24,9 +25,8 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.SwingConstants;
 
-public class ResourceInfoDialog extends JDialog {
+public class ResourceInfoFrame extends JFrame {
 	
 	private static final long serialVersionUID = -3046544027968281699L;
 	
@@ -50,11 +50,11 @@ public class ResourceInfoDialog extends JDialog {
 	private JTextField txtAmmo_1;
 	private JTextField txtEridium_1;
 	
-	public ResourceInfoDialog(Game game) {
+	public ResourceInfoFrame(Game game) {
 		this.game = game;
 		
 		setTitle("Bunkers and Badasses - Resourcen Info");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ResourceInfoDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ResourceInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1000, 600);
 		setMinimumSize(new Dimension(1000, 600));
 		

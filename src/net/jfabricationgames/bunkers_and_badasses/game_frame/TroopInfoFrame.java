@@ -7,7 +7,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -25,7 +25,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
-public class TroopInfoDialog extends JDialog {
+public class TroopInfoFrame extends JFrame {
 	
 	private static final long serialVersionUID = 8964222516995478087L;
 	
@@ -56,10 +56,10 @@ public class TroopInfoDialog extends JDialog {
 	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
 	private DefaultListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
 	
-	public TroopInfoDialog(Game game) {
+	public TroopInfoFrame(Game game) {
 		this.game = game;
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Truppen Info");
 		setBounds(100, 100, 900, 600);
 		setMinimumSize(new Dimension(900, 600));
