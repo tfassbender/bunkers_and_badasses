@@ -29,6 +29,7 @@ public class Game implements Serializable {
 	private PointManager pointManager;
 	private UserColorManager colorManager;
 	private SkillProfileManager skillProfileManager;
+	private FightManager fightManager;
 	private transient GameFrame gameFrame;
 	private static transient GameVariableStorage gameVariableStorage;
 	
@@ -55,6 +56,7 @@ public class Game implements Serializable {
 		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseRandomColors(players);
+		fightManager = new FightManager(client);
 	}
 
 	public JFGClient getClient() {
@@ -183,5 +185,12 @@ public class Game implements Serializable {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public FightManager getFightManager() {
+		return fightManager;
+	}
+	public void setFightManager(FightManager fightManager) {
+		this.fightManager = fightManager;
 	}
 }

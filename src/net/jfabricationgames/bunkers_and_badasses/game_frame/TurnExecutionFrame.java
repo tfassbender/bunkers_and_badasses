@@ -709,7 +709,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 								commandExecuted = true;
 							}
 							else {
-								//TODO start a fight
+								game.getFightManager().startFight(selectedField, targetField, normalTroops, badassTroops);
 								commandExecuted = true;
 							}
 						}

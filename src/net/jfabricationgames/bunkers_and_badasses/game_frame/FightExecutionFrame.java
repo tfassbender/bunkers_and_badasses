@@ -382,9 +382,9 @@ public class FightExecutionFrame extends JFrame {
 		txtHeroAttackerDef.setColumns(10);
 		
 		JRadioButton rdbtnEffekt = new JRadioButton("Effekt");
+		rdbtnEffekt.setEnabled(false);
 		rdbtnEffekt.setForeground(Color.BLACK);
 		rdbtnEffekt.setBackground(Color.GRAY);
-		rdbtnEffekt.setEnabled(false);
 		panel_hero_attacker.add(rdbtnEffekt, "cell 0 4 2 1,alignx center");
 		
 		JRadioButton rdbtnStrke = new JRadioButton("St\u00E4rke");
@@ -451,8 +451,8 @@ public class FightExecutionFrame extends JFrame {
 		panel_hero_defender.add(textField_1, "cell 3 2,growx");
 		
 		JRadioButton radioButton = new JRadioButton("Effekt");
-		radioButton.setForeground(Color.BLACK);
 		radioButton.setEnabled(false);
+		radioButton.setForeground(Color.BLACK);
 		radioButton.setBackground(Color.GRAY);
 		panel_hero_defender.add(radioButton, "cell 0 4 2 1,alignx center");
 		

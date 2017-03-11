@@ -193,16 +193,21 @@ public class TargetFieldSelectionDialog extends JDialog {
 			new ErrorDialog("Du hast keine Truppenbewegungen ausgewählt.\n\nDu solltest mindestens ein Ziel mit Truppen aussuchen.\nOder du lässt deine Truppen einfach im Kreis laufen.\nDas kann auch lustig sein.").setVisible(true);
 		}
 		else {
+			Field fight = null;
 			for (Field field : targets) {
 				int[] movedTroops = troops.get(field);
 				if (movedTroops[0] + movedTroops[1] > 0) {
 					if (field.getAffiliation() != null && !field.getAffiliation().equals(game.getLocalUser())) {
-						//TODO start a fight
+						fight = field;
 					}
 					else {
 						game.getBoard().moveTroops(startField, field, movedTroops[0], movedTroops[1]);
 					}
 				}
+			}
+			if (fight != null) {
+				int[] attackingTroops = troops.get(fight);
+				game.getFightManager().startFight(startField, fight, attackingTroops[0], attackingTroops[1]);
 			}
 			turnExecutionFrame.setFieldSelectionSucessfull(true);
 			dispose();
