@@ -19,8 +19,12 @@ public class Fight {
 	private int winner;
 	
 	private List<Field> possibleSupporters;
+	private List<Field> supportRejections;
 	private List<Field> attackSupporters;
 	private List<Field> defenceSupporters;
+	
+	private int attackingSupportStrength;
+	private int defendingSupportStrength;
 	
 	private int currentAttackingStrength;
 	private int currentDefendingStrength;
@@ -36,14 +40,14 @@ public class Fight {
 	private Map<Field, Integer> fallingTroopsSupport;
 	private Map<Field, int[]> fallenTroops;
 	
-	private static final int ATTACKERS = 1;
-	private static final int DEFENDERS = 2;
+	public static final int ATTACKERS = 1;
+	public static final int DEFENDERS = 2;
 	
-	private static final int STATE_SUPPORT = 1;
-	private static final int STATE_HEROS = 2;
-	private static final int STATE_RETREAT_FIELD = 3;
-	private static final int STATE_FALLEN_TROOP_SELECTION = 4;
-	private static final int STATE_FALLEN_TROOP_REMOVING = 5;
+	public static final int STATE_SUPPORT = 1;
+	public static final int STATE_HEROS = 2;
+	public static final int STATE_RETREAT_FIELD = 3;
+	public static final int STATE_FALLEN_TROOP_SELECTION = 4;
+	public static final int STATE_FALLEN_TROOP_REMOVING = 5;
 	
 	public void askForHero() {
 		//TODO
@@ -68,6 +72,32 @@ public class Fight {
 	public int getDefendingStrength() {
 		//TODO
 		return 0;
+	}
+	
+	public int[] calculateFallingTroops() {
+		//TODO
+		return null;
+	}
+	public int calculateMaxFallingSupportTroops() {
+		//TODO
+		return 0;
+	}
+	
+	public List<Field> calculateRetreatFields() {
+		//TODO
+		return null;
+	}
+	
+	public List<Field> getLoosingSupporters() {
+		if (winner == ATTACKERS) {
+			return defenceSupporters;
+		}
+		else if (winner == DEFENDERS) {
+			return attackSupporters;
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public User getAttackingPlayer() {
@@ -119,6 +149,13 @@ public class Fight {
 		this.possibleSupporters = possibleSupporters;
 	}
 	
+	public List<Field> getSupportRejections() {
+		return supportRejections;
+	}
+	public void setSupportRejections(List<Field> supportRejections) {
+		this.supportRejections = supportRejections;
+	}
+	
 	public List<Field> getAttackSupporters() {
 		return attackSupporters;
 	}
@@ -131,6 +168,20 @@ public class Fight {
 	}
 	public void setDefenceSupporters(List<Field> defenceSupporters) {
 		this.defenceSupporters = defenceSupporters;
+	}
+	
+	public int getAttackingSupportStrength() {
+		return attackingSupportStrength;
+	}
+	public void setAttackingSupportStrength(int attackingSupportStrength) {
+		this.attackingSupportStrength = attackingSupportStrength;
+	}
+	
+	public int getDefendingSupportStrength() {
+		return defendingSupportStrength;
+	}
+	public void setDefendingSupportStrength(int defendingSupportStrength) {
+		this.defendingSupportStrength = defendingSupportStrength;
 	}
 	
 	public int getCurrentAttackingStrength() {

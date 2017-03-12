@@ -21,4 +21,18 @@ public class FightManager {
 	public void startFight(Field startField, Field targetField, int normalTroops, int badassTroops) {
 		//TODO
 	}
+	
+	public Map<Integer, List<Fight>> getFights() {
+		return fights;
+	}
+	public void setFights(Map<Integer, List<Fight>> fights) {
+		this.fights = fights;
+	}
+	
+	public Fight getCurrentFight() {
+		return currentFight;
+	}
+	public void setCurrentFight(Fight currentFight) {
+		this.currentFight = currentFight;
+	}
 }

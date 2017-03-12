@@ -473,7 +473,7 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	 */
 	private void intitGuis() {
 		fieldOverviewDialog = new FieldOverviewFrame(game);
-		fightExecutionFrame = new FightExecutionFrame();
+		fightExecutionFrame = new FightExecutionFrame(game);
 		gameOverviewFrame = new GameOverviewFrame(game);
 		resourceInfoDialog = new ResourceInfoFrame(game);
 		selectHeroCardDialog = new SelectHeroCardFrame(game, false);
