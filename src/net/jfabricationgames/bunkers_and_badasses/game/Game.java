@@ -56,7 +56,7 @@ public class Game implements Serializable {
 		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseRandomColors(players);
-		fightManager = new FightManager(client);
+		fightManager = new FightManager(client, localUser);
 	}
 
 	public JFGClient getClient() {

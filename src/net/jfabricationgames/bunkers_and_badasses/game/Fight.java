@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,9 @@ public class Fight {
 	private List<Field> attackSupporters;
 	private List<Field> defenceSupporters;
 	
+	private int attackingNormalTroops;
+	private int attackingBadassTroops;
+	
 	private int attackingSupportStrength;
 	private int defendingSupportStrength;
 	
@@ -35,10 +40,19 @@ public class Fight {
 	private boolean useAttackingHeroEffect;
 	private boolean useDefendingHeroEffect;
 	
+	private boolean attackingHeroChosen;
+	private boolean defendingHeroChosen;
+	
+	private Field retreatField;
+	private boolean retreatFieldChosen;
+	
 	private int fallingTroopsTotal;
 	private int fallingTroopsLooser;
 	private Map<Field, Integer> fallingTroopsSupport;
+	private boolean fallingTroopsChosen;
+	
 	private Map<Field, int[]> fallenTroops;
+	private boolean fallenTroopsChosen;
 	
 	public static final int ATTACKERS = 1;
 	public static final int DEFENDERS = 2;
@@ -48,6 +62,15 @@ public class Fight {
 	public static final int STATE_RETREAT_FIELD = 3;
 	public static final int STATE_FALLEN_TROOP_SELECTION = 4;
 	public static final int STATE_FALLEN_TROOP_REMOVING = 5;
+	
+	public Fight() {
+		possibleSupporters = new ArrayList<Field>();
+		supportRejections = new ArrayList<Field>();
+		attackSupporters = new ArrayList<Field>();
+		defenceSupporters = new ArrayList<Field>();
+		fallingTroopsSupport = new HashMap<Field, Integer>();
+		fallenTroops = new HashMap<Field, int[]>();
+	}
 	
 	public void askForHero() {
 		//TODO
@@ -86,6 +109,10 @@ public class Fight {
 	public List<Field> calculateRetreatFields() {
 		//TODO
 		return null;
+	}
+	
+	public void calculateCurrentStrength() {
+		//TODO
 	}
 	
 	public List<Field> getLoosingSupporters() {
@@ -170,6 +197,20 @@ public class Fight {
 		this.defenceSupporters = defenceSupporters;
 	}
 	
+	public int getAttackingNormalTroops() {
+		return attackingNormalTroops;
+	}
+	public void setAttackingNormalTroops(int attackingNormalTroops) {
+		this.attackingNormalTroops = attackingNormalTroops;
+	}
+	
+	public int getAttackingBadassTroops() {
+		return attackingBadassTroops;
+	}
+	public void setAttackingBadassTroops(int attackingBadassTroops) {
+		this.attackingBadassTroops = attackingBadassTroops;
+	}
+	
 	public int getAttackingSupportStrength() {
 		return attackingSupportStrength;
 	}
@@ -226,6 +267,34 @@ public class Fight {
 		this.useDefendingHeroEffect = useDefendingHeroEffect;
 	}
 	
+	public boolean isAttackingHeroChosen() {
+		return attackingHeroChosen;
+	}
+	public void setAttackingHeroChosen(boolean attackingHeroChosen) {
+		this.attackingHeroChosen = attackingHeroChosen;
+	}
+	
+	public boolean isDefendingHeroChosen() {
+		return defendingHeroChosen;
+	}
+	public void setDefendingHeroChosen(boolean defendingHeroChosen) {
+		this.defendingHeroChosen = defendingHeroChosen;
+	}
+	
+	public Field getRetreatField() {
+		return retreatField;
+	}
+	public void setRetreatField(Field retreatField) {
+		this.retreatField = retreatField;
+	}
+	
+	public boolean isRetreatFieldChosen() {
+		return retreatFieldChosen;
+	}
+	public void setRetreatFieldChosen(boolean retreatFieldChosen) {
+		this.retreatFieldChosen = retreatFieldChosen;
+	}
+	
 	public int getFallingTroopsTotal() {
 		return fallingTroopsTotal;
 	}
@@ -247,10 +316,24 @@ public class Fight {
 		this.fallingTroopsSupport = fallingTroopsSupport;
 	}
 	
+	public boolean isFallenTroopsChosen() {
+		return fallenTroopsChosen;
+	}
+	public void setFallenTroopsChosen(boolean fallenTroopsChosen) {
+		this.fallenTroopsChosen = fallenTroopsChosen;
+	}
+	
 	public Map<Field, int[]> getFallenTroops() {
 		return fallenTroops;
 	}
 	public void setFallenTroops(Map<Field, int[]> fallenTroops) {
 		this.fallenTroops = fallenTroops;
+	}
+	
+	public boolean isFallingTroopsChosen() {
+		return fallingTroopsChosen;
+	}
+	public void setFallingTroopsChosen(boolean fallingTroopsChosen) {
+		this.fallingTroopsChosen = fallingTroopsChosen;
 	}
 }
