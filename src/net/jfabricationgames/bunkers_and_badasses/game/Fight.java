@@ -79,30 +79,87 @@ public class Fight {
 	}
 	
 	public int getAttackingStrength() {
-		//TODO
-		return 0;
+		return currentAttackingStrength;
 	}
 	public int getDefendingStrength() {
-		//TODO
-		return 0;
+		return currentDefendingStrength;
 	}
 	
 	public int[] calculateFallingTroops() {
-		//TODO
-		return null;
+		int[] fallingTroops = new int[2];
+		int overhead;
+		Field winningField;
+		Field loosingField;
+		calculateCurrentStrength();
+		overhead = Math.abs(currentAttackingStrength - currentDefendingStrength);
+		if (winner == ATTACKERS) {
+			winningField = attackingField;
+			loosingField = defendingField;
+		}
+		else {
+			winningField = defendingField;
+			loosingField = attackingField;
+		}
+		fallingTroops[0] = overhead/2;
+		fallingTroops[1] = overhead;
+		if (fallingTroops[0] == 0 && overhead != 0) {
+			//only zero troops if overhead is 0
+			fallingTroops[0] = 1;
+		}
+		if (winningField.getTroops().size() == 1) {
+			//attacker must remain one troop
+			fallingTroops[0] = 0;
+		}
+		//not more falling troops that troops in the fields
+		fallingTroops[1] = Math.min(fallingTroops[1], loosingField.getTroopStrength());
+		//winner must remain one troop
+		if (winningField.getNormalTroops() > 0) {
+			fallingTroops[1] = Math.min(fallingTroops[1], winningField.getTroopStrength()-1);			
+		}
+		else {
+			fallingTroops[1] = Math.min(fallingTroops[1], winningField.getTroopStrength()-2);
+		}
+		return fallingTroops;
 	}
-	public int calculateMaxFallingSupportTroops() {
-		//TODO
-		return 0;
+	public int calculateMaxFallingSupportTroops(int totalFallingTroops, Field field) {
+		int maximumFallingSupportTroops = totalFallingTroops/2;
+		maximumFallingSupportTroops = Math.min(maximumFallingSupportTroops, field.getTroopStrength()/2);
+		if (field.getTroops().size() == 1) {
+			maximumFallingSupportTroops = 0;
+		}
+		return maximumFallingSupportTroops;
 	}
 	
 	public List<Field> calculateRetreatFields() {
-		//TODO
-		return null;
+		List<Field> retreatFields = new ArrayList<Field>();
+		if (winner == ATTACKERS) {
+			for (Field field : defendingField.getNeighbours()) {
+				if (field.getAffiliation() != null && field.getAffiliation().equals(defendingPlayer)) {
+					retreatFields.add(field);
+				}
+			}
+		}
+		else {
+			retreatFields.add(attackingField);
+		}
+		return retreatFields;
 	}
 	
 	public void calculateCurrentStrength() {
-		//TODO
+		currentAttackingStrength = attackingField.getTroopStrength();
+		for (Field supporter : attackSupporters) {
+			currentAttackingStrength += supporter.getTroopStrength();
+		}
+		if (attackingHero != null && !useAttackingHeroEffect && battleState > STATE_HEROS) {
+			currentAttackingStrength += attackingHero.getAttack();
+		}
+		currentDefendingStrength = defendingField.getDefenceStrength();
+		for (Field supporter : defenceSupporters) {
+			currentDefendingStrength += supporter.getTroopStrength();
+		}
+		if (defendingHero != null && !useDefendingHeroEffect && battleState > STATE_HEROS) {
+			currentDefendingStrength += defendingHero.getAttack();
+		}
 	}
 	
 	public List<Field> getLoosingSupporters() {

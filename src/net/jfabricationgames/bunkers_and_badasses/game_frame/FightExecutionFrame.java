@@ -652,6 +652,11 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups.add(scrollPane_support_field, "cell 4 3 1 2,grow");
 		
 		list_support_field = new JList<Field>(fieldFallingSupportModel);
+		list_support_field.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				updateFallingTroopSupportSelection(list_support_field.getSelectedValue());
+			}
+		});
 		list_support_field.setToolTipText("<html>\r\nDie Felder die den verlierer unterst\u00FCtzt <br>\r\nhaben und in denen Truppen fallen k\u00F6nnen\r\n</html>");
 		list_support_field.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_support_field.setBackground(Color.LIGHT_GRAY);
@@ -1125,13 +1130,13 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		fieldFallingSupportModel.removeAllElements();
 		if (fight != null && fight.getBattleState() >= Fight.STATE_FALLEN_TROOP_SELECTION) {
 			int[] fallingTroops = fight.calculateFallingTroops();
-			int maxFallingSupport = fight.calculateMaxFallingSupportTroops();
+			//int maxFallingSupport = fight.calculateMaxFallingSupportTroops();
 			spinner_fallende_truppen_gesammt.setEnabled(true);
 			spinner_fallende_truppen_gesammt.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], fallingTroops[1], 1));
 			spinner_fallende_truppen_verlierer.setEnabled(true);
-			spinner_fallende_truppen_gesammt.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], fallingTroops[1], 1));
+			spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], fallingTroops[1], 1));
 			spinner_fallende_truppen_unterstuetzer.setEnabled(true);
-			spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(0, 0, maxFallingSupport, 1));
+			//spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(0, 0, maxFallingSupport, 1));
 			List<Field> supportLoosers = fight.getLoosingSupporters();
 			if (supportLoosers != null) {
 				for (Field field : supportLoosers) {
@@ -1139,9 +1144,26 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				}
 				list_support_field.setSelectedIndex(selectedField);
 			}
+			updateFallingTroopSpinnerModels();
 			btnBesttigen_1.setEnabled(true);
 			btnAuswahlZurcksetzen.setEnabled(true);
 		}
+	}
+	private void updateFallingTroopSpinnerModels() {
+		Fight fight = game.getFightManager().getCurrentFight();
+		if (fight != null && fight.getBattleState() >= Fight.STATE_FALLEN_TROOP_SELECTION) {
+			int[] fallingTroops = fight.calculateFallingTroops();
+			int fallingTroopsTotal = (Integer) spinner_fallende_truppen_gesammt.getValue();
+			int current = (Integer) spinner_fallende_truppen_verlierer.getValue();
+			spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(current, fallingTroopsTotal/2, fallingTroops[1], 1));
+			current = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
+			int maxFallingSupport = fight.calculateMaxFallingSupportTroops(fallingTroopsTotal, selectedFallenTroopsField);
+			spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(current, 0, maxFallingSupport, 1));
+		}
+	}
+	private void updateFallingTroopSupportSelection(Field field) {
+		updateFallingTroopSpinnerModels();
+		spinner_fallende_truppen_unterstuetzer.setValue(fallingSupportTroops.get(field));
 	}
 	private void updateFallingTroopsLeft() {
 		fallingTroopsLeft = fallingTroops - fallingTroopsLooser;
