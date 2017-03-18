@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.FightExecutionFrame;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.SupportRequestFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 
@@ -12,6 +15,7 @@ public class FightManager {
 	private Map<Integer, List<Fight>> fights;//executed fights sorted by the game turns
 	
 	private Fight currentFight;
+	private FightExecutionFrame fightExecutionFrame;
 	
 	private User localPlayer;
 	
@@ -43,14 +47,21 @@ public class FightManager {
 		currentFight.setDefendingField(targetField);
 		currentFight.setAttackingNormalTroops(normalTroops);
 		currentFight.setAttackingBadassTroops(badassTroops);
-		//TODO send the fight object to the other players
+		addPossibleSupportFields();
+		fightExecutionFrame.setVisible(true);
+		fightExecutionFrame.requestFocus();
+		fightExecutionFrame.update();
+		showSupportRequests();
+		FightTransfereMessage message = new FightTransfereMessage(currentFight, true);
+		client.sendMessage(message);
 	}
 	
 	/**
 	 * Send an update to the (fight-)starting player or the other player if the local player is the starter.
 	 */
 	public void sendUpdate() {
-		//TODO
+		FightTransfereMessage message = new FightTransfereMessage(currentFight, currentFight.getAttackingPlayer().equals(localPlayer));
+		client.sendMessage(message);
 	}
 	
 	/**
@@ -68,6 +79,7 @@ public class FightManager {
 		else {
 			overrideFight(fight);
 		}
+		fightExecutionFrame.update();
 	}
 	/**
 	 * Merge the new information about the fight to the current fight object.
@@ -77,27 +89,37 @@ public class FightManager {
 	 */
 	private void mergeFight(Fight fight) {
 		//merge the supports and add the strength
-		if (fight.getAttackSupporters().size() > currentFight.getAttackSupporters().size()) {
-			currentFight.setAttackSupporters(fight.getAttackSupporters());
-			currentFight.calculateCurrentStrength();
-		}
-		if (fight.getDefenceSupporters().size() > currentFight.getDefenceSupporters().size()) {
-			currentFight.setDefenceSupporters(fight.getDefenceSupporters());
-			currentFight.calculateCurrentStrength();
-		}
-		if (fight.getSupportRejections().size() > currentFight.getSupportRejections().size()) {
-			currentFight.setSupportRejections(fight.getSupportRejections());
+		if (fight.getBattleState() == Fight.STATE_SUPPORT) {
+			if (fight.getAttackSupporters().size() > currentFight.getAttackSupporters().size()) {
+				currentFight.setAttackSupporters(fight.getAttackSupporters());
+				currentFight.calculateCurrentStrength();
+			}
+			if (fight.getDefenceSupporters().size() > currentFight.getDefenceSupporters().size()) {
+				currentFight.setDefenceSupporters(fight.getDefenceSupporters());
+				currentFight.calculateCurrentStrength();
+			}
+			if (fight.getSupportRejections().size() > currentFight.getSupportRejections().size()) {
+				currentFight.setSupportRejections(fight.getSupportRejections());
+			}
+			if (fight.getAttackSupporters().size() + fight.getDefenceSupporters().size() + fight.getSupportRejections().size() == fight.getPossibleSupporters().size()) {
+				//all supporters answered -> set battle state
+				fight.setBattleState(Fight.STATE_HEROS);
+			}			
 		}
 		//merge the defenders hero card (if one)
 		if (fight.isDefendingHeroChosen()) {
 			currentFight.setDefendingHeroChosen(true);
 			currentFight.setDefendingHero(fight.getDefendingHero());
 			currentFight.setUseDefendingHeroEffect(fight.isUseDefendingHeroEffect());
+			if (currentFight.isAttackingHeroChosen()) {
+				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
+			}
 		}
 		//merge the retreat field
 		if (fight.isRetreatFieldChosen()) {
 			currentFight.setRetreatFieldChosen(true);
 			currentFight.setRetreatField(fight.getRetreatField());
+			currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
 		}
 		//merge the falling troops (chosen by the winner)
 		if (fight.isFallingTroopsChosen()) {
@@ -105,13 +127,21 @@ public class FightManager {
 			currentFight.setFallingTroopsTotal(fight.getFallingTroopsTotal());
 			currentFight.setFallingTroopsLooser(fight.getFallingTroopsLooser());
 			currentFight.setFallingTroopsSupport(fight.getFallingTroopsSupport());
+			currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);
 		}
 		//merge the fallen troops (as selected by all losing players)
 		if (fight.isFallenTroopsChosen()) {
-			currentFight.setFallenTroopsChosen(true);
-			currentFight.setFallenTroops(fight.getFallenTroops());
+			Map<Field, int[]> fallenTroops = currentFight.getFallenTroops();
+			for (Field field : fight.getFallenTroops().keySet()) {
+				fallenTroops.put(field, fight.getFallenTroops().get(field));
+			}
+			if (currentFight.getFallenTroops().keySet().size() == currentFight.getFallingTroopsSupport().keySet().size() + 2) {
+				//all support fields, attacking and defending field have chosen their falling troops
+				currentFight.setBattleState(Fight.STATE_FIGHT_ENDED);
+			}
 		}
-		//TODO send the fight object to the other players
+		FightTransfereMessage message = new FightTransfereMessage(currentFight, true);
+		client.sendMessage(message);
 	}
 	/**
 	 * Just override the current fight with the update from the server.
@@ -120,7 +150,37 @@ public class FightManager {
 	 * 		The fight update from the server.
 	 */
 	private void overrideFight(Fight fight) {
+		boolean fightStarted = currentFight == null;
 		this.currentFight = fight;
+		if (fightStarted) {
+			fightExecutionFrame.setVisible(true);
+			fightExecutionFrame.requestFocus();
+			showSupportRequests();
+		}
+	}
+	
+	private void addPossibleSupportFields() {
+		List<Field> supporters = currentFight.getPossibleSupporters();
+		for (Field field : currentFight.getDefendingField().getNeighbours()) {
+			if (field.getCommand().isSupport()) {
+				supporters.add(field);				
+			}
+		}
+	}
+	
+	private void showSupportRequests() {
+		for (Field field : currentFight.getPossibleSupporters()) {
+			if (field.getAffiliation().equals(localPlayer)) {
+				new SupportRequestFrame(currentFight, field, this).setVisible(true);
+			}
+		}
+	}
+	
+	public FightExecutionFrame getFightExecutionFrame() {
+		return fightExecutionFrame;
+	}
+	public void setFightExecutionFrame(FightExecutionFrame fightExecutionFrame) {
+		this.fightExecutionFrame = fightExecutionFrame;
 	}
 	
 	public Map<Integer, List<Fight>> getFights() {

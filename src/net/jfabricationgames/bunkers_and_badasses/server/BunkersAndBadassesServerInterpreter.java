@@ -10,6 +10,7 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
@@ -90,13 +91,15 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		else if (message instanceof GameStartMessage) {
 			interpreteGameStartMessage((GameStartMessage) message, connection);
 		}
-		//game transfer messages
+		//data transfer messages
 		else if (message instanceof GameTransferMessage) {
 			interpreteGameTransferMessage((GameTransferMessage) message, connection);
 		}
-		//skill profile transfer message
 		else if (message instanceof SkillProfileTransferMessage) {
 			interpreteSkillProfileTransferMessage((SkillProfileTransferMessage) message, connection);
+		}
+		else if (message instanceof FightTransfereMessage) {
+			interpreteFightTransfereMessage((FightTransfereMessage) message, connection);
 		}
 		//pre game message
 		else if (message instanceof PreGameDataMessage) {
@@ -281,5 +284,16 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpreteDynamicVariableRequestMessage(DynamicVariableRequestMessage message, JFGConnection connection) {
 		server.loadDynamicVariables(message, connection);
+	}
+	
+	private void interpreteFightTransfereMessage(FightTransfereMessage message, JFGConnection connection) {
+		if (message.isFromStartingPlayer()) {
+			//broadcast the message to all but the starting player
+			connection.getGroup().sendMessage(message, connection);
+		}
+		else {
+			//send the message to the starting player to merge the new data
+			server.getUserMap().get(message.getFight().getAttackingPlayer()).sendMessage(message);
+		}
 	}
 }

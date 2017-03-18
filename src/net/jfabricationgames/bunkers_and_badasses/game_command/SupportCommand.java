@@ -11,6 +11,7 @@ public class SupportCommand extends Command {
 		ammoNeeded = true;
 		executable = false;
 		removable = false;
+		support = true;
 		identifier = UserPlanManager.COMMAND_SUPPORT;
 		image = imageLoader.loadImage("marker_support.png");
 	}

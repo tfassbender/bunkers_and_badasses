@@ -25,7 +25,10 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SelectHeroCardFrame extends JFrame {
 	
@@ -43,9 +46,12 @@ public class SelectHeroCardFrame extends JFrame {
 	
 	private Hero selectedHero;
 	
+	private HeroSelectionListener selectionListener;
+	
 	private DefaultListModel<Hero> heroListModel = new DefaultListModel<Hero>();
 	private JButton btnAuswhlen;
 	private JTextArea txtrSpecialeffect;
+	private JList<Hero> list_heroes;
 	
 	public SelectHeroCardFrame(Game game, boolean cardPlayable) {
 		this.game = game;
@@ -77,7 +83,7 @@ public class SelectHeroCardFrame extends JFrame {
 			JScrollPane scrollPane_heroes = new JScrollPane();
 			panel_heroes.add(scrollPane_heroes, "cell 0 1,grow");
 			
-			JList<Hero> list_heroes = new JList<Hero>(heroListModel);
+			list_heroes = new JList<Hero>(heroListModel);
 			list_heroes.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					selectedHero = list_heroes.getSelectedValue();
@@ -164,6 +170,11 @@ public class SelectHeroCardFrame extends JFrame {
 			panel_buttons.setLayout(new MigLayout("", "[grow][][][grow]", "[]"));
 			
 			btnAuswhlen = new JButton("Ausw\u00E4hlen");
+			btnAuswhlen.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					selectHero();
+				}
+			});
 			btnAuswhlen.setEnabled(cardPlayable);
 			btnAuswhlen.setBackground(Color.GRAY);
 			panel_buttons.add(btnAuswhlen, "cell 1 0");
@@ -204,7 +215,37 @@ public class SelectHeroCardFrame extends JFrame {
 		}
 	}
 	
-	public void setCardSelectionEnabled(boolean enabled) {
+	private void selectHero() {
+		if (list_heroes.getSelectedIndex() == -1) {
+			new ErrorDialog("Du musst einen Helden aus der Liste auswählen um ihn einzusetzen.").setVisible(true);
+		}
+		else {
+			if (selectionListener == null) {
+				throw new IllegalArgumentException("The listener mussn't be null.");
+			}
+			Hero hero = list_heroes.getSelectedValue();
+			game.getHeroCardManager().putBackCards(hero);
+			selectionListener.receiveSelectedHero(hero);
+		}
+	}
+	
+	/**
+	 * Enable or disable the selection of a hero. When enabled a listener has to be set.
+	 * 
+	 * @param enabled
+	 * 		Enable or disable the selection.
+	 * 
+	 * @param listener
+	 * 		The listener that receives the selected hero card.
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		An IllegalArgumentException is thrown when the selection is enabled and the listener is null.
+	 */
+	public void setCardSelectionEnabled(boolean enabled, HeroSelectionListener listener) throws IllegalArgumentException {
+		if (enabled && listener == null) {
+			throw new IllegalArgumentException("Can't enable the selection without a listener.");
+		}
+		this.selectionListener = listener;
 		btnAuswhlen.setEnabled(enabled);
 	}
 }

@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -17,15 +19,20 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
-import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.FightManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
 public class SupportRequestFrame extends JFrame {
 	
 	private static final long serialVersionUID = -702644470055482751L;
 	
-	private Game game;
+	private static User localPlayer;
+	
+	private Fight fight;
+	private Field supportField;
+	private FightManager manager;
 	
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtAttacked;
@@ -38,8 +45,11 @@ public class SupportRequestFrame extends JFrame {
 	private JRadioButton rdbtnAngreifer;
 	private JRadioButton rdbtnVerteidiger;
 	
-	public SupportRequestFrame(Game game) {
-		this.game = game;
+	public SupportRequestFrame(Fight fight, Field supportField, FightManager manager) {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.fight = fight;
+		this.supportField = supportField;
+		this.manager = manager;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SupportRequestFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Unterst\u00FCtzungs Anfrage");
@@ -194,15 +204,44 @@ public class SupportRequestFrame extends JFrame {
 		panel_6.setLayout(new MigLayout("", "[grow][][][grow]", "[10px][]"));
 		
 		JButton btnUntersttzen = new JButton("Unterst\u00FCtzen");
+		btnUntersttzen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				support();
+			}
+		});
 		panel_6.add(btnUntersttzen, "cell 1 1");
 		btnUntersttzen.setBackground(Color.GRAY);
 		
 		JButton btnUntersttzungVerweigern = new JButton("Unterst\u00FCtzung verweigern");
+		btnUntersttzungVerweigern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reject();
+			}
+		});
 		panel_6.add(btnUntersttzungVerweigern, "cell 2 1");
 		btnUntersttzungVerweigern.setBackground(Color.GRAY);
+		
+		updateRequest(fight, supportField);
 	}
 	
-	public void updateRequest(Fight fight, Field support) {
+	private void support() {
+		if (!rdbtnAngreifer.isSelected() && !rdbtnVerteidiger.isSelected()) {
+			new ErrorDialog("Du musst auch aussuchen wen Du unterstützen willst.\n\nEinfach auf alles ballern was sich bewegt gillt leider nicht.").setVisible(true);
+		}
+		if (rdbtnAngreifer.isSelected()) {
+			fight.getAttackSupporters().add(supportField);
+		}
+		else {
+			fight.getDefenceSupporters().add(supportField);
+		}
+		manager.sendUpdate();
+	}
+	private void reject() {
+		fight.getSupportRejections().add(supportField);
+		manager.sendUpdate();
+	}
+	
+	private void updateRequest(Fight fight, Field support) {
 		txtAttacked.setText(fight.getDefendingField().getName());
 		txtSupport.setText(support.getName());
 		txtAttacker.setText(fight.getAttackingPlayer().getUsername());
@@ -210,11 +249,18 @@ public class SupportRequestFrame extends JFrame {
 		txtPoweratk.setText(Integer.toString(fight.getAttackingStrength()));
 		txtPowerdef.setText(Integer.toString(fight.getDefendingStrength()));
 		txtSupporttroups.setText(Integer.toString(support.getTroopStrength()));
-		if (fight.getDefendingPlayer().equals(game.getLocalUser())) {
+		if (fight.getDefendingPlayer().equals(localPlayer)) {
 			rdbtnAngreifer.setEnabled(false);
 		}
-		else if (fight.getAttackingPlayer().equals(game.getLocalUser())) {
+		else if (fight.getAttackingPlayer().equals(localPlayer)) {
 			rdbtnVerteidiger.setEnabled(false);
 		}
+	}
+	
+	public static User getLocalPlayer() {
+		return localPlayer;
+	}
+	public static void setLocalPlayer(User localPlayer) {
+		SupportRequestFrame.localPlayer = localPlayer;
 	}
 }

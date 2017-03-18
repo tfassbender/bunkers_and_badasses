@@ -107,6 +107,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		this.game = game;
 		//Add a reference to this frame to the client interpreter 
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
+		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setGame(game);
 		
 		startingTroops = Game.getGameVariableStorage().getStartTroops();
 		

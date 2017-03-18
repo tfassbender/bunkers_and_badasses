@@ -19,6 +19,7 @@ public class Command implements Serializable {
 	protected boolean ammoNeeded;
 	protected boolean creditsNeeded;
 	protected boolean removable;//can be removed by a raid command
+	protected boolean support;
 	protected List<Class<? extends Building>> executionBuildings;//a list of buildings that can execute the command without troops
 	protected BufferedImage image;
 	protected int identifier;
@@ -45,6 +46,9 @@ public class Command implements Serializable {
 	}
 	public boolean isRemovable() {
 		return removable;
+	}
+	public boolean isSupport() {
+		return support;
 	}
 	public List<Class<? extends Building>> getExecutionBuildings() {
 		return executionBuildings;

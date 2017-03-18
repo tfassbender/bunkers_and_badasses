@@ -42,12 +42,13 @@ import net.jfabricationgames.bunkers_and_badasses.game.UserColorManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
-public class GameFrame extends JFrame implements BoardPanelListener {
+public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener {
 	
 	private static final long serialVersionUID = 2516173588531625786L;
 	
@@ -61,13 +62,13 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	private PlayerOrderPanel orderPanel;
 	private PointPanel pointPanel;
 	
-	private FieldOverviewFrame fieldOverviewDialog;
+	private FieldOverviewFrame fieldOverviewFrame;
 	private FightExecutionFrame fightExecutionFrame;
 	private GameOverviewFrame gameOverviewFrame;
-	private ResourceInfoFrame resourceInfoDialog;
-	private SelectHeroCardFrame selectHeroCardDialog;
-	private SupportRequestFrame supportRequestDialog;
-	private TroopInfoFrame troopInfoDialog;
+	private ResourceInfoFrame resourceInfoFrame;
+	private SelectHeroCardFrame selectHeroCardFrame;
+	//private SupportRequestFrame supportRequestDialog;
+	private TroopInfoFrame troopInfoFrame;
 	private TurnExecutionFrame turnExecutionFrame;
 	private TurnGoalTurnBonusDialog turnGoalTurnBonusDialog;
 	private TurnPlaningFrame turnPlaningFrame;
@@ -192,8 +193,8 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		JMenuItem mntmGebietsbersicht = new JMenuItem("Gebiets\u00FCbersicht");
 		mntmGebietsbersicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fieldOverviewDialog.setVisible(true);
-				fieldOverviewDialog.requestFocus();
+				fieldOverviewFrame.setVisible(true);
+				fieldOverviewFrame.requestFocus();
 			}
 		});
 		mnDialog.add(mntmGebietsbersicht);
@@ -201,8 +202,8 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		JMenuItem mntmTruppenInfoDialog = new JMenuItem("Truppen Info");
 		mntmTruppenInfoDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				troopInfoDialog.setVisible(true);
-				troopInfoDialog.requestFocus();
+				troopInfoFrame.setVisible(true);
+				troopInfoFrame.requestFocus();
 			}
 		});
 		mnDialog.add(mntmTruppenInfoDialog);
@@ -210,8 +211,8 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		JMenuItem mntmResourcenInfoDialog = new JMenuItem("Resourcen Info");
 		mntmResourcenInfoDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				resourceInfoDialog.setVisible(true);
-				resourceInfoDialog.requestFocus();
+				resourceInfoFrame.setVisible(true);
+				resourceInfoFrame.requestFocus();
 			}
 		});
 		mnDialog.add(mntmResourcenInfoDialog);
@@ -219,9 +220,9 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		JMenuItem mntmHeldenInfoDialog = new JMenuItem("Helden Info");
 		mntmHeldenInfoDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				selectHeroCardDialog.setVisible(true);
-				selectHeroCardDialog.requestFocus();
-				selectHeroCardDialog.setCardSelectionEnabled(false);
+				selectHeroCardFrame.setVisible(true);
+				selectHeroCardFrame.requestFocus();
+				selectHeroCardFrame.setCardSelectionEnabled(false, null);
 			}
 		});
 		mnDialog.add(mntmHeldenInfoDialog);
@@ -405,9 +406,9 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		JButton btnbersicht = new JButton("\u00DCbersicht");
 		btnbersicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				selectHeroCardDialog.setVisible(true);
-				selectHeroCardDialog.requestFocus();
-				selectHeroCardDialog.setCardSelectionEnabled(false);
+				selectHeroCardFrame.setVisible(true);
+				selectHeroCardFrame.requestFocus();
+				selectHeroCardFrame.setCardSelectionEnabled(false, null);
 			}
 		});
 		btnbersicht.setToolTipText("<html>\r\n\u00DCbersicht \u00FCber die vorhandenen <br>\r\nHelden Karten\r\n</html>");
@@ -418,9 +419,9 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 		btnEinsetzen.setEnabled(false);
 		btnEinsetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				selectHeroCardDialog.setVisible(true);
-				selectHeroCardDialog.requestFocus();
-				selectHeroCardDialog.setCardSelectionEnabled(true);
+				selectHeroCardFrame.setVisible(true);
+				selectHeroCardFrame.requestFocus();
+				selectHeroCardFrame.setCardSelectionEnabled(true, GameFrame.this);
 			}
 		});
 		btnEinsetzen.setToolTipText("<html>\r\nEine der vorhandenen Helden Karten<br>\r\n(deren Spezialfunktion) einsetzen\r\n</html>");
@@ -472,17 +473,18 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	 * Initialize all the GUI elements needed for the game.
 	 */
 	private void intitGuis() {
-		fieldOverviewDialog = new FieldOverviewFrame(game);
+		fieldOverviewFrame = new FieldOverviewFrame(game);
 		fightExecutionFrame = new FightExecutionFrame(game);
 		gameOverviewFrame = new GameOverviewFrame(game);
-		resourceInfoDialog = new ResourceInfoFrame(game);
-		selectHeroCardDialog = new SelectHeroCardFrame(game, false);
-		supportRequestDialog = new SupportRequestFrame(game);
-		troopInfoDialog = new TroopInfoFrame(game);
+		resourceInfoFrame = new ResourceInfoFrame(game);
+		selectHeroCardFrame = new SelectHeroCardFrame(game, false);
+		//supportRequestDialog = new SupportRequestFrame(game);
+		troopInfoFrame = new TroopInfoFrame(game);
 		turnExecutionFrame = new TurnExecutionFrame(game);
 		turnGoalTurnBonusDialog = new TurnGoalTurnBonusDialog(game, true, false);
 		turnPlaningFrame = new TurnPlaningFrame(game);
 		chatDialog = new ChatDialog(chatClient, this);
+		SupportRequestFrame.setLocalPlayer(game.getLocalUser());
 	}
 	
 	/**
@@ -543,7 +545,12 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	public void receiveBoardMouseClick(MouseEvent event) {
 		selectCurrentField();
 	}
-
+	
+	@Override
+	public void receiveSelectedHero(Hero hero) {
+		//TODO receive the selected hero card
+	}
+	
 	public void update() {
 		updateBoard();
 		updateGameTurnPanel();
@@ -620,6 +627,34 @@ public class GameFrame extends JFrame implements BoardPanelListener {
 	
 	private void updatePoints() {
 		pointPanel.updatePoints(game);
+	}
+	
+	public FieldOverviewFrame getFieldOverviewFrame() {
+		return fieldOverviewFrame;
+	}
+	public FightExecutionFrame getFightExecutionFrame() {
+		return fightExecutionFrame;
+	}
+	public GameOverviewFrame getGameOverviewFrame() {
+		return gameOverviewFrame;
+	}
+	public ResourceInfoFrame getResourceInfoFrame() {
+		return resourceInfoFrame;
+	}
+	public SelectHeroCardFrame getSelectHeroCardFrame() {
+		return selectHeroCardFrame;
+	}
+	public TroopInfoFrame getTroopInfoFrame() {
+		return troopInfoFrame;
+	}
+	public TurnExecutionFrame getTurnExecutionFrame() {
+		return turnExecutionFrame;
+	}
+	public TurnGoalTurnBonusDialog getTurnGoalTurnBonusDialog() {
+		return turnGoalTurnBonusDialog;
+	}
+	public TurnPlaningFrame getTurnPlaningFrame() {
+		return turnPlaningFrame;
 	}
 	
 	public static ImageLoader getImageLoader() {

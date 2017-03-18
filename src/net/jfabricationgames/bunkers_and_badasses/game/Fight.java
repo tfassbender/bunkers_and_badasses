@@ -62,6 +62,7 @@ public class Fight {
 	public static final int STATE_RETREAT_FIELD = 3;
 	public static final int STATE_FALLEN_TROOP_SELECTION = 4;
 	public static final int STATE_FALLEN_TROOP_REMOVING = 5;
+	public static final int STATE_FIGHT_ENDED = 6;//move everything on the board in this state
 	
 	public Fight() {
 		possibleSupporters = new ArrayList<Field>();
@@ -70,18 +71,7 @@ public class Fight {
 		defenceSupporters = new ArrayList<Field>();
 		fallingTroopsSupport = new HashMap<Field, Integer>();
 		fallenTroops = new HashMap<Field, int[]>();
-	}
-	
-	public void askForHero() {
-		//TODO
-	}
-	
-	public void receiveHero(Hero hero, int group) {
-		//TODO
-	}
-	
-	public void executeBattle() {
-		//TODO
+		battleState = STATE_SUPPORT;
 	}
 	
 	public void executeHerosEffect(Hero hero) {
