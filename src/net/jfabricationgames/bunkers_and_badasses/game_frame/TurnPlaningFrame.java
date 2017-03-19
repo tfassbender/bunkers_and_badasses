@@ -28,7 +28,9 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
@@ -44,7 +46,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.SupportCommand;
 import net.miginfocom.swing.MigLayout;
 
-public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
+public class TurnPlaningFrame extends JFrame implements BoardPanelListener, ConfirmDialogListener {
 	
 	private static final long serialVersionUID = -4935074259881358736L;
 	
@@ -89,6 +91,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 	private JButton btnHinzufgen;
 	private JTextField txtSupport;
 	private JTextField txtVerteidigung;
+	private JButton btnAlleBefehleBesttigen;
 	
 	public TurnPlaningFrame(Game game) {
 		this.game = game;
@@ -254,7 +257,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		panel_command.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_command.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_command, "cell 0 0 2 1,grow");
-		panel_command.setLayout(new MigLayout("", "[][grow][fill]", "[][5px,grow][::35px,grow][::35px,grow][::35px,grow][::35px,grow][grow]"));
+		panel_command.setLayout(new MigLayout("", "[][grow][fill]", "[][5px,grow][::35px,grow][::35px,grow][::35px,grow][::35px,grow][5px,grow][grow]"));
 		
 		JLabel lblBefehle = new JLabel("Befehle:");
 		lblBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -332,6 +335,16 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		txtKosts.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command.add(txtKosts, "cell 1 5 2 1,growx");
 		txtKosts.setColumns(10);
+		
+		btnAlleBefehleBesttigen = new JButton("Alle Befehle Best\u00E4tigen");
+		btnAlleBefehleBesttigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ConfirmDialog("Zug-Planung wirklich beenden?", TurnPlaningFrame.this, 0).setVisible(true);
+			}
+		});
+		btnAlleBefehleBesttigen.setToolTipText("<html>\r\nAlle aktuellen Befehle best\u00E4tigen<br>\r\nund die Planugsphase beenden.\r\n</html>");
+		btnAlleBefehleBesttigen.setBackground(Color.GRAY);
+		panel_command.add(btnAlleBefehleBesttigen, "cell 0 7 3 1,alignx right");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -464,6 +477,15 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		updateField();
 	}
 	
+	@Override
+	public void receiveConfirmAnswer(boolean confirm, int type) {
+		if (confirm) {
+			game.getPlanManager().commit();
+			game.setState(GameState.WAIT);
+			disableAll();
+		}
+	}
+	
 	/**
 	 * Delete the command from the current field
 	 */
@@ -504,6 +526,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 	}
 	
 	public void update() {
+		disableAll();
 		updateBoard();
 		updateField();
 		updateResources();
@@ -511,6 +534,12 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 		updateFieldLists();
 		updateBuildings();
 		updateCommandList();
+	}
+	
+	private void disableAll() {
+		btnAlleBefehleBesttigen.setEnabled(false);
+		btnLschen.setEnabled(false);
+		btnHinzufgen.setEnabled(false);
 	}
 	
 	private void updateBoard() {
@@ -530,8 +559,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 				}
 				//TODO add costs
 				//txtKosts.setText("");
-				btnLschen.setEnabled(true);
-				btnHinzufgen.setEnabled(true);
+				if (game.getGameState().equals(GameState.PLAN)) {
+					btnLschen.setEnabled(true);
+					btnHinzufgen.setEnabled(true);
+				}
 			}
 			else {
 				btnLschen.setEnabled(false);
@@ -545,6 +576,9 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 			btnLschen.setEnabled(false);
 			btnHinzufgen.setEnabled(false);
 		}
+		if (game.getGameState().equals(GameState.PLAN)) {
+			btnAlleBefehleBesttigen.setEnabled(true);
+		}
 	}
 	
 	private void updateFieldLists() {
@@ -557,7 +591,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener {
 				if (field.getCommand() != null) {
 					fieldCommandListModel.addElement(new FieldCommand(field, field.getCommand()));
 				}
-				else {
+				else if (field.isCommandPlaceable()) {
 					fieldNoCommandListModel.addElement(field);
 				}
 			}

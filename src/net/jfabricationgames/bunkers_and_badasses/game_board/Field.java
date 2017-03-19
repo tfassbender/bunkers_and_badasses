@@ -219,6 +219,14 @@ public class Field implements Serializable {
 		return getTroopStrength() + building.getAdditionalDefence();
 	}
 	
+	/**
+	 * Checks whether this field can get a command.
+	 * Fields can get commands if they host troops or special buildings (Arschgauls Palace or MoxxisTavern).
+	 */
+	public boolean isCommandPlaceable() {
+		return !troops.isEmpty() || building.isCommandExecutable();
+	}
+	
 	public static BufferedImage getNormalTroopImage() {
 		return normalTroopImage;
 	}

@@ -27,7 +27,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
+import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
@@ -48,10 +50,12 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_command.MarchCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RaidCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
-public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
+public class TurnExecutionFrame extends JFrame implements BoardPanelListener, ConfirmDialogListener, TurnBonusSelectionListener {
 	
 	private static final long serialVersionUID = 245242421914033099L;
 	
@@ -60,6 +64,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private ResourceInfoPanel resourcePanel;
 	private FieldDescriptionPanel fieldPanel;
 	private PlayerOrderPanel orderPanel;
+	private PointPanel pointPanel;
 	
 	private Game game;
 	private Field selectedField;
@@ -92,6 +97,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private JSpinner spinnerAufrstungen;
 	
 	private boolean fieldSelectionSucessfull;
+	private JButton btnAusfhrungBeenden;
 
 	static {
 		buildables = new Building[9];
@@ -111,8 +117,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Zug Ausf\u00FChrung");
-		setBounds(100, 100, 1250, 700);
-		setMinimumSize(new Dimension(1250, 700));
+		setBounds(100, 100, 1300, 775);
+		setMinimumSize(new Dimension(1300, 775));
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -122,7 +128,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[650px,grow][:550px:800px,grow]", "[350px,grow][:400px:400px,grow]"));
+		panel.setLayout(new MigLayout("", "[650px,grow][:550px:800px,grow]", "[400px,grow][:400px:400px,grow]"));
 		
 		boardPanel = new BoardPanel();
 		boardPanel.addBoardPanelListener(this);
@@ -131,7 +137,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
 		panel.add(panel_side_bar, "cell 1 0 1 2,grow");
-		panel_side_bar.setLayout(new MigLayout("", "[250px,grow][350px,grow]", "[300px,grow][:100px:100px,grow][:100px:100px,grow][:200px:300px,grow]"));
+		panel_side_bar.setLayout(new MigLayout("", "[250px,grow][200px,grow][200px,grow]", "[300px,grow][:100px:100px,grow][:100px:100px,grow][:200px:300px,grow]"));
 		
 		JPanel panel_fields_all = new JPanel();
 		panel_fields_all.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -153,7 +159,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		scrollPane_fields_all.setViewportView(list_fields_all);
 
 		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
-		panel_side_bar.add(fieldPanel, "cell 1 0,grow");
+		panel_side_bar.add(fieldPanel, "cell 1 0 2 1,grow");
 		
 		JPanel panel_executable_commands = new JPanel();
 		panel_executable_commands.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -175,10 +181,13 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		scrollPane_executable_commands.setViewportView(list_executable_commands);
 		
 		resourcePanel = new ResourceInfoPanel();
-		panel_side_bar.add(resourcePanel, "cell 1 1 1 2,grow");
+		panel_side_bar.add(resourcePanel, "cell 1 1 2 2,grow");
 
 		orderPanel = new PlayerOrderPanel();
 		panel_side_bar.add(orderPanel, "cell 1 3,grow");
+		
+		pointPanel = new PointPanel();
+		panel_side_bar.add(pointPanel, "cell 2 3,grow");
 		
 		JPanel panel_low_bar = new JPanel();
 		panel_low_bar.setBackground(Color.GRAY);
@@ -278,7 +287,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		panel_command_row_1.add(panel_command_7, "cell 0 2,grow");
 		panel_command_7.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_command_7.setBackground(Color.GRAY);
-		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow][]"));
 		
 		btnBefehlAusfhren = new JButton("Befehl Ausf\u00FChren");
 		btnBefehlAusfhren.addActionListener(new ActionListener() {
@@ -289,6 +298,16 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		btnBefehlAusfhren.setEnabled(false);
 		btnBefehlAusfhren.setBackground(Color.GRAY);
 		panel_command_7.add(btnBefehlAusfhren, "cell 0 0,alignx center,aligny center");
+		
+		btnAusfhrungBeenden = new JButton("Ausf\u00FChrung Beenden");
+		btnAusfhrungBeenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ConfirmDialog("Ausführung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);
+			}
+		});
+		btnAusfhrungBeenden.setEnabled(false);
+		panel_command_7.add(btnAusfhrungBeenden, "cell 0 1,alignx center");
+		btnAusfhrungBeenden.setBackground(Color.GRAY);
 		
 		JPanel panel_command_row_2 = new JPanel();
 		panel_command_row_2.setBackground(Color.GRAY);
@@ -450,6 +469,26 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		updateField();
 	}
 	
+	@Override
+	public void receiveConfirmAnswer(boolean confirm, int type) {
+		if (confirm) {
+			game.setState(GameState.SELECT_BONUS);
+			TurnGoalTurnBonusDialog dialog = game.getGameFrame().getTurnGoalTurnBonusDialog();
+			dialog.showPanel(TurnGoalTurnBonusDialog.TURN_BONUS_PANEL);
+			dialog.setTurnBonusSelectable(true, this);
+			dialog.setVisible(true);
+			dialog.requestFocus();
+		}
+	}
+	
+	@Override
+	public void receiveTurnBonusSelection(TurnBonus selectedBonus) {
+		game.getGameTurnBonusManager().chooseTurnBonus(game.getLocalUser(), selectedBonus);
+		game.setState(GameState.WAIT);
+		game.getGameFrame().getTurnGoalTurnBonusDialog().setTurnBonusSelectable(false, null);
+		game.getTurnExecutionManager().commit();
+	}
+	
 	private List<Field> findPossibleMovingTargets(Field field) {
 		List<Field> possibleTargets = new ArrayList<Field>();
 		List<Field> newTargets;
@@ -471,6 +510,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	public void update() {
 		updateResources();
 		updatePlayerOrder();
+		updatePointPanel();
 		updateField();
 		updateFieldList();
 		updateFieldCommandList();
@@ -498,6 +538,10 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	
 	private void updatePlayerOrder() {
 		orderPanel.updateTurnOrder(game);
+	}
+	
+	private void updatePointPanel() {
+		pointPanel.updatePoints(game);
 	}
 	
 	private void updateField() {
@@ -528,6 +572,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	
 	private void disableAll() {
 		btnBefehlAusfhren.setEnabled(false);
+		btnAusfhrungBeenden.setEnabled(false);
 		rdbtnCredits.setEnabled(false);
 		rdbtnMunition.setEnabled(false);
 		rdbtnEridium.setEnabled(false);
@@ -547,8 +592,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 	private void enableComponents(Field field) {
 		if (field.getAffiliation().equals(game.getLocalUser())) {
 			Command command = field.getCommand();
-			if (command.isExecutable()) {
+			if (command.isExecutable() && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
 				btnBefehlAusfhren.setEnabled(true);
+				btnAusfhrungBeenden.setEnabled(true);
 			}
 			if (command instanceof BuildCommand) {
 				if (field.getBuilding() instanceof EmptyBuilding) {
@@ -772,6 +818,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener {
 		}
 		if (commandExecuted) {
 			selectedField.setCommand(null);
+			game.getTurnExecutionManager().commit();
 		}
 		update();
 	}

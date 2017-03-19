@@ -27,6 +27,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardSelectionListener;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
@@ -42,6 +43,8 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	private boolean selectable;
 	
 	private TurnBonus selectedTurnBonus;
+	
+	private TurnBonusSelectionListener listener;
 	
 	private DefaultListModel<User> model;
 	
@@ -242,7 +245,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	 */
 	private void chooseNewTurnBonus() {
 		if (selectedTurnBonus != null) {
-			game.getGameTurnBonusManager().chooseTurnBonus(game.getLocalUser(), selectedTurnBonus);
+			listener.receiveTurnBonusSelection(selectedTurnBonus);
 		}
 	}
 	
@@ -264,11 +267,16 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 		repaint();
 	}
 	
+	public void setTurnBonusSelectable(boolean selectable, TurnBonusSelectionListener listener) {
+		if (selectable && listener == null) {
+			throw new IllegalArgumentException("Can't enable selection without listener.");
+		}
+		this.selectable = selectable;
+		this.listener = listener;
+	}
+	
 	public boolean isTurnBonusSelectable() {
 		return selectable;
-	}
-	public void setTurnBonusSelectable(boolean selectable) {
-		this.selectable = selectable;
 	}
 	
 	public boolean isTurnBonusChangeEnabled() {

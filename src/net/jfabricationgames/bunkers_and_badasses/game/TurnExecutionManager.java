@@ -40,7 +40,7 @@ public class TurnExecutionManager {
 		this.pointManager = pointManager;
 	}
 	
-	public void execute() {
+	public void commit() {
 		//TODO
 	}
 	

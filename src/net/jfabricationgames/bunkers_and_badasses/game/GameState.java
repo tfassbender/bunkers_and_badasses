@@ -4,7 +4,9 @@ public enum GameState {
 	
 	PLAN("Planungsphase"),
 	ACT("Ausführungsphase"),
-	FIGHT("Kampf");
+	FIGHT("Kampf"),
+	SELECT_BONUS("Rundenbonus auswählen"),
+	WAIT("Warten auf andere Spieler");
 	
 	private final String name;
 	

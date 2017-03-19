@@ -35,6 +35,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
@@ -47,8 +48,10 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardP
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener {
+public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener, ConfirmDialogListener {
 	
 	private static final long serialVersionUID = 2516173588531625786L;
 	
@@ -100,13 +103,19 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private JButton btnEinsetzen;
 	
 	public GameFrame(Game game) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				new ConfirmDialog("Spiel wirklich beenden?", GameFrame.this, 0).setVisible(true);
+			}
+		});
 		this.game = game;
 		
 		intitGuis();
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1250, 750));
 		
@@ -549,6 +558,14 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	@Override
 	public void receiveSelectedHero(Hero hero) {
 		//TODO receive the selected hero card
+	}
+
+	@Override
+	public void receiveConfirmAnswer(boolean confirm, int type) {
+		if (confirm) {
+			//TODO save the game, inform the other players and logout the player
+			System.exit(0);
+		}
 	}
 	
 	public void update() {

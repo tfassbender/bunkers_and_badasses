@@ -1,7 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +56,10 @@ public class PlayerOrder implements Serializable {
 	public User getActivePlayer() {
 		//TODO
 		return null;
+	}
+	
+	public boolean isPlayersTurn(User player) {
+		return player.equals(getActivePlayer());
 	}
 	
 	public void userPassed(User user) {

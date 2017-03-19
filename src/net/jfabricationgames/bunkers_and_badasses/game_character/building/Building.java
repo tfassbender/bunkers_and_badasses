@@ -27,6 +27,7 @@ public abstract class Building {
 	protected boolean badassTroopsRecruitable;
 	protected boolean advanced;
 	protected boolean extendable;
+	protected boolean commandExecutable;
 	
 	protected int buildingId;
 	protected int extendedBuildingId;
@@ -58,6 +59,7 @@ public abstract class Building {
 		badassTroopsRecruitable = false;
 		advanced = false;
 		extendable = false;
+		commandExecutable = false;
 	}
 	
 	@Override
@@ -187,5 +189,8 @@ public abstract class Building {
 	}
 	public boolean isExtendable() {
 		return extendable;
+	}
+	public boolean isCommandExecutable() {
+		return commandExecutable;
 	}
 }
