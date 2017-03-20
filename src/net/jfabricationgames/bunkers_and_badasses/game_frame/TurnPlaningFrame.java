@@ -56,6 +56,8 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	
 	private Field selectedField;
 	
+	private AdditionalCommandFrame additionalCommandFrame;
+	
 	private ResourceInfoPanel resourcePanel;
 	private FieldDescriptionPanel fieldPanel;
 	private PlayerOrderPanel orderPanel;
@@ -92,6 +94,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private JTextField txtSupport;
 	private JTextField txtVerteidigung;
 	private JButton btnAlleBefehleBesttigen;
+	private JButton btnZustzlicheBefehle;
 	
 	public TurnPlaningFrame(Game game) {
 		this.game = game;
@@ -99,7 +102,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		setTitle("Bunkers and Badasses - Zug Planung");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1300, 800);
-		setMinimumSize(new Dimension(1150, 700));
+		setMinimumSize(new Dimension(1300, 800));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -257,11 +260,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		panel_command.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_command.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_command, "cell 0 0 2 1,grow");
-		panel_command.setLayout(new MigLayout("", "[][grow][fill]", "[][5px,grow][::35px,grow][::35px,grow][::35px,grow][::35px,grow][5px,grow][grow]"));
+		panel_command.setLayout(new MigLayout("", "[][grow][][fill]", "[][5px,grow][::35px,grow][::35px,grow][::35px,grow][::35px,grow][5px,grow][grow]"));
 		
 		JLabel lblBefehle = new JLabel("Befehle:");
 		lblBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_command.add(lblBefehle, "cell 0 0 3 1,alignx center");
+		panel_command.add(lblBefehle, "cell 0 0 4 1,alignx center");
 		
 		JLabel lblFeld = new JLabel("Feld:");
 		lblFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -271,7 +274,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		txtField.setEditable(false);
 		txtField.setBackground(Color.LIGHT_GRAY);
 		txtField.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(txtField, "cell 1 2,growx");
+		panel_command.add(txtField, "cell 1 2 2 1,growx");
 		txtField.setColumns(10);
 		
 		JButton btnbersicht = new JButton("\u00DCbersicht");
@@ -282,7 +285,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		btnbersicht.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
 		btnbersicht.setBackground(Color.GRAY);
-		panel_command.add(btnbersicht, "cell 2 2");
+		panel_command.add(btnbersicht, "cell 3 2");
 		
 		JLabel lblBefehl = new JLabel("Aktueller Befehl:");
 		lblBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -292,7 +295,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		txtCurrcommand.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtCurrcommand.setBackground(Color.LIGHT_GRAY);
 		txtCurrcommand.setEditable(false);
-		panel_command.add(txtCurrcommand, "cell 1 3,growx");
+		panel_command.add(txtCurrcommand, "cell 1 3 2 1,growx");
 		txtCurrcommand.setColumns(10);
 		
 		btnLschen = new JButton("L\u00F6schen");
@@ -303,7 +306,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		btnLschen.setToolTipText("<html>\r\nDen bestehenden Befehl f\u00FCr <br>\r\ndas ausgew\u00E4hlte Feld entfernen\r\n</html>");
 		btnLschen.setBackground(Color.GRAY);
-		panel_command.add(btnLschen, "cell 2 3");
+		panel_command.add(btnLschen, "cell 3 3");
 		
 		JLabel lblNeuerBefehl = new JLabel("Neuer Befehl:");
 		lblNeuerBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -312,7 +315,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		JComboBox<Command> comboBox = new JComboBox<Command>(commandBoxModel);
 		comboBox.setBackground(Color.GRAY);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(comboBox, "cell 1 4,growx");
+		panel_command.add(comboBox, "cell 1 4 2 1,growx");
 		
 		btnHinzufgen = new JButton("Hinzuf\u00FCgen");
 		btnHinzufgen.addActionListener(new ActionListener() {
@@ -322,7 +325,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		btnHinzufgen.setToolTipText("<html>\r\nDen ausgew\u00E4hlten Befehl dem <br>\r\nausgew\u00E4hlten Feld zuweisen\r\n</html>");
 		btnHinzufgen.setBackground(Color.GRAY);
-		panel_command.add(btnHinzufgen, "cell 2 4");
+		panel_command.add(btnHinzufgen, "cell 3 4");
 		
 		JLabel lblKosten = new JLabel("Kosten:");
 		lblKosten.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -333,7 +336,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		txtKosts.setEditable(false);
 		txtKosts.setBackground(Color.LIGHT_GRAY);
 		txtKosts.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(txtKosts, "cell 1 5 2 1,growx");
+		panel_command.add(txtKosts, "cell 1 5 3 1,growx");
 		txtKosts.setColumns(10);
 		
 		btnAlleBefehleBesttigen = new JButton("Alle Befehle Best\u00E4tigen");
@@ -342,9 +345,20 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 				new ConfirmDialog("Zug-Planung wirklich beenden?", TurnPlaningFrame.this, 0).setVisible(true);
 			}
 		});
+		
+		btnZustzlicheBefehle = new JButton("Zus\u00E4tzliche Befehle Kaufen");
+		btnZustzlicheBefehle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				additionalCommandFrame.setVisible(true);
+				additionalCommandFrame.requestFocus();
+				additionalCommandFrame.update();
+			}
+		});
+		btnZustzlicheBefehle.setBackground(Color.GRAY);
+		panel_command.add(btnZustzlicheBefehle, "cell 0 7 2 1");
 		btnAlleBefehleBesttigen.setToolTipText("<html>\r\nAlle aktuellen Befehle best\u00E4tigen<br>\r\nund die Planugsphase beenden.\r\n</html>");
 		btnAlleBefehleBesttigen.setBackground(Color.GRAY);
-		panel_command.add(btnAlleBefehleBesttigen, "cell 0 7 3 1,alignx right");
+		panel_command.add(btnAlleBefehleBesttigen, "cell 2 7 2 1,alignx right");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -523,6 +537,8 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		commandMine = new CollectCommand();
 		commandSupport = new SupportCommand();
 		commandDefend = new DefendCommand();
+		additionalCommandFrame = new AdditionalCommandFrame(this, game, commandRaid, commandRetreat, commandMarch, 
+				commandBuild, commandRecruit, commandMine, commandSupport, commandDefend);
 	}
 	
 	public void update() {
@@ -538,6 +554,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	
 	private void disableAll() {
 		btnAlleBefehleBesttigen.setEnabled(false);
+		btnZustzlicheBefehle.setEnabled(false);
 		btnLschen.setEnabled(false);
 		btnHinzufgen.setEnabled(false);
 	}
@@ -578,6 +595,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		}
 		if (game.getGameState().equals(GameState.PLAN)) {
 			btnAlleBefehleBesttigen.setEnabled(true);
+			btnZustzlicheBefehle.setEnabled(true);
 		}
 	}
 	

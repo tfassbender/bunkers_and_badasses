@@ -15,4 +15,9 @@ public class SupportCommand extends Command {
 		identifier = UserPlanManager.COMMAND_SUPPORT;
 		image = imageLoader.loadImage("marker_support.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new SupportCommand();
+	}
 }

@@ -14,4 +14,9 @@ public class RaidCommand extends Command {
 		identifier = UserPlanManager.COMMAND_RAID;
 		image = imageLoader.loadImage("marker_raid.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new RaidCommand();
+	}
 }

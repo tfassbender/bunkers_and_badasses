@@ -14,4 +14,9 @@ public class RetreatCommand extends Command {
 		identifier = UserPlanManager.COMMAND_RETREAT;
 		image = imageLoader.loadImage("marker_retreat.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new RetreatCommand();
+	}
 }

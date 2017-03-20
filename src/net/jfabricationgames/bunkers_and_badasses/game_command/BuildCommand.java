@@ -14,4 +14,9 @@ public class BuildCommand extends Command {
 		identifier = UserPlanManager.COMMAND_BUILD;
 		image = imageLoader.loadImage("marker_build.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new BuildCommand();
+	}
 }

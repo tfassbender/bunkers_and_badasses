@@ -14,4 +14,9 @@ public class MarchCommand extends Command {
 		identifier = UserPlanManager.COMMAND_MARCH;
 		image = imageLoader.loadImage("marker_march.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new MarchCommand();
+	}
 }

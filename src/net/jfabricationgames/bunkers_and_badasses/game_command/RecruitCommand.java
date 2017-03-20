@@ -18,4 +18,9 @@ public class RecruitCommand extends Command {
 		executionBuildings.add(MoxxisTavern.class);
 		image = imageLoader.loadImage("marker_recruit.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new RecruitCommand();
+	}
 }

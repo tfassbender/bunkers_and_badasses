@@ -14,4 +14,9 @@ public class CollectCommand extends Command {
 		identifier = UserPlanManager.COMMAND_COLLECT;
 		image = imageLoader.loadImage("marker_mine.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new CollectCommand();
+	}
 }

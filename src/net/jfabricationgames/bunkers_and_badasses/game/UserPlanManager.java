@@ -40,6 +40,16 @@ public class UserPlanManager {
 	}
 	
 	/**
+	 * Add a command that was bought by the player.
+	 * 
+	 * @param commandId
+	 * 		The id of the command that was bought.
+	 */
+	public void addCommand(int commandId) {
+		commands[commandId]++;
+	}
+	
+	/**
 	 * Add a command to the field.
 	 */
 	public void addCommand(Field field, Command command) throws IllegalArgumentException {
@@ -49,7 +59,7 @@ public class UserPlanManager {
 		if (commands[command.getIdentifier()] <= 0) {
 			throw new IllegalArgumentException("Can't add this command. No more commands of this type left.");
 		}
-		field.setCommand(command);
+		field.setCommand(command.getInstance());
 		commands[command.getIdentifier()]--;
 		//TODO reduce the users resources
 	}
@@ -83,5 +93,12 @@ public class UserPlanManager {
 	
 	public void setBoard(Board board) {
 		this.board = board;
+	}
+	
+	public UserResource getCurrentResource() {
+		return currentResource;
+	}
+	public void setCurrentResource(UserResource currentResource) {
+		this.currentResource = currentResource;
 	}
 }

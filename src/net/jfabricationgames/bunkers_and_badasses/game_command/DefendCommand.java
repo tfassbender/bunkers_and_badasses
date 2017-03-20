@@ -16,4 +16,9 @@ public class DefendCommand extends Command {
 		executionBuildings.add(ArschgaulsPalace.class);
 		image = imageLoader.loadImage("marker_defend.png");
 	}
+	
+	@Override
+	public Command getInstance() {
+		return new DefendCommand();
+	}
 }

@@ -9,7 +9,7 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 
-public class Command implements Serializable {
+public abstract class Command implements Serializable {
 	
 	private static final long serialVersionUID = 3756160188138590020L;
 	
@@ -34,6 +34,8 @@ public class Command implements Serializable {
 	public Command() {
 		executionBuildings = new ArrayList<Class<? extends Building>>();
 	}
+	
+	public abstract Command getInstance();
 	
 	public boolean isExecutable() {
 		return executable;
