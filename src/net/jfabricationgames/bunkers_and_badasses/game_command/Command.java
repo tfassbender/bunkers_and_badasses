@@ -16,15 +16,20 @@ public abstract class Command implements Serializable {
 	protected String name;
 	
 	protected boolean executable;
-	protected boolean ammoNeeded;
-	protected boolean creditsNeeded;
 	protected boolean removable;//can be removed by a raid command
 	protected boolean support;
 	protected List<Class<? extends Building>> executionBuildings;//a list of buildings that can execute the command without troops
 	protected BufferedImage image;
 	protected int identifier;
 	
+	protected int costsCredits;
+	protected int costsAmmo;
+	protected boolean costDependencyCredits;//indicates whether the costs depend on the number of troops
+	protected boolean costDependencyAmmo;
+	
 	protected static ImageLoader imageLoader;
+	
+	protected static CommandStorage storage;
 	
 	static {
 		imageLoader = new ImageLoader();
@@ -35,16 +40,17 @@ public abstract class Command implements Serializable {
 		executionBuildings = new ArrayList<Class<? extends Building>>();
 	}
 	
+	protected void loadVariables() {
+		costsCredits = storage.getCosts()[identifier][CommandStorage.CREDITS];
+		costsAmmo = storage.getCosts()[identifier][CommandStorage.AMMO];
+		costDependencyCredits = storage.getDependencies()[identifier][CommandStorage.CREDITS];
+		costDependencyAmmo = storage.getDependencies()[identifier][CommandStorage.AMMO];
+	}
+	
 	public abstract Command getInstance();
 	
 	public boolean isExecutable() {
 		return executable;
-	}
-	public boolean isAmmoNeeded() {
-		return ammoNeeded;
-	}
-	public boolean isCreditsNeeded() {
-		return creditsNeeded;
 	}
 	public boolean isRemovable() {
 		return removable;
@@ -62,7 +68,39 @@ public abstract class Command implements Serializable {
 		return identifier;
 	}
 	
+	public int getCostsCredits() {
+		return costsCredits;
+	}
+	public void setCostsCredits(int costsCredits) {
+		this.costsCredits = costsCredits;
+	}
+	public int getCostsAmmo() {
+		return costsAmmo;
+	}
+	public void setCostsAmmo(int costsAmmo) {
+		this.costsAmmo = costsAmmo;
+	}
+	public boolean isCostDependencyCredits() {
+		return costDependencyCredits;
+	}
+	public void setCostDependencyCredits(boolean costDependencyCredits) {
+		this.costDependencyCredits = costDependencyCredits;
+	}
+	public boolean isCostDependencyAmmo() {
+		return costDependencyAmmo;
+	}
+	public void setCostDependencyAmmo(boolean costDependencyAmmo) {
+		this.costDependencyAmmo = costDependencyAmmo;
+	}
+	
 	public String getName() {
 		return name;
+	}
+	
+	public static CommandStorage getStorage() {
+		return storage;
+	}
+	public static void setStorage(CommandStorage storage) {
+		Command.storage = storage;
 	}
 }

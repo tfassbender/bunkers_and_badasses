@@ -23,6 +23,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.BuildingStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.TroopStorage;
+import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
@@ -938,12 +939,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		GameVariableStorage gameStorage = new GameVariableStorage();
 		BuildingStorage buildingStorage = new BuildingStorage();
 		TroopStorage troopStorage = new TroopStorage();
+		CommandStorage commandStorage = new CommandStorage();
 		String gameVariablesQuery = "SELECT * FROM bunkers_and_badasses.game_variables WHERE used = true";
 		String skillResourcesQuery = "SELECT * FROM bunkser_and_badasses.skill_resources";
 		String startResourcesQuery = "SELECT * FROM bunkers_and_badasses.start_resources WHERE used = true";
 		String buildingQuery = "SELECT * FROM bunkers_and_badasses.buliding_variables";
 		String buildingCostQuery = "SELECT * FROM bunkers_and_badasses.costs_building";
 		String troopCostQuery = "SELECT * FROM bunkers_and_badasses.costs_troop";
+		String commandCostQuery = "SELECT * FROM bunkers_and_badasses.costs_command";
 		String commandQuery = "SELECT * FROM bunkers_and_badasses.commands WHERE used = true";
 		ResultSet result;
 		//load the variables from the database
@@ -1035,6 +1038,27 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_AMMO] = result.getInt(5);
 				troopPrices[result.getInt(1)][TroopStorage.RECRUIT_COSTS_ERIDIUM] = result.getInt(6);
 			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			result = statement.executeQuery(commandCostQuery);
+			int[][] commandPrices = commandStorage.getCosts();
+			boolean[][] commandDependencies = commandStorage.getDependencies();
+			while (result.next()) {
+				commandPrices[result.getInt(1)][CommandStorage.CREDITS] = result.getInt(2);
+				commandPrices[result.getInt(1)][CommandStorage.AMMO] = result.getInt(3);
+				commandDependencies[result.getInt(1)][CommandStorage.CREDITS] = result.getBoolean(4);
+				commandDependencies[result.getInt(1)][CommandStorage.AMMO] = result.getBoolean(5);
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
 			result = statement.executeQuery(commandQuery);
 			int[] commands = gameStorage.getUserCommands();
 			if (result.next()) {
@@ -1069,6 +1093,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		message.setGameStorage(gameStorage);
 		message.setBuildingStorage(buildingStorage);
 		message.setTroopStorage(troopStorage);
+		message.setCommandStorage(commandStorage);
 		connection.sendMessage(message);
 	}
 	

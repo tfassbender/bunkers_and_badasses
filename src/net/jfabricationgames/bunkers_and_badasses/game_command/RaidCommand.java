@@ -7,12 +7,11 @@ public class RaidCommand extends Command {
 	private static final long serialVersionUID = 5963435414801627767L;
 	
 	public RaidCommand() {
-		ammoNeeded = true;
-		creditsNeeded = true;
 		executable = true;
 		removable = true;
 		identifier = UserPlanManager.COMMAND_RAID;
 		image = imageLoader.loadImage("marker_raid.png");
+		loadVariables();
 	}
 	
 	@Override

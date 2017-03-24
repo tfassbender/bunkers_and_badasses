@@ -8,13 +8,12 @@ public class DefendCommand extends Command {
 	private static final long serialVersionUID = -6699207826006728668L;
 	
 	public DefendCommand() {
-		creditsNeeded = true;
-		ammoNeeded = true;
 		executable = false;
 		removable = false;
 		identifier = UserPlanManager.COMMAND_DEFEND;
 		executionBuildings.add(ArschgaulsPalace.class);
 		image = imageLoader.loadImage("marker_defend.png");
+		loadVariables();
 	}
 	
 	@Override

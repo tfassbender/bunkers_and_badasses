@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_communication;
 import net.jfabricationgames.bunkers_and_badasses.game.GameVariableStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.BuildingStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.TroopStorage;
+import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
@@ -12,6 +13,7 @@ public class DynamicVariableRequestMessage implements JFGServerMessage, JFGClien
 	
 	private BuildingStorage buildingStorage;
 	private TroopStorage troopStorage;
+	private CommandStorage commandStorage;
 	private GameVariableStorage gameStorage;
 	
 	public BuildingStorage getBuildingStorage() {
@@ -26,6 +28,13 @@ public class DynamicVariableRequestMessage implements JFGServerMessage, JFGClien
 	}
 	public void setTroopStorage(TroopStorage troopStorage) {
 		this.troopStorage = troopStorage;
+	}
+	
+	public CommandStorage getCommandStorage() {
+		return commandStorage;
+	}
+	public void setCommandStorage(CommandStorage commandStorage) {
+		this.commandStorage = commandStorage;
 	}
 	
 	public GameVariableStorage getGameStorage() {

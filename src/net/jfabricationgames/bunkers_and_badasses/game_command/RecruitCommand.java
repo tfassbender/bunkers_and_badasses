@@ -9,14 +9,13 @@ public class RecruitCommand extends Command {
 	private static final long serialVersionUID = -5452757372655089485L;
 	
 	public RecruitCommand() {
-		creditsNeeded = true;
-		ammoNeeded = false;
 		executable = true;
 		removable = true;
 		identifier = UserPlanManager.COMMAND_RECRUIT;
 		executionBuildings.add(ArschgaulsPalace.class);
 		executionBuildings.add(MoxxisTavern.class);
 		image = imageLoader.loadImage("marker_recruit.png");
+		loadVariables();
 	}
 	
 	@Override

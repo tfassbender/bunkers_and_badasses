@@ -8,7 +8,6 @@ public class MoxxisTavern extends Building {
 		extendedBuildingId = 7;
 		//TODO change to real values when known
 		recruitableTroops = 2;
-		extensionPrice = new int[] {1, 1, 1};
 		extendable = true;
 		commandExecutable = true;
 		name = "Moxxis' Taverne";

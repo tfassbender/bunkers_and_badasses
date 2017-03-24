@@ -8,7 +8,6 @@ public class MarcusGunshop extends Building {
 		extendedBuildingId = 5;
 		//TODO change to real values when known
 		ammoMining = 1;
-		extensionPrice = new int[] {1, 0, 1};
 		extendable = true;
 		name = "Marcus' Waffenladen";
 		image = imageLoader.loadImage("marcus_gunship_1_small.png");
