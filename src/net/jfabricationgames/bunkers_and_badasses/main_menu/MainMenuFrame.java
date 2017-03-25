@@ -42,6 +42,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVari
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -380,6 +381,7 @@ public class MainMenuFrame extends JFrame {
 		Building.setStorage(message.getBuildingStorage());
 		Troop.setStorage(message.getTroopStorage());
 		Command.setStorage(message.getCommandStorage());
+		TurnBonus.setStorage(message.getTurnBonusStorage());
 		Game.setGameVariableStorage(message.getGameStorage());
 		dynamicVariablesLoaded = true;
 		//enable the game start buttons

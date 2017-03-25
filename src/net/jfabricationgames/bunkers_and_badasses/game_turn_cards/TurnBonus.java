@@ -39,9 +39,13 @@ public abstract class TurnBonus {
 	protected int defenseCommand;
 	protected int collectCommand;
 	
+	protected int bonusId;
+	
 	protected String imagePath;
 	protected String description;
 	protected String name;
+	
+	private static TurnBonusStorage storage;
 	
 	public TurnBonus() {
 		credits = 0;
@@ -60,12 +64,17 @@ public abstract class TurnBonus {
 		image = loader.loadImage(imagePath);
 	}
 	
+	protected void loadVariables() {
+		credits = storage.getResources()[bonusId][TurnBonusStorage.CREDITS];
+		ammo = storage.getResources()[bonusId][TurnBonusStorage.AMMO];
+		eridium = storage.getResources()[bonusId][TurnBonusStorage.ERIDIUM];
+	}
+	
 	public void receiveAdditionalResources(User user, Game game) {
 		UserResource resource = game.getResourceManager().getResources().get(user);
-		resource.setAmmo(resource.getAmmo() + ammo);
-		resource.setCredits(resource.getCredits() + credits);
-		resource.setEridium(resource.getEridium() + eridium);
-		//TODO add commands
+		resource.addAmmo(ammo);
+		resource.addCredits(credits);
+		resource.addEridium(eridium);
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {
@@ -92,5 +101,12 @@ public abstract class TurnBonus {
 	
 	public BufferedImage getImage() {
 		return image;
+	}
+	
+	public static TurnBonusStorage getStorage() {
+		return storage;
+	}
+	public static void setStorage(TurnBonusStorage storage) {
+		TurnBonus.storage = storage;
 	}
 }

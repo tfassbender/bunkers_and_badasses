@@ -9,6 +9,9 @@ public class GameVariableStorage {
 	private int gameTurns;
 	private int maxHerosCards;
 	private int startTroops;
+	private int heroCardCosts;
+	private int additionalCommandCosts;
+	private int fieldCosts;
 	
 	private int[] userCommands;
 	
@@ -26,6 +29,10 @@ public class GameVariableStorage {
 	private int startCredits;
 	private int startAmmo;
 	private int startEridium;
+	
+	private int turnStartCredits;
+	private int turnStartAmmo;
+	private int turnStartEridium;
 
 	public GameVariableStorage() {
 		creditsSkillLevel = new int[6];
@@ -89,6 +96,27 @@ public class GameVariableStorage {
 		this.startEridium = startEridium;
 	}
 	
+	public int getTurnStartCredits() {
+		return turnStartCredits;
+	}
+	public void setTurnStartCredits(int turnStartCredits) {
+		this.turnStartCredits = turnStartCredits;
+	}
+	
+	public int getTurnStartAmmo() {
+		return turnStartAmmo;
+	}
+	public void setTurnStartAmmo(int turnStartAmmo) {
+		this.turnStartAmmo = turnStartAmmo;
+	}
+	
+	public int getTurnStartEridium() {
+		return turnStartEridium;
+	}
+	public void setTurnStartEridium(int turnStartEridium) {
+		this.turnStartEridium = turnStartEridium;
+	}
+	
 	public int getSkillPoints() {
 		return skillPoints;
 	}
@@ -115,5 +143,26 @@ public class GameVariableStorage {
 	}
 	public void setStartTroops(int startTroops) {
 		this.startTroops = startTroops;
+	}
+	
+	public int getHeroCardCosts() {
+		return heroCardCosts;
+	}
+	public void setHeroCardCosts(int heroCardCosts) {
+		this.heroCardCosts = heroCardCosts;
+	}
+	
+	public int getAdditionalCommandCosts() {
+		return additionalCommandCosts;
+	}
+	public void setAdditionalCommandCosts(int additionalCommandCosts) {
+		this.additionalCommandCosts = additionalCommandCosts;
+	}
+	
+	public int getFieldCosts() {
+		return fieldCosts;
+	}
+	public void setFieldCosts(int fieldCosts) {
+		this.fieldCosts = fieldCosts;
 	}
 }

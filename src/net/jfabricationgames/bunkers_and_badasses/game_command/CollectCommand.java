@@ -2,6 +2,9 @@ package net.jfabricationgames.bunkers_and_badasses.game_command;
 
 import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
 
+/**
+ * The resources that can be collected are stored in the command storage (int[] getResourceReception())
+ */
 public class CollectCommand extends Command {
 	
 	private static final long serialVersionUID = 8884267415050473296L;

@@ -5,7 +5,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 public class TurnBonusCreditsRaid extends TurnBonus {
 	
 	public TurnBonusCreditsRaid() {
-		//TODO
+		bonusId = 5;
+		loadVariables();
 		imagePath = "turn_bonus_credits_1_raid_command.png";
 		loadImage();
 		name = "Credits - Überfall Befehl";

@@ -4,6 +4,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.GameVariableStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.BuildingStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.TroopStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
@@ -15,6 +16,7 @@ public class DynamicVariableRequestMessage implements JFGServerMessage, JFGClien
 	private TroopStorage troopStorage;
 	private CommandStorage commandStorage;
 	private GameVariableStorage gameStorage;
+	private TurnBonusStorage turnBonusStorage;
 	
 	public BuildingStorage getBuildingStorage() {
 		return buildingStorage;
@@ -42,5 +44,12 @@ public class DynamicVariableRequestMessage implements JFGServerMessage, JFGClien
 	}
 	public void setGameStorage(GameVariableStorage gameStorage) {
 		this.gameStorage = gameStorage;
+	}
+	
+	public TurnBonusStorage getTurnBonusStorage() {
+		return turnBonusStorage;
+	}
+	public void setTurnBonusStorage(TurnBonusStorage turnBonusStorage) {
+		this.turnBonusStorage = turnBonusStorage;
 	}
 }

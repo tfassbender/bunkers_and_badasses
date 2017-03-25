@@ -34,6 +34,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMe
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
@@ -940,6 +941,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		BuildingStorage buildingStorage = new BuildingStorage();
 		TroopStorage troopStorage = new TroopStorage();
 		CommandStorage commandStorage = new CommandStorage();
+		TurnBonusStorage turnBonusStorage = new TurnBonusStorage();
 		String gameVariablesQuery = "SELECT * FROM bunkers_and_badasses.game_variables WHERE used = true";
 		String skillResourcesQuery = "SELECT * FROM bunkser_and_badasses.skill_resources";
 		String startResourcesQuery = "SELECT * FROM bunkers_and_badasses.start_resources WHERE used = true";
@@ -948,16 +950,21 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		String troopCostQuery = "SELECT * FROM bunkers_and_badasses.costs_troop";
 		String commandCostQuery = "SELECT * FROM bunkers_and_badasses.costs_command";
 		String commandQuery = "SELECT * FROM bunkers_and_badasses.commands WHERE used = true";
+		String bonusQuery = "SELECT * FROM bunkers_and_badasses.turn_bonus_resources";
 		ResultSet result;
 		//load the variables from the database
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		try (Statement statement = con.createStatement()) {
+			//game variables (skill points, turns, hero cards, start troops)
 			result = statement.executeQuery(gameVariablesQuery);
 			if (result.next()) {
 				gameStorage.setSkillPoints(result.getInt(3));
 				gameStorage.setGameTurns(result.getInt(4));
 				gameStorage.setMaxHerosCards(result.getInt(5));
 				gameStorage.setStartTroops(result.getInt(6));
+				gameStorage.setHeroCardCosts(result.getInt(7));
+				gameStorage.setAdditionalCommandCosts(result.getInt(8));
+				gameStorage.setFieldCosts(result.getInt(9));
 			}
 			try {
 				result.close();
@@ -965,6 +972,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			//the additional resources you get from skills
 			result = statement.executeQuery(skillResourcesQuery);
 			while (result.next()) {
 				gameStorage.getCreditsSkillLevel()[result.getInt(1)] = result.getInt(2);
@@ -982,11 +990,15 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			//the start resources of every player
 			result = statement.executeQuery(startResourcesQuery);
 			if (result.next()) {
 				gameStorage.setStartCredits(result.getInt(3));
 				gameStorage.setStartAmmo(result.getInt(4));
 				gameStorage.setStartEridium(result.getInt(5));
+				gameStorage.setTurnStartCredits(result.getInt(6));
+				gameStorage.setTurnStartAmmo(result.getInt(7));
+				gameStorage.setTurnStartEridium(result.getInt(8));
 			}
 			try {
 				result.close();
@@ -994,6 +1006,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			//dynamic variables for every building (mining, land mines, defense, move distance, points)
 			result = statement.executeQuery(buildingQuery);
 			int[][] buildingVariables = buildingStorage.getBuildingVariables();
 			while (result.next()) {
@@ -1012,6 +1025,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			//the costs for buildings
 			result = statement.executeQuery(buildingCostQuery);
 			int[][] buildingPrices = buildingStorage.getBuildingPrices();
 			int[][] extensionPrices = buildingStorage.getBuildingExtensionPrices();
@@ -1029,6 +1043,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			//the costs for recruiting and moving troops
 			result = statement.executeQuery(troopCostQuery);
 			int[][] troopPrices = troopStorage.getTroopCosts();
 			while (result.next()) {
@@ -1044,14 +1059,24 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			//the costs for commands
 			result = statement.executeQuery(commandCostQuery);
 			int[][] commandPrices = commandStorage.getCosts();
 			boolean[][] commandDependencies = commandStorage.getDependencies();
 			while (result.next()) {
-				commandPrices[result.getInt(1)][CommandStorage.CREDITS] = result.getInt(2);
-				commandPrices[result.getInt(1)][CommandStorage.AMMO] = result.getInt(3);
-				commandDependencies[result.getInt(1)][CommandStorage.CREDITS] = result.getBoolean(4);
-				commandDependencies[result.getInt(1)][CommandStorage.AMMO] = result.getBoolean(5);
+				if (result.getInt(1) >= 0) {
+					commandPrices[result.getInt(1)][CommandStorage.CREDITS] = result.getInt(2);
+					commandPrices[result.getInt(1)][CommandStorage.AMMO] = result.getInt(3);
+					commandDependencies[result.getInt(1)][CommandStorage.CREDITS] = result.getBoolean(5);
+					commandDependencies[result.getInt(1)][CommandStorage.AMMO] = result.getBoolean(6);
+				}
+				else {
+					//the resources a player gets from a collect command
+					int[] collectResources = commandStorage.getResourceReception();
+					collectResources[CommandStorage.CREDITS] = result.getInt(2);
+					collectResources[CommandStorage.AMMO] = result.getInt(3);
+					collectResources[CommandStorage.ERIDIUM] = result.getInt(4);
+				}
 			}
 			try {
 				result.close();
@@ -1059,6 +1084,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			//the number of commands every player gets
 			result = statement.executeQuery(commandQuery);
 			int[] commands = gameStorage.getUserCommands();
 			if (result.next()) {
@@ -1070,6 +1096,20 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				commands[UserPlanManager.COMMAND_COLLECT] = result.getInt(8);
 				commands[UserPlanManager.COMMAND_SUPPORT] = result.getInt(9);
 				commands[UserPlanManager.COMMAND_DEFEND] = result.getInt(10);
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			//the bonus resources
+			result = statement.executeQuery(bonusQuery);
+			int[][] resources = turnBonusStorage.getResources();
+			if (result.next()) {
+				resources[result.getInt(1)][TurnBonusStorage.CREDITS] = result.getInt(2);
+				resources[result.getInt(1)][TurnBonusStorage.AMMO] = result.getInt(3);
+				resources[result.getInt(1)][TurnBonusStorage.ERIDIUM] = result.getInt(4);
 			}
 			try {
 				result.close();
@@ -1094,6 +1134,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		message.setBuildingStorage(buildingStorage);
 		message.setTroopStorage(troopStorage);
 		message.setCommandStorage(commandStorage);
+		message.setTurnBonusStorage(turnBonusStorage);
 		connection.sendMessage(message);
 	}
 	

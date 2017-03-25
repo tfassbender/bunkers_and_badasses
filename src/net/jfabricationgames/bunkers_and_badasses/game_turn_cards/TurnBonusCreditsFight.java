@@ -5,7 +5,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 public class TurnBonusCreditsFight extends TurnBonus {
 	
 	public TurnBonusCreditsFight() {
-		//TODO
+		bonusId = 4;
+		loadVariables();
 		imagePath = "turn_bonus_credits_1_fight.png";
 		loadImage();
 		name = "Credits - Kampf";

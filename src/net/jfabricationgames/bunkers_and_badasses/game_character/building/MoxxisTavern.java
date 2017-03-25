@@ -3,11 +3,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 public class MoxxisTavern extends Building {
 	
 	public MoxxisTavern() {
-		super();
 		buildingId = 6;
 		extendedBuildingId = 7;
-		//TODO change to real values when known
-		recruitableTroops = 2;
 		extendable = true;
 		commandExecutable = true;
 		name = "Moxxis' Taverne";

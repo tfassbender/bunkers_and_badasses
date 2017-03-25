@@ -5,7 +5,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 public class TurnBonusCredits extends TurnBonus {
 	
 	public TurnBonusCredits() {
-		//TODO
+		bonusId = 3;
+		loadVariables();
 		imagePath = "turn_bonus_credits_2.png";
 		loadImage();
 		name = "Credits 2";

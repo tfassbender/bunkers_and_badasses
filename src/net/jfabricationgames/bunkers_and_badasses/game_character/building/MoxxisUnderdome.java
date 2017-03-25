@@ -3,11 +3,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 public class MoxxisUnderdome extends Building {
 	
 	public MoxxisUnderdome() {
-		super();
 		buildingId = 8;
 		extendedBuildingId = 9;
-		//TODO change to real values when known
-		creditMining = 1;
 		extendable = true;
 		name = "Mad Moxxis' Underdome";
 		image = imageLoader.loadImage("underdome_1_small.png");

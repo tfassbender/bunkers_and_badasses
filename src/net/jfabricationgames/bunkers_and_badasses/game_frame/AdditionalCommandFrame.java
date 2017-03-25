@@ -27,8 +27,6 @@ public class AdditionalCommandFrame extends JFrame {
 	
 	private static final long serialVersionUID = 8435788787429898787L;
 	
-	private final int costs = 10;
-	
 	private JPanel contentPane;
 	
 	private TurnPlaningFrame callingFrame;
@@ -96,7 +94,7 @@ public class AdditionalCommandFrame extends JFrame {
 		
 		txtKosten = new JTextField();
 		txtKosten.setHorizontalAlignment(SwingConstants.CENTER);
-		txtKosten.setText(costs + " Eridium");
+		txtKosten.setText(Game.getGameVariableStorage().getAdditionalCommandCosts() + " Eridium");
 		txtKosten.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtKosten.setBackground(Color.LIGHT_GRAY);
 		txtKosten.setEditable(false);
@@ -125,11 +123,11 @@ public class AdditionalCommandFrame extends JFrame {
 		if (command == null) {
 			new ErrorDialog("Kein Befehl ausgewählt.\n\nDu musst schon einen Befehl aussuchen um ihn zu Kaufen.").setVisible(true);
 		}
-		else if (resource.getEridium() < costs) {
+		else if (resource.getEridium() < Game.getGameVariableStorage().getAdditionalCommandCosts()) {
 			new ErrorDialog("Nicht genug Eridium vorhanden.\n\nAnschreiben lassen geht leider nicht.").setVisible(true);
 		}
 		else {
-			resource.addEridium(-costs);
+			resource.addEridium(-Game.getGameVariableStorage().getAdditionalCommandCosts());
 			game.getPlanManager().addCommand(command.getIdentifier());
 			callingFrame.update();
 			dispose();

@@ -5,7 +5,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 public class TurnBonusEridium extends TurnBonus {
 	
 	public TurnBonusEridium() {
-		//TODO
+		bonusId = 7;
+		loadVariables();
 		imagePath = "turn_bonus_eridium_2.png";
 		loadImage();
 		name = "Eridium 2";

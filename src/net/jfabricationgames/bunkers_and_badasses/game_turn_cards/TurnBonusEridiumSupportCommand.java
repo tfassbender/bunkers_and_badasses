@@ -5,7 +5,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 public class TurnBonusEridiumSupportCommand extends TurnBonus {
 	
 	public TurnBonusEridiumSupportCommand() {
-		//TODO
+		bonusId = 9;
+		loadVariables();
 		imagePath = "turn_bonus_eridium_1_support_command.png";
 		loadImage();
 		name = "Eridium - Unterstützungs Befehl";

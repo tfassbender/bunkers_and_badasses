@@ -3,7 +3,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 public class TurnBonusMarch extends TurnBonus {
 	
 	public TurnBonusMarch() {
-		//TODO
+		bonusId = 10;
+		loadVariables();
 		imagePath = "turn_bonus_march_command.png";
 		loadImage();
 		name = "Marschbefehl";
