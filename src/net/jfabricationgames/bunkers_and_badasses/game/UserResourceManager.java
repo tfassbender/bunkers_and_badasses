@@ -14,6 +14,8 @@ public class UserResourceManager {
 	private static int startingAmmo;
 	private static int startingEridium;
 	
+	private Game game;
+	
 	private Map<User, UserResource> resources;
 	private Map<User, Map<Integer, UserResource>> resourceUse;//store the resources the used used in every turn
 	
@@ -23,7 +25,8 @@ public class UserResourceManager {
 		startingEridium = Game.getGameVariableStorage().getStartEridium();
 	}
 	
-	public UserResourceManager(List<User> players) {
+	public UserResourceManager(List<User> players, Game game) {
+		this.game = game;
 		resources = new HashMap<User, UserResource>();
 		resourceUse = new HashMap<User, Map<Integer, UserResource>>();
 		for (User u : players) {
@@ -44,8 +47,8 @@ public class UserResourceManager {
 	/**
 	 * Collect all resources for the turn start (default, buildings, skill, turn bonus).
 	 */
-	public void collectTurnStartResources() {
-		//TODO
+	public void collectTurnStartResources(User user) {
+		resources.get(user).collectTurnStartResources(game);
 	}
 	/**
 	 * Collect the resources for a collect command.
@@ -59,6 +62,9 @@ public class UserResourceManager {
 	
 	public void payBuilding(Building building, User user) throws ResourceException {
 		resources.get(user).payBuilding(building);
+	}
+	public void payBuildingUpgrade(Building building, User user) throws ResourceException {
+		resources.get(user).payBuildingUpgrade(building);
 	}
 	
 	public void payRecroutedTroops(int normal, int badass, int upgrades, User user) throws ResourceException {

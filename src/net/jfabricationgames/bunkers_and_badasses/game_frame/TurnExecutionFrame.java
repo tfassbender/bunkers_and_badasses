@@ -27,9 +27,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
+import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
+import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
+import net.jfabricationgames.bunkers_and_badasses.game.UserResourceManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
@@ -654,14 +657,21 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		boolean commandExecuted = false;
 		if (selectedField.getAffiliation().equals(game.getLocalUser())) {
 			Command command = selectedField.getCommand();
+			UserResourceManager resourceManager = game.getResourceManager();
 			if (command.isExecutable()) {
 				if (command instanceof BuildCommand) {
 					if (rdbtnAufbauen.isSelected()) {
 						if (selectedField.getBuilding() instanceof EmptyBuilding) {
 							Building building = list_building.getSelectedValue();
 							if (building != null) {
-								selectedField.setBuilding(building.newInstance());
-								commandExecuted = true;
+								try {
+									resourceManager.payBuilding(building, game.getLocalUser());
+									selectedField.setBuilding(building.newInstance());
+									commandExecuted = true;
+								}
+								catch (ResourceException re) {
+									new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+								}
 							}
 							else {
 								new ErrorDialog("Du musst ein Gebäude auswählen um es aufzubauen.\n\nOder glaubst du etwa, dass deine Truppen aus Architekten bestehen?!\nDas würde die Existenz von Gehirnzellen bedingen!").setVisible(true);
@@ -674,8 +684,14 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					else if (rdbtnAufrsten.isSelected()) {
 						Building building = selectedField.getBuilding();
 						if (building != null && building.isExtendable()) {
-							building.extend();
-							commandExecuted = true;
+							try {
+								resourceManager.payBuildingUpgrade(building, game.getLocalUser());
+								building.extend();
+								commandExecuted = true;
+							}
+							catch (ResourceException re) {
+								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+							}
 						}
 						else {
 							new ErrorDialog("Dieses Gebäude kann man nicht aufrüsten.\n\nBau einfach ein paar mehr davon. Ist doch genug Platz da.\nAußer Du spielst zu schlecht...").setVisible(true);
@@ -710,7 +726,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
 					}
 					else {
-						//TODO collect the right resources
+						resourceManager.collectCommandResources(game.getLocalUser());
 						commandExecuted = true;
 					}
 				}
@@ -785,6 +801,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 							new ErrorDialog("Diesen Befehl kannst Du nicht entferenen.\n\nDie Anderen sollen doch auch noch ihren Spaß haben.").setVisible(true);
 						}
 						else {
+							if (target.getCommand() instanceof CollectCommand) {
+								resourceManager.collectCommandResources(game.getLocalUser());
+							}
 							target.setCommand(null);
 							commandExecuted = true;
 						}
@@ -803,11 +822,16 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					}
 					else {
 						if (upgrades <= selectedField.getNormalTroops()) {
-							//TODO check for resources needed
-							selectedField.addNormalTroops(normalTroops);
-							selectedField.addBadassTroops(badassTroops);
-							selectedField.removeNormalTroops(upgrades);
-							selectedField.addBadassTroops(upgrades);
+							try {
+								resourceManager.payRecroutedTroops(normalTroops, badassTroops, upgrades, game.getLocalUser());
+								selectedField.addNormalTroops(normalTroops);
+								selectedField.addBadassTroops(badassTroops);
+								selectedField.removeNormalTroops(upgrades);
+								selectedField.addBadassTroops(upgrades);
+							}
+							catch (ResourceException re) {
+								new ErrorDialog("Du hast nicht genug Resourcen um die Truppen zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+							}
 						}
 						else {
 							new ErrorDialog("Du hast nicht genug Truppen um sie aufzurüsten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rüstest die Truppen deiner Gegner auf...").setVisible(true);

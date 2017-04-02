@@ -150,7 +150,12 @@ public class FieldDescriptionPanel extends JPanel {
 			else {
 				txtSpieler.setText("-----");
 			}
-			//TODO add the field command to txtBefehl
+			if (field.getCommand() != null) {
+				txtBefehl.setText(field.getCommand().toString());				
+			}
+			else {
+				txtBefehl.setText("-----");
+			}
 			txtTruppennormal.setText(Integer.toString(field.getNormalTroops()));
 			txtTruppenbadass.setText(Integer.toString(field.getBadassTroops()));
 			txtGebude.setText(field.getBuilding().getName());
@@ -163,7 +168,7 @@ public class FieldDescriptionPanel extends JPanel {
 			txtFeld.setText("");
 			txtRegion.setText("");
 			txtSpieler.setText("");
-			//TODO add the field command to txtBefehl
+			txtBefehl.setText("");
 			txtTruppennormal.setText("");
 			txtTruppenbadass.setText("");
 			txtGebude.setText("");

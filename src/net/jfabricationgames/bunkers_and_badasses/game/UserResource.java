@@ -23,6 +23,29 @@ public class UserResource {
 	private int ammoBuilding;
 	private int creditsBuilding;*/
 	
+	public static int getCreditsForCommand(Command command, Field field) {
+		int costs = command.getCostsCredits();
+		if (command.isCostDependencyCredits()) {
+			for (Troop troop : field.getTroops()) {
+				costs += troop.getBaseCostsCredits();
+			}
+		}
+		return costs;
+	}
+	public static  int getAmmoForCommand(Command command, Field field) {
+		int costs = 0;
+		if (command.isCostDependencyAmmo()) {
+			for (Troop troop : field.getTroops()) {
+				costs += troop.getBaseCostsAmmo();
+			}
+			costs += command.getCostsAmmo() * Math.pow(field.getTroops().size(), 2);
+		}
+		else {
+			costs = command.getCostsAmmo();
+		}
+		return costs;
+	}
+	
 	/**
 	 * Collect the resources for a user for the game start.
 	 */
@@ -42,6 +65,39 @@ public class UserResource {
 		credits += SkillProfileManager.CREDITS_SKILL_LEVEL[skill.getCredits()];
 		ammo += SkillProfileManager.AMMO_SKILL_LEVEL[skill.getAmmo()];
 		eridium += SkillProfileManager.ERIDIUM_SKILL_LEVEL[skill.getEridium()];
+	}
+	
+	/**
+	 * Collect all resources for the turn start (default, buildings, skill, turn bonus).
+	 */
+	public void collectTurnStartResources(Game game) {
+		//default turn start
+		credits += Game.getGameVariableStorage().getTurnStartCredits();
+		ammo += Game.getGameVariableStorage().getTurnStartAmmo();
+		eridium += Game.getGameVariableStorage().getTurnStartEridium();
+		//buildings, skills
+		SkillProfile skill = game.getSkillProfileManager().getSelectedProfile(game.getLocalUser());
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
+				if (field.getBuilding().getCreditMining() > 0) {
+					credits += field.getBuilding().getCreditMining();
+					credits += SkillProfileManager.CREDITS_SKILL_LEVEL[skill.getCreditsBuilding()];
+				}
+				if (field.getBuilding().getAmmoMining() > 0) {
+					ammo += field.getBuilding().getAmmoMining();
+					ammo += SkillProfileManager.AMMO_SKILL_LEVEL[skill.getAmmoBuilding()];
+				}
+				if (field.getBuilding().getEridiumMining() > 0) {
+					eridium += field.getBuilding().getEridiumMining();
+					eridium += SkillProfileManager.ERIDIUM_SKILL_LEVEL[skill.getEridiumBuilding()];
+				}
+			}
+		}
+		//turn bonuses
+		TurnBonus bonus = game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser());
+		credits += bonus.getCredits();
+		ammo += bonus.getAmmo();
+		eridium += bonus.getEridium();
 	}
 	
 	public void collectTurnBonusResources(TurnBonus turnBonus) {
@@ -94,28 +150,6 @@ public class UserResource {
 		int commandAmmo = getAmmoForCommand(command, field);
 		credits += commandCredits;
 		ammo += commandAmmo;
-	}
-	private int getCreditsForCommand(Command command, Field field) {
-		int costs = command.getCostsCredits();
-		if (command.isCostDependencyCredits()) {
-			for (Troop troop : field.getTroops()) {
-				costs += troop.getBaseCostsCredits();
-			}
-		}
-		return costs;
-	}
-	private int getAmmoForCommand(Command command, Field field) {
-		int costs = 0;
-		if (command.isCostDependencyAmmo()) {
-			for (Troop troop : field.getTroops()) {
-				costs += troop.getBaseCostsAmmo();
-			}
-			costs += command.getCostsAmmo() * Math.pow(field.getTroops().size(), 2);
-		}
-		else {
-			costs = command.getCostsAmmo();
-		}
-		return costs;
 	}
 	
 	public void payBuilding(Building building) throws ResourceException {

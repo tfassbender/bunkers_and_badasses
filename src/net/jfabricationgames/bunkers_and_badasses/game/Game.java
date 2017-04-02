@@ -43,7 +43,7 @@ public class Game implements Serializable {
 		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
 		playerOrder = new PlayerOrder(gameTurnBonusManager);
 		playerOrder.chooseRandomOrder(players);
-		resourceManager = new UserResourceManager(players);
+		resourceManager = new UserResourceManager(players, this);
 		planManager = new UserPlanManager(localUser, resourceManager);
 		pointManager = new PointManager();
 		pointManager.initialize(players);

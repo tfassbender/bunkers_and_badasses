@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.error.CommandException;
+import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
@@ -60,9 +61,14 @@ public class UserPlanManager {
 		if (commands[command.getIdentifier()] <= 0) {
 			throw new CommandException("Can't add this command. No more commands of this type left.");
 		}
+		try {
+			currentResource.payCommand(command, field);
+		}
+		catch (ResourceException re) {
+			throw new CommandException("The command can't be payed.", re);
+		}
 		field.setCommand(command.getInstance());
 		commands[command.getIdentifier()]--;
-		//TODO reduce the users resources
 	}
 	
 	/**
@@ -72,9 +78,9 @@ public class UserPlanManager {
 		if (field.getCommand() == null) {
 			throw new CommandException("Can't delete a command. No command found on this field.");
 		}
+		currentResource.payBackCommand(field.getCommand(), field);
 		commands[field.getCommand().getIdentifier()]++;
 		field.setCommand(null);
-		//TODO add the resources used for the command
 	}
 	
 	/**

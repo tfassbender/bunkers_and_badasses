@@ -28,10 +28,12 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.error.CommandException;
 import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
+import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
@@ -95,6 +97,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private JTextField txtVerteidigung;
 	private JButton btnAlleBefehleBesttigen;
 	private JButton btnZustzlicheBefehle;
+	private JComboBox<Command> comboBox;
 	
 	public TurnPlaningFrame(Game game) {
 		this.game = game;
@@ -312,7 +315,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		lblNeuerBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command.add(lblNeuerBefehl, "cell 0 4,alignx trailing");
 		
-		JComboBox<Command> comboBox = new JComboBox<Command>(commandBoxModel);
+		comboBox = new JComboBox<Command>(commandBoxModel);
 		comboBox.setBackground(Color.GRAY);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command.add(comboBox, "cell 1 4 2 1,growx");
@@ -517,11 +520,17 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	 */
 	private void addCommand(Command command) {
 		if (selectedField != null && selectedField.getAffiliation().equals(game.getLocalUser()) && selectedField.getCommand() == null && command != null) {
-			game.getPlanManager().addCommand(selectedField, command);
-			updateBoard();
-			updateResources();
-			updateFieldLists();
-			updateCommandList();
+			try {
+				game.getPlanManager().addCommand(selectedField, command);
+				updateBoard();
+				updateResources();
+				updateFieldLists();
+				updateCommandList();
+			}
+			catch (CommandException ce) {
+				ce.printStackTrace();
+				new ErrorDialog("Du hast nicht genug Resourcen um den Befehl zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+			}
 		}
 	}
 	
@@ -574,8 +583,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 				else {
 					txtCurrcommand.setText("-----");
 				}
-				//TODO add costs
-				//txtKosts.setText("");
+				Command command = (Command) comboBox.getSelectedItem();
+				int costsCredits = UserResource.getCreditsForCommand(command, selectedField);
+				int costsAmmo = UserResource.getAmmoForCommand(command, selectedField);
+				txtKosts.setText(costsCredits + " Credits, " + costsAmmo + " Munition");
 				if (game.getGameState().equals(GameState.PLAN)) {
 					btnLschen.setEnabled(true);
 					btnHinzufgen.setEnabled(true);
