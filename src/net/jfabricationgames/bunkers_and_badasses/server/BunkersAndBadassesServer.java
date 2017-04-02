@@ -753,7 +753,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * @param game
 	 * 		The game containing the users.
 	 */
-	public void addResources(Game game) {
+	/*public void addResources(Game game) {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		ResultSet result = null;
 		Map<User, UserResource> userResources = new HashMap<User, UserResource>();
@@ -796,7 +796,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			sqle.printStackTrace();
 		}
 		//the message is sent back from the interpreter
-	}
+	}*/
 	/**
 	 * Send the game transfer message to all players joining the game.
 	 * 

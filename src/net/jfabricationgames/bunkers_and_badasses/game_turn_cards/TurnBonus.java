@@ -7,7 +7,6 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
-import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 /**
@@ -71,10 +70,7 @@ public abstract class TurnBonus {
 	}
 	
 	public void receiveAdditionalResources(User user, Game game) {
-		UserResource resource = game.getResourceManager().getResources().get(user);
-		resource.addAmmo(ammo);
-		resource.addCredits(credits);
-		resource.addEridium(eridium);
+		game.getResourceManager().getResources().get(user).collectTurnBonusResources(this);
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {
@@ -108,5 +104,15 @@ public abstract class TurnBonus {
 	}
 	public static void setStorage(TurnBonusStorage storage) {
 		TurnBonus.storage = storage;
+	}
+
+	public int getCredits() {
+		return credits;
+	}
+	public int getAmmo() {
+		return ammo;
+	}
+	public int getEridium() {
+		return eridium;
 	}
 }

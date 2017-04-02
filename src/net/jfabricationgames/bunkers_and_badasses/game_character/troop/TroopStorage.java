@@ -8,6 +8,10 @@ public class TroopStorage {
 	public static final int RECRUIT_COSTS_AMMO = 3;
 	public static final int RECRUIT_COSTS_ERIDIUM = 4;
 	
+	public static final int NORMAL_TROOP = 1;
+	public static final int BADASS_TROOP = 2;
+	public static final int NEUTRAL_TROOP = 0;
+	
 	private int[][] troopCosts;
 	
 	public TroopStorage() {

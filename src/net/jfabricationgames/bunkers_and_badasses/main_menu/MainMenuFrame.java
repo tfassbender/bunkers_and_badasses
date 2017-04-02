@@ -380,7 +380,7 @@ public class MainMenuFrame extends JFrame {
 	public void receiveDynamicVariables(DynamicVariableRequestMessage message) {
 		Building.setStorage(message.getBuildingStorage());
 		Troop.setStorage(message.getTroopStorage());
-		Command.setStorage(message.getCommandStorage());
+		//Command.setStorage(message.getCommandStorage());
 		TurnBonus.setStorage(message.getTurnBonusStorage());
 		Game.setGameVariableStorage(message.getGameStorage());
 		dynamicVariablesLoaded = true;

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class UserResourceManager {
@@ -36,11 +38,39 @@ public class UserResourceManager {
 	 * @param user
 	 * 		The user that collects the resources.
 	 */
-	public void collectStartingResources(User user) {
-		UserResource resource = resources.get(user);
-		resource.addCredits(startingCredits);
-		resource.addAmmo(startingAmmo);
-		resource.addEridium(startingEridium);
+	public void collectGameStartResources(User user) {
+		resources.get(user).collectGameStartResources();
+	}
+	/**
+	 * Collect all resources for the turn start (default, buildings, skill, turn bonus).
+	 */
+	public void collectTurnStartResources() {
+		//TODO
+	}
+	/**
+	 * Collect the resources for a collect command.
+	 * 
+	 * @param user
+	 * 		The user that executed the command.
+	 */
+	public void collectCommandResources(User user) {
+		resources.get(user).collectCommandResources();
+	}
+	
+	public void payBuilding(Building building, User user) throws ResourceException {
+		resources.get(user).payBuilding(building);
+	}
+	
+	public void payRecroutedTroops(int normal, int badass, int upgrades, User user) throws ResourceException {
+		resources.get(user).payRecroutedTroops(normal, badass, upgrades);
+	}
+	
+	public void payHeroCards(int cards, User user) throws ResourceException {
+		resources.get(user).payHeroCards(cards);
+	}
+	
+	public void payAdditionalCommand(User user) throws ResourceException {
+		resources.get(user).payAdditionalCommand();
 	}
 	
 	public Map<User, UserResource> getResources() {

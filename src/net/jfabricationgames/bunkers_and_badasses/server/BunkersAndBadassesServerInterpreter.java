@@ -263,7 +263,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private void interpreteGameTransferMessage(GameTransferMessage message, JFGConnection connection) {
 		if (message.isNewGame()) {
-			server.addResources(message.getGame());
+			//server.addResources(message.getGame());
 			server.sendGameTransferMessage(message);
 		}
 		//TODO add other cases

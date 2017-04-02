@@ -64,13 +64,7 @@ public class SkillProfileManager {
 		UserResource resource = userResourceManager.getResources().get(user);
 		SkillProfile skill = selectedProfile.get(user);
 		//add the starting resources
-		resource.addCredits(CREDITS_SKILL_LEVEL[skill.getCredits()]);
-		resource.addAmmo(AMMO_SKILL_LEVEL[skill.getAmmo()]);
-		resource.addEridium(ERIDIUM_SKILL_LEVEL[skill.getEridium()]);
-		//set the building resources
-		resource.setCreditsBuilding(CREDITS_BUILDING_SKILL_LEVEL[skill.getCreditsBuilding()]);
-		resource.setAmmoBuilding(AMMO_BUILDING_SKILL_LEVEL[skill.getAmmoBuilding()]);
-		resource.setEridiumBuilding(ERIDIUM_BUILDING_SKILL_LEVEL[skill.getEridiumBuilding()]);
+		resource.collectSkillResources(skill);
 	}
 	
 	public SkillProfile[] getSkillProfiles() {

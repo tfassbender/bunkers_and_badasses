@@ -127,7 +127,8 @@ public class AdditionalCommandFrame extends JFrame {
 			new ErrorDialog("Nicht genug Eridium vorhanden.\n\nAnschreiben lassen geht leider nicht.").setVisible(true);
 		}
 		else {
-			resource.addEridium(-Game.getGameVariableStorage().getAdditionalCommandCosts());
+			//resource.addEridium(-Game.getGameVariableStorage().getAdditionalCommandCosts());
+			resource.payAdditionalCommand();
 			game.getPlanManager().addCommand(command.getIdentifier());
 			callingFrame.update();
 			dispose();

@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.error.CommandException;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
@@ -52,12 +53,12 @@ public class UserPlanManager {
 	/**
 	 * Add a command to the field.
 	 */
-	public void addCommand(Field field, Command command) throws IllegalArgumentException {
+	public void addCommand(Field field, Command command) throws CommandException {
 		if (field.getCommand() != null) {
-			throw new IllegalArgumentException("Can't add a commmand. The field already has a command.");
+			throw new CommandException("Can't add a commmand. The field already has a command.");
 		}
 		if (commands[command.getIdentifier()] <= 0) {
-			throw new IllegalArgumentException("Can't add this command. No more commands of this type left.");
+			throw new CommandException("Can't add this command. No more commands of this type left.");
 		}
 		field.setCommand(command.getInstance());
 		commands[command.getIdentifier()]--;
@@ -67,9 +68,9 @@ public class UserPlanManager {
 	/**
 	 * Delete a command from the field.
 	 */
-	public void deleteCommand(Field field) throws IllegalArgumentException {
+	public void deleteCommand(Field field) throws CommandException {
 		if (field.getCommand() == null) {
-			throw new IllegalArgumentException("Can't delete a command. No command found on this field.");
+			throw new CommandException("Can't delete a command. No command found on this field.");
 		}
 		commands[field.getCommand().getIdentifier()]++;
 		field.setCommand(null);

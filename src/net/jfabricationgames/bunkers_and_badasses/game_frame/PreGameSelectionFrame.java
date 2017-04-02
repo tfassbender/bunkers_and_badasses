@@ -403,7 +403,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				selectProfile();
 				startTroopPositioning();
 				//collect the starting resources after the skill profile was chosen
-				game.getResourceManager().collectStartingResources(game.getLocalUser());
+				game.getResourceManager().collectGameStartResources(game.getLocalUser());
 				game.getSkillProfileManager().collectSkillResources(game.getLocalUser());
 			}
 		});
@@ -607,7 +607,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			case PreGameDataMessage.DATA_SKILL_PROFILE:
 				game.getSkillProfileManager().setSelectedProfile(message.getUser(), message.getSelectedProfile());
 				//collect the starting and skill resources of the player
-				game.getResourceManager().collectStartingResources(message.getUser());
+				game.getResourceManager().collectGameStartResources(message.getUser());
 				game.getSkillProfileManager().collectSkillResources(message.getUser());
 				break;
 			case PreGameDataMessage.DATA_BASE_POSITION:
