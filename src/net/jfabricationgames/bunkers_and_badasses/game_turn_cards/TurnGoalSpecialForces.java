@@ -1,5 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalSpecialForces extends TurnGoal {
 
 	public TurnGoalSpecialForces() {
@@ -10,5 +13,10 @@ public class TurnGoalSpecialForces extends TurnGoal {
 				+ "eingesetzte Heldenkarte (egal ob im Kampf oder als Zug)]</html>";
 	}
 	
-	//TODO override methods
+	public void receivePointsFight(User user, Fight fight) {
+		if ((user.equals(fight.getAttackingPlayer()) && fight.getAttackingHero() != null) || 
+				(user.equals(fight.getDefendingPlayer()) && fight.getDefendingHero() != null)) {
+			pointManager.addPoints(user, 3);
+		}
+	}
 }

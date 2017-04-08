@@ -1,5 +1,9 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ScootersCatchARide;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalCatchARide extends TurnGoal {
 
 	public TurnGoalCatchARide() {
@@ -11,5 +15,13 @@ public class TurnGoalCatchARide extends TurnGoal {
 				+ "Marsch (durch Catch-A-Rides oder Spezialeffekte)]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
+		if (startField.getBuilding() instanceof ScootersCatchARide) {
+			pointManager.addPoints(user, 3);
+		}
+		else {
+			pointManager.addPoints(user, 2);
+		}
+	}
 }

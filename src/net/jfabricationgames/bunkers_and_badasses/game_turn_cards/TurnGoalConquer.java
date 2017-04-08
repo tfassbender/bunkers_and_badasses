@@ -1,5 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalConquer extends TurnGoal {
 
 	public TurnGoalConquer() {
@@ -10,5 +13,10 @@ public class TurnGoalConquer extends TurnGoal {
 				+ "eroberte Gebiet (Auch neutrale Gebiete)]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
+		if (fieldConquered) {
+			pointManager.addPoints(user, 2);
+		}
+	}
 }

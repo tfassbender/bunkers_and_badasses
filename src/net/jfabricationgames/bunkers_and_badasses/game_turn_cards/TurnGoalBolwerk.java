@@ -1,5 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalBolwerk extends TurnGoal {
 	
 	public TurnGoalBolwerk() {
@@ -10,5 +13,10 @@ public class TurnGoalBolwerk extends TurnGoal {
 				+ "[3 Punkte für jede erfolgreiche Verteidigung]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsFight(User user, Fight fight) {
+		if (user.equals(fight.getDefendingPlayer()) && fight.getWinner() == Fight.DEFENDERS) {
+			pointManager.addPoints(user, 3);
+		}
+	}
 }

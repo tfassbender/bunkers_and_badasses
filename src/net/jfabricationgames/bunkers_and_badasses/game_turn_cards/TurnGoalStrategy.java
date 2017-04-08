@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalStrategy extends TurnGoal {
 
 	public TurnGoalStrategy() {
@@ -11,5 +13,8 @@ public class TurnGoalStrategy extends TurnGoal {
 				+ "ihm schon gepasst haben]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsPassing(User user, int passingOrder, int players) {
+		pointManager.addPoints(user, passingOrder-1);
+	}
 }

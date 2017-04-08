@@ -1,6 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusCreditsFight extends TurnBonus {
 	
@@ -11,5 +13,12 @@ public class TurnBonusCreditsFight extends TurnBonus {
 		loadImage();
 		name = "Credits - Kampf";
 		description = "<html>Zusätzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[1] + " Credits zu Beginn der Runde.<br/>2 Punkte Bonus für jeden gewonnenen Kampf.</html>";
+	}
+	
+	@Override
+	public void receivePointsFight(User user, Fight fight) {
+		if (fight.getWinningPlayer().equals(user)) {
+			pointManager.addPoints(user, 2);
+		}
 	}
 }

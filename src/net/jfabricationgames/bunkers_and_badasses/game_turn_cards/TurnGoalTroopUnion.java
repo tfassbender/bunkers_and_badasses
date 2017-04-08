@@ -1,5 +1,9 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalTroopUnion extends TurnGoal {
 
 	public TurnGoalTroopUnion() {
@@ -12,5 +16,14 @@ public class TurnGoalTroopUnion extends TurnGoal {
 				+ "verstärkte Einheit)]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsTurnEnd(User user, Game game) {
+		int troops = 0;
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation().equals(user)) {
+				troops = Math.max(troops, field.getTroops().size());
+			}
+		}
+		pointManager.addPoints(user, troops);
+	}
 }

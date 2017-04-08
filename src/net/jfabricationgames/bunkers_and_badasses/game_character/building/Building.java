@@ -27,6 +27,7 @@ public abstract class Building {
 	protected boolean badassTroopsRecruitable;
 	protected boolean advanced;
 	protected boolean extendable;
+	protected boolean extended;
 	protected boolean commandExecutable;
 	
 	protected int buildingId;
@@ -59,6 +60,7 @@ public abstract class Building {
 		badassTroopsRecruitable = false;
 		advanced = false;
 		extendable = false;
+		extended = false;
 		commandExecutable = false;
 	}
 	
@@ -104,6 +106,7 @@ public abstract class Building {
 	 */
 	public void extend() {
 		buildingId = extendedBuildingId;
+		extended = true;
 		loadVariables();
 		loadExtendedImage();
 	}
@@ -189,6 +192,9 @@ public abstract class Building {
 	}
 	public boolean isExtendable() {
 		return extendable;
+	}
+	public boolean isExtended() {
+		return extended;
 	}
 	public boolean isCommandExecutable() {
 		return commandExecutable;

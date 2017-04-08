@@ -1,5 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnBonusMineNeutrals extends TurnBonus {
 	
 	public TurnBonusMineNeutrals() {
@@ -9,5 +12,12 @@ public class TurnBonusMineNeutrals extends TurnBonus {
 		loadImage();
 		name = "Resourcen Befehl - Neutrale";
 		description = "<html>1 zusätzlicher Resourcen-Gewinnungsbefehl.<br/>1 Punkt Bonus für getötete neutrale Einheit.</html>";
+	}
+	
+	@Override
+	public void receivePointsFight(User user, Fight fight) {
+		if (fight.getAttackingPlayer().equals(user) && fight.getDefendingField().getAffiliation() == null && fight.getWinner() == Fight.ATTACKERS) {
+			pointManager.addPoints(user, fight.getDefendingStrength());
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalRecruit extends TurnGoal {
 
 	public TurnGoalRecruit() {
@@ -11,5 +13,8 @@ public class TurnGoalRecruit extends TurnGoal {
 				+ "aufgerüsteter Einheit]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsRecruitment(User user, int recruitedTroops) {
+		pointManager.addPoints(user, recruitedTroops);
+	}
 }

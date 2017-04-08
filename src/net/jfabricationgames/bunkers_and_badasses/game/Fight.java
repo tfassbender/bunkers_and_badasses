@@ -216,6 +216,18 @@ public class Fight {
 		this.winner = winner;
 	}
 	
+	public User getWinningPlayer() {
+		if (winner == ATTACKERS) {
+			return attackingPlayer;
+		}
+		else if (winner == DEFENDERS) {
+			return defendingPlayer;
+		}
+		else {
+			return null;
+		}
+	}
+	
 	public List<Field> getPossibleSupporters() {
 		return possibleSupporters;
 	}

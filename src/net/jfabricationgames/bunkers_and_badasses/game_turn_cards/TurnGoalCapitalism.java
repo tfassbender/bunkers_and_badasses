@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalCapitalism extends TurnGoal {
 
 	public TurnGoalCapitalism() {
@@ -8,8 +10,11 @@ public class TurnGoalCapitalism extends TurnGoal {
 		description = "<html>Kapitalismus Baby!:<br/>"
 				+ "Kapitalismus Baby!: Marcus muss sein Geschäft ankurbeln;<br/>"
 				+ "Mit Bestechung für Munitionsverschwendung [3 Punkte pro<br/>"
-				+ "100 verbrauchter Munition]</html>";
+				+ "100 verbrauchter Munition (in der Planungsphase)]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsPlaning(User user, int ammoConsumption) {
+		pointManager.addPoints(user, (ammoConsumption/100)*3); 
+	}
 }

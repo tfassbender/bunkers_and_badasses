@@ -1,5 +1,11 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import java.util.Map;
+
+import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class TurnGoalArmAGeddon extends TurnGoal {
 	
 	public TurnGoalArmAGeddon() {
@@ -12,5 +18,16 @@ public class TurnGoalArmAGeddon extends TurnGoal {
 				+ "den Angreifer)]</html>";
 	}
 	
-	//TODO override methods
+	@Override
+	public void receivePointsFight(User user, Fight fight) {
+		if (fight.getAttackingPlayer().equals(user)) {
+			int fallenTroops = 0;
+			Map<Field, int[]> troops = fight.getFallenTroops();
+			for (Field field : troops.keySet()) {
+				fallenTroops += troops.get(field)[0];
+				fallenTroops += troops.get(field)[1];
+			}
+			pointManager.addPoints(user, fallenTroops);
+		}
+	}
 }

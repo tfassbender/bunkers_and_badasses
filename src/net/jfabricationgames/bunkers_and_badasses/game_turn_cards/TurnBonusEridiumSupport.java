@@ -1,6 +1,9 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusEridiumSupport extends TurnBonus {
 	
@@ -11,5 +14,21 @@ public class TurnBonusEridiumSupport extends TurnBonus {
 		loadImage();
 		name = "Eridium - Unterstützung";
 		description = "<html>Zusätzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[1] + " Eridium zu Beginn der Runde.<br/>1 Punkt Bonus für jede Unterstützung.</html>";
+	}
+	
+	@Override
+	public void receivePointsFight(User user, Fight fight) {
+		int support = 0;
+		for (Field field : fight.getAttackSupporters()) {
+			if (field.getAffiliation().equals(user)) {
+				support++;
+			}
+		}
+		for (Field field : fight.getDefenceSupporters()) {
+			if (field.getAffiliation().equals(user)) {
+				support++;
+			}
+		}
+		pointManager.addPoints(user, support);
 	}
 }
