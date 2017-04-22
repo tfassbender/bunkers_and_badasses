@@ -31,12 +31,12 @@ public abstract class TurnBonus {
 	protected int eridium;
 	
 	protected int raidCommands;
-	protected int retreadCommands;
-	protected int supportCommand;
-	protected int marchCommand;
-	protected int recruitmentCommand;
-	protected int defenseCommand;
-	protected int collectCommand;
+	protected int retreatCommands;
+	protected int supportCommands;
+	protected int marchCommands;
+	protected int recruitmentCommands;
+	protected int defenseCommands;
+	protected int collectCommands;
 	
 	protected int bonusId;
 	
@@ -51,12 +51,12 @@ public abstract class TurnBonus {
 		ammo = 0;
 		eridium = 0;
 		raidCommands = 0;
-		retreadCommands = 0;
-		supportCommand = 0;
-		marchCommand = 0;
-		recruitmentCommand = 0;
-		defenseCommand = 0;
-		collectCommand = 0;
+		retreatCommands = 0;
+		supportCommands = 0;
+		marchCommands = 0;
+		recruitmentCommands = 0;
+		defenseCommands = 0;
+		collectCommands = 0;
 	}
 	
 	protected void loadImage() {
@@ -114,5 +114,27 @@ public abstract class TurnBonus {
 	}
 	public int getEridium() {
 		return eridium;
+	}
+	
+	public int getRaidCommands() {
+		return raidCommands;
+	}
+	public int getRetreatCommands() {
+		return retreatCommands;
+	}
+	public int getSupportCommands() {
+		return supportCommands;
+	}
+	public int getMarchCommands() {
+		return marchCommands;
+	}
+	public int getRecruitmentCommands() {
+		return recruitmentCommands;
+	}
+	public int getDefenseCommands() {
+		return defenseCommands;
+	}
+	public int getCollectCommands() {
+		return collectCommands;
 	}
 }

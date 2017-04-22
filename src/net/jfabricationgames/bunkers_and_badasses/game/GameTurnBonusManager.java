@@ -22,7 +22,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class GameTurnBonusManager {
 	
-	private Map<User, TurnBonus> usersBonuses;
+	private Map<User, TurnBonus> userBonuses;
 	
 	private List<TurnBonus> choosableTurnBonuses;
 	private List<TurnBonus> turnBonusesGame;//all the turn bonuses for the whole game
@@ -79,7 +79,7 @@ public class GameTurnBonusManager {
 	 */
 	public void chooseFirstTurnBonus(User user, TurnBonus bonus) {
 		choosableTurnBonuses.remove(bonus);
-		usersBonuses.put(user, bonus);
+		userBonuses.put(user, bonus);
 	}
 	
 	/**
@@ -87,8 +87,8 @@ public class GameTurnBonusManager {
 	 */
 	public void chooseTurnBonus(User user, TurnBonus chosen) {
 		choosableTurnBonuses.remove(chosen);
-		choosableTurnBonuses.add(usersBonuses.get(user));
-		usersBonuses.put(user, chosen);
+		choosableTurnBonuses.add(userBonuses.get(user));
+		userBonuses.put(user, chosen);
 	}
 	
 	public List<TurnBonus> getBonuses() {
@@ -98,20 +98,20 @@ public class GameTurnBonusManager {
 		return choosableTurnBonuses;
 	}
 	public TurnBonus getUsersBonus(User user) {
-		return usersBonuses.get(user);
+		return userBonuses.get(user);
 	}
 	
 	public void receiveAdditionalResources(User user, Game game) {
-		usersBonuses.get(user).receiveAdditionalResources(user, game);
+		userBonuses.get(user).receiveAdditionalResources(user, game);
 	}
 	public void receivePointsFight(User user, Fight fight) {
-		usersBonuses.get(user).receivePointsFight(user, fight);
+		userBonuses.get(user).receivePointsFight(user, fight);
 	}
 	public void receivePointsBuild(User user) {
-		usersBonuses.get(user).receivePointsBuild(user);
+		userBonuses.get(user).receivePointsBuild(user);
 	}
 	
-	public Map<User, TurnBonus> getUsersBonuses() {
-		return usersBonuses;
+	public Map<User, TurnBonus> getUserBonuses() {
+		return userBonuses;
 	}
 }

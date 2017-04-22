@@ -1,19 +1,17 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.error.CommandException;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
-import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
-import net.jfabricationgames.bunkers_and_badasses.game_frame.TurnPlaningFrame;
-import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 
 public class UserPlanManager {
 	
-	private Board board;
-	private User localUser;
+	private Game game;
 	private Map<Field, Command> fieldCommands;
 	public static int[] START_COMMANDS;//the commands that every user gets by default (loaded from the database)
 	public static final int COMMAND_SUPPORT = 0;
@@ -26,19 +24,34 @@ public class UserPlanManager {
 	public static final int COMMAND_DEFEND = 7;
 	private int[] commands;
 	private UserResource currentResource;
-	private UserResourceManager userResourceManager;
-	private TurnPlaningFrame turnPlaningFrame;
+	private GameTurnBonusManager gameTurnBonusManager;
 	
-	public UserPlanManager(User localUser, UserResourceManager userResourceManager) {
-		this.localUser = localUser;
-		this.userResourceManager = userResourceManager;
+	public UserPlanManager(Game game, GameTurnBonusManager gameTurnBonusManager) {
+		this.game = game;
+		this.gameTurnBonusManager = gameTurnBonusManager;
+		fieldCommands = new HashMap<Field, Command>();
 	}
 	
 	/**
 	 * Count the commands the user gets by start commands, turn bonus, ...
 	 */
 	public void countCommands() {
-		//TODO
+		//copy the default start commands
+		commands = new int[START_COMMANDS.length];
+		for (int i = 0; i < commands.length; i++) {
+			commands[i] = START_COMMANDS[i];
+		}
+		//add the commands gained by turn bonuses
+		TurnBonus turnBonus = gameTurnBonusManager.getUsersBonus(game.getLocalUser());
+		commands[COMMAND_SUPPORT] += turnBonus.getSupportCommands();
+		commands[COMMAND_RAID] += turnBonus.getRaidCommands();
+		commands[COMMAND_MARCH] += turnBonus.getMarchCommands();
+		commands[COMMAND_RETREAT] += turnBonus.getRetreatCommands();
+		//commands[COMMAND_BUILD] += turnBonus.getBuildCommands();
+		//commands[COMMAND_RECRUIT] += turnBonus.getRecruitCommands();
+		commands[COMMAND_COLLECT] += turnBonus.getCollectCommands();
+		//commands[COMMAND_DEFEND] += turnBonus.getDefendCommands();
+		//build, recruit and defend commands can not be added by turn bonuses
 	}
 	
 	/**
@@ -55,7 +68,7 @@ public class UserPlanManager {
 	 * Add a command to the field.
 	 */
 	public void addCommand(Field field, Command command) throws CommandException {
-		if (field.getCommand() != null) {
+		if (fieldCommands.get(field) != null) {
 			throw new CommandException("Can't add a commmand. The field already has a command.");
 		}
 		if (commands[command.getIdentifier()] <= 0) {
@@ -67,7 +80,7 @@ public class UserPlanManager {
 		catch (ResourceException re) {
 			throw new CommandException("The command can't be payed.", re);
 		}
-		field.setCommand(command.getInstance());
+		fieldCommands.put(field, command.getInstance());
 		commands[command.getIdentifier()]--;
 	}
 	
@@ -75,19 +88,23 @@ public class UserPlanManager {
 	 * Delete a command from the field.
 	 */
 	public void deleteCommand(Field field) throws CommandException {
-		if (field.getCommand() == null) {
+		if (fieldCommands.get(field) == null) {
 			throw new CommandException("Can't delete a command. No command found on this field.");
 		}
-		currentResource.payBackCommand(field.getCommand(), field);
-		commands[field.getCommand().getIdentifier()]++;
-		field.setCommand(null);
+		currentResource.payBackCommand(fieldCommands.get(field), field);
+		commands[fieldCommands.get(field).getIdentifier()]++;
+		fieldCommands.put(field, null);
 	}
 	
 	/**
-	 * Commit the commands to the server.
+	 * Add the commands to the board and commit them to the server.
 	 */
 	public void commit() {
-		//TODO
+		for (Field field : fieldCommands.keySet()) {
+			field.setCommand(fieldCommands.get(field));
+		}
+		fieldCommands = new HashMap<Field, Command>();
+		game.sendToServer();
 	}
 	
 	public static void receiveStartCommands(int[] startCommands) {
@@ -96,10 +113,6 @@ public class UserPlanManager {
 	
 	public int getCommandsLeft(int type) {
 		return commands[type];
-	}
-	
-	public void setBoard(Board board) {
-		this.board = board;
 	}
 	
 	public UserResource getCurrentResource() {

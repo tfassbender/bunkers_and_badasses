@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -41,22 +42,30 @@ public class Game implements Serializable {
 		this.localUser = new User(UserManager.getUsername());
 		gameState = GameState.PLAN;
 		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
-		playerOrder = new PlayerOrder(gameTurnBonusManager);
+		playerOrder = new PlayerOrder(players.size());
 		playerOrder.chooseRandomOrder(players);
 		resourceManager = new UserResourceManager(players, this);
-		planManager = new UserPlanManager(localUser, resourceManager);
+		planManager = new UserPlanManager(this, gameTurnBonusManager);
 		pointManager = new PointManager();
 		pointManager.initialize(players);
 		GameTurnGoalManager gameTurnGoalManager = new GameTurnGoalManager(pointManager);
 		turnManager = new GameTurnManager(playerOrder, gameTurnGoalManager, resourceManager);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
-		playerOrder.setGameTurnManager(turnManager);
 		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager);
 		heroCardManager = new HeroCardManager();
 		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseRandomColors(players);
 		fightManager = new FightManager(client, localUser);
+	}
+	
+	/**
+	 * Send a GameTransfere message containing this game to the server.
+	 */
+	public void sendToServer() {
+		GameTransferMessage message = new GameTransferMessage();
+		message.setGame(this);
+		client.sendMessage(message);
 	}
 
 	public JFGClient getClient() {

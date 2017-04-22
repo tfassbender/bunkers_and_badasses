@@ -25,6 +25,7 @@ public class GameTurnManager implements Serializable {
 		return turn;
 	}
 	public void nextTurn() {
+		playerOrder.nextTurn();
 		turn++;
 	}
 	public static int getNumTurns() {
