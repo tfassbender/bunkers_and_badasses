@@ -26,6 +26,7 @@ public class Game implements Serializable {
 	private transient TurnExecutionManager turnExecutionManager;
 	private GameTurnManager turnManager;
 	private GameTurnBonusManager gameTurnBonusManager;
+	private GameTurnGoalManager gameTurnGoalManager;
 	private HeroCardManager heroCardManager;
 	private PointManager pointManager;
 	private UserColorManager colorManager;
@@ -48,15 +49,15 @@ public class Game implements Serializable {
 		planManager = new UserPlanManager(this, gameTurnBonusManager);
 		pointManager = new PointManager();
 		pointManager.initialize(players);
-		GameTurnGoalManager gameTurnGoalManager = new GameTurnGoalManager(pointManager);
-		turnManager = new GameTurnManager(playerOrder, gameTurnGoalManager, resourceManager);
+		gameTurnGoalManager = new GameTurnGoalManager(pointManager);
+		turnManager = new GameTurnManager(this);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
 		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager);
 		heroCardManager = new HeroCardManager();
 		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseRandomColors(players);
-		fightManager = new FightManager(client, localUser);
+		fightManager = new FightManager(client, localUser, players, gameTurnBonusManager, gameTurnGoalManager, pointManager);
 	}
 	
 	/**
@@ -143,6 +144,13 @@ public class Game implements Serializable {
 	}
 	public void setGameTurnBonusManager(GameTurnBonusManager gameTurnBonusManager) {
 		this.gameTurnBonusManager = gameTurnBonusManager;
+	}
+	
+	public GameTurnGoalManager getGameTurnGoalManager() {
+		return gameTurnGoalManager;
+	}
+	public void setGameTurnGoalManager(GameTurnGoalManager gameTurnGoalManager) {
+		this.gameTurnGoalManager = gameTurnGoalManager;
 	}
 	
 	public HeroCardManager getHeroCardManager() {

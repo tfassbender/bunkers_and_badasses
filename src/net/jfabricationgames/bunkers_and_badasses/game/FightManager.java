@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.FightExecutionFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.SupportRequestFrame;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 
@@ -17,13 +20,23 @@ public class FightManager {
 	private Fight currentFight;
 	private FightExecutionFrame fightExecutionFrame;
 	
-	private User localPlayer;
+	private User localPlayer;	
+	private List<User> players;
+	
+	private GameTurnBonusManager gameTurnBonusManager;
+	private GameTurnGoalManager gameTurnGoalManager;
+	private PointManager pointManager;
 	
 	private JFGClient client;
 	
-	public FightManager(JFGClient client, User localPlayer) {
+	public FightManager(JFGClient client, User localPlayer, List<User> players, GameTurnBonusManager gameTurnBonusManager, 
+			GameTurnGoalManager gameTurnGoalManager, PointManager pointManager) {
 		this.client = client;
 		this.localPlayer = localPlayer;
+		this.players = players;
+		this.gameTurnBonusManager = gameTurnBonusManager;
+		this.gameTurnGoalManager = gameTurnGoalManager;
+		this.pointManager = pointManager;
 	}
 	
 	/**
@@ -54,6 +67,43 @@ public class FightManager {
 		showSupportRequests();
 		FightTransfereMessage message = new FightTransfereMessage(currentFight, true);
 		client.sendMessage(message);
+	}
+	
+	public void endFight() {
+		giveOutPoints();
+		//TODO
+	}
+	public void giveOutPoints() {
+		//points for attacker and winner
+		pointManager.addPoints(currentFight.getAttackingPlayer(), Game.getGameVariableStorage().getFightAttackerPoints());
+		pointManager.addPoints(currentFight.getWinningPlayer(), Game.getGameVariableStorage().getFightWinnerPoints());
+		//points for supporters
+		List<User> supporters = new ArrayList<User>();
+		if (currentFight.getWinner() == Fight.ATTACKERS) {
+			for (Field field : currentFight.getAttackSupporters()) {
+				if (!field.getAffiliation().equals(currentFight.getAttackingPlayer())) {
+					supporters.add(field.getAffiliation());
+				}
+			}
+		}
+		else {
+			for (Field field : currentFight.getDefenceSupporters()) {
+				if (!field.getAffiliation().equals(currentFight.getDefendingPlayer())) {
+					supporters.add(field.getAffiliation());
+				}
+			}
+		}
+		for (User user : supporters) {
+			pointManager.addPoints(user, Game.getGameVariableStorage().getFightSupporterPoints());
+		}
+		//points for turn goals and turn bonuses
+		TurnBonus bonus;
+		TurnGoal goal = gameTurnGoalManager.getTurnGoal();
+		for (User player : players) {
+			bonus = gameTurnBonusManager.getUsersBonus(player);
+			bonus.receivePointsFight(player, currentFight);
+			goal.receivePointsFight(player, currentFight);
+		}
 	}
 	
 	/**

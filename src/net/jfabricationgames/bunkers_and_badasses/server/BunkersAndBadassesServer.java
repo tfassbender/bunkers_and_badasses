@@ -950,6 +950,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		String commandCostQuery = "SELECT * FROM bunkers_and_badasses.costs_command";
 		String commandQuery = "SELECT * FROM bunkers_and_badasses.commands WHERE used = true";
 		String bonusQuery = "SELECT * FROM bunkers_and_badasses.turn_bonus_resources";
+		String gamePointQuery = "SELECT * FROM bunkers_and_badasses.game_points WHERE used = true";
 		ResultSet result;
 		//load the variables from the database
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
@@ -1109,6 +1110,21 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				resources[result.getInt(1)][TurnBonusStorage.CREDITS] = result.getInt(2);
 				resources[result.getInt(1)][TurnBonusStorage.AMMO] = result.getInt(3);
 				resources[result.getInt(1)][TurnBonusStorage.ERIDIUM] = result.getInt(4);
+			}
+			try {
+				result.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			//the points for fights and fields
+			result = statement.executeQuery(gamePointQuery);
+			if (result.next()) {
+				gameStorage.setFieldPoints(result.getInt(3));
+				gameStorage.setFieldPointCount(result.getInt(4));
+				gameStorage.setFightAttackerPoints(result.getInt(5));
+				gameStorage.setFightWinnerPoints(result.getInt(6));
+				gameStorage.setFightSupporterPoints(result.getInt(7));
 			}
 			try {
 				result.close();

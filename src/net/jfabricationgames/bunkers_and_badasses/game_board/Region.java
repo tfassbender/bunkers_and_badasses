@@ -9,6 +9,7 @@ public class Region implements Serializable {
 	
 	private String name;
 	private List<Field> fields;
+	private int points;
 	
 	@Override
 	public String toString() {
@@ -20,6 +21,13 @@ public class Region implements Serializable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getPoints() {
+		return points;
+	}
+	public void setPoints(int points) {
+		this.points = points;
 	}
 	
 	public List<Field> getFields() {

@@ -47,8 +47,10 @@ public class UserResourceManager {
 	/**
 	 * Collect all resources for the turn start (default, buildings, skill, turn bonus).
 	 */
-	public void collectTurnStartResources(User user) {
-		resources.get(user).collectTurnStartResources(game);
+	public void collectTurnStartResources() {
+		for (User user : game.getPlayers()) {
+			resources.get(user).collectTurnStartResources(game);
+		}
 	}
 	/**
 	 * Collect the resources for a collect command.

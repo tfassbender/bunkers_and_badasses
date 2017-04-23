@@ -11,7 +11,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -172,6 +174,40 @@ public class Board implements Serializable {
 			}
 		}
 		return usersFields;
+	}
+	
+	/**
+	 * Get a list of all regions that are completely controlled by a player.
+	 * 
+	 * @param user
+	 * 		The player who controlled the regions.
+	 * 
+	 * @return
+	 * 		A list of all regions controlled by this user.
+	 */
+	public List<Region> getUsersRegions(User user) {
+		List<Region> usersRegions = new ArrayList<Region>();
+		Map<Field, Boolean> regionsFields;
+		for (Region region : regions) {
+			regionsFields = new HashMap<Field, Boolean>();
+			//initialize all fields of this region with false
+			for (Field field : region.getFields()) {
+				regionsFields.put(field, false);
+			}
+			//add all fields and override all false values
+			for (Field field : getUsersFields(user)) {
+				regionsFields.put(field, true);
+			}
+			//if a false value is found in the list the region is not controlled by the player
+			boolean regionControlled = true;
+			for (Field field : regionsFields.keySet()) {
+				regionControlled &= regionsFields.get(field);
+			}
+			if (regionControlled) {
+				usersRegions.add(region);
+			}
+		}
+		return usersRegions;
 	}
 	
 	/**

@@ -33,6 +33,12 @@ public class GameVariableStorage {
 	private int turnStartCredits;
 	private int turnStartAmmo;
 	private int turnStartEridium;
+	
+	private int fieldPoints;
+	private int fieldPointCount;
+	private int fightAttackerPoints;
+	private int fightWinnerPoints;
+	private int fightSupporterPoints;
 
 	public GameVariableStorage() {
 		creditsSkillLevel = new int[6];
@@ -164,5 +170,40 @@ public class GameVariableStorage {
 	}
 	public void setFieldCosts(int fieldCosts) {
 		this.fieldCosts = fieldCosts;
+	}
+	
+	public int getFieldPoints() {
+		return fieldPoints;
+	}
+	public void setFieldPoints(int fieldPoints) {
+		this.fieldPoints = fieldPoints;
+	}
+	
+	public int getFieldPointCount() {
+		return fieldPointCount;
+	}
+	public void setFieldPointCount(int fieldPointCount) {
+		this.fieldPointCount = fieldPointCount;
+	}
+	
+	public int getFightAttackerPoints() {
+		return fightAttackerPoints;
+	}
+	public void setFightAttackerPoints(int fightAttackerPoints) {
+		this.fightAttackerPoints = fightAttackerPoints;
+	}
+	
+	public int getFightWinnerPoints() {
+		return fightWinnerPoints;
+	}
+	public void setFightWinnerPoints(int fightWinnerPoints) {
+		this.fightWinnerPoints = fightWinnerPoints;
+	}
+	
+	public int getFightSupporterPoints() {
+		return fightSupporterPoints;
+	}
+	public void setFightSupporterPoints(int fightSupporterPoints) {
+		this.fightSupporterPoints = fightSupporterPoints;
 	}
 }

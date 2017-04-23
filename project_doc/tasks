@@ -1,6 +1,7 @@
 Bunkers and Badasses - Tasks
 
 
+- implement the client-server communication for the game functions
 - implement the storing of the used resources
 - implement hero and building functions
 - create the statistics of a game and store them in the database when the game ends
