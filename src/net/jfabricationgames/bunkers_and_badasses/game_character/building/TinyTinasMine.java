@@ -5,8 +5,9 @@ public class TinyTinasMine extends Building {
 	public TinyTinasMine() {
 		buildingId = 15;
 		name = "Tiny Tina's Landmienen";
-		image = imageLoader.loadImage("mine_1_small.png");
+		imagePath = "mine_1_small.png";
 		loadVariables();
+		loadImage();
 	}
 	
 	@Override

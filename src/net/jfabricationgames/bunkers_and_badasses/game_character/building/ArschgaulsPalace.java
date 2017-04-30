@@ -6,8 +6,9 @@ public class ArschgaulsPalace extends Building {
 		buildingId = 0;
 		name = "Arschgaul's Palast";
 		commandExecutable = true;
-		image = imageLoader.loadImage("arschgaul_1_small.png");
+		imagePath = "arschgaul_1_small.png";
 		loadVariables();
+		loadImage();
 	}
 	
 	@Override

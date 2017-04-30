@@ -7,13 +7,10 @@ public class MarcusGunshop extends Building {
 		extendedBuildingId = 5;
 		extendable = true;
 		name = "Marcus' Waffenladen";
-		image = imageLoader.loadImage("marcus_gunship_1_small.png");
+		imagePath = "marcus_gunship_1_small.png";
+		expandedImagePath = "marcus_gunship_1_exp_small.png";
 		loadVariables();
-	}
-	
-	@Override
-	protected void loadExtendedImage() {
-		//image = imageLoader.loadImage("marcus_gunship_1_small.png");
+		loadImage();
 	}
 	
 	@Override

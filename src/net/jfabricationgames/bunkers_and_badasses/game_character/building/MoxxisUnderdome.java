@@ -7,13 +7,10 @@ public class MoxxisUnderdome extends Building {
 		extendedBuildingId = 9;
 		extendable = true;
 		name = "Mad Moxxis' Underdome";
-		image = imageLoader.loadImage("underdome_1_small.png");
+		imagePath = "underdome_1_small.png";
+		expandedImagePath = "underdome_1_exp_small.png";
 		loadVariables();
-	}
-	
-	@Override
-	protected void loadExtendedImage() {
-		//image = imageLoader.loadImage("underdome_1_small.png");
+		loadImage();
 	}
 	
 	@Override

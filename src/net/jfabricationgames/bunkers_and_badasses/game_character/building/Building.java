@@ -33,6 +33,9 @@ public abstract class Building {
 	protected int buildingId;
 	protected int extendedBuildingId;
 	
+	protected String imagePath;
+	protected String expandedImagePath;
+	
 	protected transient BufferedImage image;
 	
 	protected String name;
@@ -96,6 +99,19 @@ public abstract class Building {
 		buildingPrice = buildingPricesStorage[buildingId];
 	}
 	
+	public void loadImage() {
+		if (extended) {
+			if (expandedImagePath != null) {
+				image = imageLoader.loadImage(expandedImagePath);			
+			}
+		}
+		else {
+			if (imagePath != null) {
+				image = imageLoader.loadImage(imagePath);			
+			}
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -108,14 +124,7 @@ public abstract class Building {
 		buildingId = extendedBuildingId;
 		extended = true;
 		loadVariables();
-		loadExtendedImage();
-	}
-	
-	/**
-	 * Load the extended image for this building. (Override in subclasses)
-	 */
-	protected void loadExtendedImage() {
-		
+		loadImage();
 	}
 	
 	/**

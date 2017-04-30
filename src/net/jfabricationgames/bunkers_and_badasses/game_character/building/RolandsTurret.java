@@ -7,13 +7,10 @@ public class RolandsTurret extends Building {
 		extendedBuildingId = 11;
 		extendable = true;
 		name = "Roland's Geschützturm";
-		image = imageLoader.loadImage("turret_1_small.png");
+		imagePath = "turret_1_small.png";
+		expandedImagePath = "turret_1_exp_small.png";
 		loadVariables();
-	}
-	
-	@Override
-	protected void loadExtendedImage() {
-		//image = imageLoader.loadImage("turret_1_small.png");
+		loadImage();
 	}
 	
 	@Override

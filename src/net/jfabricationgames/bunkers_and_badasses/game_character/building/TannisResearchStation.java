@@ -7,13 +7,10 @@ public class TannisResearchStation extends Building {
 		extendedBuildingId = 14;
 		extendable = true;
 		name = "Tannis' Forschungslabor";
-		image = imageLoader.loadImage("tannis_1_small.png");
+		imagePath = "tannis_1_small.png";
+		expandedImagePath = "tannis_1_exp_small.png";
 		loadVariables();
-	}
-	
-	@Override
-	protected void loadExtendedImage() {
-		//image = imageLoader.loadImage("tannis_1_small.png");
+		loadImage();
 	}
 	
 	@Override

@@ -7,13 +7,10 @@ public class CrazyEarlsBlackMarket extends Building {
 		extendedBuildingId = 2;
 		extendable = true;
 		name = "Crazy Earl's Schwarzmarkt";
-		image = imageLoader.loadImage("earl_1_small.png");
+		imagePath = "earl_1_small.png";
+		expandedImagePath = "earl_1_exp_small.png";
 		loadVariables();
-	}
-	
-	@Override
-	protected void loadExtendedImage() {
-		//image = imageLoader.loadImage("earl_1_small.png");
+		loadImage();
 	}
 	
 	@Override

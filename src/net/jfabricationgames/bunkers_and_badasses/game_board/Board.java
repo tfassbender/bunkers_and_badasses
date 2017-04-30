@@ -66,6 +66,10 @@ public class Board implements Serializable {
 		this.regions = board.getRegions();
 		//name, player min/max, robot and image wrappers don't need to be changed
 		this.game = board.getGame();
+		//reload the images of possible buildings on the field
+		for (Field field : fields) {
+			field.getBuilding().loadImage();
+		}
 	}
 	
 	/**
