@@ -8,7 +8,8 @@ public class Zero extends Hero {
 		attack = 3;
 		defence = 4;
 		name = "Zero";
-		image = imageLoader.loadImage("zero_1.png");
+		imagePath = "zero_1.png";
+		loadImage();
 		effectDescription = "Doppelgänger:\n\nEin beliebiger Befehlsmarker kann nachträglich verändert werden";
 	}
 	

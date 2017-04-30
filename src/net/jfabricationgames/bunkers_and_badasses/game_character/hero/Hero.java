@@ -24,6 +24,7 @@ public abstract class Hero implements Serializable {
 	
 	protected String name;
 	protected String effectDescription;
+	protected String imagePath;
 	
 	protected transient BufferedImage image;
 	
@@ -39,6 +40,10 @@ public abstract class Hero implements Serializable {
 		defence = 0;
 		usedAttack = 0;
 		usedDefence = 0;
+	}
+	
+	public void loadImage() {
+		image = imageLoader.loadImage(imagePath);
 	}
 	
 	@Override
@@ -101,5 +106,12 @@ public abstract class Hero implements Serializable {
 	}
 	public String getEffectDescription() {
 		return effectDescription;
+	}
+	
+	public BufferedImage getImage() {
+		return image;
+	}
+	public void setImage(BufferedImage image) {
+		this.image = image;
 	}
 }

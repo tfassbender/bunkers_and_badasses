@@ -11,12 +11,12 @@ public class GameTurnManager implements Serializable {
 	
 	private int turn;
 	
-	private static int numTurns = Game.getGameVariableStorage().getGameTurns();
+	private static int numTurns;
 	
 	private Game game;
 	
 	private PlayerOrder playerOrder;
-	private GameTurnGoalManager gameTurnGoalManager;
+	private transient GameTurnGoalManager gameTurnGoalManager;
 	private UserResourceManager resourceManager;
 	private PointManager pointManager;
 	
@@ -26,6 +26,7 @@ public class GameTurnManager implements Serializable {
 		this.gameTurnGoalManager = game.getGameTurnGoalManager();
 		this.resourceManager = game.getResourceManager();
 		this.pointManager = game.getPointManager();
+		numTurns = Game.getGameVariableStorage().getGameTurns();
 		turn = 1;
 	}
 	

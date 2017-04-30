@@ -8,7 +8,8 @@ public class CrazyEarl extends Hero {
 		attack = 0;
 		defence = 1;
 		name = "Crazy Earl";
-		image = imageLoader.loadImage("earl_1.png");
+		imagePath = "earl_1.png";
+		loadImage();
 		effectDescription = "Schwarzmarkt:\n\nDu erhälltst gratis Eridium";
 	}
 	

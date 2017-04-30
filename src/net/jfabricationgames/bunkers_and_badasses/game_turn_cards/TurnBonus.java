@@ -59,7 +59,7 @@ public abstract class TurnBonus {
 		collectCommands = 0;
 	}
 	
-	protected void loadImage() {
+	public void loadImage() {
 		image = loader.loadImage(imagePath);
 	}
 	
@@ -97,6 +97,9 @@ public abstract class TurnBonus {
 	
 	public BufferedImage getImage() {
 		return image;
+	}
+	public void setImage(BufferedImage image) {
+		this.image = image;
 	}
 	
 	public static TurnBonusStorage getStorage() {

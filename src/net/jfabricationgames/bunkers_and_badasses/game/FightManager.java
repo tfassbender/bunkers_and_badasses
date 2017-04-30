@@ -18,13 +18,13 @@ public class FightManager {
 	private Map<Integer, List<Fight>> fights;//executed fights sorted by the game turns
 	
 	private Fight currentFight;
-	private FightExecutionFrame fightExecutionFrame;
+	private transient FightExecutionFrame fightExecutionFrame;
 	
-	private User localPlayer;	
-	private List<User> players;
+	private transient User localPlayer;	
+	private transient List<User> players;
 	
-	private GameTurnBonusManager gameTurnBonusManager;
-	private GameTurnGoalManager gameTurnGoalManager;
+	private transient GameTurnBonusManager gameTurnBonusManager;
+	private transient GameTurnGoalManager gameTurnGoalManager;
 	private PointManager pointManager;
 	
 	private JFGClient client;
@@ -37,6 +37,18 @@ public class FightManager {
 		this.gameTurnBonusManager = gameTurnBonusManager;
 		this.gameTurnGoalManager = gameTurnGoalManager;
 		this.pointManager = pointManager;
+	}
+	
+	/**
+	 * Merge the data from the new fight manager.
+	 * 
+	 * @param fightManager
+	 * 		The new fight manager.
+	 */
+	public void merge(FightManager fightManager) {
+		//the fight can be overwritten because this message is not sent during a fight
+		this.currentFight = fightManager.getCurrentFight();
+		this.pointManager = fightManager.getPointManager();
 	}
 	
 	/**
@@ -245,5 +257,12 @@ public class FightManager {
 	}
 	public void setCurrentFight(Fight currentFight) {
 		this.currentFight = currentFight;
+	}
+	
+	public PointManager getPointManager() {
+		return pointManager;
+	}
+	public void setPointManager(PointManager pointManager) {
+		this.pointManager = pointManager;
 	}
 }

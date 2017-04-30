@@ -8,7 +8,8 @@ public class Ellie extends Hero {
 		attack = 2;
 		defence = 1;
 		name = "Ellie";
-		image = imageLoader.loadImage("ellie_1.png");
+		imagePath = "ellie_1.png";
+		loadImage();
 		effectDescription = "Klanfede:\n\nIn 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten";
 	}
 	

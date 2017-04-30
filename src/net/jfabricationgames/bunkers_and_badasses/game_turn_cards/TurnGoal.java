@@ -68,6 +68,9 @@ public abstract class TurnGoal {
 	public BufferedImage getImage() {
 		return image;
 	}
+	public void setImage(BufferedImage image) {
+		this.image = image;
+	}
 	
 	public void setPointManager(PointManager pointManager) {
 		this.pointManager = pointManager;

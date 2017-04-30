@@ -27,7 +27,7 @@ public class GameTurnBonusManager {
 	private List<TurnBonus> choosableTurnBonuses;
 	private List<TurnBonus> turnBonusesGame;//all the turn bonuses for the whole game
 	
-	private static final List<TurnBonus> TURN_BONUSES = createTurnBonusList();
+	private static final transient List<TurnBonus> TURN_BONUSES = createTurnBonusList();
 	
 	public GameTurnBonusManager(PointManager pointManager) {
 		for (TurnBonus bonus : TURN_BONUSES) {
@@ -51,6 +51,30 @@ public class GameTurnBonusManager {
 		turnBonuses.add(new TurnBonusMineNeutrals());
 		turnBonuses.add(new TurnBonusRecruit());
 		return turnBonuses;
+	}
+	
+	/**
+	 * Merge the data from the new bonus manager.
+	 * 
+	 * @param bonusManager
+	 * 		The new bonus manager.
+	 */
+	public void merge(GameTurnBonusManager bonusManager) {
+		//copy the image references from the previous turn bonuses to the new ones
+		boolean instanceFound;
+		for (TurnBonus bonus : bonusManager.getTurnBonusesGame()) {
+			instanceFound = false;
+			for (TurnBonus prev : TURN_BONUSES) {//load from TURN_BONUSES because these are surely loaded
+				if (!instanceFound && bonus.getClass().equals(prev.getClass())) {
+					bonus.setImage(prev.getImage());
+					instanceFound = true;
+				}
+			}
+		}
+		//set the new bonuses
+		this.userBonuses = bonusManager.getUserBonuses();
+		this.choosableTurnBonuses = bonusManager.getChoosableTurnBonuses();
+		this.turnBonusesGame = bonusManager.getTurnBonusesGame();
 	}
 	
 	/**
@@ -113,5 +137,13 @@ public class GameTurnBonusManager {
 	
 	public Map<User, TurnBonus> getUserBonuses() {
 		return userBonuses;
+	}
+	
+	public List<TurnBonus> getChoosableTurnBonuses() {
+		return choosableTurnBonuses;
+	}
+	
+	public List<TurnBonus> getTurnBonusesGame() {
+		return turnBonusesGame;
 	}
 }

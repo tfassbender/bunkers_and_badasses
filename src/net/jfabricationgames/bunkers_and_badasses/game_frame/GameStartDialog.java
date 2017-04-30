@@ -129,7 +129,8 @@ public class GameStartDialog extends JDialog {
 	 * 		The game that was sent by the starting player.
 	 */
 	public void receiveGame(Game game) {
-		this.game = game;
+		this.game = new Game(game.getClient(), game.getPlayers());
+		this.game.merge(game);
 		if (board != null && gameId != -1) {
 			startGameFrame();
 		}

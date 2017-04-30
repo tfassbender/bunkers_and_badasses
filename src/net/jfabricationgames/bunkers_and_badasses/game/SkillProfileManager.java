@@ -9,19 +9,19 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
  */
 public class SkillProfileManager {
 	
-	public static int[] CREDITS_SKILL_LEVEL;
-	public static int[] AMMO_SKILL_LEVEL;
-	public static int[] ERIDIUM_SKILL_LEVEL;
+	public static transient int[] CREDITS_SKILL_LEVEL;
+	public static transient int[] AMMO_SKILL_LEVEL;
+	public static transient int[] ERIDIUM_SKILL_LEVEL;
 
-	public static int[] CREDITS_BUILDING_SKILL_LEVEL;
-	public static int[] AMMO_BUILDING_SKILL_LEVEL;
-	public static int[] ERIDIUM_BUILDING_SKILL_LEVEL;
+	public static transient int[] CREDITS_BUILDING_SKILL_LEVEL;
+	public static transient int[] AMMO_BUILDING_SKILL_LEVEL;
+	public static transient int[] ERIDIUM_BUILDING_SKILL_LEVEL;
 	
-	public static int[] POINTS_SKILL_LEVEL;
+	public static transient int[] POINTS_SKILL_LEVEL;
 	
-	public static int[] HEROS_SKILL_LEVEL;
+	public static transient int[] HEROS_SKILL_LEVEL;
 	
-	private static SkillProfile defaultSkillProfile;
+	private static transient SkillProfile defaultSkillProfile;
 	
 	private transient SkillProfile[] skillProfiles;//local skill profiles (not sent to others)
 	
@@ -58,6 +58,17 @@ public class SkillProfileManager {
 	}
 	
 	/**
+	 * Merge the data from the new skill profile manager.
+	 * 
+	 * @param profileManager
+	 * 		The new skill profile manager.
+	 */
+	public void merge(SkillProfileManager profileManager) {
+		selectedProfile = profileManager.getSelectedProfiles();
+		userResourceManager = profileManager.getUserResourceManager();
+	}
+	
+	/**
 	 * Add the start resources (from the skill profile) for all users to their resource managers.
 	 */
 	public void collectSkillResources(User user) {
@@ -80,7 +91,13 @@ public class SkillProfileManager {
 	public SkillProfile getSelectedProfile(User user) {
 		return selectedProfile.get(user);
 	}
+	private Map<User, SkillProfile> getSelectedProfiles() {
+		return selectedProfile;
+	}
 	
+	private UserResourceManager getUserResourceManager() {
+		return userResourceManager;
+	}
 	public void setUserResourceManager(UserResourceManager userResourceManager) {
 		this.userResourceManager = userResourceManager;
 	}

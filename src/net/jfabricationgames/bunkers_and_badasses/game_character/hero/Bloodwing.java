@@ -10,7 +10,8 @@ public class Bloodwing extends Hero {
 		attack = 2;
 		defence = 1;
 		name = "Bloodwing";
-		image = imageLoader.loadImage("bloodwing_1.png");
+		imagePath = "bloodwing_1.png";
+		loadImage();
 		effectDescription = "Luftunterstützung:\n\nDie Kampfstärke der gegnerischen Karte wird um 3 gesenkt (Angriff und Verteidigung; Der wert kann nicht unter 0 fallen)";
 	}
 	

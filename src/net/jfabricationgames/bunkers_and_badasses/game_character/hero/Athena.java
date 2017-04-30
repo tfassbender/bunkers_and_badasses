@@ -10,7 +10,8 @@ public class Athena extends Hero {
 		attack = 3;
 		defence = 5;
 		name = "Athena";
-		image = imageLoader.loadImage("athena_1.png");
+		imagePath = "athena_1.png";
+		loadImage();
 		effectDescription = "Aspis:\n\nBei einer Niederlage können keine deiner Truppen getötet werden";
 	}
 	

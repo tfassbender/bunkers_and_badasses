@@ -649,6 +649,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				break;
 			case PreGameDataMessage.DATA_TURN_BONUS:
 				//select the bonuses for the users
+				message.getSelectedBonus().loadImage();//load the image that was not sent with the serialized stream
 				game.getGameTurnBonusManager().chooseFirstTurnBonus(message.getUser(), message.getSelectedBonus());
 				if (index == 0) {
 					//all players have chosen their bonuses

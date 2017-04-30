@@ -31,17 +31,18 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Springs;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.TinyTina;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Wilhelm;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Zero;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class HeroCardManager {
 	
-	public static final List<Class<? extends Hero>> HERO_CLASSES = createHeroClassList(); 
+	public static final transient List<Class<? extends Hero>> HERO_CLASSES = createHeroClassList(); 
 	
 	private Map<User, List<Hero>> heroCards;
 	
 	private List<Hero> heroCardStack;
 	
-	private int maxCardsPerPlayer;
+	private final int maxCardsPerPlayer;
 	
 	public HeroCardManager() {
 		maxCardsPerPlayer = Game.getGameVariableStorage().getMaxHerosCards();
@@ -75,6 +76,52 @@ public class HeroCardManager {
 		heroClasses.add(Wilhelm.class);
 		heroClasses.add(Zero.class);
 		return heroClasses;
+	}
+	
+	/**
+	 * Merge the data from the new hero card manager.
+	 * 
+	 * @param heroCardManager
+	 * 		The new hero card manager.
+	 */
+	public void merge(HeroCardManager heroCardManager) {
+		//if the card images are already loaded copy the references; otherwise load the images
+		List<Hero> allHeroCards = new ArrayList<Hero>(heroCardManager.getHeroCardStack());
+		for (User user : heroCards.keySet()) {
+			allHeroCards.addAll(heroCards.get(user));
+		}
+		if (!heroCardStack.isEmpty() && heroCardStack.get(0).getImage() != null) {
+			//copy the image references from the previous heroes to the new ones
+			boolean instanceFound;
+			for (Hero hero : allHeroCards) {
+				instanceFound = false;
+				for (Hero prev : heroCardStack) {
+					if (!instanceFound && hero.getClass().equals(prev.getClass())) {
+						hero.setImage(prev.getImage());
+						instanceFound = true;
+					}
+				}
+				//also search in the players heros
+				if (!instanceFound) {
+					for (User user : heroCards.keySet()) {
+						for (Hero prev : heroCards.get(user)) {
+							if (!instanceFound && hero.getClass().equals(prev.getClass())) {
+								hero.setImage(prev.getImage());
+								instanceFound = true;
+							}
+						}
+					}
+				}
+			}
+		}
+		else {
+			//load the images from the files
+			for (Hero hero : allHeroCards) {
+				hero.loadImage();
+			}
+		}
+		heroCards = heroCardManager.getHeroCards();
+		heroCardStack = heroCardManager.getHeroCardStack();
 	}
 	
 	public void intitialize(List<User> players) {
@@ -132,6 +179,10 @@ public class HeroCardManager {
 		return heroCards.get(user);
 	}
 	
+	private List<Hero> getHeroCardStack() {
+		return heroCardStack;
+	}
+
 	public Map<User, List<Hero>> getHeroCards() {
 		return heroCards;
 	}

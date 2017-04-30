@@ -8,7 +8,8 @@ public class SirHammerlock extends Hero {
 		attack = 1;
 		defence = 2;
 		name = "Sir Hammerlock";
-		image = imageLoader.loadImage("hammerlock_1.png");
+		imagePath = "hammerlock_1.png";
+		loadImage();
 		effectDescription = "Großwildjagt:\n\nBis zu 3 beliebige Neutrale Einheiten werden getötet";
 	}
 	

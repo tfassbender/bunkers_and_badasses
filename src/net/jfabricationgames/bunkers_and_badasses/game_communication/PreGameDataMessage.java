@@ -9,6 +9,8 @@ import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
 /**
  * Send information about the pre-game to the server and the clients.
+ * 
+ * Transient fields are considered when receiving this message.
  */
 public class PreGameDataMessage implements JFGClientMessage, JFGServerMessage {
 	

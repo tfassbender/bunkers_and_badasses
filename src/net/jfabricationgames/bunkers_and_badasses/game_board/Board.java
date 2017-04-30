@@ -55,6 +55,20 @@ public class Board implements Serializable {
 	}
 	
 	/**
+	 * Merge the data from the new board into this board.
+	 * 
+	 * @param board
+	 * 		The new board.
+	 */
+	public void merge(Board board) {
+		this.boardId = board.getBoardId();
+		this.fields = board.getFields();//images in Field are static and don't need to be reloaded
+		this.regions = board.getRegions();
+		//name, player min/max, robot and image wrappers don't need to be changed
+		this.game = board.getGame();
+	}
+	
+	/**
 	 * Move troops from one field to another without checking for fights, ...
 	 * 
 	 * @param start

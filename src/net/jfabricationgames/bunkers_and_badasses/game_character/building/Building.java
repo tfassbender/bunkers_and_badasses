@@ -33,7 +33,7 @@ public abstract class Building {
 	protected int buildingId;
 	protected int extendedBuildingId;
 	
-	protected BufferedImage image;
+	protected transient BufferedImage image;
 	
 	protected String name;
 	

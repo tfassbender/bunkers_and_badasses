@@ -8,7 +8,8 @@ public class MrTorgue extends Hero {
 		attack = 3;
 		defence = 3;
 		name = "Mr. Trogue";
-		image = imageLoader.loadImage("mr_torgue_1.png");
+		imagePath = "mr_torgue_1.png";
+		loadImage();
 		effectDescription = "EXPLOSIONSGERÄUSCH:\n\n3 normale Truppen (irgentwo auf dem Feld) werden zu Badasses aufgerüstet";
 	}
 	

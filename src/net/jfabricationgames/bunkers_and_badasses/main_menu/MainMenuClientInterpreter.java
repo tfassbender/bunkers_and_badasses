@@ -122,7 +122,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	}
 	
 	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGClient client) {
-		gameStore.setLoadedGame(message.getLoadedGame());
+		gameStore.receiveLoadedGame(message.getLoadedGame());
 		gameStore.addServerAnswer(message.isLoadedSuccessful());
 	}
 	

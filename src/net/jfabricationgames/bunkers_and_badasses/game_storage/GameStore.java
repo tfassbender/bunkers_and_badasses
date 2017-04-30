@@ -111,11 +111,13 @@ public class GameStore {
 	
 	/**
 	 * Add a game that was loaded by the server.
+	 * The game from the server is merged into a new created game to keep the transient fields.
 	 * 
 	 * @param loadedGame
 	 * 		The game sent by the server.
 	 */
-	public void setLoadedGame(Game loadedGame) {
-		this.loadedGame = loadedGame;
+	public void receiveLoadedGame(Game loadedGame) {
+		this.loadedGame = new Game(client, loadedGame.getPlayers());
+		this.loadedGame.merge(loadedGame);
 	}
 }

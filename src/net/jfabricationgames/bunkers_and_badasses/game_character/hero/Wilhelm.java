@@ -10,7 +10,8 @@ public class Wilhelm extends Hero {
 		attack = 4;
 		defence = 3;
 		name = "Wilhelm";
-		image = imageLoader.loadImage("wilhelm_1.png");
+		imagePath = "wilhelm_1.png";
+		loadImage();
 		effectDescription = "Krieg:\n\nBei erfolgreichem Kampf darf der Marschbefehl mitgenommen werden";
 	}
 	

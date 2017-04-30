@@ -8,7 +8,8 @@ public class Marcus extends Hero {
 		attack = 1;
 		defence = 2;
 		name = "Marcus";
-		image = imageLoader.loadImage("marcus_1.png");
+		imagePath = "marcus_1.png";
+		loadImage();
 		effectDescription = "Nachladen:\n\nDu erhällst gratis Munition";
 	}
 	

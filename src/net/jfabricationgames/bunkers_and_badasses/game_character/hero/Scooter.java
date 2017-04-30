@@ -8,7 +8,8 @@ public class Scooter extends Hero {
 		attack = 1;
 		defence = 1;
 		name = "Scooter";
-		image = imageLoader.loadImage("scooter_3.png");
+		imagePath = "scooter_3.png";
+		loadImage();
 		effectDescription = "Catch-A-Ride:\n\nBeliebige Truppen (aus einem Feld) dürfen bis zu 2 Felder weit vorrücken und die Feindliche Linie durchbrechen wenn sie dadurch ein von ihnen kontrolliertes oder leeres Gebiet erreichen";
 	}
 	

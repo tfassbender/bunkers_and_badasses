@@ -10,7 +10,8 @@ public class DrZed extends Hero {
 		attack = 1;
 		defence = 2;
 		name = "Dr. Zed";
-		image = imageLoader.loadImage("dr_zed_1.png");
+		imagePath = "dr_zed_1.png";
+		loadImage();
 		effectDescription = "Feld Metzger:\n\nZed kann die Hälfte der Truppen (aufgerundet) die in einem Kampf sterben würden wieder zusammenflicken";
 	}
 	

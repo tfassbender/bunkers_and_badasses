@@ -24,7 +24,7 @@ public class GameTurnGoalManager {
 	
 	private List<TurnGoal> turnGoals;
 	
-	private static final List<TurnGoal> TURN_GOALS = createTurnGoalList();
+	private static final transient List<TurnGoal> TURN_GOALS = createTurnGoalList();
 	
 	private GameTurnManager gameTurnManager;
 	
@@ -50,6 +50,28 @@ public class GameTurnGoalManager {
 		goals.add(new TurnGoalTroopUnion());
 		goals.add(new TurnGoalWildHunt());
 		return goals;
+	}
+	
+	/**
+	 * Merge the data from the new goal manager.
+	 * 
+	 * @param goalManager
+	 * 		The new goal manager.
+	 */
+	public void merge(GameTurnGoalManager goalManager) {
+		//copy the image references from the previous turn bonuses to the new ones
+		boolean instanceFound;
+		for (TurnGoal goal : goalManager.getAllTurnGoals()) {
+			instanceFound = false;
+			for (TurnGoal prev : TURN_GOALS) {//load from TURN_GOALS because these are surely loaded
+				if (!instanceFound && goal.getClass().equals(prev.getClass())) {
+					goal.setImage(prev.getImage());
+					instanceFound = true;
+				}
+			}
+		}
+		//set the new goals
+		turnGoals = goalManager.getAllTurnGoals();
 	}
 	
 	public void chooseTurnGoals() {
@@ -89,6 +111,10 @@ public class GameTurnGoalManager {
 	 */
 	public TurnGoal getTurnGoal() {
 		return turnGoals.get(gameTurnManager.getTurn());
+	}
+	
+	private List<TurnGoal> getAllTurnGoals() {
+		return turnGoals;
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {

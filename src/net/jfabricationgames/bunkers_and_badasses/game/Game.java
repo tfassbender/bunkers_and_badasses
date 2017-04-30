@@ -68,6 +68,29 @@ public class Game implements Serializable {
 		message.setGame(this);
 		client.sendMessage(message);
 	}
+	
+	/**
+	 * Merge the data of the new game into this game.
+	 * All data that the new game contains overwrites the old data in this game.
+	 * 
+	 * @param newData
+	 * 		A Game object containing the new data from another player.
+	 */
+	public void merge(Game newData) {
+		board.merge(newData.getBoard());
+		players = newData.getPlayers();
+		gameState = newData.getGameState();
+		playerOrder = newData.getPlayerOrder();
+		resourceManager = newData.getResourceManager();
+		turnManager = newData.getTurnManager();
+		gameTurnBonusManager.merge(newData.getGameTurnBonusManager());
+		gameTurnGoalManager.merge(newData.getGameTurnGoalManager());
+		heroCardManager.merge(newData.getHeroCardManager());
+		pointManager = newData.getPointManager();
+		colorManager = newData.getColorManager();
+		skillProfileManager.merge(newData.getSkillProfileManager());
+		fightManager.merge(newData.getFightManager());
+	}
 
 	public JFGClient getClient() {
 		return client;
