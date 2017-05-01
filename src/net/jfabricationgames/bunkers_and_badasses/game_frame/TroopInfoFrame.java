@@ -21,6 +21,7 @@ import javax.swing.border.EtchedBorder;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
@@ -42,8 +43,6 @@ public class TroopInfoFrame extends JFrame {
 	private JTextField txtGesamtzahlTruppen;
 	private JTextField txtNormaleTruppen;
 	private JTextField txtBadassTruppen;
-	private JTextField txtGesammtKostenCredits;
-	private JTextField txtGesammtKostenMunition;
 	private JTextField txtNormaleTruppen_1;
 	private JTextField txtBadassTruppen_1;
 	private JTextField txtGesammtKostenCredits_1;
@@ -61,8 +60,8 @@ public class TroopInfoFrame extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Truppen Info");
-		setBounds(100, 100, 900, 600);
-		setMinimumSize(new Dimension(900, 600));
+		setBounds(100, 100, 900, 550);
+		setMinimumSize(new Dimension(900, 550));
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
@@ -79,7 +78,7 @@ public class TroopInfoFrame extends JFrame {
 			panel_troop_info.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_troop_info.setBackground(Color.GRAY);
 			panel.add(panel_troop_info, "cell 0 0 2 1,grow");
-			panel_troop_info.setLayout(new MigLayout("", "[grow][][50px][][grow]", "[][5px,grow][][][][][][][5px][][][grow]"));
+			panel_troop_info.setLayout(new MigLayout("", "[grow][][50px][][grow]", "[][5px,grow][][][][][][][5px,grow]"));
 			
 			JLabel lblTruppenInfo = new JLabel("Truppen Info:");
 			lblTruppenInfo.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -157,36 +156,6 @@ public class TroopInfoFrame extends JFrame {
 			txtBadassTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_troop_info.add(txtBadassTruppen, "cell 2 7,growx");
 			txtBadassTruppen.setColumns(10);
-			
-			JLabel lblGesammtKosten = new JLabel("Gesammt Kosten (Truppen):");
-			lblGesammtKosten.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_troop_info.add(lblGesammtKosten, "cell 1 9,alignx trailing");
-			
-			txtGesammtKostenCredits = new JTextField();
-			txtGesammtKostenCredits.setToolTipText("<html>\r\nDie Kosten fallen nur an wenn die Gebiete <br>\r\nauch Befehle erhallten. Erhallten einige <br>\r\nGebiete keinen Befehl, sinken die Kosten\r\n</html>");
-			txtGesammtKostenCredits.setEditable(false);
-			txtGesammtKostenCredits.setHorizontalAlignment(SwingConstants.CENTER);
-			txtGesammtKostenCredits.setBackground(Color.LIGHT_GRAY);
-			txtGesammtKostenCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_troop_info.add(txtGesammtKostenCredits, "cell 2 9,growx");
-			txtGesammtKostenCredits.setColumns(10);
-			
-			JLabel lblCredits = new JLabel("Credits");
-			lblCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_troop_info.add(lblCredits, "cell 3 9");
-			
-			txtGesammtKostenMunition = new JTextField();
-			txtGesammtKostenMunition.setToolTipText("<html>\r\nDie Kosten fallen nur an wenn die Gebiete <br>\r\nauch Befehle erhallten. Erhallten einige <br>\r\nGebiete keinen Befehl, sinken die Kosten\r\n</html>");
-			txtGesammtKostenMunition.setEditable(false);
-			txtGesammtKostenMunition.setHorizontalAlignment(SwingConstants.CENTER);
-			txtGesammtKostenMunition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			txtGesammtKostenMunition.setBackground(Color.LIGHT_GRAY);
-			panel_troop_info.add(txtGesammtKostenMunition, "cell 2 10,growx");
-			txtGesammtKostenMunition.setColumns(10);
-			
-			JLabel lblMunition = new JLabel("Munition");
-			lblMunition.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_troop_info.add(lblMunition, "cell 3 10");
 			
 			resourcePanel = new ResourceInfoPanel();
 			panel.add(resourcePanel, "cell 0 1,grow");
@@ -371,7 +340,10 @@ public class TroopInfoFrame extends JFrame {
 		txtGesamtzahlTruppen.setText(Integer.toString(troopsAll));
 		txtNormaleTruppen.setText(Integer.toString(troopsNormal));
 		txtBadassTruppen.setText(Integer.toString(troopsBadass));
-		//TODO add the costs
+		if (selectedField != null && selectedField.getCommand() != null) {
+			txtGesammtKostenCredits_1.setText(Integer.toString(UserResource.getCreditsForCommand(selectedField.getCommand(), selectedField)));
+			txtGesammtKostenMunition_1.setText(Integer.toString(UserResource.getAmmoForCommand(selectedField.getCommand(), selectedField)));
+		}
 	}
 	
 	private void updateFieldLists() {
@@ -398,7 +370,6 @@ public class TroopInfoFrame extends JFrame {
 			}
 			txtNormaleTruppen_1.setText(Integer.toString(selectedField.getNormalTroops()));
 			txtBadassTruppen_1.setText(Integer.toString(selectedField.getBadassTroops()));
-			//TODO set the costs
 		}
 		else {
 			txtField.setText("");

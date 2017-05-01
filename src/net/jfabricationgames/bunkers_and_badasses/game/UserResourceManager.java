@@ -53,6 +53,16 @@ public class UserResourceManager {
 		}
 	}
 	/**
+	 * Pay all fixed costs like field costs
+	 */
+	public void payFixCosts() {
+		int fields;
+		for (User user : game.getPlayers()) {
+			fields = game.getBoard().getUsersFields(user).size();
+			resources.get(user).payFields(fields);
+		}
+	}
+	/**
 	 * Collect the resources for a collect command.
 	 * 
 	 * @param user

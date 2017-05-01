@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -23,7 +24,9 @@ import javax.swing.event.ListSelectionListener;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.miginfocom.swing.MigLayout;
 
 public class ResourceInfoFrame extends JFrame {
@@ -42,21 +45,25 @@ public class ResourceInfoFrame extends JFrame {
 	
 	private JTextField txtCredits;
 	private JTextField txtAmmo;
-	private JTextField txtEridium;
 	private JTextField txtFields;
-	private JTextField txtTroops;
-	private JTextField txtCommands;
 	private JTextField txtCredits_1;
 	private JTextField txtAmmo_1;
 	private JTextField txtEridium_1;
+	private JList<Field> list_fields_all;
+	private JTextField txtCostscredits;
+	private JTextField txtGaincredits;
+	private JTextField txtCostsammo;
+	private JTextField txtGainammo;
+	private JTextField txtCostseridium;
+	private JTextField txtGaineridium;
 	
 	public ResourceInfoFrame(Game game) {
 		this.game = game;
 		
 		setTitle("Bunkers and Badasses - Resourcen Info");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ResourceInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setBounds(100, 100, 1000, 600);
-		setMinimumSize(new Dimension(1000, 600));
+		setBounds(100, 100, 1050, 650);
+		setMinimumSize(new Dimension(1050, 650));
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
@@ -67,19 +74,19 @@ public class ResourceInfoFrame extends JFrame {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.GRAY);
 			contentPanel.add(panel, "cell 0 0,grow");
-			panel.setLayout(new MigLayout("", "[200px,grow][100px,grow][150px,grow][100px,grow][150px,grow]", "[300px,grow][300px,grow]"));
+			panel.setLayout(new MigLayout("", "[200px,grow][100px,grow][150px,grow][100px,grow][150px,grow]", "[150px,grow][200px,grow][300px,grow]"));
 			
 			JPanel panel_kost_overview = new JPanel();
 			panel_kost_overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_kost_overview.setBackground(Color.GRAY);
 			panel.add(panel_kost_overview, "cell 0 0,grow");
-			panel_kost_overview.setLayout(new MigLayout("", "[grow][][grow][][grow]", "[][10px][][][][][10px][][][][][grow]"));
+			panel_kost_overview.setLayout(new MigLayout("", "[grow][][grow][][grow]", "[][grow][][][][grow]"));
 			
 			JLabel lblKostenbersicht = new JLabel("Kosten \u00DCbersicht:");
 			lblKostenbersicht.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			panel_kost_overview.add(lblKostenbersicht, "cell 1 0 3 1,alignx center");
 			
-			JLabel lblKostenGesammt = new JLabel("Kosten Gesammt:");
+			JLabel lblKostenGesammt = new JLabel("Kosten Gebiet:");
 			lblKostenGesammt.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_kost_overview.add(lblKostenGesammt, "cell 1 2 3 1,alignx center");
 			
@@ -88,6 +95,7 @@ public class ResourceInfoFrame extends JFrame {
 			panel_kost_overview.add(lblCredits, "cell 1 3,alignx trailing");
 			
 			txtCredits = new JTextField();
+			txtCredits.setHorizontalAlignment(SwingConstants.CENTER);
 			txtCredits.setBackground(Color.LIGHT_GRAY);
 			txtCredits.setEditable(false);
 			txtCredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -99,70 +107,17 @@ public class ResourceInfoFrame extends JFrame {
 			panel_kost_overview.add(lblMunition, "cell 1 4,alignx trailing");
 			
 			txtAmmo = new JTextField();
+			txtAmmo.setHorizontalAlignment(SwingConstants.CENTER);
 			txtAmmo.setBackground(Color.LIGHT_GRAY);
 			txtAmmo.setEditable(false);
 			txtAmmo.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_kost_overview.add(txtAmmo, "cell 2 4 2 1,growx");
 			txtAmmo.setColumns(10);
 			
-			JLabel lblEridium = new JLabel("Eridium:");
-			lblEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_kost_overview.add(lblEridium, "cell 1 5,alignx trailing");
-			
-			txtEridium = new JTextField();
-			txtEridium.setBackground(Color.LIGHT_GRAY);
-			txtEridium.setEditable(false);
-			txtEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_kost_overview.add(txtEridium, "cell 2 5 2 1,growx");
-			txtEridium.setColumns(10);
-			
-			JLabel lblKostenDetail = new JLabel("Kosten Detail:");
-			lblKostenDetail.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_kost_overview.add(lblKostenDetail, "cell 1 7 3 1,alignx center");
-			
-			JLabel lblGebiete_1 = new JLabel("Gebiete:");
-			panel_kost_overview.add(lblGebiete_1, "cell 1 8,alignx trailing");
-			
-			txtFields = new JTextField();
-			txtFields.setBackground(Color.LIGHT_GRAY);
-			txtFields.setEditable(false);
-			txtFields.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_kost_overview.add(txtFields, "cell 2 8,growx");
-			txtFields.setColumns(10);
-			
-			JLabel lblCredits_1 = new JLabel("Credits");
-			panel_kost_overview.add(lblCredits_1, "cell 3 8");
-			
-			JLabel lblTruppen = new JLabel("Truppen:");
-			panel_kost_overview.add(lblTruppen, "cell 1 9,alignx trailing");
-			
-			txtTroops = new JTextField();
-			txtTroops.setBackground(Color.LIGHT_GRAY);
-			txtTroops.setEditable(false);
-			txtTroops.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_kost_overview.add(txtTroops, "cell 2 9,growx");
-			txtTroops.setColumns(10);
-			
-			JLabel lblCredits_2 = new JLabel("Credits");
-			panel_kost_overview.add(lblCredits_2, "cell 3 9");
-			
-			JLabel lblBefehle = new JLabel("Befehle:");
-			panel_kost_overview.add(lblBefehle, "cell 1 10,alignx trailing");
-			
-			txtCommands = new JTextField();
-			txtCommands.setBackground(Color.LIGHT_GRAY);
-			txtCommands.setEditable(false);
-			txtCommands.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			panel_kost_overview.add(txtCommands, "cell 2 10,growx");
-			txtCommands.setColumns(10);
-			
-			JLabel lblMunition_1 = new JLabel("Munition");
-			panel_kost_overview.add(lblMunition_1, "cell 3 10");
-			
 			JPanel panel_resource_buildings = new JPanel();
 			panel_resource_buildings.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_resource_buildings.setBackground(Color.GRAY);
-			panel.add(panel_resource_buildings, "cell 1 0 2 1,grow");
+			panel.add(panel_resource_buildings, "cell 1 0 2 2,grow");
 			panel_resource_buildings.setLayout(new MigLayout("", "[grow][][50px][][50px][][50px][grow]", "[][grow][][]"));
 			
 			JLabel lblResourcenGebude = new JLabel("Resourcen Gewinnende Geb\u00E4ude:");
@@ -219,12 +174,102 @@ public class ResourceInfoFrame extends JFrame {
 			txtEridium_1.setColumns(10);
 
 			resourcePanel = new ResourceInfoPanel();
-			panel.add(resourcePanel, "cell 3 0 2 1,grow");
+			panel.add(resourcePanel, "cell 3 0 2 2,grow");
+			
+			JPanel panel_building_costs = new JPanel();
+			panel_building_costs.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+			panel_building_costs.setBackground(Color.GRAY);
+			panel.add(panel_building_costs, "cell 0 1,grow");
+			panel_building_costs.setLayout(new MigLayout("", "[][grow]", "[][10px][][grow]"));
+			
+			JLabel lblGebudeKosten = new JLabel("Geb\u00E4ude Kosten:");
+			lblGebudeKosten.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			panel_building_costs.add(lblGebudeKosten, "cell 0 0 2 1,alignx center");
+			
+			JLabel lblGebude = new JLabel("Geb\u00E4ude:");
+			lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_building_costs.add(lblGebude, "cell 0 2,alignx trailing");
+			
+			JComboBox<Building> comboBox = new JComboBox<Building>();
+			panel_building_costs.add(comboBox, "cell 1 2,growx");
+			
+			JPanel panel_building_costs_2 = new JPanel();
+			panel_building_costs_2.setBackground(Color.GRAY);
+			panel_building_costs.add(panel_building_costs_2, "cell 0 3 2 1,grow");
+			panel_building_costs_2.setLayout(new MigLayout("", "[][grow][grow]", "[][grow][grow][grow]"));
+			
+			JLabel lblKosten = new JLabel("Kosten:");
+			lblKosten.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_building_costs_2.add(lblKosten, "cell 1 0,alignx center");
+			
+			JLabel lblErtrge = new JLabel("Ertr\u00E4ge:");
+			lblErtrge.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_building_costs_2.add(lblErtrge, "cell 2 0,alignx center");
+			
+			JLabel lblCredits_1 = new JLabel("Credits:");
+			lblCredits_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_building_costs_2.add(lblCredits_1, "cell 0 1,alignx trailing");
+			
+			txtCostscredits = new JTextField();
+			txtCostscredits.setHorizontalAlignment(SwingConstants.CENTER);
+			txtCostscredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtCostscredits.setBackground(Color.LIGHT_GRAY);
+			txtCostscredits.setEditable(false);
+			panel_building_costs_2.add(txtCostscredits, "cell 1 1,alignx center");
+			txtCostscredits.setColumns(3);
+			
+			txtGaincredits = new JTextField();
+			txtGaincredits.setHorizontalAlignment(SwingConstants.CENTER);
+			txtGaincredits.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtGaincredits.setBackground(Color.LIGHT_GRAY);
+			txtGaincredits.setEditable(false);
+			panel_building_costs_2.add(txtGaincredits, "cell 2 1,alignx center");
+			txtGaincredits.setColumns(3);
+			
+			JLabel lblMunition_1 = new JLabel("Munition:");
+			lblMunition_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_building_costs_2.add(lblMunition_1, "cell 0 2,alignx trailing");
+			
+			txtCostsammo = new JTextField();
+			txtCostsammo.setHorizontalAlignment(SwingConstants.CENTER);
+			txtCostsammo.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtCostsammo.setBackground(Color.LIGHT_GRAY);
+			txtCostsammo.setEditable(false);
+			panel_building_costs_2.add(txtCostsammo, "cell 1 2,alignx center");
+			txtCostsammo.setColumns(3);
+			
+			txtGainammo = new JTextField();
+			txtGainammo.setHorizontalAlignment(SwingConstants.CENTER);
+			txtGainammo.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtGainammo.setBackground(Color.LIGHT_GRAY);
+			txtGainammo.setEditable(false);
+			panel_building_costs_2.add(txtGainammo, "cell 2 2,alignx center");
+			txtGainammo.setColumns(3);
+			
+			JLabel lblEridium = new JLabel("Eridium:");
+			lblEridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			panel_building_costs_2.add(lblEridium, "cell 0 3,alignx trailing");
+			
+			txtCostseridium = new JTextField();
+			txtCostseridium.setHorizontalAlignment(SwingConstants.CENTER);
+			txtCostseridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtCostseridium.setBackground(Color.LIGHT_GRAY);
+			txtCostseridium.setEditable(false);
+			panel_building_costs_2.add(txtCostseridium, "cell 1 3,alignx center");
+			txtCostseridium.setColumns(3);
+			
+			txtGaineridium = new JTextField();
+			txtGaineridium.setHorizontalAlignment(SwingConstants.CENTER);
+			txtGaineridium.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			txtGaineridium.setBackground(Color.LIGHT_GRAY);
+			txtGaineridium.setEditable(false);
+			panel_building_costs_2.add(txtGaineridium, "cell 2 3,alignx center");
+			txtGaineridium.setColumns(3);
 			
 			JPanel panel_fields = new JPanel();
 			panel_fields.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_fields.setBackground(Color.GRAY);
-			panel.add(panel_fields, "cell 0 1 2 1,grow");
+			panel.add(panel_fields, "cell 0 2 2 1,grow");
 			panel_fields.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
 			
 			JLabel lblGebiete = new JLabel("Gebiete:");
@@ -234,7 +279,7 @@ public class ResourceInfoFrame extends JFrame {
 			JScrollPane scrollPane_fields_all = new JScrollPane();
 			panel_fields.add(scrollPane_fields_all, "cell 0 2,grow");
 			
-			JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+			list_fields_all = new JList<Field>(fieldAllListModel);
 			list_fields_all.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent e) {
 					updateField(list_fields_all.getSelectedValue());
@@ -246,12 +291,12 @@ public class ResourceInfoFrame extends JFrame {
 			scrollPane_fields_all.setViewportView(list_fields_all);
 			
 			fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
-			panel.add(fieldPanel, "cell 2 1 2 1,grow");
+			panel.add(fieldPanel, "cell 2 2 2 1,grow");
 			
 			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/marcus_1.png"));
 			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setBackground(Color.GRAY);
-			panel.add(panel_image, "cell 4 1,grow");
+			panel.add(panel_image, "cell 4 2,grow");
 		}
 		
 		update();
@@ -262,10 +307,22 @@ public class ResourceInfoFrame extends JFrame {
 		updateFields();
 		updateCosts();
 		updateBuildings();
+		updateBuildingCosts();
 	}
 	
 	private void updateCosts() {
-		//TODO count the costs for fields, commands, hero cards, ...
+		txtCredits.setText("");
+		txtAmmo.setText("");
+		Field field = list_fields_all.getSelectedValue();
+		if (field != null && field.getCommand() != null) {
+			txtCredits.setText(Integer.toString(UserResource.getCreditsForCommand(field.getCommand(), field)));
+			txtAmmo.setText(Integer.toString(UserResource.getAmmoForCommand(field.getCommand(), field)));
+		}
+		txtFields.setText(Integer.toString(game.getBoard().getUsersFields(game.getLocalUser()).size() * Game.getGameVariableStorage().getFieldCosts()));
+	}
+	
+	private void updateBuildingCosts() {
+		//TODO
 	}
 	
 	private void updateField(Field field) {

@@ -314,7 +314,12 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			else {
 				txtSpieler.setText("-----");
 			}
-			//TODO add the field command to txtBefehl
+			if (field.getCommand() != null) {
+				txtBefehl.setText(field.getCommand().getName());				
+			}
+			else {
+				txtBefehl.setText("-----");
+			}
 			txtTruppennormal.setText(Integer.toString(field.getNormalTroops()));
 			txtTruppenbadass.setText(Integer.toString(field.getBadassTroops()));
 			txtGebude.setText(field.getBuilding().getName());
@@ -342,7 +347,7 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			txtFeld.setText("");
 			txtRegion.setText("");
 			txtSpieler.setText("");
-			//TODO add the field command to txtBefehl
+			txtFeld.setText("");
 			txtTruppennormal.setText("");
 			txtTruppenbadass.setText("");
 			txtGebude.setText("");

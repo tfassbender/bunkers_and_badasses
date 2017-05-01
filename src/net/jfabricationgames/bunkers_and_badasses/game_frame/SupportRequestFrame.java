@@ -234,11 +234,11 @@ public class SupportRequestFrame extends JFrame {
 		else {
 			fight.getDefenceSupporters().add(supportField);
 		}
-		manager.sendUpdate();
+		manager.update();
 	}
 	private void reject() {
 		fight.getSupportRejections().add(supportField);
-		manager.sendUpdate();
+		manager.update();
 	}
 	
 	private void updateRequest(Fight fight, Field support) {

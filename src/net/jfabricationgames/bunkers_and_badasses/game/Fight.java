@@ -174,6 +174,14 @@ public class Fight {
 		}
 	}
 	
+	public boolean allSupportersAnswered() {
+		return getAttackSupporters().size() + getDefenceSupporters().size() + getSupportRejections().size() == getPossibleSupporters().size();
+	}
+	
+	public boolean isAllFallenTroopsChosen() {
+		return getFallenTroops().keySet().size() == getFallingTroopsSupport().keySet().size() + 2;
+	}
+	
 	public User getAttackingPlayer() {
 		return attackingPlayer;
 	}

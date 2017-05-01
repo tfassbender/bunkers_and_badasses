@@ -557,7 +557,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	
 	@Override
 	public void receiveSelectedHero(Hero hero) {
-		//TODO receive the selected hero card
+		//TODO receive the selected hero card (play hero card)
 	}
 
 	@Override

@@ -855,7 +855,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				throw new IllegalArgumentException("Selecting player is neither attacker nor defender.");
 			}
 			//the information is sent but hold back by the frame
-			game.getFightManager().sendUpdate();
+			game.getFightManager().update();
 		}
 	}
 	
@@ -880,7 +880,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		else {
 			throw new IllegalArgumentException("Selecting player is neither attacker nor defender.");
 		}
-		game.getFightManager().sendUpdate();
+		game.getFightManager().update();
 	}
 	
 	private void selectRetreatField() {
@@ -891,12 +891,12 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		else if (fieldRetreadModel.isEmpty()) {
 			fight.setRetreatField(null);
 			fight.setRetreatFieldChosen(true);
-			game.getFightManager().sendUpdate();
+			game.getFightManager().update();
 		}
 		else {
 			fight.setRetreatField(list_rueckzug.getSelectedValue());
 			fight.setRetreatFieldChosen(true);
-			game.getFightManager().sendUpdate();
+			game.getFightManager().update();
 		}
 	}
 	
@@ -913,7 +913,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			fight.setFallingTroopsLooser(fallingTroopsLooser);
 			fight.setFallingTroopsSupport(fallingSupportTroops);
 			fight.setFallingTroopsChosen(true);
-			game.getFightManager().sendUpdate();
+			game.getFightManager().update();
 		}
 	}
 	
@@ -942,7 +942,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		else {
 			fight.setFallenTroops(fallenTroops);
 			fight.setFallenTroopsChosen(true);
-			game.getFightManager().sendUpdate();
+			game.getFightManager().update();
 		}
 	}
 	

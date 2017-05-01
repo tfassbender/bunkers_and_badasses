@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import net.jfabricationgames.bunkers_and_badasses.error.MovementException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
@@ -90,8 +91,20 @@ public class Board implements Serializable {
 	 * @throws IllegalArgumentException
 	 * 		An IllegalArgumentException is thrown if anything in the input is not correct.
 	 */
-	public void moveTroops(Field start, Field end, int normalTroops, int badassTroops) throws IllegalArgumentException {
-		//TODO
+	public void moveTroops(Field start, Field end, int normalTroops, int badassTroops) throws MovementException {
+		if (!start.getAffiliation().equals(end.getAffiliation()) && end.getTroopStrength() != 0) {
+			throw new MovementException("Can't move troops to a non empty enemy field (" + start.getName() + " -> " + end.getName() + ").");
+		}
+		else if (start.getNormalTroops() < normalTroops || start.getBadassTroops() < badassTroops) {
+			throw new MovementException("Can't move more troops than there are in the field(" + start.getName() + " -> " + end.getName() + ").");
+		}
+		if (!end.getAffiliation().equals(start.getAffiliation())) {
+			end.setAffiliation(start.getAffiliation());
+		}
+		start.removeNormalTroops(normalTroops);
+		start.removeBadassTroops(badassTroops);
+		end.addNormalTroops(normalTroops);
+		end.addBadassTroops(badassTroops);
 	}
 	
 	/**

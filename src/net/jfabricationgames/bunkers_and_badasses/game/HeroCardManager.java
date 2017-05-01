@@ -31,7 +31,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Springs;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.TinyTina;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Wilhelm;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Zero;
-import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class HeroCardManager {

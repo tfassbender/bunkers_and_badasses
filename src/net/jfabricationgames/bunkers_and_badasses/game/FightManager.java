@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.FightExecutionFrame;
@@ -26,17 +27,21 @@ public class FightManager {
 	private transient GameTurnBonusManager gameTurnBonusManager;
 	private transient GameTurnGoalManager gameTurnGoalManager;
 	private PointManager pointManager;
+	private transient TurnExecutionManager turnExecutionManager;
+	private Board board;
 	
 	private JFGClient client;
 	
 	public FightManager(JFGClient client, User localPlayer, List<User> players, GameTurnBonusManager gameTurnBonusManager, 
-			GameTurnGoalManager gameTurnGoalManager, PointManager pointManager) {
+			GameTurnGoalManager gameTurnGoalManager, PointManager pointManager, TurnExecutionManager turnExecutionManager, Board board) {
 		this.client = client;
 		this.localPlayer = localPlayer;
 		this.players = players;
 		this.gameTurnBonusManager = gameTurnBonusManager;
 		this.gameTurnGoalManager = gameTurnGoalManager;
 		this.pointManager = pointManager;
+		this.turnExecutionManager = turnExecutionManager;
+		this.board = board;
 	}
 	
 	/**
@@ -49,6 +54,7 @@ public class FightManager {
 		//the fight can be overwritten because this message is not sent during a fight
 		this.currentFight = fightManager.getCurrentFight();
 		this.pointManager = fightManager.getPointManager();
+		this.board = fightManager.getBoard();
 	}
 	
 	/**
@@ -81,10 +87,35 @@ public class FightManager {
 		client.sendMessage(message);
 	}
 	
+	/**
+	 * End the fight by calculating all players points, moving the troops and ending the players turn.
+	 */
 	public void endFight() {
 		giveOutPoints();
-		//TODO
+		//remove the fallen troops
+		int[] fallenTroops;
+		for (Field field : currentFight.getFallenTroops().keySet()) {
+			fallenTroops = currentFight.getFallenTroops().get(field);
+			field.removeNormalTroops(fallenTroops[0]);
+			field.removeBadassTroops(fallenTroops[1]);
+		}
+		//move the attacking troops to the new field and the loosing troops to the retreat field 
+		if (currentFight.getWinner() == Fight.ATTACKERS) {
+			//move the loosing troops to the retreat field
+			Field retreatField = currentFight.getRetreatField();
+			if (retreatField != null) {
+				board.moveTroops(currentFight.getDefendingField(), currentFight.getRetreatField(), currentFight.getDefendingField().getNormalTroops(), 
+						currentFight.getDefendingField().getBadassTroops());
+			}
+			//move the surviving attackers to their new field
+			fallenTroops = currentFight.getFallenTroops().get(currentFight.getAttackingField());
+			int[] movingTroops = {currentFight.getAttackingNormalTroops() - fallenTroops[0], currentFight.getAttackingBadassTroops() - fallenTroops[1]};
+			board.moveTroops(currentFight.getAttackingField(), currentFight.getDefendingField(), movingTroops[0], movingTroops[1]);
+		}
+		//end the players turn
+		turnExecutionManager.commit();
 	}
+	
 	public void giveOutPoints() {
 		//points for attacker and winner
 		pointManager.addPoints(currentFight.getAttackingPlayer(), Game.getGameVariableStorage().getFightAttackerPoints());
@@ -119,9 +150,47 @@ public class FightManager {
 	}
 	
 	/**
+	 * Update the current fight and then send an update.
+	 */
+	public void update() {
+		boolean fightEnded = false;
+		if (currentFight.getAttackingPlayer().equals(localPlayer)) {
+			//check for a changed battle state and then send an update
+			if (currentFight.allSupportersAnswered()) {
+				//all supporters answered -> set battle state
+				currentFight.setBattleState(Fight.STATE_HEROS);
+			}
+			if (currentFight.isAttackingHeroChosen() && currentFight.isDefendingHeroChosen()) {
+				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
+			}
+			if (currentFight.isRetreatFieldChosen()) {
+				currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
+			}
+			if (currentFight.isFallingTroopsChosen()) {
+				currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);
+			}
+			if (currentFight.isFallenTroopsChosen()) {
+				if (currentFight.isAllFallenTroopsChosen()) {
+					//all support fields, attacking and defending field have chosen their falling troops
+					currentFight.setBattleState(Fight.STATE_FIGHT_ENDED);
+					fightEnded = true;
+				}
+			}
+			sendUpdate();
+		}
+		else {
+			//just send an update and let the attacking player merge it
+			sendUpdate();
+		}
+		if (fightEnded) {
+			//execute the fight end after the update was sent
+			endFight();
+		}
+	}
+	/**
 	 * Send an update to the (fight-)starting player or the other player if the local player is the starter.
 	 */
-	public void sendUpdate() {
+	private void sendUpdate() {
 		FightTransfereMessage message = new FightTransfereMessage(currentFight, currentFight.getAttackingPlayer().equals(localPlayer));
 		client.sendMessage(message);
 	}
@@ -150,6 +219,7 @@ public class FightManager {
 	 * 		The fight object that is to be merged with the current fight.
 	 */
 	private void mergeFight(Fight fight) {
+		boolean fightEnded = false;
 		//merge the supports and add the strength
 		if (fight.getBattleState() == Fight.STATE_SUPPORT) {
 			if (fight.getAttackSupporters().size() > currentFight.getAttackSupporters().size()) {
@@ -163,10 +233,10 @@ public class FightManager {
 			if (fight.getSupportRejections().size() > currentFight.getSupportRejections().size()) {
 				currentFight.setSupportRejections(fight.getSupportRejections());
 			}
-			if (fight.getAttackSupporters().size() + fight.getDefenceSupporters().size() + fight.getSupportRejections().size() == fight.getPossibleSupporters().size()) {
+			if (fight.allSupportersAnswered()) {
 				//all supporters answered -> set battle state
 				fight.setBattleState(Fight.STATE_HEROS);
-			}			
+			}
 		}
 		//merge the defenders hero card (if one)
 		if (fight.isDefendingHeroChosen()) {
@@ -197,13 +267,18 @@ public class FightManager {
 			for (Field field : fight.getFallenTroops().keySet()) {
 				fallenTroops.put(field, fight.getFallenTroops().get(field));
 			}
-			if (currentFight.getFallenTroops().keySet().size() == currentFight.getFallingTroopsSupport().keySet().size() + 2) {
+			if (currentFight.isAllFallenTroopsChosen()) {
 				//all support fields, attacking and defending field have chosen their falling troops
 				currentFight.setBattleState(Fight.STATE_FIGHT_ENDED);
+				fightEnded = true;
 			}
 		}
 		FightTransfereMessage message = new FightTransfereMessage(currentFight, true);
 		client.sendMessage(message);
+		if (fightEnded) {
+			//execute the fight end after the update was sent
+			endFight();
+		}
 	}
 	/**
 	 * Just override the current fight with the update from the server.
@@ -264,5 +339,9 @@ public class FightManager {
 	}
 	public void setPointManager(PointManager pointManager) {
 		this.pointManager = pointManager;
+	}
+	
+	private Board getBoard() {
+		return board;
 	}
 }
