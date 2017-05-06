@@ -667,7 +667,9 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 * Start the game frame after the troops are positioned.
 	 */
 	private void startGame() {
-		//TODO start the game
+		game.getGameFrame().setVisible(true);
+		game.getGameFrame().requestFocus();
+		dispose();
 	}
 	
 	/**

@@ -36,6 +36,18 @@ public class UserResourceManager {
 	}
 	
 	/**
+	 * Receive changes from the plan manager that apply the changes of other users planing phases.
+	 * 
+	 * @param newResources
+	 * 		The new resources of all users.
+	 */
+	public void receiveChanges(Map<User, UserResource> newResources) {
+		for (User user : newResources.keySet()) {
+			resources.put(user, newResources.get(user));
+		}
+	}
+	
+	/**
 	 * Collect the game start resources for a user.
 	 * 
 	 * @param user

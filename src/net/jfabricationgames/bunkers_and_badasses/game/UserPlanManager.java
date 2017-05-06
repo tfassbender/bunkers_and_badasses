@@ -7,12 +7,16 @@ import net.jfabricationgames.bunkers_and_badasses.error.CommandException;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class UserPlanManager {
 	
 	private Game game;
 	private Map<Field, Command> fieldCommands;
+	private Map<Field, Command> allCommands;//store the commands of all players that committed their planes
+	private Map<User, UserResource> playerCommitted;//if the player committed there must be his resources
 	public static int[] START_COMMANDS;//the commands that every user gets by default (loaded from the database)
 	public static final int COMMAND_SUPPORT = 0;
 	public static final int COMMAND_RAID = 1;
@@ -30,6 +34,8 @@ public class UserPlanManager {
 		this.game = game;
 		this.gameTurnBonusManager = gameTurnBonusManager;
 		fieldCommands = new HashMap<Field, Command>();
+		allCommands = new HashMap<Field, Command>();
+		playerCommitted = new HashMap<User, UserResource>();
 	}
 	
 	/**
@@ -100,11 +106,46 @@ public class UserPlanManager {
 	 * Add the commands to the board and commit them to the server.
 	 */
 	public void commit() {
-		for (Field field : fieldCommands.keySet()) {
+		//commands are added to the field in the merge method
+		/*for (Field field : fieldCommands.keySet()) {
 			field.setCommand(fieldCommands.get(field));
+		}*/
+		if (game.getLocalUser().equals(game.getStartingPlayer())) {
+			mergeGame(game);
+		}
+		else {
+			GameTransferMessage message = new GameTransferMessage();
+			message.setGame(game);
+			message.setType(GameTransferMessage.TransferType.PLANING_COMMIT);
+			game.getClient().sendMessage(message);			
 		}
 		fieldCommands = new HashMap<Field, Command>();
-		game.sendToServer();
+	}
+	
+	/**
+	 * Merge the committed planes of a player to a temporary game.
+	 * 
+	 * @param game
+	 * 		The game the player committed.
+	 */
+	public void mergeGame(Game game) {
+		Map<Field, Command> fieldCommands = game.getPlanManager().getFieldCommands();
+		for (Field field : fieldCommands.keySet()) {
+			allCommands.put(field, fieldCommands.get(field));
+		}
+		playerCommitted.put(game.getLocalUser(), game.getResourceManager().getResources().get(game.getLocalUser()));
+		if (playerCommitted.size() == game.getPlayers().size()) {
+			//all players have committed their planes -> apply the changes and send an update
+			for (Field field : allCommands.keySet()) {
+				field.setCommand(allCommands.get(field));
+			}
+			this.game.getResourceManager().receiveChanges(playerCommitted);
+			game.setState(GameState.ACT);
+			GameTransferMessage message = new GameTransferMessage();
+			message.setGame(game);
+			message.setType(GameTransferMessage.TransferType.TURN_OVER);//start the next (first) turn (broadcasted)
+			game.getClient().sendMessage(message);
+		}
 	}
 	
 	public static void receiveStartCommands(int[] startCommands) {
@@ -113,6 +154,10 @@ public class UserPlanManager {
 	
 	public int getCommandsLeft(int type) {
 		return commands[type];
+	}
+	
+	private Map<Field, Command> getFieldCommands() {
+		return fieldCommands;
 	}
 	
 	public UserResource getCurrentResource() {

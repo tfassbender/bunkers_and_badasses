@@ -130,7 +130,7 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void receiveGame(Game game) {
 		this.game = new Game(game.getClient(), game.getPlayers());
-		this.game.merge(game);
+		this.game.merge(game);//merge the game to keep the transient fields
 		if (board != null && gameId != -1) {
 			startGameFrame();
 		}
@@ -199,7 +199,7 @@ public class GameStartDialog extends JDialog {
 		//resources are added by the server because of the skills
 		GameTransferMessage gameTransferMessage = new GameTransferMessage();
 		gameTransferMessage.setGame(game);
-		gameTransferMessage.setNewGame(true);
+		gameTransferMessage.setType(GameTransferMessage.TransferType.NEW_GAME);
 		client.sendMessage(gameTransferMessage);
 		//wait for the server to send the game id, the board and the completed game object
 	}

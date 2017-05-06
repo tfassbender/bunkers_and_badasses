@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -19,6 +18,7 @@ public class Game implements Serializable {
 	private Board board;
 	private List<User> players;
 	private transient User localUser;
+	private User startingPlayer;
 	private GameState gameState;
 	private PlayerOrder playerOrder;
 	private UserResourceManager resourceManager;
@@ -52,21 +52,13 @@ public class Game implements Serializable {
 		gameTurnGoalManager = new GameTurnGoalManager(pointManager);
 		turnManager = new GameTurnManager(this);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
-		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager);
+		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager, this);
 		heroCardManager = new HeroCardManager();
 		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseRandomColors(players);
 		fightManager = new FightManager(client, localUser, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
-	}
-	
-	/**
-	 * Send a GameTransfere message containing this game to the server.
-	 */
-	public void sendToServer() {
-		GameTransferMessage message = new GameTransferMessage();
-		message.setGame(this);
-		client.sendMessage(message);
+		gameFrame = new GameFrame(this);
 	}
 	
 	/**
@@ -118,6 +110,13 @@ public class Game implements Serializable {
 	}
 	public void setLocalUser(User localUser) {
 		this.localUser = localUser;
+	}
+	
+	public User getStartingPlayer() {
+		return startingPlayer;
+	}
+	public void setStartingPlayer(User startingPlayer) {
+		this.startingPlayer = startingPlayer;
 	}
 	
 	public GameState getGameState() {

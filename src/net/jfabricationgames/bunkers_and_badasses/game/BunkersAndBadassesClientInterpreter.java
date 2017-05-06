@@ -74,7 +74,20 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	}
 	
 	private void interpreteGameTransferMessage(GameTransferMessage message) {
-		gameStartDialog.receiveGame(message.getGame());
+		switch (message.getType()) {
+			case NEW_GAME:
+				//pass on the new game
+				gameStartDialog.receiveGame(message.getGame());
+				break;
+			case PLANING_COMMIT:
+				//merge the players planes in the UserPlanManager
+				game.getPlanManager().mergeGame(message.getGame());
+				break;
+			case TURN_OVER:
+				//merge the complete game
+				game.merge(message.getGame());
+				break;
+		}
 	}
 	
 	private void interpretePreGameDataMessage(PreGameDataMessage message) {

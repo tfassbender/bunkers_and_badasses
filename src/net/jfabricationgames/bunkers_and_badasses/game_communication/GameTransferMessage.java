@@ -13,9 +13,15 @@ public class GameTransferMessage implements JFGServerMessage, JFGClientMessage {
 	
 	private Game game;
 	
-	//identify the reason for the game transfer by these booleans
-	private boolean newGame;
-
+	private TransferType type;
+	
+	//identify the reason for the game transfer
+	public static enum TransferType {
+		NEW_GAME,
+		TURN_OVER,
+		PLANING_COMMIT;
+	}
+	
 	public Game getGame() {
 		return game;
 	}
@@ -23,10 +29,10 @@ public class GameTransferMessage implements JFGServerMessage, JFGClientMessage {
 		this.game = game;
 	}
 	
-	public boolean isNewGame() {
-		return newGame;
+	public TransferType getType() {
+		return type;
 	}
-	public void setNewGame(boolean newGame) {
-		this.newGame = newGame;
+	public void setType(TransferType type) {
+		this.type = type;
 	}
 }

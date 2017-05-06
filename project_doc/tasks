@@ -1,9 +1,7 @@
 Bunkers and Badasses - Tasks
 
 
-- implement building costs in the resource frame
-- implement the client-server communication for the game functions
 - implement the storing of the used resources
 - implement hero and building functions
+- implement storing and loading of the game in the database
 - create the statistics of a game and store them in the database when the game ends
-- frame functions

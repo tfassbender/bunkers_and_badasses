@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.TurnExecutionFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -30,18 +31,26 @@ public class TurnExecutionManager {
 	private GameTurnGoalManager gameTurnGoalManager;
 	private PointManager pointManager;
 	private transient TurnExecutionFrame turnExecutionFrame;
+	private Game game;
 	
 	public TurnExecutionManager(User localUser, UserResourceManager userResourceManager, GameTurnBonusManager gameTurnBonusManager, 
-			GameTurnGoalManager gameTurnGoalManager, PointManager pointManager) {
+			GameTurnGoalManager gameTurnGoalManager, PointManager pointManager, Game game) {
 		this.localUser = localUser;
 		this.userResourceManager = userResourceManager;
 		this.gameTurnBonusManager = gameTurnBonusManager;
 		this.gameTurnGoalManager = gameTurnGoalManager;
 		this.pointManager = pointManager;
+		this.game = game;
 	}
 	
+	/**
+	 * The player has made his move. Now commit the changes to the server and to the other players.
+	 */
 	public void commit() {
-		//TODO
+		GameTransferMessage message = new GameTransferMessage();
+		message.setGame(game);
+		message.setType(GameTransferMessage.TransferType.TURN_OVER);
+		game.getClient().sendMessage(message);
 	}
 	
 	public Board getBoard() {

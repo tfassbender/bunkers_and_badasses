@@ -5,7 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -26,7 +29,17 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.CrazyEarlsBlackMarket;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MarcusGunshop;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisTavern;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisUnderdome;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.RolandsTurret;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ScootersCatchARide;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.TannisResearchStation;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.TinyTinasMine;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.TorguesBadassDome;
 import net.miginfocom.swing.MigLayout;
 
 public class ResourceInfoFrame extends JFrame {
@@ -34,6 +47,8 @@ public class ResourceInfoFrame extends JFrame {
 	private static final long serialVersionUID = -3046544027968281699L;
 	
 	private final JPanel contentPanel = new JPanel();
+	
+	private final Building[] buildings = createBuildings();
 	
 	private Game game;
 	
@@ -56,6 +71,7 @@ public class ResourceInfoFrame extends JFrame {
 	private JTextField txtGainammo;
 	private JTextField txtCostseridium;
 	private JTextField txtGaineridium;
+	private JComboBox<Building> comboBox;
 	
 	public ResourceInfoFrame(Game game) {
 		this.game = game;
@@ -190,7 +206,13 @@ public class ResourceInfoFrame extends JFrame {
 			lblGebude.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_building_costs.add(lblGebude, "cell 0 2,alignx trailing");
 			
-			JComboBox<Building> comboBox = new JComboBox<Building>();
+			DefaultComboBoxModel<Building> model = new DefaultComboBoxModel<Building>(buildings);
+			comboBox = new JComboBox<Building>(model);
+			comboBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					updateBuildingCosts();
+				}
+			});
 			panel_building_costs.add(comboBox, "cell 1 2,growx");
 			
 			JPanel panel_building_costs_2 = new JPanel();
@@ -322,7 +344,15 @@ public class ResourceInfoFrame extends JFrame {
 	}
 	
 	private void updateBuildingCosts() {
-		//TODO
+		Building building = (Building) comboBox.getSelectedItem();
+		if (building != null) {
+			txtCostscredits.setText(Integer.toString(building.getBuildingPrice()[0]));
+			txtCostsammo.setText(Integer.toString(building.getBuildingPrice()[1]));
+			txtCostseridium.setText(Integer.toString(building.getBuildingPrice()[2]));
+			txtGaincredits.setText(Integer.toString(building.getCreditMining()));
+			txtGainammo.setText(Integer.toString(building.getAmmoMining()));
+			txtGaineridium.setText(Integer.toString(building.getEridiumMining()));			
+		}
 	}
 	
 	private void updateField(Field field) {
@@ -338,6 +368,21 @@ public class ResourceInfoFrame extends JFrame {
 		for (Field field : game.getBoard().getFields()) {
 			fieldAllListModel.addElement(field);
 		}
+	}
+	
+	private Building[] createBuildings() {
+		Building[] buildings = new Building[10];
+		buildings[0] = new ArschgaulsPalace();
+		buildings[1] = new CrazyEarlsBlackMarket();
+		buildings[2] = new MarcusGunshop();
+		buildings[3] = new MoxxisTavern();
+		buildings[4] = new MoxxisUnderdome();
+		buildings[5] = new RolandsTurret();
+		buildings[6] = new ScootersCatchARide();
+		buildings[7] = new TannisResearchStation();
+		buildings[8] = new TinyTinasMine();
+		buildings[9] = new TorguesBadassDome();
+		return buildings;
 	}
 	
 	private void updateBuildings() {
