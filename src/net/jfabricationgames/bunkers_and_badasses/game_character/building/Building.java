@@ -4,10 +4,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
-public abstract class Building {
+public abstract class Building implements Serializable {
+	
+	private static final long serialVersionUID = 4515243178671362606L;
 	
 	//this variables are set to the loaded values from the database
 	protected int recruitableTroops;

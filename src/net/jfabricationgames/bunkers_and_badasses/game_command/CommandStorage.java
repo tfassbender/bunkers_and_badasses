@@ -1,6 +1,10 @@
 package net.jfabricationgames.bunkers_and_badasses.game_command;
 
-public class CommandStorage {
+import java.io.Serializable;
+
+public class CommandStorage implements Serializable {
+	
+	private static final long serialVersionUID = 294020613163694272L;
 	
 	public static final int CREDITS = 0;
 	public static final int AMMO = 1;

@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
+
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
@@ -7,7 +9,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransfe
 import net.jfabricationgames.bunkers_and_badasses.game_frame.TurnExecutionFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class TurnExecutionManager {
+public class TurnExecutionManager implements Serializable{
+	
+	private static final long serialVersionUID = 2756514790262944398L;
 	
 	public static final int RESOURCE_MINING_TYPE_CREDITS = 1;
 	public static final int RESOURCE_MINING_TYPE_AMMO = 2;

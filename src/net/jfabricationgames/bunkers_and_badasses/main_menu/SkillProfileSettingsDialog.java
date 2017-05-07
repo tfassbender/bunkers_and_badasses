@@ -85,7 +85,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 		
 		startSkillPoints = Game.getGameVariableStorage().getSkillPoints();
 		
-		root = new SkillTreeNode(0, null, 0, 0);
+		root = new SkillTreeNode(0, new JCheckBox(), 0, 0);//the checkbox is a dummy just to avoid nullpointers
 		root.setEnabled(true);
 		root.setSelected(true);
 		
@@ -837,7 +837,9 @@ public class SkillProfileSettingsDialog extends JDialog {
 		leafs.add(nameMap.get("h" + heros));
 		leafs.add(nameMap.get("p" + points));
 		for (SkillTreeNode node : leafs) {
-			selectPreviouse(node);
+			if (node != null) {
+				selectPreviouse(node);
+			}
 		}
 		enableSkills();
 	}

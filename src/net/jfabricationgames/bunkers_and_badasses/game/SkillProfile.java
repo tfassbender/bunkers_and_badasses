@@ -1,9 +1,13 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
+
 /**
  * A single skill profile for a player.
  */
-public class SkillProfile {
+public class SkillProfile implements Serializable{
+	
+	private static final long serialVersionUID = -7351745862222323508L;
 	
 	private int id;//the id in the database
 	
@@ -27,42 +31,42 @@ public class SkillProfile {
 		sb.append(eridium);
 		sb.append(" [");
 		sb.append(SkillProfileManager.ERIDIUM_SKILL_LEVEL[eridium]);
-		sb.append(" Eridium zusätzlich (zu Spielbeginn)]\n");
+		sb.append(" Eridium zusï¿½tzlich (zu Spielbeginn)]\n");
 		sb.append("Credits: ");
 		sb.append(credits);
 		sb.append(" [");
 		sb.append(SkillProfileManager.CREDITS_SKILL_LEVEL[credits]);
-		sb.append(" Credits zusätzlich (zu Spielbeginn)]\n");
+		sb.append(" Credits zusï¿½tzlich (zu Spielbeginn)]\n");
 		sb.append("Munition: ");
 		sb.append(ammo);
 		sb.append(" [");
 		sb.append(SkillProfileManager.AMMO_SKILL_LEVEL[ammo]);
-		sb.append(" Munition zusätzlich (zu Spielbeginn)]\n\n");
-		sb.append("Eridium Gebäude: ");
+		sb.append(" Munition zusï¿½tzlich (zu Spielbeginn)]\n\n");
+		sb.append("Eridium Gebï¿½ude: ");
 		sb.append(eridiumBuilding);
 		sb.append(" [");
 		sb.append(SkillProfileManager.ERIDIUM_BUILDING_SKILL_LEVEL[eridiumBuilding]);
-		sb.append(" Eridium zusätzlich (pro Gebäude pro Runde)]\n");
-		sb.append("Credits Gebäude: ");
+		sb.append(" Eridium zusï¿½tzlich (pro Gebï¿½ude pro Runde)]\n");
+		sb.append("Credits Gebï¿½ude: ");
 		sb.append(credits);
 		sb.append(" [");
 		sb.append(SkillProfileManager.CREDITS_BUILDING_SKILL_LEVEL[creditsBuilding]);
-		sb.append(" Credits zusätzlich (pro Gebäude pro Runde)]\n");
-		sb.append("Munition Gebäude: ");
+		sb.append(" Credits zusï¿½tzlich (pro Gebï¿½ude pro Runde)]\n");
+		sb.append("Munition Gebï¿½ude: ");
 		sb.append(ammo);
 		sb.append(" [");
 		sb.append(SkillProfileManager.AMMO_BUILDING_SKILL_LEVEL[ammoBuilding]);
-		sb.append(" Munition zusätzlich (pro Gebäude pro Runde)]\n\n");
+		sb.append(" Munition zusï¿½tzlich (pro Gebï¿½ude pro Runde)]\n\n");
 		sb.append("Helden: ");
 		sb.append(hero);
 		sb.append(" [");
 		sb.append(SkillProfileManager.HEROS_SKILL_LEVEL[hero]);
-		sb.append(" Helden-Karten zusätzlich (zu Spielbeginn)]\n\n");
+		sb.append(" Helden-Karten zusï¿½tzlich (zu Spielbeginn)]\n\n");
 		sb.append("Punkte: ");
 		sb.append(points);
 		sb.append(" [");
 		sb.append(SkillProfileManager.POINTS_SKILL_LEVEL[points]);
-		sb.append(" Siegpunkte zusätzlich (zu Spielbeginn)]");
+		sb.append(" Siegpunkte zusï¿½tzlich (zu Spielbeginn)]");
 		return sb.toString();
 	}
 	

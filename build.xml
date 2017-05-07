@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="BunkersAndBadasses" default="build_jars" basedir=".">
 
-	<property name="version.mayor">1</property>
-	<property name="version.minor">0</property>
-	<property name="version.patch">1</property>
+	<property name="version.mayor">0</property>
+	<property name="version.minor">1</property>
+	<property name="version.patch">0</property>
 
 	<property name="version">V${version.mayor}.${version.minor}.${version.patch}</property>
 
@@ -21,9 +21,9 @@
 	<property name="path_elem_jfg_toolbox">JFabricationGamesToolbox V1.0.6.jar</property>
 	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.1.0.jar</property>
 	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
-	<property name="path_elem_jfg_server">JFGServerV1.1.0.jar</property>
+	<property name="path_elem_jfg_server">jfg_serverV1.1.0.jar</property>
 	<property name="path_elem_miglayout">miglayout15-swing.jar</property>
-	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin</property>
+	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin.jar</property>
 
 	<target name="init">
 		<tstamp />
@@ -31,7 +31,7 @@
 	</target>
 
 	<target name="compile_src" depends="init">
-		<javac srcdir="${src}" destdir="${build}">
+		<javac srcdir="${src}" destdir="${build}" encoding="iso-8859-1">
 			<classpath>
 				<pathelement path="${path_elem_jfg_toolbox}" />
 				<pathelement path="${path_elem_jfg_database_login}" />

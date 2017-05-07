@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 
 public class TannisResearchStation extends Building {
 	
+	private static final long serialVersionUID = 365107852097952268L;
+
 	public TannisResearchStation() {
 		buildingId = 13;
 		extendedBuildingId = 14;

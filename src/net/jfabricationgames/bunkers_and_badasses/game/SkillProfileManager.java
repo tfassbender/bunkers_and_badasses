@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -7,7 +8,9 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 /**
  * A collection of the players skill profiles and the profits for every skill in a skill tree.
  */
-public class SkillProfileManager {
+public class SkillProfileManager implements Serializable {
+	
+	private static final long serialVersionUID = 7589608943124698412L;
 	
 	public static transient int[] CREDITS_SKILL_LEVEL;
 	public static transient int[] AMMO_SKILL_LEVEL;
@@ -42,15 +45,7 @@ public class SkillProfileManager {
 	}
 	
 	public SkillProfileManager() {
-		GameVariableStorage storage = Game.getGameVariableStorage();
-		CREDITS_SKILL_LEVEL = storage.getCreditsSkillLevel();
-		AMMO_SKILL_LEVEL = storage.getAmmoSkillLevel();
-		ERIDIUM_SKILL_LEVEL = storage.getEridiumSkillLevel();
-		CREDITS_BUILDING_SKILL_LEVEL = storage.getCreditsBuildingSkillLevel();
-		AMMO_BUILDING_SKILL_LEVEL = storage.getAmmoBuildingSkillLevel();
-		ERIDIUM_BUILDING_SKILL_LEVEL = storage.getEridiumBuildingSkillLevel();
-		POINTS_SKILL_LEVEL = storage.getPointsSkillLevel();
-		HEROS_SKILL_LEVEL = storage.getHerosSkillLevel();
+		loadSkillLevels();
 	}
 	
 	public static SkillProfile getDefaultSkillProfile() {
@@ -66,6 +61,20 @@ public class SkillProfileManager {
 	public void merge(SkillProfileManager profileManager) {
 		selectedProfile = profileManager.getSelectedProfiles();
 		userResourceManager = profileManager.getUserResourceManager();
+	}
+	
+	public void loadSkillLevels() {
+		GameVariableStorage storage = Game.getGameVariableStorage();
+		if (storage != null) {
+			CREDITS_SKILL_LEVEL = storage.getCreditsSkillLevel();
+			AMMO_SKILL_LEVEL = storage.getAmmoSkillLevel();
+			ERIDIUM_SKILL_LEVEL = storage.getEridiumSkillLevel();
+			CREDITS_BUILDING_SKILL_LEVEL = storage.getCreditsBuildingSkillLevel();
+			AMMO_BUILDING_SKILL_LEVEL = storage.getAmmoBuildingSkillLevel();
+			ERIDIUM_BUILDING_SKILL_LEVEL = storage.getEridiumBuildingSkillLevel();
+			POINTS_SKILL_LEVEL = storage.getPointsSkillLevel();
+			HEROS_SKILL_LEVEL = storage.getHerosSkillLevel();
+		}
 	}
 	
 	/**

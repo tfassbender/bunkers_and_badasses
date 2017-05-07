@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,9 @@ import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class UserResourceManager {
+public class UserResourceManager implements Serializable{
+	
+	private static final long serialVersionUID = 8009289780806245960L;
 	
 	private static int startingCredits;
 	private static int startingAmmo;

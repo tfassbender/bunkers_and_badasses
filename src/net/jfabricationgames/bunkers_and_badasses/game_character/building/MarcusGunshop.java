@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 
 public class MarcusGunshop extends Building {
 	
+	private static final long serialVersionUID = 7481004449327517585L;
+
 	public MarcusGunshop() {
 		buildingId = 4;
 		extendedBuildingId = 5;

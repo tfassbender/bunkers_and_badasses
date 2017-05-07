@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 
-public class FightManager {
+public class FightManager implements Serializable {
+	
+	private static final long serialVersionUID = 1371856895594412645L;
 	
 	private Map<Integer, List<Fight>> fights;//executed fights sorted by the game turns
 	

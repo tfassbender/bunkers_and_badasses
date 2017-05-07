@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusMineN
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusRecruit;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class GameTurnBonusManager {
+public class GameTurnBonusManager implements Serializable{
+	
+	private static final long serialVersionUID = -6139764381035657426L;
 	
 	private Map<User, TurnBonus> userBonuses;
 	

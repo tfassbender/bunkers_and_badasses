@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransfe
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class UserPlanManager {
+public class UserPlanManager implements Serializable {
+	
+	private static final long serialVersionUID = -7503526894497955261L;
 	
 	private Game game;
 	private Map<Field, Command> fieldCommands;

@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalTroopU
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalWildHunt;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class GameTurnGoalManager {
+public class GameTurnGoalManager implements Serializable {
+	
+	private static final long serialVersionUID = 3308092852949814804L;
 	
 	private List<TurnGoal> turnGoals;
 	

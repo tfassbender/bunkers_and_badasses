@@ -1,11 +1,13 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
-public enum GameState {
+import java.io.Serializable;
+
+public enum GameState implements Serializable {
 	
 	PLAN("Planungsphase"),
-	ACT("Ausführungsphase"),
+	ACT("Ausfï¿½hrungsphase"),
 	FIGHT("Kampf"),
-	SELECT_BONUS("Rundenbonus auswählen"),
+	SELECT_BONUS("Rundenbonus auswï¿½hlen"),
 	WAIT("Warten auf andere Spieler");
 	
 	private final String name;

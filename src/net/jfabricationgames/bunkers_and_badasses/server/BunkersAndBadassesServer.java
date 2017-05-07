@@ -821,7 +821,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		ResultSet result = null;
 		String username = connectionMap.get(connection).getUsername();
-		String query = "SELECT * FROM bunkers_and_badasses.skills WHERE name = " + username;
+		String query = "SELECT * FROM bunkers_and_badasses.skills WHERE name = '" + username + "'";
 		SkillProfile[] skillProfiles = new SkillProfile[5];//every user has 5 skill profiles
 		try (Statement statement = con.createStatement()) {
 			result = statement.executeQuery(query);//load the skill profile
@@ -942,9 +942,9 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		CommandStorage commandStorage = new CommandStorage();
 		TurnBonusStorage turnBonusStorage = new TurnBonusStorage();
 		String gameVariablesQuery = "SELECT * FROM bunkers_and_badasses.game_variables WHERE used = true";
-		String skillResourcesQuery = "SELECT * FROM bunkser_and_badasses.skill_resources";
+		String skillResourcesQuery = "SELECT * FROM bunkers_and_badasses.skill_resources";
 		String startResourcesQuery = "SELECT * FROM bunkers_and_badasses.start_resources WHERE used = true";
-		String buildingQuery = "SELECT * FROM bunkers_and_badasses.buliding_variables";
+		String buildingQuery = "SELECT * FROM bunkers_and_badasses.building_variables";
 		String buildingCostQuery = "SELECT * FROM bunkers_and_badasses.costs_building";
 		String troopCostQuery = "SELECT * FROM bunkers_and_badasses.costs_troop";
 		String commandCostQuery = "SELECT * FROM bunkers_and_badasses.costs_command";

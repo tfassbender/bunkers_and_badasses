@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 
 public class MoxxisUnderdome extends Building {
 	
+	private static final long serialVersionUID = -5161948325226351128L;
+
 	public MoxxisUnderdome() {
 		buildingId = 8;
 		extendedBuildingId = 9;

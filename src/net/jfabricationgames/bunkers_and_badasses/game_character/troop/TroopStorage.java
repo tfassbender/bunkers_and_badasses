@@ -1,6 +1,10 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.troop;
 
-public class TroopStorage {
+import java.io.Serializable;
+
+public class TroopStorage implements Serializable {
+	
+	private static final long serialVersionUID = 2820781922417466860L;
 	
 	public static final int BASE_COSTS_CREDITS = 0;
 	public static final int BASE_COSTS_AMMO = 1;

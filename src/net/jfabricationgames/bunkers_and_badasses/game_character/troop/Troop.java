@@ -3,8 +3,11 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.troop;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public abstract class Troop {
+public abstract class Troop implements Serializable {
+	
+	private static final long serialVersionUID = -9008608458269567516L;
 	
 	public static final int PLAYER_TROOP = 1;
 	public static final int NEUTRAL_TROOP = 2;

@@ -2,6 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 
 public class CrazyEarlsBlackMarket extends Building {
 	
+	private static final long serialVersionUID = -4191238998602148831L;
+
 	public CrazyEarlsBlackMarket() {
 		buildingId = 1;
 		extendedBuildingId = 2;

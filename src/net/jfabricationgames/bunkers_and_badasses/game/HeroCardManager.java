@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Wilhelm;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Zero;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class HeroCardManager {
+public class HeroCardManager implements Serializable {
+	
+	private static final long serialVersionUID = -6570342001095822061L;
 	
 	public static final transient List<Class<? extends Hero>> HERO_CLASSES = createHeroClassList(); 
 	

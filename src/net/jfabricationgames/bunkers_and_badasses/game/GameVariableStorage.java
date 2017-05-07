@@ -1,9 +1,13 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
+
 /**
  * Store and load variables that are dynamically loaded from the database.
  */
-public class GameVariableStorage {
+public class GameVariableStorage implements Serializable {
+	
+	private static final long serialVersionUID = -8252916093434896527L;
 	
 	private int skillPoints;
 	private int gameTurns;

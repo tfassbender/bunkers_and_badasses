@@ -1,6 +1,10 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.building;
 
-public class BuildingStorage {
+import java.io.Serializable;
+
+public class BuildingStorage implements Serializable {
+	
+	private static final long serialVersionUID = 1417609801004884900L;
 	
 	public static final int RECRUITABLE_TROOPS = 0;
 	public static final int MINING_CREDITS = 1;

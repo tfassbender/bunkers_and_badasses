@@ -382,6 +382,7 @@ public class MainMenuFrame extends JFrame {
 		//Command.setStorage(message.getCommandStorage());
 		TurnBonus.setStorage(message.getTurnBonusStorage());
 		Game.setGameVariableStorage(message.getGameStorage());
+		skillProfileManager.loadSkillLevels();
 		dynamicVariablesLoaded = true;
 		//enable the game start buttons
 		btnSpielErstellen.setEnabled(true);
