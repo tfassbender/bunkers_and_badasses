@@ -165,7 +165,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxEridium = new JCheckBox("Eridium 1");
 					chckbxEridium.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -178,7 +178,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxCredits = new JCheckBox("Credits 1");
 					chckbxCredits.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -191,7 +191,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxPunkte = new JCheckBox("Punkte 1");
 					chckbxPunkte.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -239,7 +239,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxEridium_1 = new JCheckBox("Eridium 2");
 					chckbxEridium_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -252,7 +252,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxEridiumGebude = new JCheckBox("E. Geb\u00E4ude 1");
 					chckbxEridiumGebude.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -265,7 +265,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxCGebude = new JCheckBox("C. Geb\u00E4ude 1");
 					chckbxCGebude.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -278,7 +278,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxCredits_1 = new JCheckBox("Credits 2");
 					chckbxCredits_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -291,7 +291,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxMunition = new JCheckBox("Munition 1");
 					chckbxMunition.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -304,7 +304,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxPunkte_1 = new JCheckBox("Punkte 2");
 					chckbxPunkte_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -372,7 +372,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxHeld = new JCheckBox("Held 1");
 					chckbxHeld.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -385,7 +385,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxEridium_2 = new JCheckBox("Eridium 3");
 					chckbxEridium_2.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -398,7 +398,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxEridiumGebude_1 = new JCheckBox("E. Geb\u00E4ude 2");
 					chckbxEridiumGebude_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -411,7 +411,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxCGebude_1 = new JCheckBox("C. Geb\u00E4ude 2");
 					chckbxCGebude_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -424,7 +424,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxCredits_2 = new JCheckBox("Credits 3");
 					chckbxCredits_2.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -437,7 +437,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxMunition_1 = new JCheckBox("Munition 2");
 					chckbxMunition_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -450,7 +450,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxMGebude = new JCheckBox("M. Geb\u00E4ude 1");
 					chckbxMGebude.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -463,7 +463,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxPunkte_2 = new JCheckBox("Punkte 3");
 					chckbxPunkte_2.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -531,7 +531,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxHeld_1 = new JCheckBox("Held 2");
 					chckbxHeld_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -544,7 +544,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxEridiumGebude_2 = new JCheckBox("E. Geb\u00E4ude 3");
 					chckbxEridiumGebude_2.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -557,7 +557,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxCGebude_2 = new JCheckBox("C. Geb\u00E4ude 3");
 					chckbxCGebude_2.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -570,7 +570,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxMunition_2 = new JCheckBox("Munition 3");
 					chckbxMunition_2.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -583,7 +583,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxMgebude = new JCheckBox("M. Geb\u00E4ude 2");
 					chckbxMgebude.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -596,7 +596,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxPunkte_3 = new JCheckBox("Punkte 4");
 					chckbxPunkte_3.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -629,7 +629,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxHeld_2 = new JCheckBox("Held 3");
 					chckbxHeld_2.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -642,7 +642,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxMgebude_1 = new JCheckBox("M. Geb\u00E4ude 3");
 					chckbxMgebude_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -655,7 +655,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 					JCheckBox chckbxPunkte_4 = new JCheckBox("Punkte 5");
 					chckbxPunkte_4.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							skillMap.get(e.getSource()).setSelected(false);
+							skillMap.get(e.getSource()).changeSelected();
 							enableSkills();
 						}
 					});
@@ -815,12 +815,28 @@ public class SkillProfileSettingsDialog extends JDialog {
 		ab2.addNext(ab3);
 		p4.addNext(p5);
 		
+		printNodes();
+		
 		enableSkills();
 		
 		selectedSkillIndex = 0;
 		addSkills(profileManager.getSkillProfiles()[0]);
 		
+		printNodes();
 	}
+	
+	private void printNodes() {
+		for (String name : nameMap.keySet()) {
+			System.out.println(nameMap.get(name));
+		}
+	}
+	/*private void printNodesTree(SkillTreeNode node) {
+		System.out.println(node);
+		for (SkillTreeNode next : node.next) {
+			printNodes(next);
+		}
+		System.out.println("");
+	}*/
 	
 	private void addSkills(SkillProfile profile) {
 		addSkills(profile.getEridium(), profile.getCredits(), profile.getAmmo(), profile.getEridiumBuilding(), 
@@ -844,7 +860,17 @@ public class SkillProfileSettingsDialog extends JDialog {
 		enableSkills();
 	}
 	
+	/**
+	 * Reset the skills and set all to disabled and unselected
+	 */
+	private void resetSkills() {
+		for (SkillTreeNode node : nameMap.values()) {
+			node.setEnabled(false);
+		}
+	}
+	
 	private void setSelectedProfile(int profile) {
+		resetSkills();
 		addSkills(profileManager.getSkillProfiles()[profile]);
 	}
 	
@@ -859,7 +885,7 @@ public class SkillProfileSettingsDialog extends JDialog {
 		SkillProfileTransferMessage message = new SkillProfileTransferMessage();
 		int[] skills = new int[9];
 		for (SkillTreeNode node : skillMap.values()) {
-			if (skills[node.getType()] < node.getLevel()) {
+			if (skills[node.getType()] < node.getLevel() && node.isSelected()) {
 				skills[node.getType()] = node.getLevel();
 			}
 		}
@@ -886,6 +912,8 @@ public class SkillProfileSettingsDialog extends JDialog {
 		enableSkills(root);
 		enableSkillsByPoints(skillPointsLeft);
 		textField.setText(Integer.toString(skillPointsLeft));
+		revalidate();
+		repaint();
 	}
 	
 	/**
@@ -900,11 +928,13 @@ public class SkillProfileSettingsDialog extends JDialog {
 			enable &= node.getPrev().get(i).isSelected();
 		}
 		if (enable) {
-			node.getCheck().setEnabled(true);
+			node.setEnabled(true);
+			//node.getCheck().setEnabled(true);
 		}
 		else {
-			node.getCheck().setEnabled(false);
-			node.getCheck().setSelected(false);
+			node.setEnabled(false);
+			//node.getCheck().setEnabled(false);
+			//node.getCheck().setSelected(false);
 		}
 		for (int i = 0; i < node.getNext().size(); i++) {
 			enableSkills(node.getNext().get(i));
@@ -935,8 +965,50 @@ public class SkillProfileSettingsDialog extends JDialog {
 			this.type = type;
 			this.level = level;
 			selected = false;
+			check.setSelected(false);
 			prev = new ArrayList<SkillTreeNode>();
 			next = new ArrayList<SkillTreeNode>();
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("SkillTreeNode[");
+			switch (type) {
+				case SKILL_ERIDIUM:
+					sb.append("Eridium ");
+					break;
+				case SKILL_CREDITS:
+					sb.append("Credits ");
+					break;
+				case SKILL_AMMO:
+					sb.append("Ammo ");
+					break;
+				case SKILL_ERIDIUM_BUILDING:
+					sb.append("Eridium_Building ");
+					break;
+				case SKILL_CREDITS_BUILDING:
+					sb.append("Credits_Building ");
+					break;
+				case SKILL_AMMO_BUILDING:
+					sb.append("Ammo_Building ");
+					break;
+				case SKILL_HERO:
+					sb.append("Hero ");
+					break;
+				case SKILL_POINTS:
+					sb.append("Points ");
+					break;
+			}
+			sb.append(level);
+			sb.append(" Cost:");
+			sb.append(cost);
+			sb.append(" Enabled: ");
+			sb.append(isEnabled());
+			sb.append(" Selected: ");
+			sb.append(selected);
+			sb.append("]");
+			return sb.toString();
 		}
 		
 		private boolean selected;
@@ -949,16 +1021,25 @@ public class SkillProfileSettingsDialog extends JDialog {
 		
 		private List<SkillTreeNode> prev;
 		private List<SkillTreeNode> next;
+		
 
 		public boolean isSelected() {
 			return selected;
 		}
 		public void setSelected(boolean selected) {
+			check.setSelected(selected);
 			this.selected = selected;
+		}
+		
+		public void changeSelected() {
+			setSelected(!selected);
 		}
 		
 		public void setEnabled(boolean enabled) {
 			check.setEnabled(enabled);
+			if (!enabled) {
+				setSelected(false);
+			}
 		}
 		
 		public int getType() {
@@ -969,10 +1050,6 @@ public class SkillProfileSettingsDialog extends JDialog {
 		}
 		public int getCost() {
 			return cost;
-		}
-		
-		public JCheckBox getCheck() {
-			return check;
 		}
 		
 		public List<SkillTreeNode> getPrev() {
