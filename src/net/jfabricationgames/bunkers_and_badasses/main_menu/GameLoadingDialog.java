@@ -76,6 +76,7 @@ public class GameLoadingDialog extends JDialog {
 		setResizable(false);
 		setTitle("Bunkers and Badasses - Spiel Laden");
 		setBounds(100, 100, 450, 600);
+		setLocationRelativeTo(callingFrame);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

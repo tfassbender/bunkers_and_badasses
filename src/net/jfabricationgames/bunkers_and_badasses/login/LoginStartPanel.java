@@ -19,7 +19,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
 import net.miginfocom.swing.MigLayout;
 
-public class LoginStartPanel extends JPanel {
+public class LoginStartPanel extends JPanel implements LoginPanel {
 	
 	private static final long serialVersionUID = 8609984790780328814L;
 	
@@ -127,6 +127,11 @@ public class LoginStartPanel extends JPanel {
 		panel_1.setBackground(Color.GRAY);
 		add(panel_1, "cell 0 6 4 1,grow");
 	}
+	
+	@Override
+	public void requestFocusOnPanelChange() {
+		textField.requestFocus();
+	}
 
 	/**
 	 * Send the login to the server. 
@@ -157,5 +162,5 @@ public class LoginStartPanel extends JPanel {
 			});
 			login.start();
 		}
-	}	
+	}
 }

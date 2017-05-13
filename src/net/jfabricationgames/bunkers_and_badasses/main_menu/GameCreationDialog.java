@@ -187,15 +187,15 @@ public class GameCreationDialog extends JDialog {
 										selectedBoard = board;
 									}
 									else {
-										lblError.setText("Zu viele/wenig Spieler für diese Karte");
+										lblError.setText("Zu viele/wenig Spieler fÃ¼r diese Karte");
 									}
 								}
 								else {
-									lblError.setText("Karte auswählen!");
+									lblError.setText("Karte auswÃ¤hlen!");
 								}
 							}
 							else {
-								lblError.setText("Spieler auswählen!");
+								lblError.setText("Spieler auswÃ¤hlen!");
 							}
 						}
 					}
@@ -260,7 +260,7 @@ public class GameCreationDialog extends JDialog {
 		answers = new ArrayList<User>();
 	}
 	private void sendGameCreationAbort() {
-		sendGameCreationAbort("Der Startspieler hat die Anfrage zurückgezogen");
+		sendGameCreationAbort("Der Startspieler hat die Anfrage zurÃ¼ckgezogen");
 	}
 	private void sendGameCreationAbort(String cause) {
 		if (requestSent) {
@@ -286,7 +286,7 @@ public class GameCreationDialog extends JDialog {
 			rejections.add(user);
 			if (invitedUsers.size() - rejections.size() + 1 < selectedBoard.getPlayersMin()) {//invited - rejected + player himself
 				//not enough players left
-				lblError.setText("Nicht mehr genügend Spieler vorhanden.");
+				lblError.setText("Nicht mehr genÃ¼gend Spieler vorhanden.");
 				gameActive = false;
 				sendGameCreationAbort("Absage von " + user.getUsername() +  ". Zu wenig Spieler.");
 			}

@@ -20,7 +20,7 @@ public class LoginClientMain extends JFrame {
 	
 	private static final long serialVersionUID = 7230985013444319496L;
 	
-	private JPanel[] panels;
+	private LoginPanel[] panels;
 	private JPanel contentPane;
 	
 	private String username;
@@ -72,12 +72,12 @@ public class LoginClientMain extends JFrame {
 		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/");
 		
 		//create the panels for logging in and signing up
-		panels = new JPanel[] {new LoginStartPanel(this, client), new LoginSignUpPanel1(this, client), new LoginSignUpPanel2(this, client)};
+		panels = new LoginPanel[] {new LoginStartPanel(this, client), new LoginSignUpPanel1(this, client), new LoginSignUpPanel2(this, client)};
 		
 		//build the frame
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
-		contentPane.add(panels[0], BorderLayout.CENTER);
+		contentPane.add((JPanel) panels[0], BorderLayout.CENTER);
 		
 		setContentPane(contentPane);
 		
@@ -96,7 +96,8 @@ public class LoginClientMain extends JFrame {
 	 */
 	public void setPanel(int panel) {
 		contentPane.removeAll();
-		contentPane.add(panels[panel], BorderLayout.CENTER);
+		contentPane.add((JPanel) panels[panel], BorderLayout.CENTER);
+		panels[panel].requestFocusOnPanelChange();
 		revalidate();
 		repaint();
 	}

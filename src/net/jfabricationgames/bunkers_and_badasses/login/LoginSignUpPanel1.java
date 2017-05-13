@@ -19,7 +19,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Color;
 
-public class LoginSignUpPanel1 extends JPanel {
+public class LoginSignUpPanel1 extends JPanel implements LoginPanel {
 	
 	private static final long serialVersionUID = -1587127339817677764L;
 	private JTextField textField;
@@ -118,6 +118,11 @@ public class LoginSignUpPanel1 extends JPanel {
 		panel.setCentered(true);
 		panel.setBackground(Color.GRAY);
 		add(panel, "cell 0 6 4 1,grow");
+	}
+	
+	@Override
+	public void requestFocusOnPanelChange() {
+		textField.requestFocus();
 	}
 	
 	/**

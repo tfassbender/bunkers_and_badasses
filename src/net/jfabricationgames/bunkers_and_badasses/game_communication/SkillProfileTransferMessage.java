@@ -15,6 +15,7 @@ public class SkillProfileTransferMessage implements JFGServerMessage, JFGClientM
 	
 	private SkillProfile update;
 	private SkillProfile[] profiles;
+	private SkillProfile defaultProfile;
 	
 	public boolean isRequest() {
 		return request;
@@ -35,5 +36,12 @@ public class SkillProfileTransferMessage implements JFGServerMessage, JFGClientM
 	}
 	public void setProfiles(SkillProfile[] profiles) {
 		this.profiles = profiles;
+	}
+	
+	public SkillProfile getDefaultProfile() {
+		return defaultProfile;
+	}
+	public void setDefaultProfile(SkillProfile defaultProfile) {
+		this.defaultProfile = defaultProfile;
 	}
 }

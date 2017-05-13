@@ -24,32 +24,14 @@ public class SkillProfileManager implements Serializable {
 	
 	public static transient int[] HEROS_SKILL_LEVEL;
 	
-	private static transient SkillProfile defaultSkillProfile;
-	
 	private transient SkillProfile[] skillProfiles;//local skill profiles (not sent to others)
 	
 	private Map<User, SkillProfile> selectedProfile;
 	
 	private UserResourceManager userResourceManager;
 	
-	static {
-		defaultSkillProfile = new SkillProfile();
-		defaultSkillProfile.setEridium(2);
-		defaultSkillProfile.setCredits(2);
-		defaultSkillProfile.setAmmo(2);
-		defaultSkillProfile.setEridiumBuilding(1);
-		defaultSkillProfile.setCreditsBuilding(2);
-		defaultSkillProfile.setAmmoBuilding(2);
-		defaultSkillProfile.setPoints(0);
-		defaultSkillProfile.setHero(0);
-	}
-	
 	public SkillProfileManager() {
 		loadSkillLevels();
-	}
-	
-	public static SkillProfile getDefaultSkillProfile() {
-		return defaultSkillProfile;
 	}
 	
 	/**

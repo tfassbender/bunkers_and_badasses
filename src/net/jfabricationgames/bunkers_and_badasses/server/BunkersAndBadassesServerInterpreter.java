@@ -120,7 +120,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				server.getUsers().add(user);
 				server.generateUserSkills(message);
 			}
-			server.generateUserSkills(message);
+			//server.generateUserSkills(message);
 		}
 	}
 	

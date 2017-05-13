@@ -17,7 +17,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Color;
 
-public class LoginSignUpPanel2 extends JPanel {
+public class LoginSignUpPanel2 extends JPanel implements LoginPanel {
 	
 	private static final long serialVersionUID = -344393319655317638L;
 	private JPasswordField passwordField;
@@ -116,6 +116,11 @@ public class LoginSignUpPanel2 extends JPanel {
 		panel.setCentered(true);
 		panel.setBackground(Color.GRAY);
 		add(panel, "cell 0 6 4 1,grow");
+	}
+	
+	@Override
+	public void requestFocusOnPanelChange() {
+		passwordField.requestFocus();
 	}
 	
 	/**

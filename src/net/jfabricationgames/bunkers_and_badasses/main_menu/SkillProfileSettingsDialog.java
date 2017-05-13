@@ -815,21 +815,21 @@ public class SkillProfileSettingsDialog extends JDialog {
 		ab2.addNext(ab3);
 		p4.addNext(p5);
 		
-		printNodes();
+		//printNodes();
 		
 		enableSkills();
 		
 		selectedSkillIndex = 0;
 		addSkills(profileManager.getSkillProfiles()[0]);
 		
-		printNodes();
+		//printNodes();
 	}
 	
-	private void printNodes() {
+	/*private void printNodes() {
 		for (String name : nameMap.keySet()) {
 			System.out.println(nameMap.get(name));
 		}
-	}
+	}*/
 	/*private void printNodesTree(SkillTreeNode node) {
 		System.out.println(node);
 		for (SkillTreeNode next : node.next) {

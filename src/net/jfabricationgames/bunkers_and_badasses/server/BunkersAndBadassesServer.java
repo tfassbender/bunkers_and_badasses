@@ -15,7 +15,6 @@ import java.util.Map;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameVariableStorage;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
-import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardKeeper;
@@ -818,9 +817,15 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * 		The connection that sent the request.
 	 */
 	public void loadSkillProfiles(SkillProfileTransferMessage message, JFGConnection connection) {
+		String username = connectionMap.get(connection).getUsername();
+		SkillProfile[] skillProfiles = loadSkillProfiles(username);
+		//send the profiles back to the client
+		message.setProfiles(skillProfiles);
+		connection.sendMessage(message);
+	}
+	private SkillProfile[] loadSkillProfiles(String username) {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		ResultSet result = null;
-		String username = connectionMap.get(connection).getUsername();
 		String query = "SELECT * FROM bunkers_and_badasses.skills WHERE name = '" + username + "'";
 		SkillProfile[] skillProfiles = new SkillProfile[5];//every user has 5 skill profiles
 		try (Statement statement = con.createStatement()) {
@@ -860,9 +865,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				sqle.printStackTrace();
 			}
 		}
-		//send the profiles back to the client
-		message.setProfiles(skillProfiles);
-		connection.sendMessage(message);
+		return skillProfiles;
 	}
 	/**
 	 * Update a user's skill profile in the database.
@@ -902,16 +905,19 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void generateUserSkills(JFGDatabaseLoginMessage message) {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
-		SkillProfile defaultProfile = SkillProfileManager.getDefaultSkillProfile();
-		String query = "INSERT INTO bunkers_and_badasses.skills (id, name, points, eridium, credits, ammo, eridium_building, credits_building, ammo_building, heroes) VALUES (0, " + 
-				message.getUsername() + ", " + defaultProfile.getPoints() + ", " + defaultProfile.getEridium() + ", " + defaultProfile.getCredits() + ", " + defaultProfile.getAmmo() + 
+		SkillProfile defaultProfile = loadSkillProfiles("__global_user_skill__")[0];
+		String query = "INSERT INTO bunkers_and_badasses.skills (id, name, points, eridium, credits, ammo, eridium_building, credits_building, ammo_building, heroes) VALUES (0, '" + 
+				message.getUsername() + "', " + defaultProfile.getPoints() + ", " + defaultProfile.getEridium() + ", " + defaultProfile.getCredits() + ", " + defaultProfile.getAmmo() + 
 				", " + defaultProfile.getEridiumBuilding() + ", " + defaultProfile.getCreditsBuilding() + ", " + defaultProfile.getAmmoBuilding() + ", " + defaultProfile.getHero() + ");";
 		try (Statement statement = con.createStatement()) {
 			for (int i = 0; i < 5; i++) {//insert 5 default skill profiles
-				if (!statement.execute(query)) {
+				//System.out.println("Executing query: " + query);
+				statement.execute(query);
+				/*if (!statement.execute(query)) {
 					throw new SQLException();
-				}
+				}*/
 			}
+			//con.commit();
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
