@@ -12,7 +12,7 @@ public class Modecai extends Hero {
 		name = "Modecai";
 		imagePath = "modecai_1.png";
 		loadImage();
-		effectDescription = "Sniper:\n\nZwei beliebige (normale) Einheiten dürfen irgentwo vom Feld genommen werden (auch aus mehreren Feldern; die Felder dürfen dannach nicht leer sein)";
+		effectDescription = "Sniper:\n\nZwei beliebige (normale) Einheiten dÃ¼rfen irgentwo vom Feld genommen werden (auch aus mehreren Feldern; die Felder dÃ¼rfen dannach nicht leer sein)";
 	}
 	
 	@Override
@@ -23,6 +23,6 @@ public class Modecai extends Hero {
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Sniper: Zwei beliebige (normale) Einheiten dürfen irgentwo vom Feld genommen werden (auch mehrere Felder; die Felder dürfen dannach nicht leer sein)
+		//Sniper: Zwei beliebige (normale) Einheiten dï¿½rfen irgentwo vom Feld genommen werden (auch mehrere Felder; die Felder dï¿½rfen dannach nicht leer sein)
 	}
 }

@@ -10,12 +10,12 @@ public class Springs extends Hero {
 		name = "Springs";
 		imagePath = "springs_1.png";
 		loadImage();
-		effectDescription = "Raketentechnickerin:\n\nBeliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)";
+		effectDescription = "Raketentechnickerin:\n\nBeliebig viele Einheiten aus einem Gebiet kÃ¶nnen in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Raketentechnickerin: Beliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)
+		//Raketentechnickerin: Beliebig viele Einheiten aus einem Gebiet kï¿½nnen in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)
 	}
 }

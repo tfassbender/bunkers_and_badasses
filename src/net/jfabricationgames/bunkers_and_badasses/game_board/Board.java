@@ -326,7 +326,7 @@ public class Board implements Serializable {
 		else {
 			players = playersMin + "-" + playersMax;
 		}
-		return name + " (" + players + " Players)";
+		return name + " (" + players + " Spieler)";
 	}
 	
 	public int getBoardId() {

@@ -10,7 +10,7 @@ public class Marcus extends Hero {
 		name = "Marcus";
 		imagePath = "marcus_1.png";
 		loadImage();
-		effectDescription = "Nachladen:\n\nDu erh‰llst gratis Munition";
+		effectDescription = "Nachladen:\n\nDu erh√§llst gratis Munition";
 	}
 	
 	@Override

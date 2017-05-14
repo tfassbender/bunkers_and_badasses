@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,7 @@ public class HeroCardManager implements Serializable {
 	
 	public HeroCardManager() {
 		maxCardsPerPlayer = Game.getGameVariableStorage().getMaxHerosCards();
+		heroCards = new HashMap<User, List<Hero>>();
 	}
 	
 	private static List<Class<? extends Hero>> createHeroClassList() {

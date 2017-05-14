@@ -10,12 +10,12 @@ public class Angel extends Hero {
 		name = "Angel";
 		imagePath = "angel_1.png";
 		loadImage();
-		effectDescription = "Perfekte Aufklährung:\n\nIn der gesammten Runde dürfen im Kampf keine Karten gegen dich ausgespielt werden";
+		effectDescription = "Perfekte AufklÃ¤hrung:\n\nIn der gesammten Runde dÃ¼rfen im Kampf keine Karten gegen dich ausgespielt werden";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Perfekte Aufklährung: In der gesammten Runde dürfen im Kampf keine Karten gegen dich ausgespielt werden
+		//Perfekte Aufklï¿½hrung: In der gesammten Runde dï¿½rfen im Kampf keine Karten gegen dich ausgespielt werden
 	}
 }

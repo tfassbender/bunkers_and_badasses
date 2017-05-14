@@ -13,7 +13,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -33,7 +33,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
-public class GameCreationDialog extends JDialog {
+public class GameCreationDialog extends JFrame {
 	
 	private static final long serialVersionUID = 6165525170674954371L;
 	
@@ -61,7 +61,7 @@ public class GameCreationDialog extends JDialog {
 	private Board selectedBoard;
 	
 	public GameCreationDialog(JFGClient client, List<Board> playableBoards, MainMenuFrame callingFrame) {
-		setAlwaysOnTop(true);
+		//setAlwaysOnTop(true);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {

@@ -67,9 +67,9 @@
 			<manifest>
 				<attribute name="Main-Class" value="${mainClassServer}" />
 			</manifest>
-			<!--<fileset dir="${src}">
+			<fileset dir="${src}">
 				<include name="${images}" />
-			</fileset>-->
+			</fileset>
 			<zipgroupfileset dir="." includes="*.jar" />
 		</jar>
 	</target>

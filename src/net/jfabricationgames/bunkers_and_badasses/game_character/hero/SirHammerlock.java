@@ -10,12 +10,12 @@ public class SirHammerlock extends Hero {
 		name = "Sir Hammerlock";
 		imagePath = "hammerlock_1.png";
 		loadImage();
-		effectDescription = "Großwildjagt:\n\nBis zu 3 beliebige Neutrale Einheiten werden getötet";
+		effectDescription = "GroÃŸwildjagt:\n\nBis zu 3 beliebige Neutrale Einheiten werden getÃ¶tet";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Großwildjagt: Bis zu 3 beliebige Neutrale Einheiten werden getötet
+		//Groï¿½wildjagt: Bis zu 3 beliebige Neutrale Einheiten werden getï¿½tet
 	}
 }

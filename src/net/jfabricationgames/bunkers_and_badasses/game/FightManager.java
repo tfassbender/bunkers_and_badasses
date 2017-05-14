@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class FightManager implements Serializable {
 		this.pointManager = pointManager;
 		this.turnExecutionManager = turnExecutionManager;
 		this.board = board;
+		fights = new HashMap<Integer, List<Fight>>();
 	}
 	
 	/**

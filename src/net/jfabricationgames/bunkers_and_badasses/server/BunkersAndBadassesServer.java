@@ -61,6 +61,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		super(port);
 		userMap = new HashMap<User, JFGConnection>();
 		connectionMap = new HashMap<JFGConnection, User>();
+		loadedMaps = new HashMap<Integer, BoardKeeper>();
 		try {
 			md5 = MessageDigest.getInstance("md5");
 		}
@@ -469,6 +470,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			b.setFields(null);
 			b.setRegions(null);
 			b.setBoardId(id);
+			b.setStoreImage(true);
 			boards.add(b);
 		}
 		//send the board overviews to the client
@@ -669,6 +671,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
+			System.err.println("Select maximum game id failed");
 		}
 		finally {
 			if (result != null) {
@@ -701,23 +704,26 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
+			System.err.println("Select user id's failed");
 		}
 		//create the tables
 		String[] sql = new String[message.getPlayers().size()+2];
 		sql[0] = "INSERT INTO bunkers_and_badasses.games (id, active) VALUES (" + gameId + ", true)";//create the game
-		sql[1] = "INSERT INTO bunkers_and_badasses.game_maps VALUES (" + gameId + ", " + message.getBoardId() + ")";//create a game - map
+		sql[1] = "INSERT INTO bunkers_and_badasses.game_maps (game_id, map_id) VALUES (" + gameId + ", " + message.getBoardId() + ")";//create a game - map
 		for (int i = 0; i < message.getPlayers().size(); i++) {
 			sql[2+i] = "INSERT INTO bunkers_and_badasses.statistics (user_id, game_id) VALUES (" + userIds[i] + ", " + gameId + ")";
 		}
 		try (Statement statement = con.createStatement()) {
 			for (String s : sql) {
-				if (!statement.execute(s)) {
+				statement.execute(s);
+				/*if (!statement.execute(s)) {
 					throw new SQLException();
-				}
+				}*/
 			}
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
+			System.err.println("Insert into game, game_maps or statistics failed");
 		}
 		finally {
 			try {

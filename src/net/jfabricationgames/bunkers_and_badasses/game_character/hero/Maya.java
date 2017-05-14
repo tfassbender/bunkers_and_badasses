@@ -10,12 +10,12 @@ public class Maya extends Hero {
 		name = "Maya";
 		imagePath = "maya_1.png";
 		loadImage();
-		effectDescription = "Phaselock:\n\nEin Gegner wird in einem Ausgewählten Feld festgehalten und ist Bewegungsunfähig (Der Marker kann nicht eingesetzt werden und wird entfernt; Der Gegner kann sich aber verteidigen)";
+		effectDescription = "Phaselock:\n\nEin Gegner wird in einem AusgewÃ¤hlten Feld festgehalten und ist BewegungsunfÃ¤hig (Der Marker kann nicht eingesetzt werden und wird entfernt; Der Gegner kann sich aber verteidigen)";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Phaselock: Gegner ist (in einem Ausgewählten Feld) Bewegungsunfähig (Marker kann nicht eingesetzt werden; Gegner kann sich aber verteidigen)
+		//Phaselock: Gegner ist (in einem Ausgewï¿½hlten Feld) Bewegungsunfï¿½hig (Marker kann nicht eingesetzt werden; Gegner kann sich aber verteidigen)
 	}
 }

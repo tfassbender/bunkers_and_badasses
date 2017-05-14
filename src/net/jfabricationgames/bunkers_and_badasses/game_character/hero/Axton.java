@@ -12,7 +12,7 @@ public class Axton extends Hero {
 		name = "Axton";
 		imagePath = "axton_1.png";
 		loadImage();
-		effectDescription = "Stratege:\n\nDie gegnerische Karte kann nicht mehr gespielt werden (falls sie noch nicht gespielt wurde; Der Gegner erhällt Sie zurück)";
+		effectDescription = "Stratege:\n\nDie gegnerische Karte kann nicht mehr gespielt werden (falls sie noch nicht gespielt wurde; Der Gegner erhÃ¤llt Sie zurÃ¼ck)";
 	}
 	
 	@Override

@@ -10,7 +10,7 @@ public class Moxxi extends Hero {
 		name = "Moxxi";
 		imagePath = "moxxi_1.png";
 		loadImage();
-		effectDescription = "Anwerbung:\n\n3 neu rekrutierte Truppen können beliebig auf dem Feld verteilt werden";
+		effectDescription = "Anwerbung:\n\n3 neu rekrutierte Truppen kÃ¶nnen beliebig auf dem Feld verteilt werden";
 	}
 	
 	@Override

@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -33,7 +33,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
-public class GameLoadingDialog extends JDialog {
+public class GameLoadingDialog extends JFrame {
 	
 	private static final long serialVersionUID = 5567858686487512818L;
 	

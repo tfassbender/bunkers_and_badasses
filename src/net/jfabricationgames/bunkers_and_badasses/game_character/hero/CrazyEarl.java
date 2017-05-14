@@ -10,7 +10,7 @@ public class CrazyEarl extends Hero {
 		name = "Crazy Earl";
 		imagePath = "earl_1.png";
 		loadImage();
-		effectDescription = "Schwarzmarkt:\n\nDu erh‰lltst gratis Eridium";
+		effectDescription = "Schwarzmarkt:\n\nDu erh√§lltst gratis Eridium";
 	}
 	
 	@Override

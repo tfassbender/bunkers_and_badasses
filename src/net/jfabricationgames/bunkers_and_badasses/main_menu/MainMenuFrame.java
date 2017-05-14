@@ -259,10 +259,18 @@ public class MainMenuFrame extends JFrame {
 		for (GameRequestDialog request : requestDialogs.values()) {
 			request.dispose();
 		}
-		gameCreationDialog.dispose();
-		gameLoadingDialog.dispose();
-		accountSettingsDialog.dispose();
-		skillProfileSettingsDialog.dispose();
+		if (gameCreationDialog != null) {
+			gameCreationDialog.dispose();
+		}
+		if (gameLoadingDialog != null) {
+			gameLoadingDialog.dispose();
+		}
+		if (accountSettingsDialog != null) {
+			accountSettingsDialog.dispose();
+		}
+		if (skillProfileSettingsDialog != null) {
+			skillProfileSettingsDialog.dispose();
+		}
 		super.dispose();
 	}
 	

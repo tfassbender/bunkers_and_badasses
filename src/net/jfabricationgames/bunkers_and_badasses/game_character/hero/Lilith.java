@@ -10,12 +10,12 @@ public class Lilith extends Hero {
 		name = "Lilith";
 		imagePath = "lilith_1.png";
 		loadImage();
-		effectDescription = "Phasewalk:\n\nBis zu 5 Truppen (Normale oder Badasses) können ein feindliches Feld überspringen und hinter der feindlichen Linie angreifen";
+		effectDescription = "Phasewalk:\n\nBis zu 5 Truppen (Normale oder Badasses) kÃ¶nnen ein feindliches Feld Ã¼berspringen und hinter der feindlichen Linie angreifen";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Phasewalk: Begrenzte anzahl von Truppen darf hinter der Feindlichen Linie angreifen (nur ein Feld überspringen)
+		//Phasewalk: Begrenzte anzahl von Truppen darf hinter der Feindlichen Linie angreifen (nur ein Feld ï¿½berspringen)
 	}
 }

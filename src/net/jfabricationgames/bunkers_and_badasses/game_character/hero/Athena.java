@@ -12,7 +12,7 @@ public class Athena extends Hero {
 		name = "Athena";
 		imagePath = "athena_1.png";
 		loadImage();
-		effectDescription = "Aspis:\n\nBei einer Niederlage können keine deiner Truppen getötet werden";
+		effectDescription = "Aspis:\n\nBei einer Niederlage kÃ¶nnen keine deiner Truppen getÃ¶tet werden";
 	}
 	
 	@Override

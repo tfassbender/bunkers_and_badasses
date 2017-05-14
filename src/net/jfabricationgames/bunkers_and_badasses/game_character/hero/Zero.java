@@ -10,12 +10,12 @@ public class Zero extends Hero {
 		name = "Zero";
 		imagePath = "zero_1.png";
 		loadImage();
-		effectDescription = "Doppelgänger:\n\nEin beliebiger Befehlsmarker kann nachträglich verändert werden";
+		effectDescription = "DoppelgÃ¤nger:\n\nEin beliebiger Befehlsmarker kann nachtrÃ¤glich verÃ¤ndert werden";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Doppelgänger: Ein beliebiger Befehlsmarker kann nachträglich verändert werden
+		//Doppelgï¿½nger: Ein beliebiger Befehlsmarker kann nachtrï¿½glich verï¿½ndert werden
 	}
 }

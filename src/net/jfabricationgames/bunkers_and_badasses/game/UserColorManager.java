@@ -13,7 +13,11 @@ public class UserColorManager implements Serializable {
 	
 	public static final int COLOR_ALPHA = 255;//the alpha value for all user colors
 	
-	private Map<User, UserColor> userColors = new HashMap<User, UserColor>();
+	private Map<User, UserColor> userColors;
+	
+	public UserColorManager() {
+		userColors = new HashMap<User, UserColor>();
+	}
 	
 	/**
 	 * Choose random colors for all players and write them to the map.

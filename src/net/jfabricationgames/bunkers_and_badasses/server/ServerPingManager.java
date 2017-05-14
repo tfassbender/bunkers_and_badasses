@@ -13,6 +13,7 @@ public class ServerPingManager {
 	
 	private Map<User, Long> pings = new HashMap<User, Long>();
 	private Thread pingThread;
+	private User timedOutUser;
 	private BunkersAndBadassesServer server;
 	
 	public ServerPingManager(BunkersAndBadassesServer server) {
@@ -24,11 +25,15 @@ public class ServerPingManager {
 					while (true) {
 						//check for the users last ping time
 						if (!pings.isEmpty()) {
+							timedOutUser = null;
 							for (User user : pings.keySet()) {
 								if (System.currentTimeMillis() - pings.get(user) > TIMEOUT) {
 									//kick the user if he hasn't send a ping in <TIMEOUT> milliseconds
-									kickUser(user);
+									timedOutUser = user;//kick the user after the loop to avoid concurrent modification
 								}
+							}
+							if (timedOutUser != null) {
+								kickUser(timedOutUser);
 							}
 						}
 						Thread.sleep(SLEEP_TIME);

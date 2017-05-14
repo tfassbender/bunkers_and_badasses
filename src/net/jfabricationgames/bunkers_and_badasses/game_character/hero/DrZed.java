@@ -12,12 +12,12 @@ public class DrZed extends Hero {
 		name = "Dr. Zed";
 		imagePath = "dr_zed_1.png";
 		loadImage();
-		effectDescription = "Feld Metzger:\n\nZed kann die Hälfte der Truppen (aufgerundet) die in einem Kampf sterben würden wieder zusammenflicken";
+		effectDescription = "Feld Metzger:\n\nZed kann die HÃ¤lfte der Truppen (aufgerundet) die in einem Kampf sterben wÃ¼rden wieder zusammenflicken";
 	}
 	
 	@Override
 	public void executeFight(Fight fight) {
 		//TODO
-		//Feld Metzger: Zed kann die Hälfte der Truppen (aufgerundet) die sterben würden wieder zusammenflicken
+		//Feld Metzger: Zed kann die Hï¿½lfte der Truppen (aufgerundet) die sterben wï¿½rden wieder zusammenflicken
 	}
 }

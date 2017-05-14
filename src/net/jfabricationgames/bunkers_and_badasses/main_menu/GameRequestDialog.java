@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,7 +26,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
-public class GameRequestDialog extends JDialog {
+public class GameRequestDialog extends JFrame {
 	
 	private static final long serialVersionUID = -7224302886169954013L;
 	
@@ -169,7 +169,7 @@ public class GameRequestDialog extends JDialog {
 			}
 		}
 		
-		addInvitedPlayers(invitedUsers);
+		addInvitedPlayers(invitedUsers, invitingUser);
 	}
 	
 	public void startGame(int boardId, int players, boolean loadedGame) {
@@ -179,7 +179,8 @@ public class GameRequestDialog extends JDialog {
 		startDialog.startGame(client, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager());
 	}
 	
-	private void addInvitedPlayers(List<User> players) {
+	private void addInvitedPlayers(List<User> players, User invitingPlayer) {
+		txtrInvitedplayers.append(invitingPlayer + "\n");
 		for (User user : players) {
 			txtrInvitedplayers.append(user.getUsername() + "\n");
 		}

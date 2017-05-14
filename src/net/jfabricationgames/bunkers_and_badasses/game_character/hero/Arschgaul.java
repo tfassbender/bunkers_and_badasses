@@ -10,12 +10,12 @@ public class Arschgaul extends Hero {
 		name = "Prinzessin Arschgaul";
 		imagePath = "arschgaul_2.png";
 		loadImage();
-		effectDescription = "Wunderschöne Anführerin:\n\nWähle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf";
+		effectDescription = "WunderschÃ¶ne AnfÃ¼hrerin:\n\nWÃ¤hle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Wunderschöne Anführerin: Wähle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf
+		//Wunderschï¿½ne Anfï¿½hrerin: Wï¿½hle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf
 	}
 }

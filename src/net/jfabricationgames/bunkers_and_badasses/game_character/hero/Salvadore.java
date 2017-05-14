@@ -10,14 +10,14 @@ public class Salvadore extends Hero {
 		attack = 4;
 		defence = 3;
 		name = "Salvadore";
-		imagePath = "salvadore_1.png";
+		imagePath = "salvador_1.png";
 		loadImage();
-		effectDescription = "Sperrfeuer:\n\nBei Niederlage dürfen nur die Hälfte der Truppen (abgerundet) weiter ziehen";
+		effectDescription = "Sperrfeuer:\n\nBei Niederlage dÃ¼rfen nur die HÃ¤lfte der Truppen (abgerundet) weiter ziehen";
 	}
 	
 	@Override
 	public void executeFight(Fight fight) {
 		//TODO
-		//Sperrfeuer: Bei Niederlage dürfen nur die Hälfte der Truppen (abgerundet) weiter Ziehen
+		//Sperrfeuer: Bei Niederlage dï¿½rfen nur die Hï¿½lfte der Truppen (abgerundet) weiter Ziehen
 	}
 }
