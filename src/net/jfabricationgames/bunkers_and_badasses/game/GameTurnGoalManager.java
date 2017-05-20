@@ -19,6 +19,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalStrate
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalSupport;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalTroopUnion;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalWildHunt;
+import net.jfabricationgames.bunkers_and_badasses.server.BunkersAndBadassesServer;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class GameTurnGoalManager implements Serializable {
@@ -27,7 +28,16 @@ public class GameTurnGoalManager implements Serializable {
 	
 	private List<TurnGoal> turnGoals;
 	
-	private static final transient List<TurnGoal> TURN_GOALS = createTurnGoalList();
+	private static final transient List<TurnGoal> TURN_GOALS;
+	
+	static {
+		if (BunkersAndBadassesServer.IS_SERVER_APPLICATION) {
+			TURN_GOALS = null;
+		}
+		else {
+			TURN_GOALS = createTurnGoalList();
+		}
+	}
 	
 	private GameTurnManager gameTurnManager;
 	
@@ -64,14 +74,16 @@ public class GameTurnGoalManager implements Serializable {
 	public void merge(GameTurnGoalManager goalManager) {
 		//copy the image references from the previous turn bonuses to the new ones
 		boolean instanceFound;
-		for (TurnGoal goal : goalManager.getAllTurnGoals()) {
-			instanceFound = false;
-			for (TurnGoal prev : TURN_GOALS) {//load from TURN_GOALS because these are surely loaded
-				if (!instanceFound && goal.getClass().equals(prev.getClass())) {
-					goal.setImage(prev.getImage());
-					instanceFound = true;
+		if (goalManager.getAllTurnGoals() != null) {
+			for (TurnGoal goal : goalManager.getAllTurnGoals()) {
+				instanceFound = false;
+				for (TurnGoal prev : TURN_GOALS) {//load from TURN_GOALS because these are surely loaded
+					if (!instanceFound && goal.getClass().equals(prev.getClass())) {
+						goal.setImage(prev.getImage());
+						instanceFound = true;
+					}
 				}
-			}
+			}			
 		}
 		//set the new goals
 		turnGoals = goalManager.getAllTurnGoals();
@@ -114,6 +126,12 @@ public class GameTurnGoalManager implements Serializable {
 	 */
 	public TurnGoal getTurnGoal() {
 		return turnGoals.get(gameTurnManager.getTurn());
+	}
+	/**
+	 * Indicates whether there are goals available
+	 */
+	public boolean turnGoalsAvialable() {
+		return turnGoals != null;
 	}
 	
 	private List<TurnGoal> getAllTurnGoals() {

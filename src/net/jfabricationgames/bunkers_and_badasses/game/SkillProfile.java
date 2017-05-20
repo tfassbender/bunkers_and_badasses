@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * A single skill profile for a player.
  */
-public class SkillProfile implements Serializable{
+public class SkillProfile implements Serializable {
 	
 	private static final long serialVersionUID = -7351745862222323508L;
 	

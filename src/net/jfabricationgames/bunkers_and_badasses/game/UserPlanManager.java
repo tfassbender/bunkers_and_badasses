@@ -29,7 +29,7 @@ public class UserPlanManager implements Serializable {
 	public static final int COMMAND_RECRUIT = 5;
 	public static final int COMMAND_COLLECT = 6;
 	public static final int COMMAND_DEFEND = 7;
-	private int[] commands;
+	private int[] commands = new int[START_COMMANDS.length];
 	private UserResource currentResource;
 	private GameTurnBonusManager gameTurnBonusManager;
 	

@@ -58,7 +58,9 @@ public class Game implements Serializable {
 		colorManager = new UserColorManager();
 		colorManager.chooseRandomColors(players);
 		fightManager = new FightManager(client, localUser, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
-		gameFrame = new GameFrame(this);
+		skillProfileManager = new SkillProfileManager();
+		//gameFrame = new GameFrame(this);
+		//initialize the GameFrame when the board is added.
 	}
 	
 	/**
@@ -69,7 +71,13 @@ public class Game implements Serializable {
 	 * 		A Game object containing the new data from another player.
 	 */
 	public void merge(Game newData) {
-		board.merge(newData.getBoard());
+		if (board != null) {
+			//maybe the board doesn't exist on start
+			board.merge(newData.getBoard());			
+		}
+		else {
+			board = newData.getBoard();
+		}
 		players = newData.getPlayers();
 		gameState = newData.getGameState();
 		playerOrder = newData.getPlayerOrder();
@@ -82,6 +90,16 @@ public class Game implements Serializable {
 		colorManager = newData.getColorManager();
 		skillProfileManager.merge(newData.getSkillProfileManager());
 		fightManager.merge(newData.getFightManager());
+	}
+	
+	/**
+	 * Add the Board to the game and initialize the frames.
+	 * 
+	 * @param board
+	 */
+	public void addBoard(Board board) {
+		this.board = board;
+		gameFrame = new GameFrame(this);
 	}
 
 	public JFGClient getClient() {

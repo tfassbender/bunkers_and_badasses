@@ -142,7 +142,7 @@ public class GameStartDialog extends JDialog {
 	private void startGameFrame() {
 		if (board != null && game != null && gameId != -1) {
 			if (!isLoaded) {
-				game.setBoard(board);
+				game.addBoard(board);
 				game.setId(gameId);				
 			}
 			else {

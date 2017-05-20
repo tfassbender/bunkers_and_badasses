@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
+
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
@@ -10,7 +12,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 
-public class UserResource {
+public class UserResource implements Serializable {
+	
+	private static final long serialVersionUID = 425801597894620740L;
 	
 	//the current amounts of credits, ammo and eridium
 	private int credits;

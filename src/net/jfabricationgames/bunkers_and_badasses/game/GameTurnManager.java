@@ -16,7 +16,7 @@ public class GameTurnManager implements Serializable {
 	private Game game;
 	
 	private PlayerOrder playerOrder;
-	private transient GameTurnGoalManager gameTurnGoalManager;
+	private GameTurnGoalManager gameTurnGoalManager;
 	private UserResourceManager resourceManager;
 	private PointManager pointManager;
 	

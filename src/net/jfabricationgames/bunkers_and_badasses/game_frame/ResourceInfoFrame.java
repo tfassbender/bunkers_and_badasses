@@ -60,7 +60,7 @@ public class ResourceInfoFrame extends JFrame {
 	
 	private JTextField txtCredits;
 	private JTextField txtAmmo;
-	private JTextField txtFields;
+	//private JTextField txtFields;
 	private JTextField txtCredits_1;
 	private JTextField txtAmmo_1;
 	private JTextField txtEridium_1;
@@ -312,7 +312,7 @@ public class ResourceInfoFrame extends JFrame {
 			list_fields_all.setBackground(Color.LIGHT_GRAY);
 			scrollPane_fields_all.setViewportView(list_fields_all);
 			
-			fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
+			fieldPanel = new FieldDescriptionPanel("Feld Ãœbersicht", true);
 			panel.add(fieldPanel, "cell 2 2 2 1,grow");
 			
 			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/marcus_1.png"));
@@ -340,7 +340,7 @@ public class ResourceInfoFrame extends JFrame {
 			txtCredits.setText(Integer.toString(UserResource.getCreditsForCommand(field.getCommand(), field)));
 			txtAmmo.setText(Integer.toString(UserResource.getAmmoForCommand(field.getCommand(), field)));
 		}
-		txtFields.setText(Integer.toString(game.getBoard().getUsersFields(game.getLocalUser()).size() * Game.getGameVariableStorage().getFieldCosts()));
+		//txtFields.setText(Integer.toString(game.getBoard().getUsersFields(game.getLocalUser()).size() * Game.getGameVariableStorage().getFieldCosts()));
 	}
 	
 	private void updateBuildingCosts() {
@@ -391,7 +391,7 @@ public class ResourceInfoFrame extends JFrame {
 		int eridium = 0;
 		buildingsPlayerListModel.removeAllElements();
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(game.getLocalUser())) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				credits += field.getBuilding().getCreditMining();
 				ammo += field.getBuilding().getAmmoMining();
 				eridium += field.getBuilding().getEridiumMining();

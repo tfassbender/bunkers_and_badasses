@@ -9,7 +9,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransfe
 import net.jfabricationgames.bunkers_and_badasses.game_frame.TurnExecutionFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class TurnExecutionManager implements Serializable{
+public class TurnExecutionManager implements Serializable {
 	
 	private static final long serialVersionUID = 2756514790262944398L;
 	

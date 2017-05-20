@@ -210,26 +210,31 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 			JLabel label = new JLabel(Integer.toString(i+1));
 			label.setFont(font);
 			panel_turn_goal_list.add(label, "cell " + i + " 0,alignx center");
-			TurnGoalCardPanel imagePanel = new TurnGoalCardPanel(game.getTurnManager().getGameTurnGoalManager().getTurnGoal(i));
+			TurnGoalCardPanel imagePanel = new TurnGoalCardPanel();
+			if (game.getTurnManager().getGameTurnGoalManager().turnGoalsAvialable()) {
+				imagePanel.setTurnGoal(game.getTurnManager().getGameTurnGoalManager().getTurnGoal(i));
+			}
 			panel_turn_goal_list.add(imagePanel, "cell " + i + " 1,grow");
 		}
 	}
 	private void addTurnBonuses() {
 		panel_choosable_bonuses.removeAll();
 		List<TurnBonus> bonusCards = game.getGameTurnBonusManager().getBonuses();
-		int bonuses = bonusCards.size();
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < bonuses; i++) {
-			sb.append("[200px]");
-		}
-		panel_choosable_bonuses.setLayout(new MigLayout("", sb.toString(), "[grow]"));
-		for (int i = 0; i < bonuses; i++) {
-			TurnBonusCardPanel imagePanel = new TurnBonusCardPanel(bonusCards.get(i));
-			if (selectable) {
-				imagePanel.setSelectionListener(this);
-				imagePanel.setChangeColorOnFocusEvent(true);
+		if (bonusCards != null) {
+			int bonuses = bonusCards.size();
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < bonuses; i++) {
+				sb.append("[200px]");
 			}
-			panel_choosable_bonuses.add(imagePanel, "cell 0 " + i + ",grow");
+			panel_choosable_bonuses.setLayout(new MigLayout("", sb.toString(), "[grow]"));
+			for (int i = 0; i < bonuses; i++) {
+				TurnBonusCardPanel imagePanel = new TurnBonusCardPanel(bonusCards.get(i));
+				if (selectable) {
+					imagePanel.setSelectionListener(this);
+					imagePanel.setChangeColorOnFocusEvent(true);
+				}
+				panel_choosable_bonuses.add(imagePanel, "cell 0 " + i + ",grow");
+			}
 		}
 	}
 	private void addUsers() {

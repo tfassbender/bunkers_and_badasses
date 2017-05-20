@@ -251,7 +251,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		list_buildings_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_buildings_all.setViewportView(list_buildings_all);
 
-		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld ï¿½bersicht", true);
 		panel_side_bar.add(fieldPanel, "cell 0 2 2 1,grow");
 		
 		JPanel panel_low_bar = new JPanel();
@@ -507,7 +507,8 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	 * Delete the command from the current field
 	 */
 	private void deleteCommand() {
-		if (selectedField != null && selectedField.getAffiliation().equals(game.getLocalUser()) && selectedField.getCommand() != null) {
+		if (selectedField != null && selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && 
+				selectedField.getCommand() != null) {
 			game.getPlanManager().deleteCommand(selectedField);
 			updateBoard();
 			updateResources();
@@ -519,7 +520,8 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	 * Add a command to the current field
 	 */
 	private void addCommand(Command command) {
-		if (selectedField != null && selectedField.getAffiliation().equals(game.getLocalUser()) && selectedField.getCommand() == null && command != null) {
+		if (selectedField != null && selectedField.getAffiliation() != null &&  selectedField.getAffiliation().equals(game.getLocalUser()) && 
+				selectedField.getCommand() == null && command != null) {
 			try {
 				game.getPlanManager().addCommand(selectedField, command);
 				updateBoard();
@@ -576,7 +578,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		fieldPanel.updateField(selectedField);
 		if (selectedField != null) {
 			txtField.setText(selectedField.getName());
-			if (selectedField.getAffiliation().equals(game.getLocalUser())) {
+			if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser())) {
 				if (selectedField.getCommand() != null) {
 					txtCurrcommand.setText(selectedField.getCommand().getName());					
 				}
@@ -616,7 +618,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		fieldAllListModel.removeAllElements();
 		for (Field field : game.getBoard().getFields()) {
 			fieldAllListModel.addElement(field);
-			if (field.getAffiliation().equals(game.getLocalUser())) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				if (field.getCommand() != null) {
 					fieldCommandListModel.addElement(new FieldCommand(field, field.getCommand()));
 				}
@@ -633,7 +635,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		for (Field field : game.getBoard().getFields()) {
 			if (!(field.getBuilding() instanceof EmptyBuilding)) {
 				buildingsAllListModel.addElement(new FieldBuilding(field, field.getBuilding()));
-				if (field.getAffiliation().equals(game.getLocalUser())) {
+				if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 					buildingsPlayerListModel.addElement(new FieldBuilding(field, field.getBuilding()));
 				}
 			}

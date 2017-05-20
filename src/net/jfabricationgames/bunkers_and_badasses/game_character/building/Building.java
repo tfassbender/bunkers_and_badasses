@@ -110,7 +110,7 @@ public abstract class Building implements Serializable {
 		}
 		else {
 			if (imagePath != null) {
-				image = imageLoader.loadImage(imagePath);			
+				image = imageLoader.loadImage(imagePath);
 			}
 		}
 	}

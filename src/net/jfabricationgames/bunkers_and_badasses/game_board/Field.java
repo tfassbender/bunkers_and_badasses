@@ -17,6 +17,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.CrimsonRa
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
+import net.jfabricationgames.bunkers_and_badasses.server.BunkersAndBadassesServer;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Field implements Serializable {
@@ -47,9 +48,11 @@ public class Field implements Serializable {
 	
 	static {
 		//load the troop images
-		normalTroopImage = GameFrame.getImageLoader().loadImage("troops/bandit_3_small.png");
-		badassTroopImage = GameFrame.getImageLoader().loadImage("troops/lance_4_small.png");
-		neutralTroopImage = GameFrame.getImageLoader().loadImage("troops/skag_1_small.png");
+		if (!BunkersAndBadassesServer.IS_SERVER_APPLICATION) {
+			normalTroopImage = GameFrame.getImageLoader().loadImage("troops/bandit_3_small.png");
+			badassTroopImage = GameFrame.getImageLoader().loadImage("troops/lance_4_small.png");
+			neutralTroopImage = GameFrame.getImageLoader().loadImage("troops/skag_1_small.png");
+		}
 	}
 	
 	public Field() {

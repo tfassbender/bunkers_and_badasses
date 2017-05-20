@@ -116,6 +116,9 @@ public class Board implements Serializable {
 	 */
 	public BufferedImage displayBoard() {
 		//create a new BufferedImage and draw the basic image on it.
+		if (baseImage == null) {
+			return null;
+		}
 		BufferedImage board = new BufferedImage(baseImage.getWidth(), baseImage.getHeight(), baseImage.getType());
 	    Graphics g = board.getGraphics();
 	    g.drawImage(baseImage, 0, 0, null);
@@ -200,7 +203,7 @@ public class Board implements Serializable {
 	public List<Field> getUsersFields(User user) {
 		List<Field> usersFields = new ArrayList<Field>();
 		for (Field f : fields) {
-			if (f.getAffiliation().equals(user)) {
+			if (f.getAffiliation() != null && f.getAffiliation().equals(user)) {
 				usersFields.add(f);
 			}
 		}

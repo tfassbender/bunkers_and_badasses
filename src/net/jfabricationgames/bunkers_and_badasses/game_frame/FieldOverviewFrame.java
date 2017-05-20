@@ -292,7 +292,7 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	public void updateControlledFields() {
 		fieldControlledListModel.removeAllElements();
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(game.getLocalUser())) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				fieldControlledListModel.addElement(field);
 			}
 		}

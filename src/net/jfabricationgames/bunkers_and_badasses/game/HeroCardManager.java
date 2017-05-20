@@ -33,13 +33,23 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Springs;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.TinyTina;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Wilhelm;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Zero;
+import net.jfabricationgames.bunkers_and_badasses.server.BunkersAndBadassesServer;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class HeroCardManager implements Serializable {
 	
 	private static final long serialVersionUID = -6570342001095822061L;
 	
-	public static final transient List<Class<? extends Hero>> HERO_CLASSES = createHeroClassList(); 
+	public static final transient List<Class<? extends Hero>> HERO_CLASSES;
+	
+	static {
+		if (BunkersAndBadassesServer.IS_SERVER_APPLICATION) {
+			HERO_CLASSES = null;
+		}
+		else {
+			HERO_CLASSES = createHeroClassList();
+		}
+	}
 	
 	private Map<User, List<Hero>> heroCards;
 	

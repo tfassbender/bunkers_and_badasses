@@ -36,6 +36,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
@@ -387,7 +388,7 @@ public class MainMenuFrame extends JFrame {
 	public void receiveDynamicVariables(DynamicVariableRequestMessage message) {
 		Building.setStorage(message.getBuildingStorage());
 		Troop.setStorage(message.getTroopStorage());
-		//Command.setStorage(message.getCommandStorage());
+		Command.setStorage(message.getCommandStorage());
 		TurnBonus.setStorage(message.getTurnBonusStorage());
 		Game.setGameVariableStorage(message.getGameStorage());
 		skillProfileManager.loadSkillLevels();

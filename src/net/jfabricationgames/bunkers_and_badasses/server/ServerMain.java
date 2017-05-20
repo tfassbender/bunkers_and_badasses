@@ -50,6 +50,9 @@ public class ServerMain {
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+		
+		//set the server application value to true
+		BunkersAndBadassesServer.IS_SERVER_APPLICATION = true;
 	}
 	
 	public JFGLoginServer getServer() {

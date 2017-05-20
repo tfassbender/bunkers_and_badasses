@@ -19,9 +19,10 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusEridi
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusMarch;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusMineNeutrals;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusRecruit;
+import net.jfabricationgames.bunkers_and_badasses.server.BunkersAndBadassesServer;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class GameTurnBonusManager implements Serializable{
+public class GameTurnBonusManager implements Serializable {
 	
 	private static final long serialVersionUID = -6139764381035657426L;
 	
@@ -30,7 +31,16 @@ public class GameTurnBonusManager implements Serializable{
 	private List<TurnBonus> choosableTurnBonuses;
 	private List<TurnBonus> turnBonusesGame;//all the turn bonuses for the whole game
 	
-	private static final transient List<TurnBonus> TURN_BONUSES = createTurnBonusList();
+	private static final transient List<TurnBonus> TURN_BONUSES;
+	
+	static {
+		if (BunkersAndBadassesServer.IS_SERVER_APPLICATION) {
+			TURN_BONUSES = null;
+		}
+		else {
+			TURN_BONUSES = createTurnBonusList();			
+		}
+	}
 	
 	public GameTurnBonusManager(PointManager pointManager) {
 		for (TurnBonus bonus : TURN_BONUSES) {
@@ -65,14 +75,16 @@ public class GameTurnBonusManager implements Serializable{
 	public void merge(GameTurnBonusManager bonusManager) {
 		//copy the image references from the previous turn bonuses to the new ones
 		boolean instanceFound;
-		for (TurnBonus bonus : bonusManager.getTurnBonusesGame()) {
-			instanceFound = false;
-			for (TurnBonus prev : TURN_BONUSES) {//load from TURN_BONUSES because these are surely loaded
-				if (!instanceFound && bonus.getClass().equals(prev.getClass())) {
-					bonus.setImage(prev.getImage());
-					instanceFound = true;
+		if (bonusManager.getTurnBonusesGame() != null) {
+			for (TurnBonus bonus : bonusManager.getTurnBonusesGame()) {
+				instanceFound = false;
+				for (TurnBonus prev : TURN_BONUSES) {//load from TURN_BONUSES because these are surely loaded
+					if (!instanceFound && bonus.getClass().equals(prev.getClass())) {
+						bonus.setImage(prev.getImage());
+						instanceFound = true;
+					}
 				}
-			}
+			}			
 		}
 		//set the new bonuses
 		this.userBonuses = bonusManager.getUserBonuses();

@@ -73,10 +73,12 @@ public class BoardPanel extends JPanel {
 	}
 	
 	public void updateBoardImage(BufferedImage boardImage) {
-		panel_scroll_board.setImage(boardImage);
-		panel_scroll_board.setPreferredSize(new Dimension(boardImage.getWidth(), boardImage.getHeight()));
-		panel_board_overview.setImage(boardImage);
-		repaint();
+		if (boardImage != null) {
+			panel_scroll_board.setImage(boardImage);
+			panel_scroll_board.setPreferredSize(new Dimension(boardImage.getWidth(), boardImage.getHeight()));
+			panel_board_overview.setImage(boardImage);
+			repaint();
+		}
 	}
 	
 	private void informListeners(MouseEvent event) {

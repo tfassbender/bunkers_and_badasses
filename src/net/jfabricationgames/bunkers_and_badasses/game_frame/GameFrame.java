@@ -111,8 +111,6 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		});
 		this.game = game;
 		
-		intitGuis();
-		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -304,7 +302,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		panel_turn_bonus.setBackground(Color.GRAY);
 		panel_1.add(panel_turn_bonus, "cell 1 1,grow");
 		
-		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld ï¿½bersicht", true);
 		panel_side_bar.add(fieldPanel, "cell 0 2,grow");
 		
 		JPanel panel_low_bar = new JPanel();
@@ -474,7 +472,8 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		panel_logo_capture.add(panel_logo, "cell 0 1,grow");
 		
 		addPlayerColors(panel_colors_1, game.getPlayers(), game.getColorManager());
-
+		
+		intitGuis();
 		update();
 	}
 	
@@ -622,8 +621,10 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	}
 	
 	private void updateTurnCards() {
-		panel_turn_bonus.setTurnBonus(game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser()));
-		panel_turn_goal.setTurnGoal(game.getTurnManager().getGameTurnGoalManager().getTurnGoal());
+		if (game.getGameTurnBonusManager().getBonuses() != null) {
+			panel_turn_bonus.setTurnBonus(game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser()));
+			panel_turn_goal.setTurnGoal(game.getTurnManager().getGameTurnGoalManager().getTurnGoal());
+		}
 	}
 	
 	private void updateHeroCards() {

@@ -34,7 +34,7 @@ public class FightManager implements Serializable {
 	private transient TurnExecutionManager turnExecutionManager;
 	private Board board;
 	
-	private JFGClient client;
+	private transient JFGClient client;
 	
 	public FightManager(JFGClient client, User localPlayer, List<User> players, GameTurnBonusManager gameTurnBonusManager, 
 			GameTurnGoalManager gameTurnGoalManager, PointManager pointManager, TurnExecutionManager turnExecutionManager, Board board) {

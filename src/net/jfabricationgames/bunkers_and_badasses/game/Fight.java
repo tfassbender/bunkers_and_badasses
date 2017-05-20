@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class Fight {
+public class Fight implements Serializable {
+	
+	private static final long serialVersionUID = 3623504762354487614L;
 	
 	private User attackingPlayer;
 	private User defendingPlayer;

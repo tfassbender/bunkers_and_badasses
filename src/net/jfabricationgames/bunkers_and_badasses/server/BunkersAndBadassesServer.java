@@ -46,6 +46,11 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	
 	public static final String loginTable = "users";
 	
+	/**
+	 * Indicates whether this application is a client- or a server-application.
+	 */
+	public static boolean IS_SERVER_APPLICATION = false;
+	
 	private Map<User, JFGConnection> userMap;
 	private Map<JFGConnection, User> connectionMap;
 	
