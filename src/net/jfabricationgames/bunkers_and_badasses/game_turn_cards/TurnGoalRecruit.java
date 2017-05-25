@@ -4,13 +4,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalRecruit extends TurnGoal {
 
+	private static final long serialVersionUID = -1220061583864766693L;
+	
 	public TurnGoalRecruit() {
 		imagePath = "turn_goal_recruit.png";
 		loadImage();
 		description = "<html>Rekrutierung:<br/>"
 				+ "Viele neue Selbstmordkandidaten sind auf Pandora eingetroffen,<br/>"
 				+ "die Rekrutiert werden wollen. [1 Punkt pro rekrutierter oder<br/>"
-				+ "aufgerüsteter Einheit]</html>";
+				+ "aufgerï¿½steter Einheit]</html>";
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -172,11 +173,11 @@ public class GameRequestDialog extends JFrame {
 		addInvitedPlayers(invitedUsers, invitingUser);
 	}
 	
-	public void startGame(int boardId, int players, boolean loadedGame) {
+	public void startGame(BufferedImage boardImage, int boardId, int players, boolean loadedGame) {
 		GameStartDialog startDialog = new GameStartDialog();
 		startDialog.setVisible(true);
 		mainMenu.dispose();
-		startDialog.startGame(client, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager());
+		startDialog.startGame(client, boardImage, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager());
 	}
 	
 	private void addInvitedPlayers(List<User> players, User invitingPlayer) {

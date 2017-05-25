@@ -4,12 +4,14 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalStrategy extends TurnGoal {
 
+	private static final long serialVersionUID = -2072170443891249406L;
+	
 	public TurnGoalStrategy() {
 		imagePath = "turn_goal_strategy.png";
 		loadImage();
 		description = "<html>Strategie:<br/>"
-				+ "Nichts übereilen. Strategie dauert seine Zeit. [Beim Beenden<br/>"
-				+ "der Runde erhällt jeder Spieler so viele Punkte wie Spieler vor<br/>"
+				+ "Nichts ï¿½bereilen. Strategie dauert seine Zeit. [Beim Beenden<br/>"
+				+ "der Runde erhï¿½llt jeder Spieler so viele Punkte wie Spieler vor<br/>"
 				+ "ihm schon gepasst haben]</html>";
 	}
 	

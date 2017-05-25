@@ -8,13 +8,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalBuilding extends TurnGoal {
 	
+	private static final long serialVersionUID = -6244193169366840795L;
+	
 	public TurnGoalBuilding() {
 		imagePath = "turn_goal_building.png";
 		loadImage();
 		description = "<html>Bauabnahme:<br/>"
-				+ "Eine erfolgreiche Armee braucht nicht nur Truppen sondern auch Gebäude.<br/>"
-				+ "[Alle Spieler erhallten am ende der Runde: 1 Punkt für jedes normale Gebäude,<br/>"
-				+ "2 Punkte für jedes aufgerüstete Gebäude, 3 Punkte für jede gehalltene Basis]</html>";
+				+ "Eine erfolgreiche Armee braucht nicht nur Truppen sondern auch Gebï¿½ude.<br/>"
+				+ "[Alle Spieler erhallten am ende der Runde: 1 Punkt fï¿½r jedes normale Gebï¿½ude,<br/>"
+				+ "2 Punkte fï¿½r jedes aufgerï¿½stete Gebï¿½ude, 3 Punkte fï¿½r jede gehalltene Basis]</html>";
 	}
 	
 	@Override

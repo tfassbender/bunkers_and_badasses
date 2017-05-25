@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,7 @@ public class GameTurnBonusManager implements Serializable {
 		for (TurnBonus bonus : TURN_BONUSES) {
 			bonus.setPointManager(pointManager);
 		}
+		userBonuses = new HashMap<User, TurnBonus>();
 	}
 	
 	private static List<TurnBonus> createTurnBonusList() {
@@ -96,6 +98,8 @@ public class GameTurnBonusManager implements Serializable {
 	 * Select the turn bonus cards for the game.
 	 */
 	public void chooseTurnBonusForGame(int players) {
+		choosableTurnBonuses = new ArrayList<TurnBonus>(players+3);
+		turnBonusesGame = new ArrayList<TurnBonus>(players+3);
 		TurnBonus[] bonuses = new TurnBonus[TURN_BONUSES.size()];
 		for (int i = 0; i < bonuses.length; i++) {
 			bonuses[i] = TURN_BONUSES.get(i);

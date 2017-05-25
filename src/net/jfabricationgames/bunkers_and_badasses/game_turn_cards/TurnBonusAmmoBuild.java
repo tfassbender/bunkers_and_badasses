@@ -5,13 +5,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusAmmoBuild extends TurnBonus {
 	
+	private static final long serialVersionUID = -2095892554504000838L;
+	
 	public TurnBonusAmmoBuild() {
 		bonusId = 1;
 		loadVariables();
 		imagePath = "turn_bonus_ammo_1_build.png";
 		loadImage();
 		name = "Munition - Aufbau";
-		description = "<html>Zusätzliche " + SkillProfileManager.AMMO_SKILL_LEVEL[1] + " Munition zu Beginn der Runde.<br/>2 Punkte Bonus für jedes Bauen oder Aufrüsten eines Gebäudes.</html>";
+		description = "<html>Zusï¿½tzliche " + SkillProfileManager.AMMO_SKILL_LEVEL[1] + " Munition zu Beginn der Runde.<br/>2 Punkte Bonus fï¿½r jedes Bauen oder Aufrï¿½sten eines Gebï¿½udes.</html>";
 	}
 	
 	@Override

@@ -5,11 +5,13 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalConquer extends TurnGoal {
 
+	private static final long serialVersionUID = 508841262886589248L;
+	
 	public TurnGoalConquer() {
 		imagePath = "turn_goal_conquer.png";
 		loadImage();
 		description = "<html>Mein Land:<br/>"
-				+ "Die Armeen müssen an Boden gewinnen! [2 Punkte für jedes<br/>"
+				+ "Die Armeen mï¿½ssen an Boden gewinnen! [2 Punkte fï¿½r jedes<br/>"
 				+ "eroberte Gebiet (Auch neutrale Gebiete)]</html>";
 	}
 	

@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
@@ -17,7 +18,9 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
  * The matching functions are called from the points where they were executed.
  * The functions need to be overwritten in the subclasses.
  */
-public abstract class TurnGoal {
+public abstract class TurnGoal implements Serializable {
+	
+	private static final long serialVersionUID = 4433289771289119044L;
 	
 	protected static ImageLoader loader;
 	

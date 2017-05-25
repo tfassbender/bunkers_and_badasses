@@ -7,13 +7,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusEridiumSupport extends TurnBonus {
 	
+	private static final long serialVersionUID = 1377999226637594818L;
+	
 	public TurnBonusEridiumSupport() {
 		bonusId = 8;
 		loadVariables();
 		imagePath = "turn_bonus_eridium_1_support.png";
 		loadImage();
-		name = "Eridium - Unterstützung";
-		description = "<html>Zusätzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[1] + " Eridium zu Beginn der Runde.<br/>1 Punkt Bonus für jede Unterstützung.</html>";
+		name = "Eridium - Unterstï¿½tzung";
+		description = "<html>Zusï¿½tzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[1] + " Eridium zu Beginn der Runde.<br/>1 Punkt Bonus fï¿½r jede Unterstï¿½tzung.</html>";
 	}
 	
 	@Override

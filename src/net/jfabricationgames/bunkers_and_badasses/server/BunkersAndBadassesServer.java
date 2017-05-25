@@ -412,7 +412,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * 		The client connection that sent the request.
 	 */
 	public void loadMap(int id, int players, JFGConnection connection) {
-		BoardKeeper keeper = loadedMaps.get(id);
+		/*BoardKeeper keeper = loadedMaps.get(id);
 		synchronized (this) {//wait if the map is currently loaded
 			if (keeper == null) {
 				BoardLoader loader = new BoardLoader();
@@ -422,8 +422,16 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				loadedMaps.put(id, keeper);//store the loaded map for the next players
 			}
 		}
-		BoardTransfereMessage transfere = new BoardTransfereMessage(keeper.getBoard());
-		connection.sendMessage(transfere);
+		//keeper.getBoard().setStoreImage(true);
+		BoardTransfereMessage transfere = new BoardTransfereMessage(keeper.getBoard());*/
+		BoardLoader loader = new BoardLoader();
+		Board board = loader.loadBoard(id);
+		board.setBoardId(id);
+		//don't send the image; client has already got one he can use
+		//board.setStoreImage(true);
+		//send the board to the client
+		BoardTransfereMessage message = new BoardTransfereMessage(board);
+		connection.sendMessage(message);
 	}
 	/**
 	 * Load an overview of all maps (including the name, the image and the player number) and send it to the client.

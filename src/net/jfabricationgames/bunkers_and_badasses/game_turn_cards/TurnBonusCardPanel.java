@@ -48,9 +48,11 @@ public class TurnBonusCardPanel extends ImagePanel {
 	
 	public void setTurnBonus(TurnBonus turnBonus) {
 		this.turnBonus = turnBonus;
-		setImage(turnBonus.getImage());
-		setToolTipText(turnBonus.getDescription());
-		repaint();
+		if (turnBonus != null) {
+			setImage(turnBonus.getImage());
+			setToolTipText(turnBonus.getDescription());
+			repaint();			
+		}
 	}
 	public TurnBonus getTurnBonus() {
 		return turnBonus;

@@ -5,13 +5,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalWildHunt extends TurnGoal {
 
+	private static final long serialVersionUID = 7588035027020774251L;
+	
 	public TurnGoalWildHunt() {
 		imagePath = "turn_goal_wild_hunt.png";
 		loadImage();
-		description = "<html>Großwildjagt:<br/>"
-				+ "Hast du das Gefühl du hast zu viel Munition und zu<br/>"
+		description = "<html>Groï¿½wildjagt:<br/>"
+				+ "Hast du das Gefï¿½hl du hast zu viel Munition und zu<br/>"
 				+ "wenig Punkte? Dann baller ein paar Skags weg! [1 Punkt<br/>"
-				+ "pro gegöteter neutraler Einheit]</html>";
+				+ "pro gegï¿½teter neutraler Einheit]</html>";
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {

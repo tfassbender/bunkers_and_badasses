@@ -5,13 +5,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusDefendFight extends TurnBonus {
 	
+	private static final long serialVersionUID = -8529176704498269445L;
+	
 	public TurnBonusDefendFight() {
 		bonusId = 6;
 		loadVariables();
 		imagePath = "turn_bonus_defend_command_fight.png";
 		loadImage();
 		name = "Verteidungungs Befehl - Kampf";
-		description = "<html>1 zusätzlicher Verteidigungsbefehl.<br/>2 Punkte Bonus für jeden gewonnenen Kampf.</html>";
+		description = "<html>1 zusï¿½tzlicher Verteidigungsbefehl.<br/>2 Punkte Bonus fï¿½r jeden gewonnenen Kampf.</html>";
 	}
 	
 	@Override

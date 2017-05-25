@@ -90,6 +90,7 @@ public class GameTurnGoalManager implements Serializable {
 	}
 	
 	public void chooseTurnGoals() {
+		turnGoals = new ArrayList<TurnGoal>(Game.getGameVariableStorage().getGameTurns());
 		TurnGoal[] goals = new TurnGoal[TURN_GOALS.size()];
 		for (int i = 0; i < goals.length; i++) {
 			goals[i] = TURN_GOALS.get(i);

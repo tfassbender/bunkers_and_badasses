@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.JDialog;
@@ -17,6 +18,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientI
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
@@ -34,10 +37,12 @@ public class GameStartDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	
-	//private JFGClient client;
+	private JFGClient client;
 	private Board board;
 	private int gameId = -1;
 	private Game game;
+	
+	private BufferedImage boardImage;
 	
 	private SkillProfileManager skillProfileManager;
 	
@@ -117,6 +122,14 @@ public class GameStartDialog extends JDialog {
 	 */
 	public void receiveBoard(Board board) {
 		this.board = board;
+		//some things in the fields seem to not work correctly; fix them
+		for (Field field : board.getFields()) {
+			field.setBoard(board);
+			if (field.getBuilding() == null) {
+				field.setBuilding(new EmptyBuilding());				
+			}
+		}
+		board.setBaseImage(boardImage);
 		if (gameId != -1 && game != null) {
 			startGameFrame();
 		}
@@ -129,7 +142,7 @@ public class GameStartDialog extends JDialog {
 	 * 		The game that was sent by the starting player.
 	 */
 	public void receiveGame(Game game) {
-		this.game = new Game(game.getClient(), game.getPlayers());
+		this.game = new Game(client, game.getPlayers());
 		this.game.merge(game);//merge the game to keep the transient fields
 		if (board != null && gameId != -1) {
 			startGameFrame();
@@ -172,9 +185,10 @@ public class GameStartDialog extends JDialog {
 	 * 		The SkillProfileManager passed on from the main menu (added to the game when it's started in the startGameFrame method).
 	 */
 	public void startGameMaster(JFGClient client, List<User> players, Board board, SkillProfileManager skillProfileManager) {
-		//this.client = client;
+		this.client = client;
 		this.isLoaded = false;
 		this.skillProfileManager = skillProfileManager;
+		this.boardImage = board.getBaseImage();
 		changeClientInterpreter(client);
 		//send a game start message containing the board id to all players
 		//this message is received by the MainMenuClientInterpreter and starts the GameStartDialog that adds the BunkersAndBadassesClientInterpreter
@@ -220,9 +234,10 @@ public class GameStartDialog extends JDialog {
 	 * 		The GameOverview to identify the game that is to be loaded from the server.
 	 */
 	public void loadGameMaster(JFGClient client, List<User> players, Board board, GameOverview overview, SkillProfileManager skillProfileManager) {
-		//this.client = client;
+		this.client = client;
 		this.isLoaded = true;
 		this.skillProfileManager = skillProfileManager;
+		this.boardImage = board.getBaseImage();
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		//send a game start message containing the board id to all players
@@ -274,10 +289,11 @@ public class GameStartDialog extends JDialog {
 	 * @param overview
 	 * 		The GameOverview to identify the game that is to be loaded (or null if the game is new).
 	 */
-	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview, SkillProfileManager skillProfileManager) {
-		//this.client = client;
+	public void startGame(JFGClient client, BufferedImage boardImage, int boardId, int players, boolean loadedGame, GameOverview overview, SkillProfileManager skillProfileManager) {
+		this.client = client;
 		this.isLoaded = loadedGame;
 		this.skillProfileManager = skillProfileManager;
+		this.boardImage = boardImage;
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		if (loadedGame) {

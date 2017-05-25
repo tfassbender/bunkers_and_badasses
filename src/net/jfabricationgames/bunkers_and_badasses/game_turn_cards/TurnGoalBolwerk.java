@@ -5,12 +5,14 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalBolwerk extends TurnGoal {
 	
+	private static final long serialVersionUID = 2973075463316860518L;
+	
 	public TurnGoalBolwerk() {
 		imagePath = "turn_goal_bolwerk.png";
 		loadImage();
 		description = "<html>Bolwerk:<br/>"
 				+ "Haltet den Vormarsch der feindlichen Truppen auf!<br/>"
-				+ "[3 Punkte für jede erfolgreiche Verteidigung]</html>";
+				+ "[3 Punkte fï¿½r jede erfolgreiche Verteidigung]</html>";
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -422,7 +423,13 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	public void receiveGameStartMessage(User startingPlayer, int boardId, int players, boolean loadedGame) {
-		requestDialogs.get(startingPlayer).startGame(boardId, players, loadedGame);
+		BufferedImage boardImage = null;
+		for (Board board : playableBoards) {
+			if (board.getBoardId() == boardId) {
+				boardImage = board.getBaseImage();
+			}
+		}
+		requestDialogs.get(startingPlayer).startGame(boardImage, boardId, players, loadedGame);
 	}
 	
 	public void receiveAccoutUpdateAnswer(boolean answer, String username) {

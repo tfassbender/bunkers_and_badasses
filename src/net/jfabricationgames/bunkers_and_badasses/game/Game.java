@@ -43,6 +43,7 @@ public class Game implements Serializable {
 		this.localUser = new User(UserManager.getUsername());
 		gameState = GameState.PLAN;
 		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
+		gameTurnBonusManager.chooseTurnBonusForGame(players.size());
 		playerOrder = new PlayerOrder(players.size());
 		playerOrder.chooseRandomOrder(players);
 		resourceManager = new UserResourceManager(players, this);
@@ -52,6 +53,7 @@ public class Game implements Serializable {
 		gameTurnGoalManager = new GameTurnGoalManager(pointManager);
 		turnManager = new GameTurnManager(this);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
+		gameTurnGoalManager.chooseTurnGoals();
 		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager, this);
 		heroCardManager = new HeroCardManager();
 		heroCardManager.intitialize(players);
@@ -59,8 +61,8 @@ public class Game implements Serializable {
 		colorManager.chooseRandomColors(players);
 		fightManager = new FightManager(client, localUser, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
 		skillProfileManager = new SkillProfileManager();
-		//gameFrame = new GameFrame(this);
 		//initialize the GameFrame when the board is added.
+		//gameFrame = new GameFrame(this);
 	}
 	
 	/**

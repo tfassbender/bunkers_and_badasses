@@ -105,7 +105,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	
 	public PreGameSelectionFrame(Game game) {
 		this.game = game;
-		//Add a reference to this frame to the client interpreter 
+		//Add a reference to this frame to the client interpreter
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setGame(game);
 		
@@ -124,7 +124,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new MigLayout("", "[100px:n,grow][grow]", "[grow]"));
+		contentPane.setLayout(new MigLayout("", "[100px:n,grow]", "[grow]"));
 		
 		panel_6 = new JPanel();
 		panel_6.setBackground(Color.GRAY);

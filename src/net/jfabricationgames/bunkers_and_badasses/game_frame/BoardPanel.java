@@ -24,7 +24,6 @@ public class BoardPanel extends JPanel {
 	private JScrollPane scrollPane_board;
 	
 	private boolean fieldOverview = false;
-	private JPanel panel_board_capture;
 	private final String SCROLL_BOARD = "scroll_board";
 	private final String OVERVIEW_BOARD = "overview_board";
 	
@@ -88,12 +87,12 @@ public class BoardPanel extends JPanel {
 	}
 	
 	public void showOtherView() {
-		CardLayout layout = (CardLayout) panel_board_capture.getLayout();
+		CardLayout layout = (CardLayout) getLayout();
 		if (fieldOverview) {
-			layout.show(panel_board_capture, SCROLL_BOARD);
+			layout.show(this, SCROLL_BOARD);
 		}
 		else {
-			layout.show(panel_board_capture, OVERVIEW_BOARD);
+			layout.show(this, OVERVIEW_BOARD);
 		}
 		fieldOverview = !fieldOverview;
 	}

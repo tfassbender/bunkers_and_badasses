@@ -36,6 +36,7 @@ public class Field implements Serializable {
 	private Point normalTroopsPosition;
 	private Point badassTroopsPosition;
 	private Point buildingPosition;
+	private Point commandMarkerPosition;
 	private Point playerMarkerPosition;
 	
 	private Color fieldColor;
@@ -113,24 +114,25 @@ public class Field implements Serializable {
 			color = board.getGame().getColorManager().getUserColors().get(affiliation);
 		}
 		//set font and color
-		g.setFont(new Font("Arial", Font.PLAIN, normalTroopImage.getHeight()));
+		//g.setFont(new Font("Arial", Font.PLAIN, normalTroopImage.getHeight()));
+		g.setFont(new Font("Arial", Font.PLAIN, 30));
 		g.setColor(Color.BLACK);
 		//draw the troop images and numbers
-		if (neutrals) {
+		if (neutrals && normalTroops > 0) {
 			g.drawImage(neutralTroopImage, (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
-			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+neutralTroopImage.getWidth(), (int) normalTroopsPosition.getY());
+			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+neutralTroopImage.getWidth(), (int) normalTroopsPosition.getY()+neutralTroopImage.getHeight()-15);
 		}
 		else {
 			g.drawImage(normalTroopImage, (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
-			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+normalTroopImage.getWidth(), (int) normalTroopsPosition.getY());
+			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+normalTroopImage.getWidth(), (int) normalTroopsPosition.getY()+normalTroopImage.getHeight()-15);
 			g.drawImage(badassTroopImage, (int) badassTroopsPosition.getX(), (int) badassTroopsPosition.getY(), null);
-			g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImage.getWidth(), (int) badassTroopsPosition.getY());
+			g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImage.getWidth(), (int) badassTroopsPosition.getY()+badassTroopImage.getHeight()-15);
 		}
 		//draw the building image
 		g.drawImage(building.getImage(), (int) buildingPosition.getX(), (int) buildingPosition.getY(), null);
 		//draw the user color
 		g.setColor(color.getColor());
-		g.drawOval((int) playerMarkerPosition.getX(), (int) playerMarkerPosition.getY(), 30, 30);
+		g.fillOval((int) playerMarkerPosition.getX(), (int) playerMarkerPosition.getY(), 15, 15);
 	}
 	
 	/**
@@ -228,6 +230,27 @@ public class Field implements Serializable {
 	 */
 	public boolean isCommandPlaceable() {
 		return !troops.isEmpty() || building.isCommandExecutable();
+	}
+	
+	public Board getBoard() {
+		return board;
+	}
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+	
+	public Point getCommandMarkerPosition() {
+		return commandMarkerPosition;
+	}
+	public void setCommandMarkerPosition(Point commandMarkerPosition) {
+		this.commandMarkerPosition = commandMarkerPosition;
+	}
+	
+	public Point getPlayerMarkerPosition() {
+		return playerMarkerPosition;
+	}
+	public void setPlayerMarkerPosition(Point playerMarkerPosition) {
+		this.playerMarkerPosition = playerMarkerPosition;
 	}
 	
 	public static BufferedImage getNormalTroopImage() {

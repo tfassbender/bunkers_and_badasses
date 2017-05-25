@@ -8,13 +8,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalArmAGeddon extends TurnGoal {
 	
+	private static final long serialVersionUID = 3446648916742339794L;
+	
 	public TurnGoalArmAGeddon() {
 		imagePath = "turn_goal_arm_a_geddon.png";
 		loadImage();
 		description = "<html>Arm-A-Geddon:<br/>"
-				+ "Dr. Zed braucht Ersatzkörperteile. Dafür müssen nur <br/>"
+				+ "Dr. Zed braucht Ersatzkï¿½rperteile. Dafï¿½r mï¿½ssen nur <br/>"
 				+ "ein paar Leute sterben... [1 Punkt pro im Kampf fallender<br/>"
-				+ " Truppe (gegnerische und eigene Truppen; Punkte nur für <br/>"
+				+ " Truppe (gegnerische und eigene Truppen; Punkte nur fï¿½r <br/>"
 				+ "den Angreifer)]</html>";
 	}
 	

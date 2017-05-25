@@ -6,12 +6,14 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalSupport extends TurnGoal {
 
+	private static final long serialVersionUID = -2378622878360708902L;
+	
 	public TurnGoalSupport() {
 		imagePath = "turn_goal_support.png";
 		loadImage();
-		description = "<html>Unterstützung:<br/>"
-				+ "Truppen brauchen Unterstützung [2 Punkte für Unterstützung<br/>"
-				+ "eigener Truppen; 3 Punkte für Unterstützung gegnerischer Truppen]</html>";
+		description = "<html>Unterstï¿½tzung:<br/>"
+				+ "Truppen brauchen Unterstï¿½tzung [2 Punkte fï¿½r Unterstï¿½tzung<br/>"
+				+ "eigener Truppen; 3 Punkte fï¿½r Unterstï¿½tzung gegnerischer Truppen]</html>";
 	}
 	
 	@Override

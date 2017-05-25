@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
@@ -13,7 +14,9 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
  * A bonus that every player can take at the start of the turn and change when passing.
  * Used to support the players by additional resources, points or commands
  */
-public abstract class TurnBonus {
+public abstract class TurnBonus implements Serializable {
+	
+	private static final long serialVersionUID = 5465438133855649732L;
 	
 	protected static ImageLoader loader;
 	

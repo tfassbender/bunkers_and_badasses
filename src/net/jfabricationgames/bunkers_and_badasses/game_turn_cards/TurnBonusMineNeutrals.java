@@ -5,13 +5,15 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusMineNeutrals extends TurnBonus {
 	
+	private static final long serialVersionUID = -1303890713691071951L;
+	
 	public TurnBonusMineNeutrals() {
 		bonusId = 11;
 		loadVariables();
 		imagePath = "turn_bonus_mine_command_neutrals.png";
 		loadImage();
 		name = "Resourcen Befehl - Neutrale";
-		description = "<html>1 zusätzlicher Resourcen-Gewinnungsbefehl.<br/>1 Punkt Bonus für getötete neutrale Einheit.</html>";
+		description = "<html>1 zusï¿½tzlicher Resourcen-Gewinnungsbefehl.<br/>1 Punkt Bonus fï¿½r getï¿½tete neutrale Einheit.</html>";
 	}
 	
 	@Override

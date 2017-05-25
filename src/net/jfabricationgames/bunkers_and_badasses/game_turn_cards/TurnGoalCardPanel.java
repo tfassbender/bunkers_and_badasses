@@ -27,9 +27,11 @@ public class TurnGoalCardPanel extends ImagePanel {
 	
 	public void setTurnGoal(TurnGoal turnGoal) {
 		this.turnGoal = turnGoal;
-		setImage(turnGoal.getImage());
-		setToolTipText(turnGoal.getDescription());
-		repaint();
+		if (turnGoal != null) {
+			setImage(turnGoal.getImage());
+			setToolTipText(turnGoal.getDescription());
+			repaint();			
+		}
 	}
 	public TurnGoal getTurnGoal() {
 		return turnGoal;

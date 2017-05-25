@@ -6,14 +6,16 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalTroopUnion extends TurnGoal {
 
+	private static final long serialVersionUID = -1474453959743655739L;
+	
 	public TurnGoalTroopUnion() {
 		imagePath = "turn_goal_troop_union.png";
 		loadImage();
 		description = "<html>Truppenverband:<br/>"
-				+ "Einer für alle; Und alle für mich [Alle Spieler erhallten am<br/>"
-				+ "Ende der Runde Punkte für ihren größten Truppenzusammenschluss:<br/>"
+				+ "Einer fï¿½r alle; Und alle fï¿½r mich [Alle Spieler erhallten am<br/>"
+				+ "Ende der Runde Punkte fï¿½r ihren grï¿½ï¿½ten Truppenzusammenschluss:<br/>"
 				+ "1 Punkt pro Truppe im Zusammenschluss (egal ob normale oder<br/>"
-				+ "verstärkte Einheit)]</html>";
+				+ "verstï¿½rkte Einheit)]</html>";
 	}
 	
 	@Override
