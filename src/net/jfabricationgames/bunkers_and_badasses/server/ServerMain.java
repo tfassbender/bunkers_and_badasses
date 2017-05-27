@@ -40,7 +40,7 @@ public class ServerMain {
 		server.setInterpreterFactory(interpreter);
 		
 		//set the JFGConnections to reset the output before every message sent
-		JFGConnection.setResetBeforeSending(true);
+		//JFGConnection.setResetBeforeSending(true);
 		
 		//start the server
 		try {

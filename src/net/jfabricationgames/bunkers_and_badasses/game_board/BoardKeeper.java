@@ -8,7 +8,7 @@ import net.jfabricationgames.bunkers_and_badasses.server.BunkersAndBadassesServe
  */
 public class BoardKeeper {
 	
-	public static final int KEEP_TIME = 60;//time till the loaded board reference is deleted (in seconds)
+	public static final int KEEP_TIME = 10;//time till the loaded board reference is deleted (in seconds)
 	
 	private int id;//the map id in the database
 	private int players;//the players taking part in the game

@@ -141,7 +141,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	
 	/**
 	 * Inform the players about a game creation request to which the player is invited.
-	 *  
+	 * 
 	 * @param message
 	 * 		The inviting message.
 	 */
@@ -349,7 +349,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		UserUpdateMessage update = new UserUpdateMessage(allUsers);
 		for (JFGConnection con : getConnections()) {
 			if (isLoggedIn(con)) {
-				//con.resetOutput();
+				con.resetOutput();
 				con.sendMessage(update);
 			}
 		}
@@ -450,7 +450,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		String query = "SELECT id FROM bunkers_and_badasses.maps";
 		try (Statement statement = con.createStatement()) {
 			result = statement.executeQuery(query);//get the ids
-			if (result.next()) {
+			while (result.next()) {
 				availableBoardIds.add(result.getInt(1));//store all ids in a list
 			}
 		}
@@ -750,7 +750,10 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		GameStartMessage startMessage = new GameStartMessage();
 		startMessage.setGameId(gameId);
 		for (int i = 0; i < message.getPlayers().size(); i++) {
-			userMap.get(message.getPlayers().get(i)).sendMessage(startMessage);
+			JFGConnection connection = userMap.get(message.getPlayers().get(i));
+			System.out.println("sending game start to player: " + message.getPlayers().get(i).getUsername());
+			System.out.println(System.currentTimeMillis());
+			connection.sendMessage(startMessage);
 		}
 	}
 	

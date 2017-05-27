@@ -65,7 +65,7 @@ public class LoginClientMain extends JFrame {
 		client.getClient().setClientInterpreter(interpreter);
 		
 		//set the JFGClient to automatically reset the output before every message sent
-		JFGClient.setResetBeforeSending(true);
+		//JFGClient.setResetBeforeSending(true);
 		
 		//create a new ImageLoader for the login panels
 		imageLoader = new ImageLoader();
