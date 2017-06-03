@@ -12,11 +12,29 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 
 public class BoardLoader {
 	
+	/**
+	 * Load all the boards that are found on the client side.
+	 * 
+	 * @return
+	 * 		A list of all the boards the client knows.
+	 */
+	public List<Board> loadAllBoards() {
+		File boardDir = new File("boards");
+		List<Board> boards = new ArrayList<Board>();
+		if (boardDir.exists() && boardDir.isDirectory()) {
+			for (File boardFile : boardDir.listFiles()) {
+				boards.add(loadBoard(boardFile));
+			}
+		}
+		return boards;
+	}
 	/**
 	 * Load a board from a file.
 	 * 

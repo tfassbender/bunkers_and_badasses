@@ -491,6 +491,43 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		connection.sendMessage(message);
 	}
 	
+	public void completeBoards(BoardOverviewRequestMessage message, JFGConnection connection) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		String query = "SELECT * FROM bunkers_and_badasses.maps";
+		try (Statement statement = con.createStatement()) {
+			for (Board board : message.getBoards()) {
+				result = statement.executeQuery(query + " WHERE name = '" + board.getName() + "'");
+				if (result.next()) {
+					board.setBoardId(result.getInt(1));
+					board.setPlayersMin(result.getInt(3));
+					board.setPlayersMax(result.getInt(4));
+				}
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			//close resources
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		connection.sendMessage(message);
+	}
+	
 	/**
 	 * Save a game in the database.
 	 * First an overview of the game is created. Then the game is updated in the database.
@@ -751,8 +788,8 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		startMessage.setGameId(gameId);
 		for (int i = 0; i < message.getPlayers().size(); i++) {
 			JFGConnection connection = userMap.get(message.getPlayers().get(i));
-			System.out.println("sending game start to player: " + message.getPlayers().get(i).getUsername());
-			System.out.println(System.currentTimeMillis());
+			//System.out.println("sending game start to player: " + message.getPlayers().get(i).getUsername());
+			//System.out.println(System.currentTimeMillis());
 			connection.sendMessage(startMessage);
 		}
 	}

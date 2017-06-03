@@ -68,10 +68,13 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			interpreteServerPingMessage((PingMessage) message, connection);
 		}
 		//board loading message
+		//don't use the board loaders; boards are stored locally
 		else if (message instanceof BoardRequestMessage) {
-			interpreteBoardRequestMessage((BoardRequestMessage) message, connection);
+			System.err.println("Received BoardRequestMessage");
+			//interpreteBoardRequestMessage((BoardRequestMessage) message, connection);
 		}
 		else if (message instanceof BoardOverviewRequestMessage) {
+			//now used to add content like player numbers to the boards
 			interpreteBoardOverviewRequestMessage((BoardOverviewRequestMessage) message, connection);
 		}
 		//game storing message
@@ -231,12 +234,13 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		server.receivePing(connection);
 	}
 	
-	private void interpreteBoardRequestMessage(BoardRequestMessage message, JFGConnection connection) {
+	/*private void interpreteBoardRequestMessage(BoardRequestMessage message, JFGConnection connection) {
 		server.loadMap(message.getId(), message.getPlayers(), connection);
-	}
+	}*/
 	
 	private void interpreteBoardOverviewRequestMessage(BoardOverviewRequestMessage message, JFGConnection connection) {
-		server.sendMapOverviews(message, connection);
+		//server.sendMapOverviews(message, connection);
+		server.completeBoards(message, connection);
 	}
 	
 	private void interpreteGameSaveMessage(GameSaveMessage message, JFGConnection connection) {

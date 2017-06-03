@@ -198,10 +198,12 @@ public class GameStartDialog extends JDialog {
 		message.setLoaded(false);
 		client.sendMessage(message);
 		//load the board from the server
-		BoardRequestMessage boardRequest = new BoardRequestMessage();
+		/*BoardRequestMessage boardRequest = new BoardRequestMessage();
 		boardRequest.setId(board.getBoardId());
 		boardRequest.setPlayers(players.size());
-		client.sendMessage(boardRequest);
+		client.sendMessage(boardRequest);*/
+		//directly send the board to yourself
+		receiveBoard(board);
 		//create the game entry in the database
 		GameCreationMessage creationMessage = new GameCreationMessage();
 		creationMessage.setBoardId(board.getBoardId());
@@ -289,11 +291,11 @@ public class GameStartDialog extends JDialog {
 	 * @param overview
 	 * 		The GameOverview to identify the game that is to be loaded (or null if the game is new).
 	 */
-	public void startGame(JFGClient client, BufferedImage boardImage, int boardId, int players, boolean loadedGame, GameOverview overview, SkillProfileManager skillProfileManager) {
+	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview, SkillProfileManager skillProfileManager, Board board) {
 		this.client = client;
 		this.isLoaded = loadedGame;
 		this.skillProfileManager = skillProfileManager;
-		this.boardImage = boardImage;
+		this.boardImage = board.getBaseImage();
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		if (loadedGame) {
@@ -305,7 +307,7 @@ public class GameStartDialog extends JDialog {
 					try {
 						game = gameStore.loadGame(overview);
 						gameId = game.getId();
-						board = game.getBoard();
+						GameStartDialog.this.board = game.getBoard();
 						//the loaded game already contains the board and the id so the game can be started
 						startGameFrame();
 					}
@@ -317,10 +319,12 @@ public class GameStartDialog extends JDialog {
 			gameLoadingThread.start();
 		}
 		//load the board from the server (for loaded games only the image is used)
-		BoardRequestMessage boardRequest = new BoardRequestMessage();
+		/*BoardRequestMessage boardRequest = new BoardRequestMessage();
 		boardRequest.setId(boardId);
 		boardRequest.setPlayers(players);
-		client.sendMessage(boardRequest);
+		client.sendMessage(boardRequest);*/
+		//directly send the board to yourself
+		receiveBoard(board);
 		//wait for the server to send the game id
 	}
 	

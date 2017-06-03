@@ -52,6 +52,9 @@ public class BoardKeeper {
 				}
 				//delete the reference to this object after the KEEP_TIME is over
 				server.getLoadedMaps().remove(id);
+				board = null;
+				server = null;
+				System.gc();
 			}
 		}).start();
 	}

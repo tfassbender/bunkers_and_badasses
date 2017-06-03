@@ -3,7 +3,6 @@ package net.jfabricationgames.bunkers_and_badasses.server;
 import java.io.IOException;
 
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
-import net.jfabricationgames.jfgserver.server.JFGConnection;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 /**

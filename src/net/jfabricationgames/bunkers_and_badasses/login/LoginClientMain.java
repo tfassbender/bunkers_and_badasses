@@ -14,7 +14,6 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClientInterpreter;
-import net.jfabricationgames.jfgserver.client.JFGClient;
 
 public class LoginClientMain extends JFrame {
 	

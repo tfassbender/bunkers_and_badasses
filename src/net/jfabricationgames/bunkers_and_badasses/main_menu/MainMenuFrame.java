@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +35,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
@@ -58,6 +59,8 @@ public class MainMenuFrame extends JFrame {
 	private JFGClient client;
 	//private List<User> playersOnline;
 	//private List<User> playersInGame;
+	
+	private List<Board> boardImages;//the loaded board images
 	
 	private GameStore gameStore;
 	
@@ -251,7 +254,8 @@ public class MainMenuFrame extends JFrame {
 		panel_buttons.add(btnSpielErstellen, "cell 0 0,alignx center,aligny center");
 		
 		updateUserList();
-		requireBoards();
+		//requireBoards();
+		loadBoards();
 		requireSkillProfiles();
 		requireDynamicVariables();
 	}
@@ -306,8 +310,21 @@ public class MainMenuFrame extends JFrame {
 		repaint();
 	}
 	
-	private void requireBoards() {
+	/*private void requireBoards() {
 		BoardOverviewRequestMessage message = new BoardOverviewRequestMessage();
+		client.sendMessage(message);
+	}*/
+	private void loadBoards() {
+		//the boards are loaded locally, not from the server to reduce the servers RAM usage
+		BoardLoader loader = new BoardLoader();
+		List<Board> boards = loader.loadAllBoards();
+		boardImages = new ArrayList<Board>(boards.size());
+		for (Board b : boards) {
+			boardImages.add(b);
+		}
+		//send the boards to the server (without images) to let the server complete them
+		BoardOverviewRequestMessage message = new BoardOverviewRequestMessage();
+		message.setBoards(boards);
 		client.sendMessage(message);
 	}
 	private void requireSkillProfiles() {
@@ -423,13 +440,13 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	public void receiveGameStartMessage(User startingPlayer, int boardId, int players, boolean loadedGame) {
-		BufferedImage boardImage = null;
-		for (Board board : playableBoards) {
-			if (board.getBoardId() == boardId) {
-				boardImage = board.getBaseImage();
+		Board board = null;
+		for (Board b : playableBoards) {
+			if (b.getBoardId() == boardId) {
+				board = b;
 			}
 		}
-		requestDialogs.get(startingPlayer).startGame(boardImage, boardId, players, loadedGame);
+		requestDialogs.get(startingPlayer).startGame(board, boardId, players, loadedGame);
 	}
 	
 	public void receiveAccoutUpdateAnswer(boolean answer, String username) {
@@ -444,6 +461,13 @@ public class MainMenuFrame extends JFrame {
 		}
 	}
 	public void receiveBoardOverviews(List<Board> boards) {
+		for (Board b : boards) {
+			for (Board image : boardImages) {
+				if (b.getName().equals(image.getName())) {
+					b.setBaseImage(image.getBaseImage());
+				}
+			}
+		}
 		this.playableBoards = boards;
 	}
 	

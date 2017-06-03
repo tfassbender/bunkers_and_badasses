@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -20,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -173,11 +173,11 @@ public class GameRequestDialog extends JFrame {
 		addInvitedPlayers(invitedUsers, invitingUser);
 	}
 	
-	public void startGame(BufferedImage boardImage, int boardId, int players, boolean loadedGame) {
+	public void startGame(Board board, int boardId, int players, boolean loadedGame) {
 		GameStartDialog startDialog = new GameStartDialog();
 		startDialog.setVisible(true);
 		mainMenu.dispose();
-		startDialog.startGame(client, boardImage, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager());
+		startDialog.startGame(client, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager(), board);
 	}
 	
 	private void addInvitedPlayers(List<User> players, User invitingPlayer) {
