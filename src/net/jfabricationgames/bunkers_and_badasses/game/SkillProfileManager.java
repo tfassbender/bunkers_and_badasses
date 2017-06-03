@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -32,6 +33,7 @@ public class SkillProfileManager implements Serializable {
 	
 	public SkillProfileManager() {
 		loadSkillLevels();
+		selectedProfile = new HashMap<User, SkillProfile>();
 	}
 	
 	/**

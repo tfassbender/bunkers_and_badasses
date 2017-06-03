@@ -98,7 +98,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	private JPanel panel_selectable_turn_bonuses;
 	private JTextField txtBonus;
 	private JTextArea txtrChosen;
-	private JPanel panel_10;
+	private JPanel panel_turn_goals_inner;
 	private JTextArea txtrBonusDescription;
 	private JButton btnAusgewhltenBonusBesttigen;
 	private JButton btnSpielStarten;
@@ -133,11 +133,11 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		
 		JPanel panel_troop_positioning = new JPanel();
 		panel_troop_positioning.setBackground(Color.GRAY);
-		panel_6.add(panel_troop_positioning, SKILL_SELECTION_PANEL);
+		panel_6.add(panel_troop_positioning, TROOP_POSITIONING_PANEL);
 		panel_troop_positioning.setLayout(new MigLayout("", "[800px,grow][:300px:300px,grow]", "[grow]"));
 		
 		JPanel panel_skill_selection = new JPanel();
-		panel_6.add(panel_skill_selection, TROOP_POSITIONING_PANEL);
+		panel_6.add(panel_skill_selection, SKILL_SELECTION_PANEL);
 		panel_skill_selection.setBackground(Color.GRAY);
 		panel_skill_selection.setLayout(new MigLayout("", "[350px,grow][350px,grow][500px,grow]", "[grow]"));
 		
@@ -315,6 +315,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		panel_1.add(lblSpielRunden, "cell 0 0,alignx center");
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		panel_1.add(scrollPane, "cell 0 1,grow");
 		
 		panel_turn_goals = new JPanel();
@@ -332,6 +333,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		panel_4.add(lblRundenBoni, "cell 0 0,alignx center");
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.getVerticalScrollBar().setUnitIncrement(20);
 		panel_4.add(scrollPane_1, "cell 0 1,grow");
 		
 		panel_turn_bonuses = new JPanel();
@@ -429,9 +431,9 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		JScrollPane scrollPane_7 = new JScrollPane();
 		panel_11.add(scrollPane_7, "cell 0 1,grow");
 		
-		panel_10 = new JPanel();
-		panel_10.setBackground(Color.GRAY);
-		scrollPane_7.setViewportView(panel_10);
+		panel_turn_goals_inner = new JPanel();
+		panel_turn_goals_inner.setBackground(Color.GRAY);
+		scrollPane_7.setViewportView(panel_turn_goals_inner);
 		
 		JPanel panel_7 = new JPanel();
 		panel_7.setBackground(Color.GRAY);
@@ -513,12 +515,15 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		
 
 		addGameTurns(panel_turn_goals);
-		addGameTurns(panel_10);
+		addGameTurns(panel_turn_goals_inner);
 		addTurnBonuses(panel_turn_bonuses, false);
 		addTurnBonuses(panel_selectable_turn_bonuses, true);
 		addPlayers(panel_player_order);
 		
 		updateBoardImage();
+		
+		//start the pre-game-selections with the skill selection
+		startSkillSelection();
 	}
 	
 	@Override
@@ -698,6 +703,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 */
 	private void describeSkillProfile(int profile) {
 		txtrSkillProfile.setText(game.getSkillProfileManager().getSkillProfiles()[list_skill_profiles.getSelectedIndex()].describe());
+		txtrSkillProfile.setCaretPosition(0);
 	}
 	
 	/**
@@ -764,6 +770,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		PreGameDataMessage message = new PreGameDataMessage();
 		message.setData(PreGameDataMessage.DATA_BASE_POSITION);
 		message.setBasePosition(selectedBaseField);
+		message.setUser(game.getLocalUser());
 		game.getClient().sendMessage(message);
 	}
 	/**
@@ -795,6 +802,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			message.setData(PreGameDataMessage.DATA_STARTING_POSITION);
 			message.setStartingTroopPositions(selectedStartFields);
 			message.setStartingTroops(startTroops);
+			message.setUser(game.getLocalUser());
 			game.getClient().sendMessage(message);			
 		}
 	}
@@ -878,5 +886,12 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	private void startTurnBonusSelection() {
 		CardLayout layout = (CardLayout) panel_6.getLayout();
 		layout.show(panel_6, BONUS_SELECTION_PANEL);
+	}
+	/**
+	 * Start the skill selection.
+	 */
+	private void startSkillSelection() {
+		CardLayout layout = (CardLayout) panel_6.getLayout();
+		layout.show(panel_6, SKILL_SELECTION_PANEL);
 	}
 }

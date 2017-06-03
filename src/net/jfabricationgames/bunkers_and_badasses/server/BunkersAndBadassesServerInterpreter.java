@@ -262,6 +262,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	}
 	
 	private void interpreteGameStartMessage(GameStartMessage message, JFGConnection connection) {
+		server.createGameGroup(message);
 		server.sendGameStartMessage(message);
 	}
 	

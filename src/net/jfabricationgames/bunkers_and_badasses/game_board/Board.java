@@ -41,7 +41,7 @@ public class Board implements Serializable {
 	private boolean storeImage;
 	private ImageIcon imageWrapper;
 	
-	private Robot robot;
+	private transient Robot robot;
 	
 	private Game game;
 	
@@ -52,7 +52,7 @@ public class Board implements Serializable {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		storeImage = true;
+		storeImage = false;
 	}
 	
 	/**
@@ -138,6 +138,14 @@ public class Board implements Serializable {
 	 * 		The field the user points to.
 	 */
 	public Field getFieldAtMousePosition() {
+		if (robot == null) {
+			try {
+				robot = new Robot();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		Point point = MouseInfo.getPointerInfo().getLocation();
 		Color color = robot.getPixelColor((int) point.getX(), (int) point.getY());
 		return getFieldByColor(color);
