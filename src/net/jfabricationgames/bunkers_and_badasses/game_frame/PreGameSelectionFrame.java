@@ -417,7 +417,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		JPanel panel_turn_bonus_selection = new JPanel();
 		panel_turn_bonus_selection.setBackground(Color.GRAY);
 		panel_6.add(panel_turn_bonus_selection, BONUS_SELECTION_PANEL);
-		panel_turn_bonus_selection.setLayout(new MigLayout("", "[300px,grow][350px,grow][450px,grow]", "[grow]"));
+		panel_turn_bonus_selection.setLayout(new MigLayout("", "[300px:300px,grow][300px:350px,grow][:450px:500px,grow]", "[grow]"));
 		
 		JPanel panel_11 = new JPanel();
 		panel_11.setBackground(Color.GRAY);
@@ -429,6 +429,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		panel_11.add(lblRundenZiele, "cell 0 0,alignx center");
 		
 		JScrollPane scrollPane_7 = new JScrollPane();
+		scrollPane_7.getVerticalScrollBar().setUnitIncrement(20);
 		panel_11.add(scrollPane_7, "cell 0 1,grow");
 		
 		panel_turn_goals_inner = new JPanel();
@@ -445,6 +446,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		panel_7.add(lblRundenBoni_1, "cell 0 0,alignx center");
 		
 		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.getVerticalScrollBar().setUnitIncrement(20);
 		panel_7.add(scrollPane_5, "cell 0 1,grow");
 		
 		panel_selectable_turn_bonuses = new JPanel();
@@ -477,6 +479,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		panel_9.add(lblBeschreibung, "cell 0 3 3 1");
 		
 		txtrBonusDescription = new JTextArea();
+		txtrBonusDescription.setWrapStyleWord(true);
+		txtrBonusDescription.setLineWrap(true);
 		txtrBonusDescription.setBackground(Color.LIGHT_GRAY);
 		txtrBonusDescription.setEditable(false);
 		panel_9.add(txtrBonusDescription, "cell 0 4 2 1,grow");
@@ -608,6 +612,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				index = i;
 			}
 		}
+		//System.out.println("index: " + index + " message_data: " + message.getData());		
 		switch (message.getData()) {
 			case PreGameDataMessage.DATA_SKILL_PROFILE:
 				game.getSkillProfileManager().setSelectedProfile(message.getUser(), message.getSelectedProfile());
@@ -656,6 +661,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				//select the bonuses for the users
 				message.getSelectedBonus().loadImage();//load the image that was not sent with the serialized stream
 				game.getGameTurnBonusManager().chooseFirstTurnBonus(message.getUser(), message.getSelectedBonus());
+				txtrChosen.append(message.getSelectedBonus().getName() + "\n");
 				if (index == 0) {
 					//all players have chosen their bonuses
 					//game can be started now
@@ -666,6 +672,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				}
 				break;
 		}
+		updateBoardImage();
 	}
 	
 	/**
@@ -723,8 +730,11 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 					txtBase.setText(field.getName());
 				}
 			}
-			else if (selectionType == SELECTION_TYPE_FIELDS) {
-				fieldSelectable = selectedBaseField.getNeighbours().contains(field) || selectedBaseField.equals(field);
+			else if (selectionType == SELECTION_TYPE_FIELDS && field != null) {
+				fieldSelectable = selectedBaseField.equals(field);
+				for (Field neighbour : selectedBaseField.getNeighbours()) {
+					fieldSelectable |= field.getName().equals(neighbour.getName());
+				}
 				if (fieldSelectable) {
 					selectedStartFields[2] = selectedStartFields[1];
 					selectedStartFields[1] = selectedStartFields[0];
@@ -765,13 +775,16 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		if (selectedBaseField != null && selectedBaseField.getBuilding() instanceof EmptyBuilding) {
 			selectedBaseField.setAffiliation(game.getLocalUser());
 			selectedBaseField.setBuilding(new ArschgaulsPalace());
+			//send an update to all users
+			PreGameDataMessage message = new PreGameDataMessage();
+			message.setData(PreGameDataMessage.DATA_BASE_POSITION);
+			message.setBasePosition(selectedBaseField);
+			message.setUser(game.getLocalUser());
+			game.getClient().sendMessage(message);
+			//update the frame functions
+			nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_BASE_POSITION);
+			updateBoardImage();
 		}
-		//send an update to all users
-		PreGameDataMessage message = new PreGameDataMessage();
-		message.setData(PreGameDataMessage.DATA_BASE_POSITION);
-		message.setBasePosition(selectedBaseField);
-		message.setUser(game.getLocalUser());
-		game.getClient().sendMessage(message);
 	}
 	/**
 	 * Confirm the position of the start troops and send an update to all users.
@@ -803,14 +816,17 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			message.setStartingTroopPositions(selectedStartFields);
 			message.setStartingTroops(startTroops);
 			message.setUser(game.getLocalUser());
-			game.getClient().sendMessage(message);			
+			game.getClient().sendMessage(message);
+			//update the frame functions
+			nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_STARTING_POSITION);
+			updateBoardImage();
 		}
 	}
 	/**
 	 * Confirm the selected turn bonus and send an update to all users.
 	 */
 	private void confirmBonus() {
-		if (selectedBonus != null) {
+		if (selectedBonus != null && game.getGameTurnBonusManager().isTurnBonusChoosable(selectedBonus)) {
 			game.getGameTurnBonusManager().chooseFirstTurnBonus(game.getLocalUser(), selectedBonus);
 			addTurnBonuses(panel_selectable_turn_bonuses, true);
 			turnDialog.update();
@@ -819,6 +835,56 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			message.setUser(game.getLocalUser());
 			message.setSelectedBonus(selectedBonus);
 			game.getClient().sendMessage(message);
+			//update the frame functions
+			txtrChosen.append(message.getSelectedBonus().getName() + "\n");
+			nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_TURN_BONUS);
+			updateBoardImage();
+		}
+	}
+	
+	private void nextPlayersTurn(User lastUser, int data) {
+		int index = -1;
+		User[] order = game.getPlayerOrder().getOrder();
+		for (int i = 0; i < order.length; i++) {
+			if (lastUser.equals(order[i])) {
+				index = i;
+			}
+		}
+		switch (data) {
+			case PreGameDataMessage.DATA_BASE_POSITION:
+				if (index == 0) {
+					//every user has chosen his start position -> go on to the troop positions
+					//the next selection type is set when the user is set
+					setPlayersTurn(order[0]);
+				}
+				else {
+					//let the next user choose his base position
+					setPlayersTurn(order[index-1]);
+				}
+				break;
+			case PreGameDataMessage.DATA_STARTING_POSITION:
+				if (index == order.length-1) {
+					//all players have chosen their starting troops
+					//choose the game turn bonuses next
+					btnWeiter_1.setEnabled(true);
+					setPlayersTurn(order[index]);//last player chooses the bonus first
+				}
+				else {
+					//let the next use choose his starting troops
+					setPlayersTurn(order[index+1]);
+				}
+				break;
+			case PreGameDataMessage.DATA_TURN_BONUS:
+				if (index == 0) {
+					//all players have chosen their bonuses
+					//game can be started now
+					btnAusgewhltenBonusBesttigen.setEnabled(false);
+					btnSpielStarten.setEnabled(true);
+				}
+				else {
+					setPlayersTurn(order[index-1]);
+				}
+				break;
 		}
 	}
 	
@@ -840,17 +906,23 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			}
 			else if (selectionType == SELECTION_TYPE_BASE) {
 				selectionType = SELECTION_TYPE_FIELDS;
+				btnBasisBesttigen.setEnabled(false);
 				btnStartTruppenBesttigen.setEnabled(true);
 			}
 			else if (selectionType == SELECTION_TYPE_FIELDS) {
 				selectionType = SELECTION_TYPE_BONUS;
+				btnStartTruppenBesttigen.setEnabled(false);
 				btnAusgewhltenBonusBesttigen.setEnabled(true);
+			}
+			else if (selectionType == SELECTION_TYPE_BONUS) {
+				btnAusgewhltenBonusBesttigen.setEnabled(false);
 			}
 			usersTurn = true;
 		}
 		else {
 			btnBasisBesttigen.setEnabled(false);
 			btnStartTruppenBesttigen.setEnabled(false);
+			btnAusgewhltenBonusBesttigen.setEnabled(false);
 			usersTurn = false;
 		}
 		txtPlayerturn.setText(user.getUsername());

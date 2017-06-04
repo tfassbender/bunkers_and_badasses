@@ -162,6 +162,7 @@ public class GameStartDialog extends JDialog {
 				//set only the image because it's not included in the loaded board
 				game.getBoard().setBaseImage(board.getBaseImage());
 			}
+			board.setGame(game);
 			//add the skill profile manager from the main menu
 			game.setSkillProfileManager(skillProfileManager);
 			new PreGameSelectionFrame(game).setVisible(true);

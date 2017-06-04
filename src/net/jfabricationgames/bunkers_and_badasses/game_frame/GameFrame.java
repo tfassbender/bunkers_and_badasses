@@ -512,7 +512,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.setColor(color.getColor());
-			g.drawOval(0, 0, getWidth(), getHeight());//draw an oval of the users color on the panel
+			g.fillOval(2, 2, getWidth()-4, getHeight()-4);//draw an oval of the users color on the panel
 		}
 	}
 	

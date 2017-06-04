@@ -5,6 +5,8 @@ import java.awt.Color;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TurnBonusCardPanel extends ImagePanel {
 	
@@ -20,6 +22,12 @@ public class TurnBonusCardPanel extends ImagePanel {
 		this(null);
 	}
 	public TurnBonusCardPanel(TurnBonus turnBonus) {
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				requestFocus();
+			}
+		});
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {

@@ -118,9 +118,25 @@ public class GameTurnBonusManager implements Serializable {
 	}
 	
 	/**
+	 * Check whether the bonus can be chosen or was already chosen.
+	 * 
+	 * @param bonus
+	 * 		The TurnBonus that is checked.
+	 * 
+	 * @return
+	 * 		True if the turn bonus can be chosen.
+	 */
+	public boolean isTurnBonusChoosable(TurnBonus bonus) {
+		return choosableTurnBonuses.contains(bonus);
+	}
+	
+	/**
 	 * Choose the first turn bonus (without giving back one).
 	 */
 	public void chooseFirstTurnBonus(User user, TurnBonus bonus) {
+		if (!choosableTurnBonuses.contains(bonus)) {
+			throw new IllegalArgumentException("This turn bonus cannot be chosen.");
+		}
 		choosableTurnBonuses.remove(bonus);
 		userBonuses.put(user, bonus);
 	}

@@ -76,7 +76,7 @@ public class Field implements Serializable {
 					troopsEqual &= getTroops().get(i).getType() == field.getTroops().get(i).getType() && getTroops().get(i).getStrength() == field.getTroops().get(i).getStrength();
 				}				
 			}
-			return field.getAffiliation().equals(getAffiliation()) && field.getBuilding().equals(getBuilding()) && field.getName().equals(getName()) && troopsEqual;
+			return field.getAffiliation() != null && getAffiliation() != null && field.getAffiliation().equals(getAffiliation()) && field.getBuilding().equals(getBuilding()) && field.getName().equals(getName()) && troopsEqual;
 		}
 		else {
 			return super.equals(obj);

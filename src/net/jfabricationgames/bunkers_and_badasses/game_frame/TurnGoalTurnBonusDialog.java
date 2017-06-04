@@ -85,6 +85,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 				}
 				{
 					JScrollPane scrollPane = new JScrollPane();
+					scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
 					panel_turn_goals.add(scrollPane, "cell 0 1,grow");
 					{
 						panel_turn_goal_list = new JPanel();
@@ -121,6 +122,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 				}
 				{
 					JScrollPane scrollPane = new JScrollPane();
+					scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
 					panel_turn_bonuses.add(scrollPane, "cell 0 2,grow");
 					{
 						panel_choosable_bonuses = new JPanel();
