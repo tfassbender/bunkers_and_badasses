@@ -50,6 +50,8 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener, ConfirmDialogListener {
 	
@@ -75,6 +77,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private TurnExecutionFrame turnExecutionFrame;
 	private TurnGoalTurnBonusDialog turnGoalTurnBonusDialog;
 	private TurnPlaningFrame turnPlaningFrame;
+	private BoardOverviewFrame boardOverviewFrame;
 	
 	private Game game;
 	
@@ -103,6 +106,12 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private JButton btnEinsetzen;
 	
 	public GameFrame(Game game) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -241,6 +250,15 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 				chatDialog.requestFocus();
 			}
 		});
+		
+		JMenuItem mntmSpielfeldbersicht = new JMenuItem("Spielfeld Übersicht");
+		mntmSpielfeldbersicht.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boardOverviewFrame.setVisible(true);
+				boardOverviewFrame.requestFocus();
+			}
+		});
+		mnDialog.add(mntmSpielfeldbersicht);
 		mnDialog.add(mntmChatDialog);
 		
 		JMenu mnHilfe = new JMenu("Hilfe");
@@ -491,6 +509,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		turnExecutionFrame = new TurnExecutionFrame(game);
 		turnGoalTurnBonusDialog = new TurnGoalTurnBonusDialog(game, true, false);
 		turnPlaningFrame = new TurnPlaningFrame(game);
+		boardOverviewFrame = new BoardOverviewFrame(game.getBoard());
 		chatDialog = new ChatDialog(chatClient, this);
 		SupportRequestFrame.setLocalPlayer(game.getLocalUser());
 	}
@@ -587,6 +606,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private void updateBoard() {
 		BufferedImage boardImage = game.getBoard().displayBoard();
 		boardPanel.updateBoardImage(boardImage);
+		boardOverviewFrame.updateBoardImage(boardImage);
 	}
 	
 	private void updateGameTurnPanel() {
@@ -673,6 +693,9 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	}
 	public TurnPlaningFrame getTurnPlaningFrame() {
 		return turnPlaningFrame;
+	}
+	public BoardOverviewFrame getBoardOverviewFrame() {
+		return boardOverviewFrame;
 	}
 	
 	public static ImageLoader getImageLoader() {

@@ -226,7 +226,7 @@ public class SupportRequestFrame extends JFrame {
 	
 	private void support() {
 		if (!rdbtnAngreifer.isSelected() && !rdbtnVerteidiger.isSelected()) {
-			new ErrorDialog("Du musst auch aussuchen wen Du unterstützen willst.\n\nEinfach auf alles ballern was sich bewegt gillt leider nicht.").setVisible(true);
+			new ErrorDialog("Du musst auch aussuchen wen Du unterstï¿½tzen willst.\n\nEinfach auf alles ballern was sich bewegt gillt leider nicht.").setVisible(true);
 		}
 		if (rdbtnAngreifer.isSelected()) {
 			fight.getAttackSupporters().add(supportField);

@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +117,12 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	}
 	
 	public TurnExecutionFrame(Game game) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.game = game;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -160,7 +168,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_fields_all.setViewportView(list_fields_all);
 
-		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld ï¿½bersicht", true);
 		panel_side_bar.add(fieldPanel, "cell 1 0 2 1,grow");
 		
 		JPanel panel_executable_commands = new JPanel();
@@ -304,7 +312,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		btnAusfhrungBeenden = new JButton("Ausf\u00FChrung Beenden");
 		btnAusfhrungBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ConfirmDialog("Ausführung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);
+				new ConfirmDialog("Ausfï¿½hrung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);
 			}
 		});
 		btnAusfhrungBeenden.setEnabled(false);
@@ -669,15 +677,15 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 									commandExecuted = true;
 								}
 								catch (ResourceException re) {
-									new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+									new ErrorDialog("Du hast nicht genug Resourcen um das Gebï¿½ude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
 								}
 							}
 							else {
-								new ErrorDialog("Du musst ein Gebäude auswählen um es aufzubauen.\n\nOder glaubst du etwa, dass deine Truppen aus Architekten bestehen?!\nDas würde die Existenz von Gehirnzellen bedingen!").setVisible(true);
+								new ErrorDialog("Du musst ein Gebï¿½ude auswï¿½hlen um es aufzubauen.\n\nOder glaubst du etwa, dass deine Truppen aus Architekten bestehen?!\nDas wï¿½rde die Existenz von Gehirnzellen bedingen!").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Du kannst nicht zwei Gebäude auf ein Feld bauen.\n\nAußer du willst versuchen sie zu stapeln...\nIch muss zugeben das würde ich gerne sehen.").setVisible(true);
+							new ErrorDialog("Du kannst nicht zwei Gebï¿½ude auf ein Feld bauen.\n\nAuï¿½er du willst versuchen sie zu stapeln...\nIch muss zugeben das wï¿½rde ich gerne sehen.").setVisible(true);
 						}
 					}
 					else if (rdbtnAufrsten.isSelected()) {
@@ -689,20 +697,20 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
-								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+								new ErrorDialog("Du hast nicht genug Resourcen um das Gebï¿½ude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Dieses Gebäude kann man nicht aufrüsten.\n\nBau einfach ein paar mehr davon. Ist doch genug Platz da.\nAußer Du spielst zu schlecht...").setVisible(true);
+							new ErrorDialog("Dieses Gebï¿½ude kann man nicht aufrï¿½sten.\n\nBau einfach ein paar mehr davon. Ist doch genug Platz da.\nAuï¿½er Du spielst zu schlecht...").setVisible(true);
 						}
 					}
 					else if (rdbtnAbreien.isSelected()) {
 						Building building = selectedField.getBuilding();
 						if (building == null || building instanceof EmptyBuilding) {
-							new ErrorDialog("Du musst ein Gebäude aufbauen bevor Du es einreißen kannst.\n\nErst die Arbeit, dann das Vergnügen...").setVisible(true);
+							new ErrorDialog("Du musst ein Gebï¿½ude aufbauen bevor Du es einreiï¿½en kannst.\n\nErst die Arbeit, dann das Vergnï¿½gen...").setVisible(true);
 						}
 						else if (building instanceof ArschgaulsPalace) {
-							new ErrorDialog("Du kannst doch nicht Arschgauls Palast abreißen!!!\nWas soll der Scheiß?!");
+							new ErrorDialog("Du kannst doch nicht Arschgauls Palast abreiï¿½en!!!\nWas soll der Scheiï¿½?!");
 						}
 						else {
 							selectedField.setBuilding(new EmptyBuilding());
@@ -722,7 +730,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						collectionType = 3;
 					}
 					if (collectionType == 0) {
-						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
+						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lï¿½sst sie einfach ein paar hï¿½bsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
 					}
 					else {
 						resourceManager.collectCommandResources(game.getLocalUser());
@@ -750,7 +758,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 							new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\nDas ist keine freiwillige Aktion hier.").setVisible(true);
 						}
 						/*else if (troops < targets.length) {
-							new ErrorDialog("Das sind mehr Felder als du Truppen hast.\n\nDeine Truppen können sich nicht Zweiteilen.\nNaja können sie schon aber dannach sind sie meistens ein wenig... tot...").setVisible(true);
+							new ErrorDialog("Das sind mehr Felder als du Truppen hast.\n\nDeine Truppen kï¿½nnen sich nicht Zweiteilen.\nNaja kï¿½nnen sie schon aber dannach sind sie meistens ein wenig... tot...").setVisible(true);
 						}*/
 						else {
 							List<Field> targetFields = new ArrayList<Field>(targets.length);
@@ -779,25 +787,25 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						}
 					}
 					else {
-						new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\nOder Du lässt sie einfach im Kreis rennen. Das kann auch lustig sein.\nNicht unbedingt zielführend... aber lustig.").setVisible(true);
+						new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\nOder Du lï¿½sst sie einfach im Kreis rennen. Das kann auch lustig sein.\nNicht unbedingt zielfï¿½hrend... aber lustig.").setVisible(true);
 					}
 				}
 				else if (command instanceof RaidCommand) {
 					int[] targets = list_target_field.getSelectedIndices();
 					if (targets.length > 1) {
-						new ErrorDialog("Du kannst nicht in einem Zug mehrere Felder überfallen.\n\nLass den Anderen auch noch was übrig.").setVisible(true);
+						new ErrorDialog("Du kannst nicht in einem Zug mehrere Felder ï¿½berfallen.\n\nLass den Anderen auch noch was ï¿½brig.").setVisible(true);
 					}
 					else if (targets.length == 0) {
-						new ErrorDialog("Du musst schon ein Ziel aussuchen das deine Leute überfallen können.\n\nOder Du überfällst dich einfach selbst.\nDas schlägt auch die Zeit tot.").setVisible(true);
+						new ErrorDialog("Du musst schon ein Ziel aussuchen das deine Leute ï¿½berfallen kï¿½nnen.\n\nOder Du ï¿½berfï¿½llst dich einfach selbst.\nDas schlï¿½gt auch die Zeit tot.").setVisible(true);
 					}
 					else {
 						Field target = fieldTargetModel.getElementAt(targets[0]);
 						Command selectedCommand = target.getCommand();
 						if (selectedCommand == null) {
-							new ErrorDialog("Du kannst keinen Befehl entfernen wo garkein Befehl ist.\n\nDu könntest sie aber nur so zum Spaß überfallen...").setVisible(true);
+							new ErrorDialog("Du kannst keinen Befehl entfernen wo garkein Befehl ist.\n\nDu kï¿½nntest sie aber nur so zum Spaï¿½ ï¿½berfallen...").setVisible(true);
 						}
 						else if (!selectedCommand.isRemovable()) {
-							new ErrorDialog("Diesen Befehl kannst Du nicht entferenen.\n\nDie Anderen sollen doch auch noch ihren Spaß haben.").setVisible(true);
+							new ErrorDialog("Diesen Befehl kannst Du nicht entferenen.\n\nDie Anderen sollen doch auch noch ihren Spaï¿½ haben.").setVisible(true);
 						}
 						else {
 							if (target.getCommand() instanceof CollectCommand) {
@@ -817,7 +825,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						new ErrorDialog("Du willst also 0 Truppen Rekrutieren?!\n\nBist Du sicher, dass du das Spielprinzip verstanden hast?").setVisible(true);
 					}
 					else if (troops > selectedField.getBuilding().getRecruitableTroops()) {
-						new ErrorDialog("Du kannst nicht so viele Truppen auf einmal rekrutieren.\n\nDiese Selbstmordkandidaten wachsen nunmal nicht an Bäumen.").setVisible(true);
+						new ErrorDialog("Du kannst nicht so viele Truppen auf einmal rekrutieren.\n\nDiese Selbstmordkandidaten wachsen nunmal nicht an Bï¿½umen.").setVisible(true);
 					}
 					else {
 						if (upgrades <= selectedField.getNormalTroops()) {
@@ -833,7 +841,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 							}
 						}
 						else {
-							new ErrorDialog("Du hast nicht genug Truppen um sie aufzurüsten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rüstest die Truppen deiner Gegner auf...").setVisible(true);
+							new ErrorDialog("Du hast nicht genug Truppen um sie aufzurï¿½sten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rï¿½stest die Truppen deiner Gegner auf...").setVisible(true);
 						}
 					}
 				}

@@ -127,17 +127,22 @@ public class GameTurnBonusManager implements Serializable {
 	 * 		True if the turn bonus can be chosen.
 	 */
 	public boolean isTurnBonusChoosable(TurnBonus bonus) {
-		return choosableTurnBonuses.contains(bonus);
+		boolean isChoosable = false;
+		for (TurnBonus choosable : choosableTurnBonuses) {
+			isChoosable |= choosable.getClass().equals(bonus.getClass());
+		}
+		return isChoosable;
 	}
 	
 	/**
 	 * Choose the first turn bonus (without giving back one).
 	 */
 	public void chooseFirstTurnBonus(User user, TurnBonus bonus) {
-		if (!choosableTurnBonuses.contains(bonus)) {
+		if (!isTurnBonusChoosable(bonus)) {
 			throw new IllegalArgumentException("This turn bonus cannot be chosen.");
 		}
-		choosableTurnBonuses.remove(bonus);
+		removeBonus(choosableTurnBonuses, bonus);
+		//choosableTurnBonuses.remove(bonus);
 		userBonuses.put(user, bonus);
 	}
 	
@@ -145,9 +150,20 @@ public class GameTurnBonusManager implements Serializable {
 	 * Choose a turn bonus for the next round and lay back one.
 	 */
 	public void chooseTurnBonus(User user, TurnBonus chosen) {
-		choosableTurnBonuses.remove(chosen);
+		removeBonus(choosableTurnBonuses, chosen);
+		//choosableTurnBonuses.remove(chosen);
 		choosableTurnBonuses.add(userBonuses.get(user));
 		userBonuses.put(user, chosen);
+	}
+	
+	private void removeBonus(List<TurnBonus> list, TurnBonus bonus) {
+		boolean removedBonus = false;
+		for (int i = 0; i < list.size(); i++) {
+			if (!removedBonus && list.get(i).getClass().equals(bonus.getClass())) {
+				list.remove(i);
+				removedBonus = false;
+			}
+		}
 	}
 	
 	public List<TurnBonus> getBonuses() {

@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
+import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
@@ -16,20 +18,27 @@ import net.jfabricationgames.jfgserver.interpreter.JFGClientInterpreter;
 
 public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter {
 	
+	private ChatClient chatClient;
+	
 	private GameStore gameStore;
 	private GameStartDialog gameStartDialog;
 	private PreGameSelectionFrame preGameSelectionFrame;
 	private Game game;//set in the pre-game selection frame
 	
-	public BunkersAndBadassesClientInterpreter(GameStore gameStore, GameStartDialog gameStartDialog) {
+	public BunkersAndBadassesClientInterpreter(GameStore gameStore, GameStartDialog gameStartDialog, ChatClient chatClient) {
 		this.gameStore = gameStore;
 		this.gameStartDialog = gameStartDialog;
+		this.chatClient = chatClient;
 	}
 
 	@Override
 	public void interpreteClientMessage(JFGClientMessage message, JFGClient client) {
+		//chat message
+		if (message instanceof ChatMessage) {
+			interpreteChatMessage((ChatMessage) message);
+		}
 		//board loading message
-		if (message instanceof BoardTransfereMessage) {
+		else if (message instanceof BoardTransfereMessage) {
 			interpreteBoardTransfereMessage((BoardTransfereMessage) message);
 		}
 		//game save message
@@ -55,6 +64,10 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		else if (message instanceof FightTransfereMessage) {
 			interpreteFightTransfereMessage((FightTransfereMessage) message);
 		}
+	}
+	
+	private void interpreteChatMessage(ChatMessage message) {
+		chatClient.receiveMessage(message.getMessage());
 	}
 	
 	private void interpreteBoardTransfereMessage(BoardTransfereMessage message) {

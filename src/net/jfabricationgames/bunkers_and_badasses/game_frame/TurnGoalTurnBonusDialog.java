@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -56,6 +58,12 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	private JButton btnBonusAuswhlen;
 	
 	public TurnGoalTurnBonusDialog(Game game, boolean selectable, boolean turnBonusChangeEnabled) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.game = game;
 		this.selectable = selectable;
 		

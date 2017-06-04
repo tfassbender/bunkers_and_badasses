@@ -513,6 +513,17 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				startGame();
 			}
 		});
+		
+		JButton btnSpielfeldbersichtAnzeigen = new JButton("Spielfeld Übersicht Anzeigen");
+		btnSpielfeldbersichtAnzeigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BoardOverviewFrame boardOverview = game.getGameFrame().getBoardOverviewFrame();
+				boardOverview.setVisible(true);
+				boardOverview.requestFocus();
+			}
+		});
+		btnSpielfeldbersichtAnzeigen.setBackground(Color.GRAY);
+		panel_9.add(btnSpielfeldbersichtAnzeigen, "cell 0 9 2 1,alignx left,aligny bottom");
 		btnSpielStarten.setEnabled(false);
 		btnSpielStarten.setBackground(Color.GRAY);
 		panel_9.add(btnSpielStarten, "cell 2 9,alignx right,aligny bottom");

@@ -2,24 +2,25 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- display chosen turn bonus in game frame
-	- display right resources in game frame
 	- chat isn't working (chat dialog also)
 	- character encoding
-	- board displaying (no troops or buildings shown...)
 	- current player position is -1
 	- open new dialogs centered to the game frame ?
-	- show turn bonuses button in TurnGoalTurnBonus Dialog isn't working 
-	- game overview has no data
-	- area overview frame has no map, controlled fields or resources
+	- show turn bonuses button in TurnGoalTurnBonusDialog isn't working 
+	- game overview has not all data
+	- area overview frame has no map
 	- troop info dialog has no data
-	- resource info dialog has not all data
 	- toString needed in building and command
 	- show all heroes (in game) button in HeroSelectionDialog has no effect
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line
+	- game overview in PreGameSelectionDialog throws NullPointerException because it doesn't know a board
+	- turn execution shows no board
+	- turn goals frame shows no images (needs repaint on focus)
+	- turn bonuses can't be shown
 
 
 - Next versions:
+	- fix the stream corrupted exception
 	- help dialogs need to be implemented
 	- implement the storing of the used resources
 	- implement hero and building functions

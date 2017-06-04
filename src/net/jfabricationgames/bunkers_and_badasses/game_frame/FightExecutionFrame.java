@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,6 +120,12 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private JButton btnAuswahlZurcksetzen_1;
 	
 	public FightExecutionFrame(Game game) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.game = game;
 		
 		fallingSupportTroops = new HashMap<Field, Integer>();
@@ -886,7 +894,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void selectRetreatField() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		if (list_rueckzug.getSelectedIndex() == -1 && !fieldRetreadModel.isEmpty()) {
-			new ErrorDialog("Du musst ein Feld auswählen um den Rückzug zu befehlen. ").setVisible(true);
+			new ErrorDialog("Du musst ein Feld auswï¿½hlen um den Rï¿½ckzug zu befehlen. ").setVisible(true);
 		}
 		else if (fieldRetreadModel.isEmpty()) {
 			fight.setRetreatField(null);
@@ -903,10 +911,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void confirmFallingTroopSelection() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		if (fallingTroopsLeft > 0) {
-			new ErrorDialog("Du kannst die Fallenden Truppen nicht bestätigen wenn noch Truppen übrig sind.\n\nGnade ist hier unangebracht (und nicht erlaubt).").setVisible(true);
+			new ErrorDialog("Du kannst die Fallenden Truppen nicht bestï¿½tigen wenn noch Truppen ï¿½brig sind.\n\nGnade ist hier unangebracht (und nicht erlaubt).").setVisible(true);
 		}
 		else if (fallingTroopsLeft < 0) {
-			new ErrorDialog("Du kannst nicht mehr Truppen töten als du insgesammt ausgewählt hast.\n\nWenn alle auf einmal draufgehn wird Dein nächster Zug doch total langweilig.").setVisible(true);
+			new ErrorDialog("Du kannst nicht mehr Truppen tï¿½ten als du insgesammt ausgewï¿½hlt hast.\n\nWenn alle auf einmal draufgehn wird Dein nï¿½chster Zug doch total langweilig.").setVisible(true);
 		}
 		else {
 			fight.setFallingTroopsTotal(fallingTroops);
@@ -937,7 +945,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			fallenTroopsSelected &= fallingTroops >= fallenTroopCount[0] + 2*fallenTroopCount[1];
 		}
 		if (!fallenTroopsSelected) {
-			new ErrorDialog("Du hast in (mindestens) einem Feld zu wenige Truppen ausgewählt die fallen.").setVisible(true);
+			new ErrorDialog("Du hast in (mindestens) einem Feld zu wenige Truppen ausgewï¿½hlt die fallen.").setVisible(true);
 		}
 		else {
 			fight.setFallenTroops(fallenTroops);
@@ -973,16 +981,16 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			txtUntersttzerverteidiger.setText(Integer.toString(fight.getDefendingSupportStrength()));
 			switch (fight.getBattleState()) {
 				case Fight.STATE_SUPPORT:
-					txtPhase.setText("Verstärkung anfordern");
+					txtPhase.setText("Verstï¿½rkung anfordern");
 					break;
 				case Fight.STATE_HEROS:
 					txtPhase.setText("Helden einsetzen");
 					break;
 				case Fight.STATE_RETREAT_FIELD:
-					txtPhase.setText("Rückzugsfeld bestimmen");
+					txtPhase.setText("Rï¿½ckzugsfeld bestimmen");
 					break;
 				case Fight.STATE_FALLEN_TROOP_SELECTION:
-					txtPhase.setText("Fallende Truppen auswählen");
+					txtPhase.setText("Fallende Truppen auswï¿½hlen");
 					break;
 				case Fight.STATE_FALLEN_TROOP_REMOVING:
 					txtPhase.setText("Gefallene Truppen vom Feld nehmen");

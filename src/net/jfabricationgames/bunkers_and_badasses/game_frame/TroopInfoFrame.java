@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -56,6 +58,12 @@ public class TroopInfoFrame extends JFrame {
 	private DefaultListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
 	
 	public TroopInfoFrame(Game game) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.game = game;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));

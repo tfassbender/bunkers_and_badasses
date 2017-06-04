@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -43,6 +45,12 @@ public class AdditionalCommandFrame extends JFrame {
 	private JButton btnKaufen;
 	
 	public AdditionalCommandFrame(TurnPlaningFrame callingFrame, Game game, Command... commands) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.callingFrame = callingFrame;
 		this.game = game;
 		
@@ -121,7 +129,7 @@ public class AdditionalCommandFrame extends JFrame {
 	private void buyCommand(Command command) {
 		UserResource resource = game.getPlanManager().getCurrentResource();
 		if (command == null) {
-			new ErrorDialog("Kein Befehl ausgewählt.\n\nDu musst schon einen Befehl aussuchen um ihn zu Kaufen.").setVisible(true);
+			new ErrorDialog("Kein Befehl ausgewï¿½hlt.\n\nDu musst schon einen Befehl aussuchen um ihn zu Kaufen.").setVisible(true);
 		}
 		else if (resource.getEridium() < Game.getGameVariableStorage().getAdditionalCommandCosts()) {
 			new ErrorDialog("Nicht genug Eridium vorhanden.\n\nAnschreiben lassen geht leider nicht.").setVisible(true);

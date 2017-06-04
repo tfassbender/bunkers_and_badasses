@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -59,6 +61,12 @@ public class GameOverviewFrame extends JFrame {
 	private JTextField txtGebiete;
 	
 	public GameOverviewFrame(Game game) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.game = game;
 		selectedUser = game.getLocalUser();
 		
@@ -274,7 +282,7 @@ public class GameOverviewFrame extends JFrame {
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_fields_all.setViewportView(list_fields_all);
 
-		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld ï¿½bersicht", true);
 		panel.add(fieldPanel, "cell 3 2 2 2,grow");
 		
 		JPanel panel_buildings = new JPanel();

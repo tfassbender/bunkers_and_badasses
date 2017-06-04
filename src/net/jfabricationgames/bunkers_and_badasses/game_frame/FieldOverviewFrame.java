@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListModel;
@@ -55,6 +57,12 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	private JTextField txtGrenzenfeindlich;
 	
 	public FieldOverviewFrame(Game game) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.game = game;
 		
 		setTitle("Bunkers and Badasses - Gebiets \u00DCbersicht");

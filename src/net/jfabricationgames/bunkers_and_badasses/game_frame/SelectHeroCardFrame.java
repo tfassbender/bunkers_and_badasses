@@ -28,6 +28,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
 
 public class SelectHeroCardFrame extends JFrame {
@@ -54,6 +56,12 @@ public class SelectHeroCardFrame extends JFrame {
 	private JList<Hero> list_heroes;
 	
 	public SelectHeroCardFrame(Game game, boolean cardPlayable) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				update();
+			}
+		});
 		this.game = game;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -217,7 +225,7 @@ public class SelectHeroCardFrame extends JFrame {
 	
 	private void selectHero() {
 		if (list_heroes.getSelectedIndex() == -1) {
-			new ErrorDialog("Du musst einen Helden aus der Liste auswählen um ihn einzusetzen.").setVisible(true);
+			new ErrorDialog("Du musst einen Helden aus der Liste auswï¿½hlen um ihn einzusetzen.").setVisible(true);
 		}
 		else {
 			if (selectionListener == null) {

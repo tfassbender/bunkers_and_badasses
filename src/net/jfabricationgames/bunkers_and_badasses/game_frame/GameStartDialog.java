@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
@@ -27,6 +28,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransfe
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStorageException;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
+import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
@@ -332,7 +334,8 @@ public class GameStartDialog extends JDialog {
 	private BunkersAndBadassesClientInterpreter changeClientInterpreter(JFGClient client) {
 		//replace the main menu interpreter with the game interpreter
 		GameStore gameStore = new GameStore(client);
-		BunkersAndBadassesClientInterpreter interpreter = new BunkersAndBadassesClientInterpreter(gameStore, this);
+		ChatClient chatClient = ((MainMenuClientInterpreter) client.getClientInterpreter()).getChatClient();
+		BunkersAndBadassesClientInterpreter interpreter = new BunkersAndBadassesClientInterpreter(gameStore, this, chatClient);
 		client.setClientInterpreter(interpreter);
 		return interpreter;
 	}

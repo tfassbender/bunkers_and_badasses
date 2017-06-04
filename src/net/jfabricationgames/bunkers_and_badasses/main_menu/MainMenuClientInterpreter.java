@@ -141,4 +141,8 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	private void interpreteDynamicVariableRequestMessage(DynamicVariableRequestMessage message, JFGClient client) {
 		mainMenu.receiveDynamicVariables(message);
 	}
+	
+	public ChatClient getChatClient() {
+		return chatClient;
+	}
 }
