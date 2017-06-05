@@ -2,14 +2,11 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- chat in external dialog is not shown in internal
 	- character encoding
 	- open new dialogs centered to the game frame ?
 	- show all heroes (in game) button in HeroSelectionDialog has no effect
-	- game overview in PreGameSelectionDialog throws NullPointerException because it doesn't know a board
-	- buy additional command frame has no commands in the combo box
-	- commands are not collected (or not known in the turn planing frame)
-
+	- commands can't be added (nullpointer)
+	
 - Next versions:
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line
 	- fix the stream corrupted exception

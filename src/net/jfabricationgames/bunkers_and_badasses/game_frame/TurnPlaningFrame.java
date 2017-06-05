@@ -666,7 +666,6 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		int mine = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_COLLECT);
 		int support = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_SUPPORT);
 		int defend = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_DEFEND);
-		System.out.println("Raid commands: " + raid);
 		commandBoxModel.removeAllElements();
 		txtberflle.setText(Integer.toString(raid));
 		txtRckzge.setText(Integer.toString(retreat));

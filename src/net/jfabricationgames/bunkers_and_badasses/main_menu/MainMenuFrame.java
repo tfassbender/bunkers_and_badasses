@@ -34,6 +34,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.ClientPingManager;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
+import net.jfabricationgames.bunkers_and_badasses.game.UserPlanManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardLoader;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
@@ -409,6 +410,7 @@ public class MainMenuFrame extends JFrame {
 		Command.setStorage(message.getCommandStorage());
 		TurnBonus.setStorage(message.getTurnBonusStorage());
 		Game.setGameVariableStorage(message.getGameStorage());
+		UserPlanManager.START_COMMANDS = message.getGameStorage().getUserCommands();
 		skillProfileManager.loadSkillLevels();
 		dynamicVariablesLoaded = true;
 		//enable the game start buttons

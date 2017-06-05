@@ -32,6 +32,9 @@ public class BoardOverviewFrame extends JFrame {
 				update();
 			}
 		});
+		
+		this.board = board;
+		
 		setTitle("Bunkers and Badasses - Spielfeld Übersicht");
 		setBounds(100, 100, 1200, 700);
 		setMinimumSize(new Dimension(700, 400));
@@ -64,9 +67,9 @@ public class BoardOverviewFrame extends JFrame {
 	}
 	
 	public void update() {
-		System.out.println(boardPanel == null );
-		System.out.println(board == null);
-		boardPanel.updateBoardImage(board.displayBoard());
+		if (board != null) {
+			boardPanel.updateBoardImage(board.displayBoard());			
+		}		
 	}
 	public void updateBoardImage(BufferedImage image) {
 		boardPanel.updateBoardImage(image);

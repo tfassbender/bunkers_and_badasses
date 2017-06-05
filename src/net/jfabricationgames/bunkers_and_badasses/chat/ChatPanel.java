@@ -61,7 +61,7 @@ public class ChatPanel extends JPanel {
 	private void sendMessage() {
 		String message = UserManager.getUsername() + ": " + textField.getText();
 		if (textField.getText() != null && !textField.getText().equals("")) {
-			client.sendMessage(message);
+			client.sendMessage(message, this);
 		}
 		txtrChatpanel.append(message + "\n");
 		textField.setText("");
@@ -69,5 +69,9 @@ public class ChatPanel extends JPanel {
 	
 	public void receiveMessage(String message) {
 		txtrChatpanel.append(message + "\n");
+	}
+	
+	public String getChatText() {
+		return txtrChatpanel.getText();
 	}
 }

@@ -122,6 +122,9 @@ public class AdditionalCommandFrame extends JFrame {
 		
 		resourcePanel = new ResourceInfoPanel();
 		panel.add(resourcePanel, "cell 1 2,grow");
+		
+		revalidate();
+		repaint();
 	}
 	
 	public void update() {

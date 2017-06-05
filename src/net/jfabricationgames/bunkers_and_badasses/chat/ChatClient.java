@@ -16,9 +16,15 @@ public class ChatClient {
 		panels = new ArrayList<ChatPanel>();
 	}
 	
-	public void sendMessage(String message) {
+	public void sendMessage(String message, ChatPanel panel) {
 		ChatMessage msg = new ChatMessage(message);
 		client.sendMessage(msg);
+		//show the message in all other client panels
+		for (ChatPanel p : panels) {
+			if (!p.equals(panel)) {
+				panel.receiveMessage(message);
+			}
+		}
 	}
 	public void receiveMessage(String message) {
 		if (panels != null && !panels.isEmpty()) {

@@ -15,6 +15,7 @@ public class RecruitCommand extends Command {
 		executionBuildings.add(ArschgaulsPalace.class);
 		executionBuildings.add(MoxxisTavern.class);
 		image = imageLoader.loadImage("marker_recruit.png");
+		name = "Rekrutieren";
 		loadVariables();
 	}
 	

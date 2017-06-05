@@ -11,6 +11,7 @@ public class BuildCommand extends Command {
 		removable = true;
 		identifier = UserPlanManager.COMMAND_BUILD;
 		image = imageLoader.loadImage("marker_build.png");
+		name = "Aufbauen";
 		loadVariables();
 	}
 	

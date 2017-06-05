@@ -12,6 +12,7 @@ public class SupportCommand extends Command {
 		support = true;
 		identifier = UserPlanManager.COMMAND_SUPPORT;
 		image = imageLoader.loadImage("marker_support.png");
+		name = "Unterstützen";
 		loadVariables();
 	}
 	
