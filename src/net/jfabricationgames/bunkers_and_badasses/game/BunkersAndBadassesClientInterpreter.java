@@ -131,4 +131,8 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	public void setGame(Game game) {
 		this.game = game;
 	}
+	
+	public ChatClient getChatClient() {
+		return chatClient;
+	}
 }

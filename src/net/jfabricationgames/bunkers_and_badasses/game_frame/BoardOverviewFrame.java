@@ -59,7 +59,13 @@ public class BoardOverviewFrame extends JFrame {
 		panel.add(btnbersicht, "cell 0 1");
 	}
 	
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+	
 	public void update() {
+		System.out.println(boardPanel == null );
+		System.out.println(board == null);
 		boardPanel.updateBoardImage(board.displayBoard());
 	}
 	public void updateBoardImage(BufferedImage image) {

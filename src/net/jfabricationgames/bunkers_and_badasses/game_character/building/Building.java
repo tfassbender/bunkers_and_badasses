@@ -84,6 +84,11 @@ public abstract class Building implements Serializable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 	public abstract Building newInstance();
 	
 	protected void loadVariables() {

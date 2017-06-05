@@ -66,7 +66,7 @@ public class SelectHeroCardFrame extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
-		setBounds(100, 100, 450, 601);
+		setBounds(100, 100, 550, 601);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -96,6 +96,7 @@ public class SelectHeroCardFrame extends JFrame {
 				public void valueChanged(ListSelectionEvent arg0) {
 					selectedHero = list_heroes.getSelectedValue();
 					updateHero();
+					updateHeroImage();
 				}
 			});
 			list_heroes.setToolTipText("<html>\r\nAlle Heldenkarten die du<br>\r\nauf der Hand hast\r\n</html>");
@@ -104,12 +105,17 @@ public class SelectHeroCardFrame extends JFrame {
 			scrollPane_heroes.setViewportView(list_heroes);
 			
 			JButton btnAlleHeldenAnsehen = new JButton("Alle Helden ansehen");
+			btnAlleHeldenAnsehen.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					//TODO open the help dialog and the hero site
+				}
+			});
 			btnAlleHeldenAnsehen.setToolTipText("<html>\r\nAlle im Spiel verf\u00FCgbaren Helden ansehen\r\n</html>");
 			btnAlleHeldenAnsehen.setBackground(Color.GRAY);
 			panel_heroes.add(btnAlleHeldenAnsehen, "cell 0 2");
 			
-			panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/brick_1.png"));
-			panel_image.setToolTipText("Brick: ICH KLOPP SIE!!!");
+			panel_image = new ImagePanel();
+			panel_image.setToolTipText("");
 			panel_image.setCentered(true);
 			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setBackground(Color.GRAY);
@@ -188,6 +194,11 @@ public class SelectHeroCardFrame extends JFrame {
 			panel_buttons.add(btnAuswhlen, "cell 1 0");
 			
 			JButton btnAbbrechen = new JButton("Abbrechen");
+			btnAbbrechen.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+				}
+			});
 			btnAbbrechen.setBackground(Color.GRAY);
 			panel_buttons.add(btnAbbrechen, "cell 2 0");
 		}
@@ -220,6 +231,14 @@ public class SelectHeroCardFrame extends JFrame {
 			txtHeroAttack.setText(Integer.toString(selectedHero.getAttack()));
 			txtHerodefence.setText(Integer.toString(selectedHero.getDefence()));
 			txtrSpecialeffect.setText(selectedHero.getEffectDescription());
+		}
+	}
+	
+	private void updateHeroImage() {
+		if (selectedHero != null) {
+			panel_image.setImage(selectedHero.getImage());
+			revalidate();
+			repaint();
 		}
 	}
 	

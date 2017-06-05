@@ -63,6 +63,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	
 	private BoardPanel boardPanel;
 	
+	private BoardOverviewFrame boardOverview;
+	
 	private int selectionType = 0;
 	
 	private Field selectedBaseField;
@@ -405,8 +407,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				selectProfile();
 				startTroopPositioning();
 				//collect the starting resources after the skill profile was chosen
-				game.getResourceManager().collectGameStartResources(game.getLocalUser());
-				game.getSkillProfileManager().collectSkillResources(game.getLocalUser());
+				/*game.getResourceManager().collectGameStartResources(game.getLocalUser());
+				game.getSkillProfileManager().collectSkillResources(game.getLocalUser());*/
 			}
 		});
 		btnWeiter.setBackground(Color.GRAY);
@@ -517,7 +519,6 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		JButton btnSpielfeldbersichtAnzeigen = new JButton("Spielfeld Übersicht Anzeigen");
 		btnSpielfeldbersichtAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BoardOverviewFrame boardOverview = game.getGameFrame().getBoardOverviewFrame();
 				boardOverview.setVisible(true);
 				boardOverview.requestFocus();
 			}
@@ -628,8 +629,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			case PreGameDataMessage.DATA_SKILL_PROFILE:
 				game.getSkillProfileManager().setSelectedProfile(message.getUser(), message.getSelectedProfile());
 				//collect the starting and skill resources of the player
-				game.getResourceManager().collectGameStartResources(message.getUser());
-				game.getSkillProfileManager().collectSkillResources(message.getUser());
+				//game.getResourceManager().collectGameStartResources(message.getUser());
+				//game.getSkillProfileManager().collectSkillResources(message.getUser());
 				break;
 			case PreGameDataMessage.DATA_BASE_POSITION:
 				//set the affiliation and the building on the local board
@@ -690,6 +691,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 * Start the game frame after the troops are positioned.
 	 */
 	private void startGame() {
+		game.startGame();
 		game.getGameFrame().setVisible(true);
 		game.getGameFrame().requestFocus();
 		dispose();
@@ -731,30 +733,32 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		if (usersTurn) {
 			Field field = game.getBoard().getFieldAtMousePosition();
 			boolean fieldSelectable = true;
-			if (selectionType == SELECTION_TYPE_BASE) {
-				for (Field neighbour : field.getNeighbours()) {
-					fieldSelectable &= neighbour.getBuilding() instanceof EmptyBuilding;
+			if (field != null) {
+				if (selectionType == SELECTION_TYPE_BASE) {
+					for (Field neighbour : field.getNeighbours()) {
+						fieldSelectable &= neighbour.getBuilding() instanceof EmptyBuilding;
+					}
+					fieldSelectable &= field.getBuilding() instanceof EmptyBuilding;
+					if (fieldSelectable) {
+						selectedBaseField = field;
+						txtBase.setText(field.getName());
+					}
 				}
-				fieldSelectable &= field.getBuilding() instanceof EmptyBuilding;
-				if (fieldSelectable) {
-					selectedBaseField = field;
-					txtBase.setText(field.getName());
-				}
-			}
-			else if (selectionType == SELECTION_TYPE_FIELDS && field != null) {
-				fieldSelectable = selectedBaseField.equals(field);
-				for (Field neighbour : selectedBaseField.getNeighbours()) {
-					fieldSelectable |= field.getName().equals(neighbour.getName());
-				}
-				if (fieldSelectable) {
-					selectedStartFields[2] = selectedStartFields[1];
-					selectedStartFields[1] = selectedStartFields[0];
-					selectedStartFields[0] = field;
-					troopsLeft += startTroops[2];
-					startTroops[2] = startTroops[1];
-					startTroops[1] = startTroops[0];
-					startTroops[0] = 1;
-					updateStartTroops();
+				else if (selectionType == SELECTION_TYPE_FIELDS && field != null) {
+					fieldSelectable = selectedBaseField.equals(field);
+					for (Field neighbour : selectedBaseField.getNeighbours()) {
+						fieldSelectable |= field.getName().equals(neighbour.getName());
+					}
+					if (fieldSelectable) {
+						selectedStartFields[2] = selectedStartFields[1];
+						selectedStartFields[1] = selectedStartFields[0];
+						selectedStartFields[0] = field;
+						troopsLeft += startTroops[2];
+						startTroops[2] = startTroops[1];
+						startTroops[1] = startTroops[0];
+						startTroops[0] = 1;
+						updateStartTroops();
+					}
 				}
 			}
 		}
@@ -900,8 +904,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	}
 	
 	private void updateBoardImage() {
-		BufferedImage field = game.getBoard().displayBoard();
-		boardPanel.updateBoardImage(field);
+		BufferedImage board = game.getBoard().displayBoard();
+		boardPanel.updateBoardImage(board);
 	}
 	
 	/**
@@ -967,6 +971,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 * Change to the turn bonus selection panel.
 	 */
 	private void startTurnBonusSelection() {
+		//update the board in the overview frame
+		boardOverview = new BoardOverviewFrame(game.getBoard());
 		CardLayout layout = (CardLayout) panel_6.getLayout();
 		layout.show(panel_6, BONUS_SELECTION_PANEL);
 	}

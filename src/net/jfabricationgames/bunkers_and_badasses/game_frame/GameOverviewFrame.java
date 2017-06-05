@@ -317,6 +317,8 @@ public class GameOverviewFrame extends JFrame {
 		updatePoints();
 		updateTurnOrder();
 		updatePlayerBuildings();
+		updatePlayers();
+		updateFields();
 		selectPlayer(selectedUser);
 		repaint();
 	}
@@ -330,7 +332,7 @@ public class GameOverviewFrame extends JFrame {
 		int troops = 0;
 		int fields = 0;
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(player)) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(player)) {
 				fields++;
 				troops += field.getNormalTroops();
 				troops += field.getBadassTroops()*2;//strength of the badass troops
@@ -355,10 +357,24 @@ public class GameOverviewFrame extends JFrame {
 		}
 	}
 	
+	private void updateFields() {
+		fieldAllListModel.removeAllElements();
+		for (Field field : game.getBoard().getFields()) {
+			fieldAllListModel.addElement(field);
+		}
+	}
+	
+	private void updatePlayers() {
+		selectPlayerListModel.removeAllElements();
+		for (User user : game.getPlayers()) {
+			selectPlayerListModel.addElement(user);
+		}
+	}
+	
 	private void updatePlayerBuildings() {
 		buildingsPlayerListModel.removeAllElements();
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(selectedUser) && !(field.getBuilding() instanceof EmptyBuilding)) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(selectedUser) && !(field.getBuilding() instanceof EmptyBuilding)) {
 				buildingsPlayerListModel.addElement(new FieldBuilding(field, field.getBuilding()));
 			}
 		}
@@ -367,7 +383,7 @@ public class GameOverviewFrame extends JFrame {
 	private void countBordersTo(User player) {
 		int borders = 0;
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(selectedUser)) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(selectedUser)) {
 				for (Field neighbour : field.getNeighbours()) {
 					if (neighbour.getAffiliation().equals(player)) {
 						borders++;

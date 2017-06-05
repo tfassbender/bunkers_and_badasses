@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -30,6 +31,9 @@ public class SkillProfileManager implements Serializable {
 	private Map<User, SkillProfile> selectedProfile;
 	
 	private UserResourceManager userResourceManager;
+	
+	private PointManager pointManager;
+	private HeroCardManager heroCardManager;
 	
 	public SkillProfileManager() {
 		loadSkillLevels();
@@ -61,6 +65,12 @@ public class SkillProfileManager implements Serializable {
 		}
 	}
 	
+	public void collectAllSkillResources(List<User> players) {
+		for (User user : players) {
+			collectSkillResources(user);
+		}
+	}
+	
 	/**
 	 * Add the start resources (from the skill profile) for all users to their resource managers.
 	 */
@@ -69,6 +79,9 @@ public class SkillProfileManager implements Serializable {
 		SkillProfile skill = selectedProfile.get(user);
 		//add the starting resources
 		resource.collectSkillResources(skill);
+		//add heros and points
+		pointManager.addPoints(user, skill.getPoints());
+		heroCardManager.takeCards(user, skill.getHero());
 	}
 	
 	public SkillProfile[] getSkillProfiles() {
@@ -93,5 +106,10 @@ public class SkillProfileManager implements Serializable {
 	}
 	public void setUserResourceManager(UserResourceManager userResourceManager) {
 		this.userResourceManager = userResourceManager;
+	}
+	
+	public void setManagers(PointManager pointManager, HeroCardManager heroCardManager) {
+		this.pointManager = pointManager;
+		this.heroCardManager = heroCardManager;
 	}
 }

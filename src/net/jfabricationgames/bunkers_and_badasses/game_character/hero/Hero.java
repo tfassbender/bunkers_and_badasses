@@ -56,6 +56,11 @@ public abstract class Hero implements Serializable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 	/**
 	 * Execute the fight special effect of the hero.
 	 * The default implementation is empty because not every hero can use his special effect in a fight.

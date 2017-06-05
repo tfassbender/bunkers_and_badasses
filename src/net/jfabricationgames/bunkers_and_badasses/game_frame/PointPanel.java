@@ -78,6 +78,6 @@ public class PointPanel extends JPanel {
 			pointListModel.addElement(users.get(i));
 		}
 		txtYourPoints.setText(Integer.toString(game.getPointManager().getPoints(game.getLocalUser())));
-		txtYourPosition.setText(Integer.toString(game.getPointManager().getPosition(game.getLocalUser())));
+		txtYourPosition.setText(Integer.toString(game.getPointManager().getPosition(game.getLocalUser()) + 1));
 	}
 }

@@ -84,7 +84,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 			{
 				JPanel panel_turn_goals = new JPanel();
 				panel_turn_goals.setBackground(Color.GRAY);
-				panel.add(panel_turn_goals, "name_13767850722345");
+				panel.add(panel_turn_goals, "turn_goal");
 				panel_turn_goals.setLayout(new MigLayout("", "[grow]", "[][grow][]"));
 				{
 					JLabel lblRundenZiele = new JLabel("Runden Ziele:");
@@ -116,7 +116,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 			{
 				JPanel panel_turn_bonuses = new JPanel();
 				panel_turn_bonuses.setBackground(Color.GRAY);
-				panel.add(panel_turn_bonuses, "name_13772292203048");
+				panel.add(panel_turn_bonuses, "turn_bonus");
 				panel_turn_bonuses.setLayout(new MigLayout("", "[600px,grow][10px:10px][200px,grow][300px,grow]", "[][][grow][]"));
 				{
 					JLabel lblRundenBoni = new JLabel("Runden Boni:");
@@ -243,7 +243,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 					imagePanel.setSelectionListener(this);
 					imagePanel.setChangeColorOnFocusEvent(true);
 				}
-				panel_choosable_bonuses.add(imagePanel, "cell 0 " + i + ",grow");
+				panel_choosable_bonuses.add(imagePanel, "cell " + i + " 0,grow");
 			}
 		}
 	}
@@ -270,6 +270,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	private void showUsersBonus(User user) {
 		panel_user_bonus.removeAll();
 		panel_user_bonus.add(new TurnBonusCardPanel(game.getGameTurnBonusManager().getUsersBonus(user)), BorderLayout.CENTER);
+		revalidate();
 		repaint();
 	}
 	
@@ -279,6 +280,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	public void update() {
 		addTurnGoals();
 		addTurnBonuses();
+		revalidate();
 		repaint();
 	}
 	

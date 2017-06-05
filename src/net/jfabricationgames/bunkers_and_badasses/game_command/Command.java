@@ -47,6 +47,11 @@ public abstract class Command implements Serializable {
 		costDependencyAmmo = storage.getDependencies()[identifier][CommandStorage.AMMO];
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 	public abstract Command getInstance();
 	
 	public boolean isExecutable() {

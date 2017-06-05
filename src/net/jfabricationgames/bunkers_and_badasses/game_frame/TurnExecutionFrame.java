@@ -58,6 +58,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class TurnExecutionFrame extends JFrame implements BoardPanelListener, ConfirmDialogListener, TurnBonusSelectionListener {
 	
@@ -163,6 +165,12 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		panel_fields_all.add(scrollPane_fields_all, "cell 0 2,grow");
 		
 		JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+		list_fields_all.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				selectedField = list_fields_all.getSelectedValue();
+				updateField();
+			}
+		});
 		list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
@@ -518,12 +526,17 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	}
 	
 	public void update() {
+		updateBoard();
 		updateResources();
 		updatePlayerOrder();
 		updatePointPanel();
 		updateField();
 		updateFieldList();
 		updateFieldCommandList();
+	}
+	
+	private void updateBoard() {
+		boardPanel.updateBoardImage(game.getBoard().displayBoard());
 	}
 	
 	private void updateFieldList() {
@@ -600,61 +613,63 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	 * Enable the components depending on the command on the chosen field
 	 */
 	private void enableComponents(Field field) {
-		if (field.getAffiliation().equals(game.getLocalUser())) {
+		if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 			Command command = field.getCommand();
-			if (command.isExecutable() && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
-				btnBefehlAusfhren.setEnabled(true);
-				btnAusfhrungBeenden.setEnabled(true);
-			}
-			if (command instanceof BuildCommand) {
-				if (field.getBuilding() instanceof EmptyBuilding) {
-					rdbtnAufbauen.setEnabled(true);
-					for (Building building : buildables) {
-						buildingModel.addElement(building);
+			if (command != null) {
+				if (command.isExecutable() && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+					btnBefehlAusfhren.setEnabled(true);
+					btnAusfhrungBeenden.setEnabled(true);
+				}
+				if (command instanceof BuildCommand) {
+					if (field.getBuilding() instanceof EmptyBuilding) {
+						rdbtnAufbauen.setEnabled(true);
+						for (Building building : buildables) {
+							buildingModel.addElement(building);
+						}
 					}
-				}
-				else {
-					rdbtnAbreien.setEnabled(true);
-					if (field.getBuilding().isExtendable()) {
-						rdbtnAufrsten.setEnabled(true);
-					}
-				}
-			}
-			else if (command instanceof CollectCommand) {
-				rdbtnCredits.setEnabled(true);
-				rdbtnMunition.setEnabled(true);
-				rdbtnEridium.setEnabled(true);
-			}
-			else if (command instanceof MarchCommand) {
-				for (Field target : findPossibleMovingTargets(field)) {
-					fieldTargetModel.addElement(target);
-				}
-				spinnerNormalTroops.setEnabled(true);
-				spinnerBadassTroops.setEnabled(true);
-				spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getNormalTroops(), 1));
-				spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBadassTroops(), 1));
-			}
-			else if (command instanceof RaidCommand) {
-				for (Field target : field.getNeighbours()) {
-					if (target.getAffiliation().equals(game.getLocalUser())) {
-						if (target.getCommand() != null && target.getCommand().isRemovable()) {
-							fieldTargetModel.addElement(target);
+					else {
+						rdbtnAbreien.setEnabled(true);
+						if (field.getBuilding().isExtendable()) {
+							rdbtnAufrsten.setEnabled(true);
 						}
 					}
 				}
-			}
-			else if (command instanceof RecruitCommand) {
-				spinnerNormalTroops.setEnabled(true);
-				spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops(), 1));
-				boolean badassesRecruitable = false;
-				for (Field boardField : game.getBoard().getFields()) {
-					badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation().equals(game.getLocalUser());
+				else if (command instanceof CollectCommand) {
+					rdbtnCredits.setEnabled(true);
+					rdbtnMunition.setEnabled(true);
+					rdbtnEridium.setEnabled(true);
 				}
-				if (badassesRecruitable) {
+				else if (command instanceof MarchCommand) {
+					for (Field target : findPossibleMovingTargets(field)) {
+						fieldTargetModel.addElement(target);
+					}
+					spinnerNormalTroops.setEnabled(true);
 					spinnerBadassTroops.setEnabled(true);
-					spinnerAufrstungen.setEnabled(true);
-					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops()/2, 1));
-					spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, Math.min(field.getNormalTroops(), field.getBuilding().getRecruitableTroops()), 1));
+					spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getNormalTroops(), 1));
+					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBadassTroops(), 1));
+				}
+				else if (command instanceof RaidCommand) {
+					for (Field target : field.getNeighbours()) {
+						if (target.getAffiliation().equals(game.getLocalUser())) {
+							if (target.getCommand() != null && target.getCommand().isRemovable()) {
+								fieldTargetModel.addElement(target);
+							}
+						}
+					}
+				}
+				else if (command instanceof RecruitCommand) {
+					spinnerNormalTroops.setEnabled(true);
+					spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops(), 1));
+					boolean badassesRecruitable = false;
+					for (Field boardField : game.getBoard().getFields()) {
+						badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation().equals(game.getLocalUser());
+					}
+					if (badassesRecruitable) {
+						spinnerBadassTroops.setEnabled(true);
+						spinnerAufrstungen.setEnabled(true);
+						spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops()/2, 1));
+						spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, Math.min(field.getNormalTroops(), field.getBuilding().getRecruitableTroops()), 1));
+					}
 				}
 			}
 		}

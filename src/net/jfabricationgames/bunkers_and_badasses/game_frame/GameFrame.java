@@ -7,7 +7,11 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -35,6 +39,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
+import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
@@ -48,10 +53,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardP
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener, ConfirmDialogListener {
 	
@@ -276,7 +277,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		chatClient = new ChatClient(game.getClient());
+		chatClient = ((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).getChatClient();
 		chatPanel = new ChatPanel(chatClient);
 		chatPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		chatClient.addChatPanel(chatPanel);

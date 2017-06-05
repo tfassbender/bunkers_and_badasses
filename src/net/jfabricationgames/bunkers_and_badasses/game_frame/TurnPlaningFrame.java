@@ -594,8 +594,12 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 					txtCurrcommand.setText("-----");
 				}
 				Command command = (Command) comboBox.getSelectedItem();
-				int costsCredits = UserResource.getCreditsForCommand(command, selectedField);
-				int costsAmmo = UserResource.getAmmoForCommand(command, selectedField);
+				int costsCredits = 0;
+				int costsAmmo = 0;
+				if (command != null) {
+					costsCredits = UserResource.getCreditsForCommand(command, selectedField);
+					costsAmmo = UserResource.getAmmoForCommand(command, selectedField);
+				}
 				txtKosts.setText(costsCredits + " Credits, " + costsAmmo + " Munition");
 				if (game.getGameState().equals(GameState.PLAN)) {
 					btnLschen.setEnabled(true);
@@ -662,6 +666,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		int mine = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_COLLECT);
 		int support = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_SUPPORT);
 		int defend = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_DEFEND);
+		System.out.println("Raid commands: " + raid);
 		commandBoxModel.removeAllElements();
 		txtberflle.setText(Integer.toString(raid));
 		txtRckzge.setText(Integer.toString(retreat));

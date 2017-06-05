@@ -63,7 +63,7 @@ public class PointManager implements Serializable {
 		List<UserPoints> sortedPoints = getSortedPointList();
 		int position = -1;
 		for (int i = 0; i < sortedPoints.size(); i++) {
-			if (sortedPoints.get(i).equals(player)) {
+			if (sortedPoints.get(i).getUser().equals(player)) {
 				position = i;
 			}
 		}

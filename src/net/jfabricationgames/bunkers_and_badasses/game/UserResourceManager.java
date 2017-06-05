@@ -50,6 +50,11 @@ public class UserResourceManager implements Serializable{
 		}
 	}
 	
+	public void collectAllGameStartResources(List<User> players) {
+		for (User user : players) {
+			collectGameStartResources(user);
+		}
+	}
 	/**
 	 * Collect the game start resources for a user.
 	 * 

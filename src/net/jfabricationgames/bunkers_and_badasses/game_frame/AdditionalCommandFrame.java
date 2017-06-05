@@ -24,6 +24,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
+import java.awt.Toolkit;
 
 public class AdditionalCommandFrame extends JFrame {
 	
@@ -45,6 +46,7 @@ public class AdditionalCommandFrame extends JFrame {
 	private JButton btnKaufen;
 	
 	public AdditionalCommandFrame(TurnPlaningFrame callingFrame, Game game, Command... commands) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AdditionalCommandFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {

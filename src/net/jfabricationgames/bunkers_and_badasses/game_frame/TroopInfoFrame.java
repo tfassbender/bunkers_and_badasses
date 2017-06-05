@@ -27,6 +27,8 @@ import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class TroopInfoFrame extends JFrame {
 	
@@ -170,7 +172,7 @@ public class TroopInfoFrame extends JFrame {
 			
 			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/mr_torgue_1.png"));
 			panel_image.setAdaptSizeKeepProportion(true);
-			panel_image.setToolTipText("Marcus: Keine R\u00FCckerstattung");
+			panel_image.setToolTipText("Mr. Torgue: EXPLOSIONSGERÄUSCH");
 			panel_image.setCentered(true);
 			panel_image.setBackground(Color.GRAY);
 			panel.add(panel_image, "cell 1 1 2 1,grow");
@@ -193,6 +195,12 @@ public class TroopInfoFrame extends JFrame {
 			panel_fields_all.add(scrollPane_fields_all, "cell 0 2,grow");
 			
 			JList<Field> list_fields_all = new JList<Field>(fieldAllListModel);
+			list_fields_all.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+					selectedField = list_fields_all.getSelectedValue();
+					updateSelectedField();
+				}
+			});
 			list_fields_all.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list_fields_all.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			list_fields_all.setBackground(Color.LIGHT_GRAY);
@@ -329,7 +337,7 @@ public class TroopInfoFrame extends JFrame {
 		int troopsNormal = 0;
 		int troopsBadass = 0;
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(game.getLocalUser())) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				if (field.getTroopStrength() > 0) {
 					fieldsWithTroops++;
 				}
@@ -359,7 +367,7 @@ public class TroopInfoFrame extends JFrame {
 		fieldControlledListModel.removeAllElements();
 		for (Field field : game.getBoard().getFields()) {
 			fieldAllListModel.addElement(field);
-			if (field.getAffiliation().equals(game.getLocalUser())) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				fieldControlledListModel.addElement(field);
 			}
 		}

@@ -103,6 +103,17 @@ public class Game implements Serializable {
 		this.board = board;
 		gameFrame = new GameFrame(this);
 	}
+	
+	/**
+	 * Start the game by collecting the start resources, commands, ...
+	 */
+	public void startGame() {
+		skillProfileManager.setManagers(pointManager, heroCardManager);
+		resourceManager.collectAllGameStartResources(players);
+		skillProfileManager.collectAllSkillResources(players);
+		planManager.countCommands();
+		gameFrame.getBoardOverviewFrame().setBoard(board);
+	}
 
 	public JFGClient getClient() {
 		return client;
