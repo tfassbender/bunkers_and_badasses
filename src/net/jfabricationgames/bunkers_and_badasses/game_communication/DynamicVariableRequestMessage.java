@@ -1,10 +1,13 @@
 package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
+import java.util.List;
+
 import net.jfabricationgames.bunkers_and_badasses.game.GameVariableStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.BuildingStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.TroopStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
+import net.jfabricationgames.bunkers_and_badasses.help.HelpContent;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
@@ -17,6 +20,7 @@ public class DynamicVariableRequestMessage implements JFGServerMessage, JFGClien
 	private CommandStorage commandStorage;
 	private GameVariableStorage gameStorage;
 	private TurnBonusStorage turnBonusStorage;
+	private List<HelpContent> helpContents;
 	
 	public BuildingStorage getBuildingStorage() {
 		return buildingStorage;
@@ -51,5 +55,12 @@ public class DynamicVariableRequestMessage implements JFGServerMessage, JFGClien
 	}
 	public void setTurnBonusStorage(TurnBonusStorage turnBonusStorage) {
 		this.turnBonusStorage = turnBonusStorage;
+	}
+	
+	public List<HelpContent> getHelpContents() {
+		return helpContents;
+	}
+	public void setHelpContents(List<HelpContent> helpContents) {
+		this.helpContents = helpContents;
 	}
 }

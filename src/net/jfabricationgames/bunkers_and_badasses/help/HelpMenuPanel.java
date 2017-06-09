@@ -44,14 +44,14 @@ public class HelpMenuPanel extends JPanel {
 		
 		setBackground(Color.GRAY);
 		if (imagePreferedSize != null) {
-			setLayout(new MigLayout("", "[500px,grow][:" + imagePreferedSize[0] + "px:500px,grow]", "[][10px:n:10px][grow][" + imagePreferedSize[1] + "px][grow]"));
+			setLayout(new MigLayout("", "[500px,grow][:150px:" + imagePreferedSize[0] + "px,grow][150px:n:150px,grow]", "[][10px:n:10px][grow][" + imagePreferedSize[1] + "px][grow][150px:n:150px,grow]"));
 		}
 		else {
-			setLayout(new MigLayout("", "[500px,grow][:300px:500px,grow]", "[][10px:n:10px][grow][300px][grow]"));
+			setLayout(new MigLayout("", "[500px,grow][:150px:350px,grow][150px:n:150px,grow]", "[][10px:n:10px][grow][300px][grow][150px:n:150px,grow]"));
 		}
-		setLayout(new MigLayout("", "[500px,grow][:150px:350px,grow][150px:n:150px,grow]", "[][10px:n:10px][grow][300px][grow][150px:n:150px,grow]"));
+		//setLayout(new MigLayout("", "[500px,grow][:150px:350px,grow][150px:n:150px,grow]", "[][10px:n:10px][grow][300px][grow][150px:n:150px,grow]"));
 		
-		JLabel lblTitle = new JLabel("Title");
+		JLabel lblTitle = new JLabel(title);
 		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
 		add(lblTitle, "cell 0 0 3 1,alignx center");
 		
@@ -61,15 +61,17 @@ public class HelpMenuPanel extends JPanel {
 		JTextPane txtpnTest = new JTextPane();
 		txtpnTest.setBackground(Color.LIGHT_GRAY);
 		txtpnTest.setEditable(false);
-		txtpnTest.setText("Some text\n\n more Text\nlanger text ....... bla bla bla blabla bla bla blabla bla bla blabla bla bla blabla bla bla");
+		txtpnTest.setText(content);
 		scrollPane.setViewportView(txtpnTest);
 		
-		ImagePanel panel;
+		ImagePanel panel = new ImagePanel();
 		if (imagePath != null) {
-			panel = new ImagePanel(imagePath);
-		}
-		else {
-			panel = new ImagePanel();
+			try {
+				panel = new ImagePanel(loader.loadImage(imagePath));
+			}
+			catch (IllegalArgumentException ie) {
+				ie.printStackTrace();
+			}
 		}
 		if (imageMinimumSize != null) {
 			panel.setMinimumSize(imageMinimumSize);

@@ -1,9 +1,12 @@
 package net.jfabricationgames.bunkers_and_badasses.help;
+
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,20 +23,20 @@ import net.miginfocom.swing.MigLayout;
 
 public class HelpMenuFrame extends JFrame {
 	
-	public static void main(String[] args) {
-		new HelpMenuFrame().setVisible(true);
-	}
-	
 	private static final long serialVersionUID = 8954900524712977138L;
 	
 	private JPanel contentPane;
 	private JPanel panel_card;
+	private JTree tree;
+	
+	private List<HelpContent> contents;
 	
 	public HelpMenuFrame() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(HelpMenuFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Hilfe");
 		setBounds(100, 100, 1000, 600);
 		setMinimumSize(new Dimension(1000, 600));
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -48,9 +51,8 @@ public class HelpMenuFrame extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		panel.add(scrollPane, "cell 0 0,grow");
 		
-		JTree tree = new JTree();
+		tree = new JTree();
 		tree.setCellRenderer(new JFGCellRenderer());
-		tree.setModel(new DefaultTreeModel(generateTree()));
 		tree.setBackground(Color.LIGHT_GRAY);
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
@@ -69,7 +71,25 @@ public class HelpMenuFrame extends JFrame {
 		panel_card.setLayout(new CardLayout(0, 0));
 	}
 	
-	public void buildHelpPanels(List<HelpContent> contents) {
+	/**
+	 * Build the help panels and the JTree.
+	 * 
+	 * @param contents
+	 * 		The contents from the database.
+	 */
+	public void buildHelpMenu(List<HelpContent> contents) {
+		this.contents = contents;
+		buildHelpPanels(contents);
+		buildHelpTree(contents);
+	}
+	
+	/**
+	 * Builds the panels that include the help content from the database and adds them to the card panel.
+	 * 
+	 * @param contents
+	 * 		The loaded help contents from the database.
+	 */
+	private void buildHelpPanels(List<HelpContent> contents) {
 		for (HelpContent helpContent : contents) {
 			if (helpContent.isPanel()) {
 				HelpMenuPanel panel = new HelpMenuPanel(helpContent);
@@ -78,23 +98,46 @@ public class HelpMenuFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * Generate the JTree of the help contents.
+	 * 
+	 * @param contents
+	 * 		The loaded contents from the database.
+	 */
+	private void buildHelpTree(List<HelpContent> contents) {
+		Map<Integer, HelpTreeNode> nodes = new HashMap<Integer, HelpTreeNode>();
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+		//generate all nodes and add them to the map
+		for (HelpContent helpContent : contents) {
+			HelpTreeNode helpNode = new HelpTreeNode(helpContent);
+			nodes.put(helpContent.getId(), helpNode);
+		}
+		//build the tree from the nodes
+		for (Integer key : nodes.keySet()) {
+			HelpTreeNode node = nodes.get(key);
+			DefaultMutableTreeNode superNode = nodes.get(node.getSuperId());
+			if (superNode == null) {
+				superNode = root;
+			}
+			superNode.add(node);
+		}
+		//set the model and repaint
+		tree.setModel(new DefaultTreeModel(root));
+		revalidate();
+		repaint();
+	}
+	
+	/**
+	 * Select the visible help panel by the selected object in the JTree.
+	 * 
+	 * @param node
+	 * 		The selected node.
+	 */
 	private void setHelpPanel(HelpTreeNode node) {
 		if (node.isPanel()) {
 			CardLayout layout = (CardLayout) panel_card.getLayout();
 			layout.show(panel_card, node.getPanelName());	
 		}
-	}
-	
-	private DefaultMutableTreeNode generateTree() {
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("JTree");
-		HelpTreeNode node_1;
-		root.add(new HelpTreeNode("Data", "data_1", true));
-		node_1 = new HelpTreeNode("Data2", "data2", false);
-		node_1.add(new HelpTreeNode("data2_1", "data_2_1", true));
-		node_1.add(new HelpTreeNode("data2_2", "data_2_1", true));
-		root.add(node_1);
-		root.add(new HelpTreeNode("Data3", "data3", true));
-		return root;
 	}
 	
 	private class JFGCellRenderer extends DefaultTreeCellRenderer {
@@ -126,10 +169,16 @@ public class HelpMenuFrame extends JFrame {
 		
 		private boolean isPanel;
 		
-		public HelpTreeNode(String name, String panelName, boolean isPanel) {
+		private int superId;
+		
+		public HelpTreeNode(HelpContent helpContent) {
+			this(helpContent.getTitle(), helpContent.getPanelName(), helpContent.isPanel(), helpContent.getSuperId());
+		}
+		public HelpTreeNode(String name, String panelName, boolean isPanel, int superId) {
 			this.name = name;
 			this.panelName = panelName;
 			this.isPanel = isPanel;
+			this.superId = superId;
 		}
 		
 		@Override
@@ -140,9 +189,15 @@ public class HelpMenuFrame extends JFrame {
 		public String getPanelName() {
 			return panelName;
 		}
-		
 		public boolean isPanel() {
 			return isPanel;
 		}
+		public int getSuperId() {
+			return superId;
+		}
+	}
+	
+	public List<HelpContent> getContents() {
+		return contents;
 	}
 }

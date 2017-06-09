@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.server;
 
+import java.awt.Dimension;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -33,6 +34,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransfe
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
+import net.jfabricationgames.bunkers_and_badasses.help.HelpContent;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
@@ -1006,6 +1008,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		TroopStorage troopStorage = new TroopStorage();
 		CommandStorage commandStorage = new CommandStorage();
 		TurnBonusStorage turnBonusStorage = new TurnBonusStorage();
+		List<HelpContent> helpContents = new ArrayList<HelpContent>();
 		String gameVariablesQuery = "SELECT * FROM bunkers_and_badasses.game_variables WHERE used = true";
 		String skillResourcesQuery = "SELECT * FROM bunkers_and_badasses.skill_resources";
 		String startResourcesQuery = "SELECT * FROM bunkers_and_badasses.start_resources WHERE used = true";
@@ -1016,6 +1019,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		String commandQuery = "SELECT * FROM bunkers_and_badasses.commands WHERE used = true";
 		String bonusQuery = "SELECT * FROM bunkers_and_badasses.turn_bonus_resources";
 		String gamePointQuery = "SELECT * FROM bunkers_and_badasses.game_points WHERE used = true";
+		String helpContentQuery = "SELECT * FROM bunkers_and_badasses.help_content";
 		ResultSet result;
 		//load the variables from the database
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
@@ -1197,6 +1201,18 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			catch (SQLException sqle) {
 				sqle.printStackTrace();
 			}
+			result = statement.executeQuery(helpContentQuery);
+			while (result.next()) {
+				HelpContent help = new HelpContent(result.getString(3), 
+						result.getString(5),
+						result.getString(6),
+						result.getString(4),
+						new int[] {result.getInt(7), result.getInt(8)},
+						new Dimension(result.getInt(9), result.getInt(10)),
+						result.getInt(1),
+						result.getInt(2));
+				helpContents.add(help);
+			}
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -1215,6 +1231,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		message.setTroopStorage(troopStorage);
 		message.setCommandStorage(commandStorage);
 		message.setTurnBonusStorage(turnBonusStorage);
+		message.setHelpContents(helpContents);
 		connection.sendMessage(message);
 	}
 	

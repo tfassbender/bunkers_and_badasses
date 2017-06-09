@@ -51,6 +51,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
+import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
+import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
@@ -79,6 +81,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private TurnGoalTurnBonusDialog turnGoalTurnBonusDialog;
 	private TurnPlaningFrame turnPlaningFrame;
 	private BoardOverviewFrame boardOverviewFrame;
+	private HelpMenuFrame helpMenuFrame;
 	
 	private Game game;
 	
@@ -265,11 +268,14 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		JMenu mnHilfe = new JMenu("Hilfe");
 		menuBar.add(mnHilfe);
 		
-		JMenuItem mntmSpiel = new JMenuItem("Spiel");
-		mnHilfe.add(mntmSpiel);
-		
-		JMenuItem mntmSpielFunktionen = new JMenuItem("Spiel Funktionen");
-		mnHilfe.add(mntmSpielFunktionen);
+		JMenuItem mntmHilfeMenu = new JMenuItem("Hilfe Menü");
+		mntmHilfeMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				helpMenuFrame.setVisible(true);
+				helpMenuFrame.requestFocus();
+			}
+		});
+		mnHilfe.add(mntmHilfeMenu);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
@@ -512,6 +518,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		turnPlaningFrame = new TurnPlaningFrame(game);
 		boardOverviewFrame = new BoardOverviewFrame(game.getBoard());
 		chatDialog = new ChatDialog(chatClient, this);
+		helpMenuFrame = MainMenuFrame.getHelpMenu();
 		SupportRequestFrame.setLocalPlayer(game.getLocalUser());
 	}
 	

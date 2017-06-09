@@ -46,6 +46,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfil
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -55,6 +56,8 @@ import net.miginfocom.swing.MigLayout;
 public class MainMenuFrame extends JFrame {
 	
 	private static final long serialVersionUID = 8543413745165916921L;
+	
+	private static HelpMenuFrame helpMenu;
 	
 	private MainMenuDynamicLoader dynamicLoader;
 	private JFGClient client;
@@ -88,6 +91,7 @@ public class MainMenuFrame extends JFrame {
 	private JMenuItem mntmSpielLaden;
 	private JButton btnSpielErstellen;
 	private JMenuItem mntmSkillProfil;
+	private JMenuItem mntmHilfeMenu;
 	
 	public MainMenuFrame(JFGClient client) {
 		addWindowListener(new WindowAdapter() {
@@ -173,6 +177,22 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		mnSpiel.add(mntmSpielLaden);
+		
+		JMenu mnHilfe = new JMenu("Hilfe");
+		menuBar.add(mnHilfe);
+		
+		mntmHilfeMenu = new JMenuItem("Hilfe Menü");
+		mntmHilfeMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				helpMenu.setVisible(true);
+				helpMenu.requestFocus();
+			}
+		});
+		mntmHilfeMenu.setEnabled(false);
+		mnHilfe.add(mntmHilfeMenu);
+		
+		JMenuItem mntmberBunkersAnd = new JMenuItem("Über Bunkers And Badasses");
+		mnHilfe.add(mntmberBunkersAnd);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
@@ -412,11 +432,15 @@ public class MainMenuFrame extends JFrame {
 		Game.setGameVariableStorage(message.getGameStorage());
 		UserPlanManager.START_COMMANDS = message.getGameStorage().getUserCommands();
 		skillProfileManager.loadSkillLevels();
+		//generate the help menu
+		helpMenu = new HelpMenuFrame();
+		helpMenu.buildHelpMenu(message.getHelpContents());
 		dynamicVariablesLoaded = true;
 		//enable the game start buttons
 		btnSpielErstellen.setEnabled(true);
 		mntmSpielErstellen.setEnabled(true);
 		mntmSpielLaden.setEnabled(true);
+		mntmHilfeMenu.setEnabled(true);
 		//enable the buttons in the request dialogs
 		for (GameRequestDialog request : requestDialogs.values()) {
 			request.enableGameStart();
@@ -489,6 +513,10 @@ public class MainMenuFrame extends JFrame {
 	
 	public SkillProfileManager getSkillProfileManager() {
 		return skillProfileManager;
+	}
+	
+	public static HelpMenuFrame getHelpMenu() {
+		return helpMenu;
 	}
 	
 	public JFGClient getClient() {
