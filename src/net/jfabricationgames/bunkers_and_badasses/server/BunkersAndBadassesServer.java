@@ -1019,7 +1019,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		String commandQuery = "SELECT * FROM bunkers_and_badasses.commands WHERE used = true";
 		String bonusQuery = "SELECT * FROM bunkers_and_badasses.turn_bonus_resources";
 		String gamePointQuery = "SELECT * FROM bunkers_and_badasses.game_points WHERE used = true";
-		String helpContentQuery = "SELECT * FROM bunkers_and_badasses.help_content";
+		String helpContentQuery = "SELECT * FROM bunkers_and_badasses.help_content ORDER BY id";
 		ResultSet result;
 		//load the variables from the database
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();

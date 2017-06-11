@@ -6,7 +6,8 @@ Bunkers and Badasses - Tasks
 	- open new dialogs centered to the game frame ?
 	- show all heroes (in game) button in HeroSelectionDialog has no effect
 	- commands can't be added (nullpointer)
-	- help menu doesn't show images
+	- second "Weiter"-Button in PreGameSelectionFrame is enabled before it should
+	- support image in help menu is shown very small
 	
 - Next versions:
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line

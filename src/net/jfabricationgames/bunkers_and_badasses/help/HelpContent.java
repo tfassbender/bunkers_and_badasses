@@ -37,7 +37,7 @@ public class HelpContent implements Serializable {
 	}
 	
 	public boolean isPanel() {
-		return !content.isEmpty();
+		return content != null && !content.isEmpty();
 	}
 	
 	public String getTitle() {

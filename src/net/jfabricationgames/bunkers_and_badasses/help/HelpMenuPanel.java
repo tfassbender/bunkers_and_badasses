@@ -36,6 +36,9 @@ public class HelpMenuPanel extends JPanel {
 	public HelpMenuPanel(HelpContent content) {
 		this(content.getTitle(), content.getContent(), content.getImagePath(), content.getPanelName(), content.getImagePreferedSize(), content.getImageMinimumSize());
 	}
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public HelpMenuPanel(String title, String content, String imagePath, String panelName, int[] imagePreferedSize, Dimension imageMinimumSize) {
 		this.title = title;
 		this.content = content;
@@ -49,7 +52,7 @@ public class HelpMenuPanel extends JPanel {
 		else {
 			setLayout(new MigLayout("", "[500px,grow][:150px:350px,grow][150px:n:150px,grow]", "[][10px:n:10px][grow][300px][grow][150px:n:150px,grow]"));
 		}
-		//setLayout(new MigLayout("", "[500px,grow][:150px:350px,grow][150px:n:150px,grow]", "[][10px:n:10px][grow][300px][grow][150px:n:150px,grow]"));
+		setLayout(new MigLayout("", "[500px,grow][:150px:350px,grow][150px:n:150px,grow]", "[][10px:n:10px][grow][300px][grow][150px:n:150px,grow]"));
 		
 		JLabel lblTitle = new JLabel(title);
 		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -58,16 +61,19 @@ public class HelpMenuPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 2 1 4,grow");
 		
-		JTextPane txtpnTest = new JTextPane();
-		txtpnTest.setBackground(Color.LIGHT_GRAY);
-		txtpnTest.setEditable(false);
-		txtpnTest.setText(content);
-		scrollPane.setViewportView(txtpnTest);
+		content = content.replace("\t", "    ");
+		
+		JTextPane txtpnText = new JTextPane();
+		txtpnText.setBackground(Color.LIGHT_GRAY);
+		txtpnText.setEditable(false);
+		txtpnText.setText(content);
+		scrollPane.setViewportView(txtpnText);
 		
 		ImagePanel panel = new ImagePanel();
 		if (imagePath != null) {
 			try {
-				panel = new ImagePanel(loader.loadImage(imagePath));
+				BufferedImage image = loader.loadImage(imagePath);
+				panel = new ImagePanel(image);
 			}
 			catch (IllegalArgumentException ie) {
 				ie.printStackTrace();
@@ -76,7 +82,6 @@ public class HelpMenuPanel extends JPanel {
 		if (imageMinimumSize != null) {
 			panel.setMinimumSize(imageMinimumSize);
 		}
-		panel = new ImagePanel();
 		panel.setBackground(Color.GRAY);
 		panel.setCentered(true);
 		panel.setAdaptSizeKeepProportion(true);
