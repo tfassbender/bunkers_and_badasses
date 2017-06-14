@@ -24,10 +24,13 @@ public class BuildingStorage implements Serializable {
 	private int[][] buildingPrices;
 	private int[][] buildingExtensionPrices;
 	
+	private int[] buildingBreakOffPrices;
+	
 	public BuildingStorage() {
 		buildingVariables = new int[17][8];
 		buildingPrices = new int[17][3];
 		buildingExtensionPrices = new int[17][3];
+		buildingBreakOffPrices = new int[3];
 	}
 	
 	public int[][] getBuildingVariables() {
@@ -38,5 +41,8 @@ public class BuildingStorage implements Serializable {
 	}
 	public int[][] getBuildingExtensionPrices() {
 		return buildingExtensionPrices;
+	}
+	public int[] getBuildingBreakOffPrices() {
+		return buildingBreakOffPrices;
 	}
 }

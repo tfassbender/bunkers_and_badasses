@@ -6,7 +6,7 @@ public class CrazyEarl extends Hero {
 
 	public CrazyEarl() {
 		attack = 0;
-		defence = 1;
+		defence = 3;
 		name = "Crazy Earl";
 		imagePath = "earl_1.png";
 		loadImage();

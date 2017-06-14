@@ -1078,15 +1078,24 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			//dynamic variables for every building (mining, land mines, defense, move distance, points)
 			result = statement.executeQuery(buildingQuery);
 			int[][] buildingVariables = buildingStorage.getBuildingVariables();
+			int[] buildingBreakOffPrices = buildingStorage.getBuildingBreakOffPrices();
 			while (result.next()) {
-				buildingVariables[result.getInt(1)][BuildingStorage.RECRUITABLE_TROOPS] = result.getInt(2);
-				buildingVariables[result.getInt(1)][BuildingStorage.MINING_CREDITS] = result.getInt(3);
-				buildingVariables[result.getInt(1)][BuildingStorage.MINING_AMMO] = result.getInt(4);
-				buildingVariables[result.getInt(1)][BuildingStorage.MINING_ERIDIUM] = result.getInt(5);
-				buildingVariables[result.getInt(1)][BuildingStorage.LAND_MINE_VICTIMS] = result.getInt(6);
-				buildingVariables[result.getInt(1)][BuildingStorage.ADDITIONAL_DEFENCE] = result.getInt(7);
-				buildingVariables[result.getInt(1)][BuildingStorage.MOVE_DISTANCE] = result.getInt(8);
-				buildingVariables[result.getInt(1)][BuildingStorage.POINTS] = result.getInt(9);
+				if (result.getInt(1) == -1) {
+					//-1 is the index for break off prices;
+					buildingBreakOffPrices[0] = result.getInt(2);
+					buildingBreakOffPrices[0] = result.getInt(3);
+					buildingBreakOffPrices[0] = result.getInt(4);
+				}
+				else {
+					buildingVariables[result.getInt(1)][BuildingStorage.RECRUITABLE_TROOPS] = result.getInt(2);
+					buildingVariables[result.getInt(1)][BuildingStorage.MINING_CREDITS] = result.getInt(3);
+					buildingVariables[result.getInt(1)][BuildingStorage.MINING_AMMO] = result.getInt(4);
+					buildingVariables[result.getInt(1)][BuildingStorage.MINING_ERIDIUM] = result.getInt(5);
+					buildingVariables[result.getInt(1)][BuildingStorage.LAND_MINE_VICTIMS] = result.getInt(6);
+					buildingVariables[result.getInt(1)][BuildingStorage.ADDITIONAL_DEFENCE] = result.getInt(7);
+					buildingVariables[result.getInt(1)][BuildingStorage.MOVE_DISTANCE] = result.getInt(8);
+					buildingVariables[result.getInt(1)][BuildingStorage.POINTS] = result.getInt(9);
+				}
 			}
 			try {
 				result.close();

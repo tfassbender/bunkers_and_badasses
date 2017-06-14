@@ -10,12 +10,12 @@ public class Ellie extends Hero {
 		name = "Ellie";
 		imagePath = "ellie_1.png";
 		loadImage();
-		effectDescription = "Klanfede:\n\nIn 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten";
+		effectDescription = "Klanfede:\n\nIn 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten (nur Banditen)";
 	}
 	
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Klanfede: In 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten
+		//Klanfede: In 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten (nur Banditen)
 	}
 }
