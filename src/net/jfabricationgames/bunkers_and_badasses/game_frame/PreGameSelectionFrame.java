@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -299,6 +300,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		panel.add(btnSpielfeldbersicht, "flowx,cell 0 20 4 1");
 		
 		btnWeiter_1 = new JButton("Weiter");
+		btnWeiter_1.setEnabled(false);
 		btnWeiter_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				startTurnBonusSelection();
@@ -661,6 +663,12 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				if (index == order.length-1) {
 					//all players have chosen their starting troops
 					//choose the game turn bonuses next
+					if (message.getNeutralTroops() != null) {
+						game.getBoard().addNeutralTroops(message.getNeutralTroops());
+					}
+					else {
+						System.err.println("Error: no neutral troops found");
+					}
 					btnWeiter_1.setEnabled(true);
 					setPlayersTurn(order[index]);//last player chooses the bonus first
 				}
@@ -831,6 +839,12 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			message.setStartingTroopPositions(selectedStartFields);
 			message.setStartingTroops(startTroops);
 			message.setUser(game.getLocalUser());
+			User[] order = game.getPlayerOrder().getOrder();
+			if (game.getLocalUser().equals(order[order.length-1])) {
+				//last user to choose the start troops -> add the neutral troops
+				Map<Field, Integer> neutralTroops = game.getBoard().addNeutralTroops();
+				message.setNeutralTroops(neutralTroops);
+			}
 			game.getClient().sendMessage(message);
 			//update the frame functions
 			nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_STARTING_POSITION);
@@ -880,9 +894,9 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			case PreGameDataMessage.DATA_STARTING_POSITION:
 				if (index == order.length-1) {
 					//all players have chosen their starting troops
-					//choose the game turn bonuses next
 					btnWeiter_1.setEnabled(true);
 					setPlayersTurn(order[index]);//last player chooses the bonus first
+					//choose the game turn bonuses next
 				}
 				else {
 					//let the next use choose his starting troops

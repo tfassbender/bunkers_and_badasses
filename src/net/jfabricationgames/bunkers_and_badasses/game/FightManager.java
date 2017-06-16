@@ -58,8 +58,6 @@ public class FightManager implements Serializable {
 	public void merge(FightManager fightManager) {
 		//the fight can be overwritten because this message is not sent during a fight
 		this.currentFight = fightManager.getCurrentFight();
-		this.pointManager = fightManager.getPointManager();
-		this.board = fightManager.getBoard();
 	}
 	
 	/**
@@ -344,9 +342,5 @@ public class FightManager implements Serializable {
 	}
 	public void setPointManager(PointManager pointManager) {
 		this.pointManager = pointManager;
-	}
-	
-	private Board getBoard() {
-		return board;
 	}
 }

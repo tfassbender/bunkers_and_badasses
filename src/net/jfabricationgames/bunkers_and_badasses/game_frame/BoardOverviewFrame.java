@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.miginfocom.swing.MigLayout;
+import java.awt.Toolkit;
 
 public class BoardOverviewFrame extends JFrame {
 	
@@ -26,6 +27,7 @@ public class BoardOverviewFrame extends JFrame {
 	private Board board;
 	
 	public BoardOverviewFrame(Board board) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(BoardOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {

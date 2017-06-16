@@ -30,6 +30,10 @@ public class GameTurnManager implements Serializable {
 		turn = 1;
 	}
 	
+	public void merge(GameTurnManager manager) {
+		this.turn = manager.getTurn();
+	}
+	
 	public int getTurn() {
 		return turn;
 	}

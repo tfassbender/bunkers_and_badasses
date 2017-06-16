@@ -48,7 +48,6 @@ public class SkillProfileManager implements Serializable {
 	 */
 	public void merge(SkillProfileManager profileManager) {
 		selectedProfile = profileManager.getSelectedProfiles();
-		userResourceManager = profileManager.getUserResourceManager();
 	}
 	
 	public void loadSkillLevels() {
@@ -101,9 +100,6 @@ public class SkillProfileManager implements Serializable {
 		return selectedProfile;
 	}
 	
-	private UserResourceManager getUserResourceManager() {
-		return userResourceManager;
-	}
 	public void setUserResourceManager(UserResourceManager userResourceManager) {
 		this.userResourceManager = userResourceManager;
 	}

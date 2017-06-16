@@ -61,6 +61,7 @@ public class UserPlanManager implements Serializable {
 		commands[COMMAND_COLLECT] += turnBonus.getCollectCommands();
 		//commands[COMMAND_DEFEND] += turnBonus.getDefendCommands();
 		//build, recruit and defend commands can not be added by turn bonuses
+		currentResource = game.getResourceManager().getResources().get(game.getLocalUser());
 	}
 	
 	/**

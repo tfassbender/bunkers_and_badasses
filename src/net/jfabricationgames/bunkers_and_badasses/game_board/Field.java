@@ -123,10 +123,14 @@ public class Field implements Serializable {
 			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+neutralTroopImage.getWidth(), (int) normalTroopsPosition.getY()+neutralTroopImage.getHeight()-15);
 		}
 		else {
-			g.drawImage(normalTroopImage, (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
-			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+normalTroopImage.getWidth(), (int) normalTroopsPosition.getY()+normalTroopImage.getHeight()-15);
-			g.drawImage(badassTroopImage, (int) badassTroopsPosition.getX(), (int) badassTroopsPosition.getY(), null);
-			g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImage.getWidth(), (int) badassTroopsPosition.getY()+badassTroopImage.getHeight()-15);
+			if (normalTroops > 0) {
+				g.drawImage(normalTroopImage, (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
+				g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+normalTroopImage.getWidth(), (int) normalTroopsPosition.getY()+normalTroopImage.getHeight()-15);				
+			}
+			if (badassTroops > 0) {
+				g.drawImage(badassTroopImage, (int) badassTroopsPosition.getX(), (int) badassTroopsPosition.getY(), null);
+				g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImage.getWidth(), (int) badassTroopsPosition.getY()+badassTroopImage.getHeight()-15);				
+			}
 		}
 		//draw the building image
 		g.drawImage(building.getImage(), (int) buildingPosition.getX(), (int) buildingPosition.getY(), null);

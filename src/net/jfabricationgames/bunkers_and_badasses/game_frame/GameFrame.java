@@ -705,6 +705,9 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	public BoardOverviewFrame getBoardOverviewFrame() {
 		return boardOverviewFrame;
 	}
+	public HelpMenuFrame getHelpMenuFrame() {
+		return helpMenuFrame;
+	}
 	
 	public static ImageLoader getImageLoader() {
 		return imageLoader;

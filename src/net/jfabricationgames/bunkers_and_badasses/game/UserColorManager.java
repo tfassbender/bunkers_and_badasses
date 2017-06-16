@@ -39,6 +39,10 @@ public class UserColorManager implements Serializable {
 		}
 	}
 	
+	public void merge(UserColorManager manager) {
+		this.userColors = manager.getUserColors();
+	}
+	
 	public Map<User, UserColor> getUserColors() {
 		return userColors;
 	}

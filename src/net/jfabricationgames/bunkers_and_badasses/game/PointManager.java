@@ -50,6 +50,10 @@ public class PointManager implements Serializable {
 		}
 	}
 	
+	public void merge(PointManager manager) {
+		this.points = manager.points;
+	}
+	
 	public List<UserPoints> getSortedPointList() {
 		List<UserPoints> userPoints = new ArrayList<UserPoints>();
 		for (User user : points.keySet()) {

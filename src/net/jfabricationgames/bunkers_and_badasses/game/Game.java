@@ -42,14 +42,14 @@ public class Game implements Serializable {
 		this.players = players;
 		this.localUser = new User(UserManager.getUsername());
 		gameState = GameState.PLAN;
-		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
-		gameTurnBonusManager.chooseTurnBonusForGame(players.size());
 		playerOrder = new PlayerOrder(players.size());
 		playerOrder.chooseRandomOrder(players);
 		resourceManager = new UserResourceManager(players, this);
-		planManager = new UserPlanManager(this, gameTurnBonusManager);
 		pointManager = new PointManager();
 		pointManager.initialize(players);
+		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
+		gameTurnBonusManager.chooseTurnBonusForGame(players.size());
+		planManager = new UserPlanManager(this, gameTurnBonusManager);
 		gameTurnGoalManager = new GameTurnGoalManager(pointManager);
 		turnManager = new GameTurnManager(this);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
@@ -82,14 +82,14 @@ public class Game implements Serializable {
 		}
 		players = newData.getPlayers();
 		gameState = newData.getGameState();
-		playerOrder = newData.getPlayerOrder();
-		resourceManager = newData.getResourceManager();
-		turnManager = newData.getTurnManager();
+		playerOrder.merge(newData.getPlayerOrder());
+		resourceManager.merge(newData.getResourceManager());
+		turnManager.merge(newData.getTurnManager());
 		gameTurnBonusManager.merge(newData.getGameTurnBonusManager());
 		gameTurnGoalManager.merge(newData.getGameTurnGoalManager());
 		heroCardManager.merge(newData.getHeroCardManager());
-		pointManager = newData.getPointManager();
-		colorManager = newData.getColorManager();
+		pointManager.merge(newData.getPointManager());
+		colorManager.merge(newData.getColorManager());
 		skillProfileManager.merge(newData.getSkillProfileManager());
 		fightManager.merge(newData.getFightManager());
 	}

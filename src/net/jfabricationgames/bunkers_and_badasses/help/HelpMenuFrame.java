@@ -141,7 +141,7 @@ public class HelpMenuFrame extends JFrame {
 		}
 	}
 	
-	private void setHelpPanel(String name) {
+	public void setHelpPanel(String name) {
 		CardLayout layout = (CardLayout) panel_card.getLayout();
 		layout.show(panel_card, name);
 	}

@@ -4,6 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -26,11 +30,8 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
+import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ActionEvent;
 
 public class SelectHeroCardFrame extends JFrame {
 	
@@ -107,7 +108,10 @@ public class SelectHeroCardFrame extends JFrame {
 			JButton btnAlleHeldenAnsehen = new JButton("Alle Helden ansehen");
 			btnAlleHeldenAnsehen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					//TODO open the help dialog and the hero site
+					HelpMenuFrame helpMenu = game.getGameFrame().getHelpMenuFrame();
+					helpMenu.setHelpPanel("heldenkarten_erhallten");
+					helpMenu.setVisible(true);
+					helpMenu.requestFocus();
 				}
 			});
 			btnAlleHeldenAnsehen.setToolTipText("<html>\r\nAlle im Spiel verf\u00FCgbaren Helden ansehen\r\n</html>");

@@ -4,10 +4,9 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- character encoding
 	- open new dialogs centered to the game frame ?
-	- show all heroes (in game) button in HeroSelectionDialog has no effect
 	- commands can't be added (nullpointer)
-	- second "Weiter"-Button in PreGameSelectionFrame is enabled before it should
 	- support image in help menu is shown very small
+	- users don't seem to receive the bonuses from the turn bonuses
 	
 - Next versions:
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line

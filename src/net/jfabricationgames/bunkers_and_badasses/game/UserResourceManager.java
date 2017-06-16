@@ -38,6 +38,11 @@ public class UserResourceManager implements Serializable{
 		}
 	}
 	
+	public void merge(UserResourceManager manager) {
+		resources = manager.getResources();
+		resourceUse = manager.getResourceUse();
+	}
+	
 	/**
 	 * Receive changes from the plan manager that apply the changes of other users planing phases.
 	 * 
@@ -63,6 +68,8 @@ public class UserResourceManager implements Serializable{
 	 */
 	public void collectGameStartResources(User user) {
 		resources.get(user).collectGameStartResources();
+		resources.get(user).collectTurnStartResources(game);
+		resources.get(user).collectTurnBonusResources(game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser()));
 	}
 	/**
 	 * Collect all resources for the turn start (default, buildings, skill, turn bonus).

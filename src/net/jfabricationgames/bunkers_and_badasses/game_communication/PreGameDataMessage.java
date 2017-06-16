@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
+import java.util.Map;
+
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
@@ -31,6 +33,8 @@ public class PreGameDataMessage implements JFGClientMessage, JFGServerMessage {
 	private Field basePosition;
 	private Field[] startingTroopPositions;
 	private int[] startingTroops;
+	
+	private Map<Field, Integer> neutralTroops;
 	
 	public int getData() {
 		return data;
@@ -80,4 +84,12 @@ public class PreGameDataMessage implements JFGClientMessage, JFGServerMessage {
 	public void setStartingTroops(int[] startingTroops) {
 		this.startingTroops = startingTroops;
 	}
+	
+	public Map<Field, Integer> getNeutralTroops() {
+		return neutralTroops;
+	}
+	public void setNeutralTroops(Map<Field, Integer> neutralTroops) {
+		this.neutralTroops = neutralTroops;
+	}
+	
 }

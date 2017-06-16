@@ -131,6 +131,49 @@ public class Board implements Serializable {
 	}
 	
 	/**
+	 * Add the neutral troops when the game is started and return a Map containing the information.
+	 * 
+	 * Half of the neutral fields get neutral troops. The fields are chosen randomly.
+	 * The number of neutral troops is chosen randomly from 1 to 3.
+	 * 
+	 * @return
+	 * 		A Map of the neutral troops that are added to the board.
+	 */
+	public Map<Field, Integer> addNeutralTroops() {
+		List<Field> neutralFields = new ArrayList<Field>();
+		Map<Field, Integer> neutralTroops = new HashMap<Field, Integer>();
+		for (Field field : fields) {
+			if (field.getAffiliation() == null) {
+				neutralFields.add(field);
+			}
+		}
+		//remove half of the neutral fields from the list
+		int halfFields = neutralFields.size()/2;
+		for (int i = 0; i < halfFields; i++) {
+			int random = (int) (Math.random()*neutralFields.size());
+			neutralFields.remove(random);
+		}
+		//add 1 to 3 neutral troops to the selected fields
+		for (Field field : neutralFields) {
+			int random = (int) (Math.random()*3 + 1);
+			field.addNormalTroops(random);
+			neutralTroops.put(field, random);
+		}
+		return neutralTroops;
+	}
+	/**
+	 * Add the neutral troops by the info of another player.
+	 * 
+	 * @param neutralTroops
+	 * 		The neutral troops that are to be added to the board.
+	 */
+	public void addNeutralTroops(Map<Field, Integer> neutralTroops) {
+		for (Field field : neutralTroops.keySet()) {
+			getFieldByName(field.getName()).addNormalTroops(neutralTroops.get(field));
+		}
+	}
+	
+	/**
 	 * Get the field at the current mouse position by it's color.
 	 * Only works when the mouse is over a field of the board.
 	 * 

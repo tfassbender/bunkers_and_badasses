@@ -23,6 +23,12 @@ public class PlayerOrder implements Serializable {
 		this.players = players;
 	}
 	
+	public void merge(PlayerOrder playerOrder) {
+		this.order = playerOrder.order;
+		this.nextOrder = playerOrder.nextOrder;
+		this.move = playerOrder.move;
+	}
+	
 	/**
 	 * Select a random order for the first turn.
 	 * 
