@@ -12,7 +12,6 @@ Bunkers and Badasses - Tasks
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line
 	- fix the stream corrupted exception
 	- slider for zoom on board
-	- help dialogs need to be implemented
 	- implement the storing of the used resources
 	- implement hero and building functions
 	- implement storing and loading of the game in the database

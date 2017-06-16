@@ -95,6 +95,17 @@ public class GameTurnBonusManager implements Serializable {
 	}
 	
 	/**
+	 * Reload the variables of all turn bonuses because they might not be loaded.
+	 * 
+	 * The variables are loaded before the data was received from the database.
+	 */
+	public void reloadVariables() {
+		for (TurnBonus bonus : turnBonusesGame) {
+			bonus.loadVariables();
+		}
+	}
+	
+	/**
 	 * Select the turn bonus cards for the game.
 	 */
 	public void chooseTurnBonusForGame(int players) {

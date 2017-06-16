@@ -1192,7 +1192,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			//the bonus resources
 			result = statement.executeQuery(bonusQuery);
 			int[][] resources = turnBonusStorage.getResources();
-			if (result.next()) {
+			while (result.next()) {
 				resources[result.getInt(1)][TurnBonusStorage.CREDITS] = result.getInt(2);
 				resources[result.getInt(1)][TurnBonusStorage.AMMO] = result.getInt(3);
 				resources[result.getInt(1)][TurnBonusStorage.ERIDIUM] = result.getInt(4);

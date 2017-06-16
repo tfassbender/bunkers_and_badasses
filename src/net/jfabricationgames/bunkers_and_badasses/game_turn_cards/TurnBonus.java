@@ -66,7 +66,7 @@ public abstract class TurnBonus implements Serializable {
 		image = loader.loadImage(imagePath);
 	}
 	
-	protected void loadVariables() {
+	public void loadVariables() {
 		credits = storage.getResources()[bonusId][TurnBonusStorage.CREDITS];
 		ammo = storage.getResources()[bonusId][TurnBonusStorage.AMMO];
 		eridium = storage.getResources()[bonusId][TurnBonusStorage.ERIDIUM];

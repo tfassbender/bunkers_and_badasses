@@ -23,9 +23,7 @@ public class UserResourceManager implements Serializable{
 	private Map<User, Map<Integer, UserResource>> resourceUse;//store the resources the used used in every turn
 	
 	public UserResourceManager() {
-		startingCredits = Game.getGameVariableStorage().getStartCredits();
-		startingAmmo = Game.getGameVariableStorage().getStartAmmo();
-		startingEridium = Game.getGameVariableStorage().getStartEridium();
+		loadStartResources();
 	}
 	
 	public UserResourceManager(List<User> players, Game game) {
@@ -41,6 +39,12 @@ public class UserResourceManager implements Serializable{
 	public void merge(UserResourceManager manager) {
 		resources = manager.getResources();
 		resourceUse = manager.getResourceUse();
+	}
+	
+	public void loadStartResources() {
+		startingCredits = Game.getGameVariableStorage().getStartCredits();
+		startingAmmo = Game.getGameVariableStorage().getStartAmmo();
+		startingEridium = Game.getGameVariableStorage().getStartEridium();
 	}
 	
 	/**
