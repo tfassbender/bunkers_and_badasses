@@ -11,12 +11,12 @@ public class TurnGoalStrategy extends TurnGoal {
 		loadImage();
 		description = "<html>Strategie:<br/>"
 				+ "Nichts �bereilen. Strategie dauert seine Zeit. [Beim Beenden<br/>"
-				+ "der Runde erh�llt jeder Spieler so viele Punkte wie Spieler vor<br/>"
-				+ "ihm schon gepasst haben]</html>";
+				+ "der Runde erh�llt jeder Spieler zwei mal so viele Punkte wie<br/>"
+				+ "Spieler vor ihm schon gepasst haben]</html>";
 	}
 	
 	@Override
 	public void receivePointsPassing(User user, int passingOrder, int players) {
-		pointManager.addPoints(user, passingOrder-1);
+		pointManager.addPoints(user, 2*(passingOrder-1));
 	}
 }

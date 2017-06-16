@@ -14,7 +14,7 @@ public class TurnGoalTroopUnion extends TurnGoal {
 		description = "<html>Truppenverband:<br/>"
 				+ "Einer f�r alle; Und alle f�r mich [Alle Spieler erhallten am<br/>"
 				+ "Ende der Runde Punkte f�r ihren gr��ten Truppenzusammenschluss:<br/>"
-				+ "1 Punkt pro Truppe im Zusammenschluss (egal ob normale oder<br/>"
+				+ "2 Punkte pro Truppe im Zusammenschluss (egal ob normale oder<br/>"
 				+ "verst�rkte Einheit)]</html>";
 	}
 	
@@ -26,6 +26,6 @@ public class TurnGoalTroopUnion extends TurnGoal {
 				troops = Math.max(troops, field.getTroops().size());
 			}
 		}
-		pointManager.addPoints(user, troops);
+		pointManager.addPoints(user, 2*troops);
 	}
 }

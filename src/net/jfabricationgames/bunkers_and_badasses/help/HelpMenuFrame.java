@@ -81,6 +81,7 @@ public class HelpMenuFrame extends JFrame {
 		this.contents = contents;
 		buildHelpPanels(contents);
 		buildHelpTree(contents);
+		setHelpPanel("bunkers_and_badasses");
 	}
 	
 	/**
@@ -138,6 +139,11 @@ public class HelpMenuFrame extends JFrame {
 			CardLayout layout = (CardLayout) panel_card.getLayout();
 			layout.show(panel_card, node.getPanelName());	
 		}
+	}
+	
+	private void setHelpPanel(String name) {
+		CardLayout layout = (CardLayout) panel_card.getLayout();
+		layout.show(panel_card, name);
 	}
 	
 	private class JFGCellRenderer extends DefaultTreeCellRenderer {

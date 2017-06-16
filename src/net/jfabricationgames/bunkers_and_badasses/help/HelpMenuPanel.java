@@ -76,6 +76,7 @@ public class HelpMenuPanel extends JPanel {
 				panel = new ImagePanel(image);
 			}
 			catch (IllegalArgumentException ie) {
+				System.err.println("Couldn't load image: " + loader.getDefaultPathPrefix() + imagePath);
 				ie.printStackTrace();
 			}
 		}

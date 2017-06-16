@@ -12,13 +12,13 @@ public class TurnGoalWildHunt extends TurnGoal {
 		loadImage();
 		description = "<html>Gro�wildjagt:<br/>"
 				+ "Hast du das Gef�hl du hast zu viel Munition und zu<br/>"
-				+ "wenig Punkte? Dann baller ein paar Skags weg! [1 Punkt<br/>"
+				+ "wenig Punkte? Dann baller ein paar Skags weg! [2 Punkte<br/>"
 				+ "pro geg�teter neutraler Einheit]</html>";
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getAttackingPlayer().equals(user) && fight.getDefendingField().getAffiliation() == null && fight.getWinner() == Fight.ATTACKERS) {
-			pointManager.addPoints(user, fight.getDefendingStrength());
+			pointManager.addPoints(user, 2*fight.getDefendingStrength());
 		}
 	}
 }
