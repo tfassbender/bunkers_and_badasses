@@ -63,12 +63,13 @@ public class Board implements Serializable {
 	 */
 	public void merge(Board board) {
 		this.boardId = board.getBoardId();
-		this.fields = board.getFields();//images in Field are static and don't need to be reloaded
-		this.regions = board.getRegions();
+		//this.fields = board.getFields();//images in Field are static and don't need to be reloaded
+		//this.regions = board.getRegions();
 		//name, player min/max, robot and image wrappers don't need to be changed
-		this.game = board.getGame();
+		//this.game = board.getGame();
 		//reload the images of possible buildings on the field
 		for (Field field : fields) {
+			field.merge(board.getFieldByName(field.getName()));
 			field.getBuilding().loadImage();
 		}
 	}
@@ -325,6 +326,7 @@ public class Board implements Serializable {
 	 * 		The ObjectOutputStream that is used to write down the file.
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException {
+		storeImage = false;//TODO
 		if (storeImage) {
 			imageWrapper = new ImageIcon(baseImage);
 		}

@@ -14,9 +14,9 @@ public class TurnGoalArmAGeddon extends TurnGoal {
 		imagePath = "turn_goal_arm_a_geddon.png";
 		loadImage();
 		description = "<html>Arm-A-Geddon:<br/>"
-				+ "Dr. Zed braucht Ersatzk�rperteile. Daf�r m�ssen nur <br/>"
+				+ "Dr. Zed braucht Ersatzkörperteile. Dafür müssen nur <br/>"
 				+ "ein paar Leute sterben... [1 Punkt pro im Kampf fallender<br/>"
-				+ " Truppe (gegnerische und eigene Truppen; Punkte nur f�r <br/>"
+				+ " Truppe (gegnerische und eigene Truppen; Punkte nur für <br/>"
 				+ "den Angreifer)]</html>";
 	}
 	

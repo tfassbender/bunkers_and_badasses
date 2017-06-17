@@ -12,6 +12,6 @@ public class TurnBonusCredits extends TurnBonus {
 		imagePath = "turn_bonus_credits_2.png";
 		loadImage();
 		name = "Credits 2";
-		description = "<html>Zus�tzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[2] + " Credits zu Beginn der Runde.</html>";
+		description = "<html>Zusätzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[2] + " Credits zu Beginn der Runde.</html>";
 	}
 }

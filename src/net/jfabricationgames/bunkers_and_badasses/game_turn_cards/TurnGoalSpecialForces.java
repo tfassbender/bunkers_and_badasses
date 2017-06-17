@@ -11,7 +11,7 @@ public class TurnGoalSpecialForces extends TurnGoal {
 		imagePath = "turn_goal_special_forces.png";
 		loadImage();
 		description = "<html>Spezialeinheit:<br/>"
-				+ "Elitek�mpfer greifen ins Kampfgeschehen ein [3 Punkte f�r jede<br/>"
+				+ "Elitekämpfer greifen ins Kampfgeschehen ein [3 Punkte für jede<br/>"
 				+ "eingesetzte Heldenkarte (egal ob im Kampf oder als Zug)]</html>";
 	}
 	

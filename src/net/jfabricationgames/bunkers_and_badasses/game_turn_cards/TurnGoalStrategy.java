@@ -10,8 +10,8 @@ public class TurnGoalStrategy extends TurnGoal {
 		imagePath = "turn_goal_strategy.png";
 		loadImage();
 		description = "<html>Strategie:<br/>"
-				+ "Nichts �bereilen. Strategie dauert seine Zeit. [Beim Beenden<br/>"
-				+ "der Runde erh�llt jeder Spieler zwei mal so viele Punkte wie<br/>"
+				+ "Nichts Übereilen. Strategie dauert seine Zeit. [Beim Beenden<br/>"
+				+ "der Runde erhällt jeder Spieler zwei mal so viele Punkte wie<br/>"
 				+ "Spieler vor ihm schon gepasst haben]</html>";
 	}
 	

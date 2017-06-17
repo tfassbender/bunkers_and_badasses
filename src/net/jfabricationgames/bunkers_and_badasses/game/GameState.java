@@ -5,9 +5,9 @@ import java.io.Serializable;
 public enum GameState implements Serializable {
 	
 	PLAN("Planungsphase"),
-	ACT("Ausf�hrungsphase"),
+	ACT("Ausführungsphase"),
 	FIGHT("Kampf"),
-	SELECT_BONUS("Rundenbonus ausw�hlen"),
+	SELECT_BONUS("Rundenbonus auswählen"),
 	WAIT("Warten auf andere Spieler");
 	
 	private final String name;

@@ -12,7 +12,7 @@ public class TurnGoalBolwerk extends TurnGoal {
 		loadImage();
 		description = "<html>Bolwerk:<br/>"
 				+ "Haltet den Vormarsch der feindlichen Truppen auf!<br/>"
-				+ "[3 Punkte f�r jede erfolgreiche Verteidigung]</html>";
+				+ "[3 Punkte für jede erfolgreiche Verteidigung]</html>";
 	}
 	
 	@Override

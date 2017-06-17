@@ -11,7 +11,7 @@ public class TurnGoalBlitzkrieg extends TurnGoal {
 		loadImage();
 		description = "<html>Blitzkrieg:<br/>"
 				+ "Was dauert da so lange? Weiter jetzt! [Beim beenden der Runde<br/>"
-				+ "erh�llt jeder zwei mal Spieler so viele Punkte wie noch Spieler<br/>"
+				+ "erhällt jeder Spieler zwei mal so viele Punkte wie noch Spieler<br/>"
 				+ "vorhanden sind die noch nicht gepasst haben]</html>";
 	}
 	

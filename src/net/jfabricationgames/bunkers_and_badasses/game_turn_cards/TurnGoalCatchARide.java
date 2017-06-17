@@ -13,7 +13,7 @@ public class TurnGoalCatchARide extends TurnGoal {
 		loadImage();
 		description = "<html>Catch-A-Ride:<br/>"
 				+ "Lasst die Armeen nicht einschlafen! Etwas Bewegung muss sein!<br/>"
-				+ "[2 Punkt f�r jeden normalen Marsch; 3 Punkte f�r jeden weiten<br/>"
+				+ "[2 Punkt für jeden normalen Marsch; 3 Punkte für jeden weiten<br/>"
 				+ "Marsch (durch Catch-A-Rides oder Spezialeffekte)]</html>";
 	}
 	

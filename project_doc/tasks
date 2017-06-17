@@ -2,11 +2,12 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- character encoding
 	- open new dialogs centered to the game frame ?
-	- commands can't be added (nullpointer)
 	- support image in help menu is shown very small
-	- users don't seem to receive the bonuses from the turn bonuses
+	- user can select wrong commands on base fields
+	- two times the same card is chosen when starting with two heros
+	- somehow base images are sent (overwritten to no image send; check why images were sent)
+	- when merging the games after the plan phase there are no commands and no troops (reset problem?)  
 	
 - Next versions:
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line

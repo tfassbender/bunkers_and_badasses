@@ -259,7 +259,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		list_buildings_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_buildings_all.setViewportView(list_buildings_all);
 
-		fieldPanel = new FieldDescriptionPanel("Feld �bersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
 		panel_side_bar.add(fieldPanel, "cell 0 2 2 1,grow");
 		
 		JPanel panel_low_bar = new JPanel();
@@ -324,6 +324,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		panel_command.add(lblNeuerBefehl, "cell 0 4,alignx trailing");
 		
 		comboBox = new JComboBox<Command>(commandBoxModel);
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateField();
+			}
+		});
 		comboBox.setBackground(Color.GRAY);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command.add(comboBox, "cell 1 4 2 1,growx");
@@ -507,6 +512,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		if (confirm) {
 			game.getPlanManager().commit();
 			game.setState(GameState.WAIT);
+			game.getGameFrame().update();
 			disableAll();
 		}
 	}
@@ -539,7 +545,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 			}
 			catch (CommandException ce) {
 				ce.printStackTrace();
-				new ErrorDialog("Du hast nicht genug Resourcen um den Befehl zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+				new ErrorDialog(ce.getErrorText()).setVisible(true);
 			}
 		}
 	}

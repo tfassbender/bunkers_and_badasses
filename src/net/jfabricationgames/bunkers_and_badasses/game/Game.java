@@ -17,12 +17,12 @@ public class Game implements Serializable {
 	
 	private Board board;
 	private List<User> players;
-	private transient User localUser;
+	private User localUser;
 	private User startingPlayer;
 	private GameState gameState;
 	private PlayerOrder playerOrder;
 	private UserResourceManager resourceManager;
-	private transient UserPlanManager planManager;
+	private UserPlanManager planManager;
 	private transient TurnExecutionManager turnExecutionManager;
 	private GameTurnManager turnManager;
 	private GameTurnBonusManager gameTurnBonusManager;
@@ -75,7 +75,7 @@ public class Game implements Serializable {
 	public void merge(Game newData) {
 		if (board != null) {
 			//maybe the board doesn't exist on start
-			board.merge(newData.getBoard());			
+			board.merge(newData.getBoard());
 		}
 		else {
 			board = newData.getBoard();
@@ -92,6 +92,10 @@ public class Game implements Serializable {
 		colorManager.merge(newData.getColorManager());
 		skillProfileManager.merge(newData.getSkillProfileManager());
 		fightManager.merge(newData.getFightManager());
+		//update the frames
+		if (gameFrame != null) {
+			gameFrame.update();			
+		}
 	}
 	
 	/**
@@ -120,7 +124,7 @@ public class Game implements Serializable {
 		planManager.countCommands();
 		gameFrame.getBoardOverviewFrame().setBoard(board);
 	}
-
+	
 	public JFGClient getClient() {
 		return client;
 	}

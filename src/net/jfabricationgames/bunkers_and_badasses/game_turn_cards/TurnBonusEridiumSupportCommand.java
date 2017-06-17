@@ -11,7 +11,7 @@ public class TurnBonusEridiumSupportCommand extends TurnBonus {
 		loadVariables();
 		imagePath = "turn_bonus_eridium_1_support_command.png";
 		loadImage();
-		name = "Eridium - Unterst�tzungs Befehl";
-		description = "<html>Zus�tzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[1] + " Eridium zu Beginn der Runde.<br/>1 zus�tzlicher Unterst�tzungsbefehl.</html>";
+		name = "Eridium - Unterstützungs Befehl";
+		description = "<html>Zusätzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[1] + " Eridium zu Beginn der Runde.<br/>1 zusätzlicher Unterstützungsbefehl.</html>";
 	}
 }

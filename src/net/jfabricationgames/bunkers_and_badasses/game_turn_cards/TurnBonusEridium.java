@@ -12,6 +12,6 @@ public class TurnBonusEridium extends TurnBonus {
 		imagePath = "turn_bonus_eridium_2.png";
 		loadImage();
 		name = "Eridium 2";
-		description = "<html>Zus�tzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[2] + " Eridium zu Beginn der Runde.</html>";
+		description = "<html>Zusätzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[2] + " Eridium zu Beginn der Runde.</html>";
 	}
 }

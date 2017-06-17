@@ -327,7 +327,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		panel_turn_bonus.setBackground(Color.GRAY);
 		panel_1.add(panel_turn_bonus, "cell 1 1,grow");
 		
-		fieldPanel = new FieldDescriptionPanel("Feld �bersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
 		panel_side_bar.add(fieldPanel, "cell 0 2,grow");
 		
 		JPanel panel_low_bar = new JPanel();
@@ -585,7 +585,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	public void receiveSelectedHero(Hero hero) {
 		//TODO receive the selected hero card (play hero card)
 	}
-
+	
 	@Override
 	public void receiveConfirmAnswer(boolean confirm, int type) {
 		if (confirm) {
@@ -638,7 +638,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		else {
 			txtCommand.setText("");
 		}
-		if (game.getGameState() == GameState.ACT && selectedField.getAffiliation().equals(game.getLocalUser())) {
+		if (game.getGameState() == GameState.ACT && selectedField != null && selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser())) {
 			btnSpielzugAusfhren.setEnabled(true);
 			btnEinsetzen.setEnabled(true);
 		}

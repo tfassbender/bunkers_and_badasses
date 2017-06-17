@@ -14,7 +14,7 @@ public class TurnBonusCreditsFight extends TurnBonus {
 		imagePath = "turn_bonus_credits_1_fight.png";
 		loadImage();
 		name = "Credits - Kampf";
-		description = "<html>Zus�tzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[1] + " Credits zu Beginn der Runde.<br/>2 Punkte Bonus f�r jeden gewonnenen Kampf.</html>";
+		description = "<html>Zusätzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[1] + " Credits zu Beginn der Runde.<br/>2 Punkte Bonus für jeden gewonnenen Kampf.</html>";
 	}
 	
 	@Override

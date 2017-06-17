@@ -553,7 +553,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	public void turnBonusCardSelected(TurnBonus bonus) {
 		selectedBonus = bonus;
 		txtBonus.setText(bonus.getName());
-		txtrBonusDescription.setText(bonus.getDescription());
+		txtrBonusDescription.setText(bonus.getDescriptionNoHtml());
 	}
 	
 	private void addGameTurns(JPanel panel) {

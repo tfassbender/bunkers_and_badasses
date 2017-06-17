@@ -14,8 +14,8 @@ public class TurnBonusEridiumSupport extends TurnBonus {
 		loadVariables();
 		imagePath = "turn_bonus_eridium_1_support.png";
 		loadImage();
-		name = "Eridium - Unterst�tzung";
-		description = "<html>Zus�tzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[1] + " Eridium zu Beginn der Runde.<br/>1 Punkt Bonus f�r jede Unterst�tzung.</html>";
+		name = "Eridium - Unterstützung";
+		description = "<html>Zusätzliche " + SkillProfileManager.ERIDIUM_SKILL_LEVEL[1] + " Eridium zu Beginn der Runde.<br/>1 Punkt Bonus für jede Unterst�tzung.</html>";
 	}
 	
 	@Override

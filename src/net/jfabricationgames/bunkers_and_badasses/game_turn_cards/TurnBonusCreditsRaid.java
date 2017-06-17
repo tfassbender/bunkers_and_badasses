@@ -11,7 +11,7 @@ public class TurnBonusCreditsRaid extends TurnBonus {
 		loadVariables();
 		imagePath = "turn_bonus_credits_1_raid_command.png";
 		loadImage();
-		name = "Credits - �berfall Befehl";
-		description = "<html>Zus�tzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[1] + " Credits zu Beginn der Runde.<br/>1 zus�tzlicher �berfallbefehl</html>";
+		name = "Credits - Überfall Befehl";
+		description = "<html>Zusätzliche " + SkillProfileManager.CREDITS_SKILL_LEVEL[1] + " Credits zu Beginn der Runde.<br/>1 zusätzlicher Überfallbefehl</html>";
 	}
 }

@@ -30,6 +30,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStorageExcept
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
@@ -199,6 +200,7 @@ public class GameStartDialog extends JDialog {
 		message.setBoardId(board.getBoardId());
 		message.setPlayers(players);
 		message.setLoaded(false);
+		message.setStartingPlayer(UserManager.getLocalUser());
 		client.sendMessage(message);
 		//load the board from the server
 		/*BoardRequestMessage boardRequest = new BoardRequestMessage();
@@ -251,6 +253,7 @@ public class GameStartDialog extends JDialog {
 		message.setBoardId(board.getBoardId());
 		message.setPlayers(players);
 		message.setLoaded(true);
+		message.setStartingPlayer(UserManager.getLocalUser());
 		client.sendMessage(message);
 		//load the board (image) from the server
 		BoardRequestMessage boardRequest = new BoardRequestMessage();

@@ -79,19 +79,21 @@ public class UserPlanManager implements Serializable {
 	 */
 	public void addCommand(Field field, Command command) throws CommandException {
 		if (fieldCommands.get(field) != null) {
-			throw new CommandException("Can't add a commmand. The field already has a command.");
+			throw new CommandException("Can't add a commmand. The field already has a command.", "Du kannst nicht zwei Befehle an ein Feld erteilen.\n\nDie Truppen haben es schon schwer genug sich einen Befehl zu merken");
 		}
 		if (commands[command.getIdentifier()] <= 0) {
-			throw new CommandException("Can't add this command. No more commands of this type left.");
+			throw new CommandException("Can't add this command. No more commands of this type left.", "Du hast keine Befehle von diesem Typ mehr.\n\nBefehle wachsen nunmal nicht an Bäumen. Kauf neue!");
 		}
 		try {
 			currentResource.payCommand(command, field);
 		}
 		catch (ResourceException re) {
-			throw new CommandException("The command can't be payed.", re);
+			throw new CommandException("The command can't be payed.", re, "Du hast nicht genug Resourcen um den Befehl zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.");
 		}
 		fieldCommands.put(field, command.getInstance());
 		commands[command.getIdentifier()]--;
+		//also add the command to the field to let the user see what he does
+		field.setCommand(command);
 	}
 	
 	/**
@@ -99,11 +101,13 @@ public class UserPlanManager implements Serializable {
 	 */
 	public void deleteCommand(Field field) throws CommandException {
 		if (fieldCommands.get(field) == null) {
-			throw new CommandException("Can't delete a command. No command found on this field.");
+			throw new CommandException("Can't delete a command. No command found on this field.", "Du kannst keinen Befehl löschen wenn kein Befehl da ist.");
 		}
 		currentResource.payBackCommand(fieldCommands.get(field), field);
 		commands[fieldCommands.get(field).getIdentifier()]++;
 		fieldCommands.put(field, null);
+		//remove the command from the field
+		field.setCommand(null);
 	}
 	
 	/**
@@ -135,20 +139,25 @@ public class UserPlanManager implements Serializable {
 	public void mergeGame(Game game) {
 		Map<Field, Command> fieldCommands = game.getPlanManager().getFieldCommands();
 		for (Field field : fieldCommands.keySet()) {
-			allCommands.put(field, fieldCommands.get(field));
+			//find the field reference in this game
+			Field localField = game.getBoard().getFieldByName(field.getName());
+			allCommands.put(localField, fieldCommands.get(field));
 		}
+		//add the game's local user (not this game's local user) to the committed map
 		playerCommitted.put(game.getLocalUser(), game.getResourceManager().getResources().get(game.getLocalUser()));
 		if (playerCommitted.size() == game.getPlayers().size()) {
 			//all players have committed their planes -> apply the changes and send an update
 			for (Field field : allCommands.keySet()) {
 				field.setCommand(allCommands.get(field));
 			}
-			this.game.getResourceManager().receiveChanges(playerCommitted);
+			game.getResourceManager().receiveChanges(playerCommitted);
 			game.setState(GameState.ACT);
 			GameTransferMessage message = new GameTransferMessage();
 			message.setGame(game);
-			message.setType(GameTransferMessage.TransferType.TURN_OVER);//start the next (first) turn (broadcasted)
-			game.getClient().sendMessage(message);
+			message.setType(GameTransferMessage.TransferType.TURN_OVER);//start the next (first) turn (broadcasted) (turn is not really over but the other game knows what's to do)
+			this.game.getClient().sendMessage(message);
+			//merge it to the local game
+			this.game.merge(game);
 		}
 	}
 	

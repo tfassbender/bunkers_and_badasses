@@ -267,18 +267,21 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	}
 	
 	private void interpreteGameTransferMessage(GameTransferMessage message, JFGConnection connection) {
+		BunkersAndBadassesConnectionGroup group = ((BunkersAndBadassesConnectionGroup) connection.getGroup());
 		switch (message.getType()) {
 			case NEW_GAME:
 				//server.addResources(message.getGame());
 				server.sendGameTransferMessage(message);
 				break;
 			case TURN_OVER:
-				//a player's turn is over; send a broadcast 
-				connection.getGroup().sendMessage(message, connection);
+				//a player's turn is over; send a broadcast
+				group.resetAll();
+				group.sendMessage(message, connection);
 				break;
 			case PLANING_COMMIT:
 				//a player has ended his planing phase; send to the starting player
-				((BunkersAndBadassesConnectionGroup) connection.getGroup()).getStartingPlayerConnection().sendMessage(message);
+				group.getStartingPlayerConnection().resetOutput();
+				group.sendToStartingPlayer(message);
 				break;
 		}
 	}

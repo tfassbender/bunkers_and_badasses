@@ -41,7 +41,6 @@ import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgdatabaselogin.message.Cryptographer;
 import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
-import net.jfabricationgames.jfgserver.server.JFGConnectionGroup;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 public class BunkersAndBadassesServer extends JFGLoginServer {
@@ -698,10 +697,12 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		for (User player : message.getPlayers()) {
 			connections.add(userMap.get(player));
 		}
-		JFGConnectionGroup group = createGroup(connections);
+		BunkersAndBadassesConnectionGroup group = (BunkersAndBadassesConnectionGroup) createGroup(connections);
 		for (JFGConnection connection : connections) {
 			connection.setGroup(group);
 		}
+		group.setStartingPlayer(message.getStartingPlayer());
+		group.setStartingPlayerConnection(userMap.get(message.getStartingPlayer()));
 	}
 	
 	/**

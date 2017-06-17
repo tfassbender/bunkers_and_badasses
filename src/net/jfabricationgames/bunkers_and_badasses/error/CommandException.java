@@ -1,6 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.error;
 
-public class CommandException extends RuntimeException {
+public class CommandException extends BunkersAndBadassesException {
 
 	private static final long serialVersionUID = -3947649698414550772L;
 	
@@ -9,5 +9,11 @@ public class CommandException extends RuntimeException {
 	}
 	public CommandException(String message) {
 		super(message);
+	}
+	public CommandException(String message, String errorText) {
+		super(message, errorText);
+	}
+	public CommandException(String message, Throwable cause, String errorText) {
+		super(message, cause, errorText);
 	}
 }

@@ -16,6 +16,8 @@ public class GameStartMessage implements JFGClientMessage, JFGServerMessage {
 	
 	private List<User> players;
 	
+	private User startingPlayer;
+	
 	public int getGameId() {
 		return gameId;
 	}
@@ -42,5 +44,12 @@ public class GameStartMessage implements JFGClientMessage, JFGServerMessage {
 	}
 	public void setPlayers(List<User> players) {
 		this.players = players;
+	}
+	
+	public User getStartingPlayer() {
+		return startingPlayer;
+	}
+	public void setStartingPlayer(User startingPlayer) {
+		this.startingPlayer = startingPlayer;
 	}
 }

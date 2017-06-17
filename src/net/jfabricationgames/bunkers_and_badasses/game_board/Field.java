@@ -62,6 +62,13 @@ public class Field implements Serializable {
 		building = new EmptyBuilding();
 	}
 	
+	public void merge(Field field) {
+		this.affiliation = field.getAffiliation();
+		this.building = field.getBuilding();
+		this.command = field.getCommand();
+		this.troops = field.getTroops();
+	}
+	
 	@Override
 	public String toString() {
 		return name;
@@ -137,6 +144,10 @@ public class Field implements Serializable {
 		//draw the user color
 		g.setColor(color.getColor());
 		g.fillOval((int) playerMarkerPosition.getX(), (int) playerMarkerPosition.getY(), 15, 15);
+		//draw the command
+		if (command != null) {
+			g.drawImage(command.getImage(), (int) commandMarkerPosition.getX(), (int) commandMarkerPosition.getY(), 50, 50, null); 
+		}
 	}
 	
 	/**

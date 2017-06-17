@@ -12,7 +12,7 @@ public class TurnGoalRecruit extends TurnGoal {
 		description = "<html>Rekrutierung:<br/>"
 				+ "Viele neue Selbstmordkandidaten sind auf Pandora eingetroffen,<br/>"
 				+ "die Rekrutiert werden wollen. [1 Punkt pro rekrutierter oder<br/>"
-				+ "aufger�steter Einheit]</html>";
+				+ "aufgerüsteter Einheit]</html>";
 	}
 	
 	@Override

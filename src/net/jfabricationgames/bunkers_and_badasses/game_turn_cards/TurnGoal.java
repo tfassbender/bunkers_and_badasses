@@ -68,6 +68,13 @@ public abstract class TurnGoal implements Serializable {
 		return description;
 	}
 	
+	/**
+	 * Get a description without html tags.
+	 */
+	public String getDescriptionNoHtml() {
+		return description.replace("<html>", "").replace("</html>", "").replace("<br/>", "").replace("<br>", "");
+	}
+	
 	public BufferedImage getImage() {
 		return image;
 	}

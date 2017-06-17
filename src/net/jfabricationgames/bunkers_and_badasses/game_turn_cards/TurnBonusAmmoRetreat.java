@@ -11,7 +11,7 @@ public class TurnBonusAmmoRetreat extends TurnBonus {
 		loadVariables();
 		imagePath = "turn_bonus_ammo_1_retreat_command.png";
 		loadImage();
-		name = "Munition - R�ckzugs Befehl";
-		description = "<html>Zus�tzliche " + SkillProfileManager.AMMO_SKILL_LEVEL[1] + " Munition zu Beginn der Runde.<br/>1 zus�tzlicher R�ckzugsbefehl.</html>";
+		name = "Munition - Rückzugs Befehl";
+		description = "<html>Zusätzliche " + SkillProfileManager.AMMO_SKILL_LEVEL[1] + " Munition zu Beginn der Runde.<br/>1 zusätzlicher Rückzugsbefehl.</html>";
 	}
 }

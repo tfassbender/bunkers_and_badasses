@@ -12,10 +12,10 @@ public class TurnGoalTroopUnion extends TurnGoal {
 		imagePath = "turn_goal_troop_union.png";
 		loadImage();
 		description = "<html>Truppenverband:<br/>"
-				+ "Einer f�r alle; Und alle f�r mich [Alle Spieler erhallten am<br/>"
-				+ "Ende der Runde Punkte f�r ihren gr��ten Truppenzusammenschluss:<br/>"
+				+ "Einer für alle; Und alle für mich [Alle Spieler erhallten am<br/>"
+				+ "Ende der Runde Punkte für ihren größten Truppenzusammenschluss:<br/>"
 				+ "2 Punkte pro Truppe im Zusammenschluss (egal ob normale oder<br/>"
-				+ "verst�rkte Einheit)]</html>";
+				+ "verstärkte Einheit)]</html>";
 	}
 	
 	@Override
