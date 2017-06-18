@@ -38,10 +38,44 @@ public class BunkersAndBadassesConnectionGroup extends DefaultJFGConnectionGroup
 	}
 	
 	/**
+	 * Send a broadcast unshared.
+	 * 
+	 * @param message
+	 * 		The broadcast message.
+	 */
+	public <T extends JFGClientMessage> void sendGroupBroadcastUnshared(T message) {
+		for (JFGConnection con : getConnections()) {
+			con.sendMessageUnshared(message);
+		}
+	}
+	/**
+	 * Send a message unshared.
+	 * 
+	 * @param message
+	 * 		The message.
+	 * 
+	 * @param fromConnection
+	 * 		The sending connection.
+	 */
+	public <T extends JFGClientMessage> void sendMessageUnshared(T message, JFGConnection fromConnection) {
+		for (JFGConnection con : getConnections()) {
+			if (!con.equals(fromConnection)) {
+				con.sendMessageUnshared(message);
+			}
+		}
+	}
+	
+	/**
 	 * Send a message to the starting player of this group.
 	 */
 	public void sendToStartingPlayer(JFGClientMessage message) {
 		startingPlayerConnection.sendMessage(message);
+	}
+	/**
+	 * Send an unshared message to the starting player.
+	 */
+	public void sendToStartingPlayerUnshared(JFGClientMessage message) {
+		startingPlayerConnection.sendMessageUnshared(message);
 	}
 	
 	public User getStartingPlayer() {

@@ -10,7 +10,8 @@ public class RetreatCommand extends Command {
 		executable = false;
 		removable = true;
 		identifier = UserPlanManager.COMMAND_RETREAT;
-		image = imageLoader.loadImage("marker_retreat.png");
+		imagePath = "marker_retreat.png";
+		loadImage();
 		name = "Zurückziehen";
 		loadVariables();
 	}

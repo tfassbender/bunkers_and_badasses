@@ -276,11 +276,13 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			case TURN_OVER:
 				//a player's turn is over; send a broadcast
 				group.resetAll();
-				group.sendMessage(message, connection);
+				group.sendMessageUnshared(message, connection);
 				break;
 			case PLANING_COMMIT:
 				//a player has ended his planing phase; send to the starting player
+				//group.resetAll();
 				group.getStartingPlayerConnection().resetOutput();
+				//group.sendToStartingPlayerUnshared(message);
 				group.sendToStartingPlayer(message);
 				break;
 		}

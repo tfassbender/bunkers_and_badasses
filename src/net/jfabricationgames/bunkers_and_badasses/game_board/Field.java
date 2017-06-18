@@ -66,6 +66,9 @@ public class Field implements Serializable {
 		this.affiliation = field.getAffiliation();
 		this.building = field.getBuilding();
 		this.command = field.getCommand();
+		if (command != null) {
+			this.command.loadImage();//reload the image that was not sent			
+		}
 		this.troops = field.getTroops();
 	}
 	

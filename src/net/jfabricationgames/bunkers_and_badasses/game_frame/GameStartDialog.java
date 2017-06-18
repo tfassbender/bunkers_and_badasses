@@ -44,6 +44,7 @@ public class GameStartDialog extends JDialog {
 	private Board board;
 	private int gameId = -1;
 	private Game game;
+	private User startingPlayer;
 	
 	private BufferedImage boardImage;
 	
@@ -147,6 +148,9 @@ public class GameStartDialog extends JDialog {
 	public void receiveGame(Game game) {
 		this.game = new Game(client, game.getPlayers());
 		this.game.merge(game);//merge the game to keep the transient fields
+		if (game.getStartingPlayer() == null) {
+			game.setStartingPlayer(startingPlayer);
+		}
 		if (board != null && gameId != -1) {
 			startGameFrame();
 		}
@@ -216,6 +220,7 @@ public class GameStartDialog extends JDialog {
 		client.sendMessage(creationMessage);
 		//create a game object
 		Game game = new Game(client, players);
+		game.setStartingPlayer(UserManager.getLocalUser());
 		//board and id are not sent to the server (added later by the clients)
 		//resources are added by the server because of the skills
 		GameTransferMessage gameTransferMessage = new GameTransferMessage();
@@ -297,11 +302,13 @@ public class GameStartDialog extends JDialog {
 	 * @param overview
 	 * 		The GameOverview to identify the game that is to be loaded (or null if the game is new).
 	 */
-	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview, SkillProfileManager skillProfileManager, Board board) {
+	public void startGame(JFGClient client, int boardId, int players, boolean loadedGame, GameOverview overview, 
+			SkillProfileManager skillProfileManager, Board board, User startingPlayer) {
 		this.client = client;
 		this.isLoaded = loadedGame;
 		this.skillProfileManager = skillProfileManager;
 		this.boardImage = board.getBaseImage();
+		this.startingPlayer = startingPlayer;
 		BunkersAndBadassesClientInterpreter interpreter = changeClientInterpreter(client);
 		GameStore gameStore = interpreter.getGameStore();
 		if (loadedGame) {

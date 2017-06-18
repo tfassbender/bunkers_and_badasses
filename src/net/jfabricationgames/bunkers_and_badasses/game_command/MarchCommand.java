@@ -10,7 +10,8 @@ public class MarchCommand extends Command {
 		executable = true;
 		removable = false;
 		identifier = UserPlanManager.COMMAND_MARCH;
-		image = imageLoader.loadImage("marker_march.png");
+		imagePath = "marker_march.png";
+		loadImage();
 		name = "Angreifen";
 		loadVariables();
 	}

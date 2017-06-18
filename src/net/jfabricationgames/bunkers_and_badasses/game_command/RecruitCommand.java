@@ -14,7 +14,8 @@ public class RecruitCommand extends Command {
 		identifier = UserPlanManager.COMMAND_RECRUIT;
 		executionBuildings.add(ArschgaulsPalace.class);
 		executionBuildings.add(MoxxisTavern.class);
-		image = imageLoader.loadImage("marker_recruit.png");
+		imagePath = "marker_recruit.png";
+		loadImage();
 		name = "Rekrutieren";
 		loadVariables();
 	}

@@ -472,7 +472,7 @@ public class MainMenuFrame extends JFrame {
 				board = b;
 			}
 		}
-		requestDialogs.get(startingPlayer).startGame(board, boardId, players, loadedGame);
+		requestDialogs.get(startingPlayer).startGame(board, startingPlayer, boardId, players, loadedGame);
 	}
 	
 	public void receiveAccoutUpdateAnswer(boolean answer, String username) {

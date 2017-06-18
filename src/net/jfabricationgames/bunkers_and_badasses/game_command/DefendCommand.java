@@ -12,7 +12,8 @@ public class DefendCommand extends Command {
 		removable = false;
 		identifier = UserPlanManager.COMMAND_DEFEND;
 		executionBuildings.add(ArschgaulsPalace.class);
-		image = imageLoader.loadImage("marker_defend.png");
+		imagePath = "marker_defend.png";
+		loadImage();
 		name = "Verteidigen";
 		loadVariables();
 	}

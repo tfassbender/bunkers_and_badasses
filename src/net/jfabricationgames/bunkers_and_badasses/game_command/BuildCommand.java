@@ -10,7 +10,8 @@ public class BuildCommand extends Command {
 		executable = true;
 		removable = true;
 		identifier = UserPlanManager.COMMAND_BUILD;
-		image = imageLoader.loadImage("marker_build.png");
+		imagePath = "marker_build.png";
+		loadImage();
 		name = "Aufbauen";
 		loadVariables();
 	}

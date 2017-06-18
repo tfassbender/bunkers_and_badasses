@@ -173,11 +173,11 @@ public class GameRequestDialog extends JFrame {
 		addInvitedPlayers(invitedUsers, invitingUser);
 	}
 	
-	public void startGame(Board board, int boardId, int players, boolean loadedGame) {
+	public void startGame(Board board, User startingPlayer, int boardId, int players, boolean loadedGame) {
 		GameStartDialog startDialog = new GameStartDialog();
 		startDialog.setVisible(true);
 		mainMenu.dispose();
-		startDialog.startGame(client, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager(), board);
+		startDialog.startGame(client, boardId, players, loadedGame, overview, mainMenu.getSkillProfileManager(), board, startingPlayer);
 	}
 	
 	private void addInvitedPlayers(List<User> players, User invitingPlayer) {

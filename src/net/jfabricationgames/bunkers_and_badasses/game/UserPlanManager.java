@@ -125,7 +125,8 @@ public class UserPlanManager implements Serializable {
 			GameTransferMessage message = new GameTransferMessage();
 			message.setGame(game);
 			message.setType(GameTransferMessage.TransferType.PLANING_COMMIT);
-			game.getClient().sendMessage(message);			
+			game.getClient().resetOutput();//reset before sending a game
+			game.getClient().sendMessageUnshared(message);
 		}
 		fieldCommands = new HashMap<Field, Command>();
 	}
@@ -140,7 +141,7 @@ public class UserPlanManager implements Serializable {
 		Map<Field, Command> fieldCommands = game.getPlanManager().getFieldCommands();
 		for (Field field : fieldCommands.keySet()) {
 			//find the field reference in this game
-			Field localField = game.getBoard().getFieldByName(field.getName());
+			Field localField = this.game.getBoard().getFieldByName(field.getName());
 			allCommands.put(localField, fieldCommands.get(field));
 		}
 		//add the game's local user (not this game's local user) to the committed map
@@ -149,15 +150,18 @@ public class UserPlanManager implements Serializable {
 			//all players have committed their planes -> apply the changes and send an update
 			for (Field field : allCommands.keySet()) {
 				field.setCommand(allCommands.get(field));
+				field.getCommand().loadImage();
 			}
-			game.getResourceManager().receiveChanges(playerCommitted);
-			game.setState(GameState.ACT);
+			this.game.getResourceManager().receiveChanges(playerCommitted);
+			this.game.setState(GameState.ACT);
 			GameTransferMessage message = new GameTransferMessage();
-			message.setGame(game);
+			message.setGame(this.game);
 			message.setType(GameTransferMessage.TransferType.TURN_OVER);//start the next (first) turn (broadcasted) (turn is not really over but the other game knows what's to do)
+			this.game.getClient().resetOutput();
 			this.game.getClient().sendMessage(message);
+			this.game.getGameFrame().update();
 			//merge it to the local game
-			this.game.merge(game);
+			//this.game.merge(game);
 		}
 	}
 	

@@ -11,7 +11,8 @@ public class SupportCommand extends Command {
 		removable = false;
 		support = true;
 		identifier = UserPlanManager.COMMAND_SUPPORT;
-		image = imageLoader.loadImage("marker_support.png");
+		imagePath = "marker_support.png";
+		loadImage();
 		name = "Unterstützen";
 		loadVariables();
 	}

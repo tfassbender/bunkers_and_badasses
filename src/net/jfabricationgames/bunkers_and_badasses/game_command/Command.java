@@ -19,8 +19,9 @@ public abstract class Command implements Serializable {
 	protected boolean removable;//can be removed by a raid command
 	protected boolean support;
 	protected List<Class<? extends Building>> executionBuildings;//a list of buildings that can execute the command without troops
-	protected BufferedImage image;
+	protected transient BufferedImage image;
 	protected int identifier;
+	protected String imagePath;
 	
 	protected int costsCredits;
 	protected int costsAmmo;
@@ -45,6 +46,10 @@ public abstract class Command implements Serializable {
 		costsAmmo = storage.getCosts()[identifier][CommandStorage.AMMO];
 		costDependencyCredits = storage.getDependencies()[identifier][CommandStorage.CREDITS];
 		costDependencyAmmo = storage.getDependencies()[identifier][CommandStorage.AMMO];
+	}
+	
+	public void loadImage() {
+		image = imageLoader.loadImage(imagePath);
 	}
 	
 	@Override

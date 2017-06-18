@@ -10,7 +10,8 @@ public class RaidCommand extends Command {
 		executable = true;
 		removable = true;
 		identifier = UserPlanManager.COMMAND_RAID;
-		image = imageLoader.loadImage("marker_raid.png");
+		imagePath = "marker_raid.png";
+		loadImage();
 		name = "Überfallen";
 		loadVariables();
 	}

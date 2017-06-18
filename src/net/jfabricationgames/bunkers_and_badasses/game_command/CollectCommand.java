@@ -13,7 +13,8 @@ public class CollectCommand extends Command {
 		executable = true;
 		removable = true;
 		identifier = UserPlanManager.COMMAND_COLLECT;
-		image = imageLoader.loadImage("marker_mine.png");
+		imagePath = "marker_mine.png";
+		loadImage();
 		name = "Resourcen";
 		loadVariables();
 	}

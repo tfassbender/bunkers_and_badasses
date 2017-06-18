@@ -7,7 +7,11 @@ Bunkers and Badasses - Tasks
 	- user can select wrong commands on base fields
 	- two times the same card is chosen when starting with two heros
 	- somehow base images are sent (overwritten to no image send; check why images were sent)
-	- when merging the games after the plan phase there are no commands and no troops (reset problem?)  
+	- when merging the games after the plan phase there are no commands and no troops (reset problem?)
+	- game request can't be sent when an error in the dialog once occurred
+	- can't go on in PreGameSelection when user chooses base before other user confirms his skill
+	- when merging and sending everything after the planing phase the turn bonus image seems to disappear
+	- the start user is not set in the game
 	
 - Next versions:
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line
