@@ -187,7 +187,7 @@ public class UserResource implements Serializable {
 	}
 	
 	public void payHeroCards(int cards) throws ResourceException {
-		pay(new int[] {0, 0, Game.getGameVariableStorage().getHeroCardCosts()});
+		pay(new int[] {0, 0, Game.getGameVariableStorage().getHeroCardCosts()*cards});
 	}
 	
 	public void payAdditionalCommand() throws ResourceException {

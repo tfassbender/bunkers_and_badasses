@@ -42,6 +42,7 @@ public class GameTurnManager implements Serializable {
 		playerOrder.nextTurn();
 		resourceManager.collectTurnStartResources();
 		resourceManager.payFixCosts();
+		game.getHeroCardManager().resetHeroCardsTaken();
 		turn++;
 		if (turn > numTurns) {
 			//TODO end game

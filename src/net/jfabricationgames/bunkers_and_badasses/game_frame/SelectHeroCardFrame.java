@@ -2,15 +2,12 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -23,13 +20,16 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.error.BunkersAndBadassesException;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
@@ -38,8 +38,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class SelectHeroCardFrame extends JFrame {
 	
@@ -57,15 +55,15 @@ public class SelectHeroCardFrame extends JFrame {
 	
 	private HeroSelectionListener selectionListener;
 	
-	private List<HeroCardPanel> heroCards;
-	
 	private DefaultListModel<Hero> heroListModel = new DefaultListModel<Hero>();
 	private JButton btnAuswhlen;
 	private JTextArea txtrSpecialeffect;
 	private JList<Hero> list_heroes;
 	private JTextField txtKosten;
-	private JPanel panel_hero_cards;
 	private JSpinner spinner;
+	private ImagePanel panel_hero_image;
+	private ResourceInfoPanel panel_resources;
+	private JButton btnRekrutieren;
 	
 	public SelectHeroCardFrame(Game game, boolean cardPlayable) {
 		addFocusListener(new FocusAdapter() {
@@ -78,8 +76,8 @@ public class SelectHeroCardFrame extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
-		setBounds(100, 100, 1000, 550);
-		setMinimumSize(new Dimension(1000, 500));
+		setBounds(100, 100, 601, 700);
+		//setMinimumSize(new Dimension(1000, 500));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -89,7 +87,7 @@ public class SelectHeroCardFrame extends JFrame {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.GRAY);
 			contentPanel.add(panel, "cell 0 0,grow");
-			panel.setLayout(new MigLayout("", "[150px,grow][50px,grow][200px,grow][250px,grow]", "[300px,grow][300px,grow]"));
+			panel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[300px,grow][150px,grow][150px,grow]"));
 			
 			JPanel panel_heroes = new JPanel();
 			panel_heroes.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -129,18 +127,16 @@ public class SelectHeroCardFrame extends JFrame {
 			btnAlleHeldenAnsehen.setBackground(Color.GRAY);
 			panel_heroes.add(btnAlleHeldenAnsehen, "cell 0 2");
 			
-			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			panel.add(scrollPane, "cell 1 0 3 1,grow");
-			
-			panel_hero_cards = new JPanel();
-			panel_hero_cards.setBackground(Color.GRAY);
-			scrollPane.setViewportView(panel_hero_cards);
+			panel_hero_image = new ImagePanel();
+			panel_hero_image.setAdaptSizeKeepProportion(true);
+			panel_hero_image.setCentered(true);
+			panel_hero_image.setBackground(Color.GRAY);
+			panel.add(panel_hero_image, "cell 1 0,grow");
 			
 			JPanel panel_selected = new JPanel();
 			panel_selected.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_selected.setBackground(Color.GRAY);
-			panel.add(panel_selected, "cell 0 1 2 1,grow");
+			panel.add(panel_selected, "cell 0 1 1 2,grow");
 			panel_selected.setLayout(new MigLayout("", "[][][50px][30px][grow]", "[][5px][][][5px][][grow][]"));
 			
 			JLabel lblHeld = new JLabel("Held:");
@@ -221,7 +217,7 @@ public class SelectHeroCardFrame extends JFrame {
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_1.setBackground(Color.GRAY);
-			panel.add(panel_1, "cell 2 1,grow");
+			panel.add(panel_1, "cell 1 1,grow");
 			panel_1.setLayout(new MigLayout("", "[][grow][40px][grow]", "[][15px][][][5px:n:5px][][grow]"));
 			
 			JLabel lblHeldenRekrutieren = new JLabel("Helden Rekrutieren");
@@ -254,14 +250,19 @@ public class SelectHeroCardFrame extends JFrame {
 			panel_1.add(txtKosten, "cell 1 3 3 1,growx");
 			txtKosten.setColumns(10);
 			
-			JButton btnRekrutieren = new JButton("Rekrutieren");
+			btnRekrutieren = new JButton("Rekrutieren");
+			btnRekrutieren.setEnabled(false);
 			btnRekrutieren.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					try {
 						int cards = (Integer) spinner.getValue();
 						game.getResourceManager().getResources().get(game.getLocalUser()).payHeroCards(cards);
 						try {
-							game.getHeroCardManager().takeCards(game.getLocalUser(), cards);						
+							game.getHeroCardManager().takeCards(game.getLocalUser(), cards);
+							game.getHeroCardManager().setHeroCardsTaken(game.getLocalUser());
+							updateComponents();
+							updateHeroList();
+							updateResources();
 						}
 						catch (BunkersAndBadassesException be) {
 							new ErrorDialog(be.getErrorText()).setVisible(true);
@@ -275,26 +276,23 @@ public class SelectHeroCardFrame extends JFrame {
 			btnRekrutieren.setBackground(Color.GRAY);
 			panel_1.add(btnRekrutieren, "cell 0 5 4 1,alignx center");
 			
-			JPanel panel_2 = new ResourceInfoPanel();
-			panel.add(panel_2, "cell 3 1,grow");
-			panel_2.setBackground(Color.GRAY);
+			panel_resources = new ResourceInfoPanel();
+			panel.add(panel_resources, "cell 1 2,grow");
+			panel_resources.setBackground(Color.GRAY);
 		}
-	}
-	
-	public void heroCardSelected(HeroCardPanel heroCard) {
-		selectedHero = heroCard.getHero();
-		list_heroes.setSelectedValue(selectedHero, false);
-		for (HeroCardPanel panel : heroCards) {
-			panel.setSelected(false);
-		}
-		heroCard.setSelected(true);
-		updateHero();
 	}
 	
 	public void update() {
+		updateComponents();
 		updateHeroList();
-		updateHeroCards();
 		updateHero();
+		updateResources();
+	}
+	
+	private void updateComponents() {
+		int cardsLeft = Game.getGameVariableStorage().getMaxHerosCards() - game.getHeroCardManager().getHeroCards(game.getLocalUser()).size();
+		spinner.setModel(new SpinnerNumberModel(1, 1, (cardsLeft < 1 ? 1 : cardsLeft), 1));
+		btnRekrutieren.setEnabled(!game.getHeroCardManager().isHeroCardsTaken(game.getLocalUser()) && cardsLeft >= 1);
 	}
 	
 	private void updateHeroList() {
@@ -304,21 +302,6 @@ public class SelectHeroCardFrame extends JFrame {
 		}
 		if (!heroListModel.contains(selectedHero)) {
 			selectedHero = null;
-		}
-	}
-	
-	private void updateHeroCards() {
-		List<Hero> heros = game.getHeroCardManager().getHeroCards(game.getLocalUser());
-		heroCards = new ArrayList<HeroCardPanel>(heros.size());
-		panel_hero_cards.removeAll();
-		panel_hero_cards.setLayout(new MigLayout("", "[175px][175px][175px][175px][175px]", "[grow]"));
-		for (int i = 0; i < heros.size(); i++) {
-			HeroCardPanel panel = new HeroCardPanel(heros.get(i));
-			panel.setCentered(true);
-			panel.setAdaptSizeKeepProportion(true);
-			panel.setBackground(Color.GRAY);
-			panel_hero_cards.add(panel, "cell " + i + " 0,grow");
-			heroCards.add(panel);
 		}
 	}
 	
@@ -334,7 +317,12 @@ public class SelectHeroCardFrame extends JFrame {
 			txtHeroAttack.setText(Integer.toString(selectedHero.getAttack()));
 			txtHerodefence.setText(Integer.toString(selectedHero.getDefence()));
 			txtrSpecialeffect.setText(selectedHero.getEffectDescription());
+			panel_hero_image.setImage(selectedHero.getCardImage());
 		}
+	}
+	
+	private void updateResources() {
+		panel_resources.updateResources(game, game.getLocalUser());
 	}
 	
 	private void selectHero() {

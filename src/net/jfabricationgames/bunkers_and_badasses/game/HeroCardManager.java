@@ -54,6 +54,8 @@ public class HeroCardManager implements Serializable {
 	
 	private Map<User, List<Hero>> heroCards;
 	
+	private Map<User, Boolean> heroCardsTaken;
+	
 	private List<Hero> heroCardStack;
 	
 	private final int maxCardsPerPlayer;
@@ -61,8 +63,9 @@ public class HeroCardManager implements Serializable {
 	public HeroCardManager() {
 		maxCardsPerPlayer = Game.getGameVariableStorage().getMaxHerosCards();
 		heroCards = new HashMap<User, List<Hero>>();
+		heroCardsTaken = new HashMap<User, Boolean>();
 	}
-	
+
 	private static List<Class<? extends Hero>> createHeroClassList() {
 		List<Class<? extends Hero>> heroClasses = new ArrayList<Class<? extends Hero>>();
 		heroClasses.add(Angel.class);
@@ -198,11 +201,19 @@ public class HeroCardManager implements Serializable {
 	private List<Hero> getHeroCardStack() {
 		return heroCardStack;
 	}
-
+	
 	public Map<User, List<Hero>> getHeroCards() {
 		return heroCards;
 	}
-	public void setHeroCards(Map<User, List<Hero>> heroCards) {
-		this.heroCards = heroCards;
+	
+	public void resetHeroCardsTaken() {
+		heroCardsTaken = new HashMap<User, Boolean>();
+	}
+	public void setHeroCardsTaken(User user) {
+		heroCardsTaken.put(user, true);
+	}
+	public boolean isHeroCardsTaken(User user) {
+		Boolean taken = heroCardsTaken.get(user); 
+		return taken != null && taken;
 	}
 }
