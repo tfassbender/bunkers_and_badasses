@@ -10,7 +10,8 @@ public class Modecai extends Hero {
 		attack = 4;
 		defence = 2;
 		name = "Modecai";
-		imagePath = "modecai_1.png";
+		imagePath = "heros/modecai_1.png";
+		cardImagePath = "hero_cards/card_modecai.png";
 		loadImage();
 		effectDescription = "Sniper:\n\nZwei beliebige (normale) Einheiten dürfen irgentwo vom Feld genommen werden (auch aus mehreren Feldern; die Felder dürfen dannach nicht leer sein)";
 	}

@@ -8,7 +8,8 @@ public class Springs extends Hero {
 		attack = 1;
 		defence = 2;
 		name = "Springs";
-		imagePath = "springs_1.png";
+		imagePath = "heros/springs_1.png";
+		cardImagePath = "hero_cards/card_springs.png";
 		loadImage();
 		effectDescription = "Raketentechnickerin:\n\nBeliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)";
 	}

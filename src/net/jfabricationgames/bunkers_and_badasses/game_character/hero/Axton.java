@@ -10,7 +10,8 @@ public class Axton extends Hero {
 		attack = 4;
 		defence = 3;
 		name = "Axton";
-		imagePath = "axton_1.png";
+		imagePath = "heros/axton_1.png";
+		cardImagePath = "hero_cards/card_axton.png";
 		loadImage();
 		effectDescription = "Stratege:\n\nDie gegnerische Karte kann nicht mehr gespielt werden (falls sie noch nicht gespielt wurde; Der Gegner erhällt Sie zurück)";
 	}

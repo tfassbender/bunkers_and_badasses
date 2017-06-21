@@ -8,7 +8,8 @@ public class Arschgaul extends Hero {
 		attack = 0;
 		defence = 0;
 		name = "Prinzessin Arschgaul";
-		imagePath = "arschgaul_2.png";
+		imagePath = "heros/arschgaul_2.png";
+		cardImagePath = "hero_cards/card_prinzessin_arschgaul.png";
 		loadImage();
 		effectDescription = "Wunderschöne Anführerin:\n\nWähle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf";
 	}

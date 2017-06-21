@@ -594,6 +594,20 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		}
 	}
 	
+	public void updateAllFrames() {
+		update();
+		fieldOverviewFrame.update();
+		fightExecutionFrame.update();
+		gameOverviewFrame.update();
+		resourceInfoFrame.update();
+		selectHeroCardFrame.update();
+		troopInfoFrame.update();
+		turnExecutionFrame.update();
+		turnGoalTurnBonusDialog.update();
+		turnPlaningFrame.update();
+		boardOverviewFrame.update();
+	}
+	
 	public void update() {
 		updateBoard();
 		updateGameTurnPanel();

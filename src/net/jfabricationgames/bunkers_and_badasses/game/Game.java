@@ -94,7 +94,7 @@ public class Game implements Serializable {
 		fightManager.merge(newData.getFightManager());
 		//update the frames
 		if (gameFrame != null) {
-			gameFrame.update();			
+			gameFrame.updateAllFrames();			
 		}
 	}
 	

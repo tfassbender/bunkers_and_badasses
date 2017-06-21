@@ -8,7 +8,8 @@ public class Ellie extends Hero {
 		attack = 2;
 		defence = 1;
 		name = "Ellie";
-		imagePath = "ellie_1.png";
+		imagePath = "heros/ellie_1.png";
+		cardImagePath = "hero_cards/card_ellie.png";
 		loadImage();
 		effectDescription = "Klanfede:\n\nIn 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten (nur Banditen)";
 	}

@@ -128,6 +128,12 @@ public class PlayerOrder implements Serializable {
 		}
 	}
 	
+	/**
+	 * End a players move and let the next player do his move.
+	 * 
+	 * @throws TurnOrderException
+	 * 		A TurnOrderException is thrown when all players have passed and therefore there is no next move. 
+	 */
 	public void nextMove() throws TurnOrderException {
 		move++;
 		int additions = 0;//the additional moves to skip the players that have already passed

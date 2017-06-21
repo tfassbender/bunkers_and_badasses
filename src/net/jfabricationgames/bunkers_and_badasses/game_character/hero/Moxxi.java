@@ -8,7 +8,8 @@ public class Moxxi extends Hero {
 		attack = 3;
 		defence = 2;
 		name = "Moxxi";
-		imagePath = "moxxi_1.png";
+		imagePath = "heros/moxxi_1.png";
+		cardImagePath = "hero_cards/card_mad_moxxi.png";
 		loadImage();
 		effectDescription = "Anwerbung:\n\n3 neu rekrutierte Truppen können beliebig auf dem Feld verteilt werden";
 	}

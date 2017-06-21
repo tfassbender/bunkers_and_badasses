@@ -54,6 +54,7 @@ public class TurnExecutionManager implements Serializable {
 		GameTransferMessage message = new GameTransferMessage();
 		message.setGame(game);
 		message.setType(GameTransferMessage.TransferType.TURN_OVER);
+		game.getClient().resetOutput();
 		game.getClient().sendMessage(message);
 	}
 	

@@ -160,8 +160,6 @@ public class UserPlanManager implements Serializable {
 			this.game.getClient().resetOutput();
 			this.game.getClient().sendMessage(message);
 			this.game.getGameFrame().update();
-			//merge it to the local game
-			//this.game.merge(game);
 		}
 	}
 	

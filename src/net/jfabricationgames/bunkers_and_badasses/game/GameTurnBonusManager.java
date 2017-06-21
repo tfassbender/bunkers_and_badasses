@@ -88,6 +88,17 @@ public class GameTurnBonusManager implements Serializable {
 				}
 			}			
 		}
+		//copy the images to the userBonuses
+		for (User user : bonusManager.getUserBonuses().keySet()) {
+			TurnBonus bonus = bonusManager.getUserBonuses().get(user);
+			instanceFound = false;
+			for (TurnBonus prev : TURN_BONUSES) {//load from TURN_BONUSES because these are surely loaded
+				if (!instanceFound && bonus.getClass().equals(prev.getClass())) {
+					bonus.setImage(prev.getImage());
+					instanceFound = true;
+				}
+			}
+		}
 		//set the new bonuses
 		this.userBonuses = bonusManager.getUserBonuses();
 		this.choosableTurnBonuses = bonusManager.getChoosableTurnBonuses();

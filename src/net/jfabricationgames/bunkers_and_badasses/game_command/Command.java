@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 
 public abstract class Command implements Serializable {
@@ -50,6 +51,24 @@ public abstract class Command implements Serializable {
 	
 	public void loadImage() {
 		image = imageLoader.loadImage(imagePath);
+	}
+	
+	/**
+	 * Check if the command could be executed on a field. The resources needed are not checked.
+	 * 
+	 * @param field
+	 * 		The field on which the command should be executed.
+	 * 
+	 * @return
+	 * 		True if the command can be executed on the field.
+	 */
+	public boolean isExecutableOnField(Field field) {
+		boolean executable = true;
+		executable &= !field.getTroops().isEmpty();
+		for (Class<? extends Building> buildingClass : executionBuildings) {
+			executable |= field.getBuilding().getClass().equals(buildingClass);
+		}
+		return executable;
 	}
 	
 	@Override

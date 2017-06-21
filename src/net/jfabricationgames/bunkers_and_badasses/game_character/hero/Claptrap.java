@@ -10,7 +10,8 @@ public class Claptrap extends Hero {
 		attack = 2;
 		defence = 2;
 		name = "Claptrap";
-		imagePath = "claptrap_1.png";
+		imagePath = "heros/claptrap_1.png";
+		cardImagePath = "hero_cards/card_claptrap.png";
 		loadImage();
 		effectDescription = "Downgrade:\n\nBis zu 3 gegnerischen Badasses werden sofort gedowngraded (zu normalen Truppen)";
 	}
@@ -23,6 +24,6 @@ public class Claptrap extends Hero {
 	@Override
 	public void executeTurn() {
 		//TODO
-		//Downgrade: Alle (begrenzt ?) gegnerischen (aufgerüsteten) Truppen werden sofort gedowngraded
+		//Downgrade: Alle (begrenzt ?) gegnerischen (aufgerï¿½steten) Truppen werden sofort gedowngraded
 	}
 }

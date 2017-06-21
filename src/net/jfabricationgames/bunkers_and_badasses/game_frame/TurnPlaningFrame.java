@@ -569,12 +569,12 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	public void update() {
 		disableAll();
 		updateBoard();
+		updateCommandList();
 		updateField();
 		updateResources();
 		updatePlayerOrder();
 		updateFieldLists();
 		updateBuildings();
-		updateCommandList();
 	}
 	
 	private void disableAll() {
@@ -608,13 +608,26 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 				}
 				txtKosts.setText(costsCredits + " Credits, " + costsAmmo + " Munition");
 				if (game.getGameState().equals(GameState.PLAN)) {
-					btnLschen.setEnabled(true);
-					btnHinzufgen.setEnabled(true);
+					if (selectedField.getCommand() != null) {
+						btnLschen.setEnabled(true);
+					}
+					if (command != null && command.isExecutableOnField(selectedField)) {
+						btnHinzufgen.setEnabled(true);						
+					}
+					else {
+						btnHinzufgen.setEnabled(false);
+					}
+				}
+				else {
+					btnLschen.setEnabled(false);
+					btnHinzufgen.setEnabled(false);
 				}
 			}
 			else {
 				btnLschen.setEnabled(false);
 				btnHinzufgen.setEnabled(false);
+				txtCurrcommand.setText("");
+				txtKosts.setText("");
 			}
 		}
 		else {
@@ -672,6 +685,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		int mine = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_COLLECT);
 		int support = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_SUPPORT);
 		int defend = game.getPlanManager().getCommandsLeft(UserPlanManager.COMMAND_DEFEND);
+		int index = comboBox.getSelectedIndex();
 		commandBoxModel.removeAllElements();
 		txtberflle.setText(Integer.toString(raid));
 		txtRckzge.setText(Integer.toString(retreat));
@@ -704,6 +718,9 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		}
 		if (defend > 0) {
 			commandBoxModel.addElement(commandDefend);
+		}
+		if (commandBoxModel.getSize() >= index) {
+			comboBox.setSelectedIndex(index);
 		}
 	}
 	

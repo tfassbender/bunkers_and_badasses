@@ -10,7 +10,8 @@ public class Salvadore extends Hero {
 		attack = 4;
 		defence = 3;
 		name = "Salvadore";
-		imagePath = "salvador_1.png";
+		imagePath = "heros/salvador_1.png";
+		cardImagePath = "hero_cards/card_salvador.png";
 		loadImage();
 		effectDescription = "Sperrfeuer:\n\nBei Niederlage dürfen nur die Hälfte der Truppen (abgerundet) weiter ziehen";
 	}

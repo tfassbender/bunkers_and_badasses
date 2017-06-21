@@ -302,7 +302,7 @@ public class FightManager implements Serializable {
 	private void addPossibleSupportFields() {
 		List<Field> supporters = currentFight.getPossibleSupporters();
 		for (Field field : currentFight.getDefendingField().getNeighbours()) {
-			if (field.getCommand().isSupport()) {
+			if (field.getCommand() != null && field.getCommand().isSupport()) {
 				supporters.add(field);				
 			}
 		}

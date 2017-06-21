@@ -10,7 +10,8 @@ public class Brick extends Hero {
 		attack = 5;
 		defence = 3;
 		name = "Brick";
-		imagePath = "brick_1.png";
+		imagePath = "heros/brick_1.png";
+		cardImagePath = "hero_cards/card_brick.png";
 		loadImage();
 		effectDescription = "Klopp Sie:\n\nBeim Sieg sterben beim Verlierer 3 Einheiten mehr als beim Sieger";
 	}

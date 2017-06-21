@@ -8,7 +8,8 @@ public class Zero extends Hero {
 		attack = 3;
 		defence = 4;
 		name = "Zero";
-		imagePath = "zero_1.png";
+		imagePath = "heros/zero_1.png";
+		cardImagePath = "hero_cards/card_zero.png";
 		loadImage();
 		effectDescription = "Doppelgänger:\n\nEin beliebiger Befehlsmarker kann nachträglich verändert werden";
 	}

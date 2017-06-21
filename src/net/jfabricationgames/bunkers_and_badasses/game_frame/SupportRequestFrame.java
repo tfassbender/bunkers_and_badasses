@@ -46,6 +46,7 @@ public class SupportRequestFrame extends JFrame {
 	private JRadioButton rdbtnVerteidiger;
 	
 	public SupportRequestFrame(Fight fight, Field supportField, FightManager manager) {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.fight = fight;
 		this.supportField = supportField;

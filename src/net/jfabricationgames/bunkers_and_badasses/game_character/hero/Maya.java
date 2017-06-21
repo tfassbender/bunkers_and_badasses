@@ -8,7 +8,8 @@ public class Maya extends Hero {
 		attack = 4;
 		defence = 3;
 		name = "Maya";
-		imagePath = "maya_1.png";
+		imagePath = "heros/maya_1.png";
+		cardImagePath = "hero_cards/card_maya.png";
 		loadImage();
 		effectDescription = "Phaselock:\n\nEin Gegner wird in einem Ausgewählten Feld festgehalten und ist Bewegungsunfähig (Der Marker kann nicht eingesetzt werden und wird entfernt; Der Gegner kann sich aber verteidigen)";
 	}

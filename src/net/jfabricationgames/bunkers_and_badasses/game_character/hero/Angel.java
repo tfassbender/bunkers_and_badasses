@@ -8,7 +8,8 @@ public class Angel extends Hero {
 		attack = 2;
 		defence = 2;
 		name = "Angel";
-		imagePath = "angel_1.png";
+		imagePath = "heros/angel_1.png";
+		cardImagePath = "hero_cards/card_angel.png";
 		loadImage();
 		effectDescription = "Perfekte Aufklährung:\n\nIn der gesammten Runde dürfen im Kampf keine Karten gegen dich ausgespielt werden";
 	}

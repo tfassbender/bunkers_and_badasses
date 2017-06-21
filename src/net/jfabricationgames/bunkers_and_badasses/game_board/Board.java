@@ -99,9 +99,10 @@ public class Board implements Serializable {
 		else if (start.getNormalTroops() < normalTroops || start.getBadassTroops() < badassTroops) {
 			throw new MovementException("Can't move more troops than there are in the field(" + start.getName() + " -> " + end.getName() + ").");
 		}
-		if (!end.getAffiliation().equals(start.getAffiliation())) {
+		/*if (end.getAffiliation() != null || !end.getAffiliation().equals(start.getAffiliation())) {
 			end.setAffiliation(start.getAffiliation());
-		}
+		}*/
+		end.setAffiliation(start.getAffiliation());
 		start.removeNormalTroops(normalTroops);
 		start.removeBadassTroops(badassTroops);
 		end.addNormalTroops(normalTroops);

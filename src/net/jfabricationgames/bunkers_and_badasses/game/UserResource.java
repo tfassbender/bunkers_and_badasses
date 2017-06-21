@@ -196,7 +196,7 @@ public class UserResource implements Serializable {
 
 	private void pay(int[] costs) {
 		if (costs[0] > credits || costs[1] > ammo || costs[2] > eridium) {
-			throw new ResourceException("Not enough resources.");
+			throw new ResourceException("Not enough resources.", "Du hast nicht genug Resourcen.\n\nAnschreiben lassen geht hier nicht.");
 		}
 		else {
 			credits -= costs[0];

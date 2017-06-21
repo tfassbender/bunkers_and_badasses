@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.error.BunkersAndBadassesException;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Angel;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Arschgaul;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Athena;
@@ -169,11 +170,12 @@ public class HeroCardManager implements Serializable {
 	public void takeCards(User user, int cards) {
 		List<Hero> playersCards = heroCards.get(user);
 		if (playersCards.size() + cards > maxCardsPerPlayer) {
-			throw new IllegalArgumentException("The player want's to take more cards than allowed.");
+			throw new BunkersAndBadassesException("The player want's to take more cards than allowed.", "So viele Helden kannst du nicht Rekrutieren. Das Maximum sind 5 Helden.");
 		}
 		for (int i = 0; i < cards; i++) {
 			//take the last element to avoid moving the whole array list
 			playersCards.add(heroCardStack.get(heroCardStack.size()-1));
+			heroCardStack.remove(heroCardStack.size()-1);
 		}
 	}
 	/**

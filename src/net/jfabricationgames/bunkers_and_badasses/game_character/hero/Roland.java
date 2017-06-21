@@ -10,7 +10,8 @@ public class Roland extends Hero {
 		attack = 4;
 		defence = 4;
 		name = "Roland";
-		imagePath = "roland_1.png";
+		imagePath = "heros/roland_1.png";
+		cardImagePath = "hero_cards/card_roland.png";
 		loadImage();
 		effectDescription = "Anführer:\n\nBeim Sieg werden bis zu 3 kämpfende Einheiten aufgerüstet (nicht die unterstützenden Einheiten)";
 	}

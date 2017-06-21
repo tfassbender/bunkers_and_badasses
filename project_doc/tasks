@@ -4,14 +4,15 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- open new dialogs centered to the game frame ?
 	- support image in help menu is shown very small
-	- user can select wrong commands on base fields
 	- two times the same card is chosen when starting with two heros
-	- somehow base images are sent (overwritten to no image send; check why images were sent)
-	- when merging the games after the plan phase there are no commands and no troops (reset problem?)
+	- somehow board images are sent (overwritten to no image send; check why images were sent)
 	- game request can't be sent when an error in the dialog once occurred
 	- can't go on in PreGameSelection when user chooses base before other user confirms his skill
-	- when merging and sending everything after the planing phase the turn bonus image seems to disappear
 	- the start user is not set in the game
+	- hero images are not loaded after sending
+	- the board image is not updated in all dialogs (e.g. TurnExecution)
+	- check that a user can only recruit heros once in a turn
+	- fix problems in select hero card frame
 	
 - Next versions:
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line

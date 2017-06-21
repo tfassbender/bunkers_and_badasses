@@ -8,7 +8,8 @@ public class TinyTina extends Hero {
 		attack = 2;
 		defence = 3;
 		name = "Tiny Tina";
-		imagePath = "tina_1.png";
+		imagePath = "heros/tina_1.png";
+		cardImagePath = "hero_cards/card_tiny_tina.png";
 		loadImage();
 		effectDescription = "Kabummabumms:\n\nEin beliebiges Gebäude (außer Arschgauls Palast) in einem angrenzenden Feld wird zerstört";
 	}

@@ -30,6 +30,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
+import net.jfabricationgames.bunkers_and_badasses.error.TurnOrderException;
 import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
@@ -104,6 +105,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	
 	private boolean fieldSelectionSucessfull;
 	private JButton btnAusfhrungBeenden;
+	private JTextField txtKosten;
 
 	static {
 		buildables = new Building[9];
@@ -129,8 +131,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Zug Ausf\u00FChrung");
-		setBounds(100, 100, 1300, 775);
-		setMinimumSize(new Dimension(1300, 775));
+		setBounds(100, 100, 1300, 800);
+		setMinimumSize(new Dimension(1300, 800));
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -176,7 +178,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_fields_all.setViewportView(list_fields_all);
 
-		fieldPanel = new FieldDescriptionPanel("Feld �bersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
 		panel_side_bar.add(fieldPanel, "cell 1 0 2 1,grow");
 		
 		JPanel panel_executable_commands = new JPanel();
@@ -305,7 +307,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		panel_command_row_1.add(panel_command_7, "cell 0 2,grow");
 		panel_command_7.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_command_7.setBackground(Color.GRAY);
-		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow][]"));
+		panel_command_7.setLayout(new MigLayout("", "[grow]", "[grow][grow][][grow]"));
 		
 		btnBefehlAusfhren = new JButton("Befehl Ausf\u00FChren");
 		btnBefehlAusfhren.addActionListener(new ActionListener() {
@@ -315,16 +317,16 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		});
 		btnBefehlAusfhren.setEnabled(false);
 		btnBefehlAusfhren.setBackground(Color.GRAY);
-		panel_command_7.add(btnBefehlAusfhren, "cell 0 0,alignx center,aligny center");
+		panel_command_7.add(btnBefehlAusfhren, "cell 0 1,alignx center,aligny center");
 		
 		btnAusfhrungBeenden = new JButton("Ausf\u00FChrung Beenden");
 		btnAusfhrungBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ConfirmDialog("Ausf�hrung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);
+				new ConfirmDialog("Ausführung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);
 			}
 		});
 		btnAusfhrungBeenden.setEnabled(false);
-		panel_command_7.add(btnAusfhrungBeenden, "cell 0 1,alignx center");
+		panel_command_7.add(btnAusfhrungBeenden, "cell 0 2,alignx center");
 		btnAusfhrungBeenden.setBackground(Color.GRAY);
 		
 		JPanel panel_command_row_2 = new JPanel();
@@ -403,11 +405,11 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		panel_command_5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_command_row_3.add(panel_command_5, "cell 0 0,grow");
 		panel_command_5.setBackground(Color.GRAY);
-		panel_command_5.setLayout(new MigLayout("", "[grow][grow][][][grow]", "[][5px][][][5px][][100px,grow]"));
+		panel_command_5.setLayout(new MigLayout("", "[grow][][grow][][][grow]", "[][5px][][][5px][][100px,grow][]"));
 		
 		JLabel lblAufbau = new JLabel("Aufbau:");
 		lblAufbau.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_5.add(lblAufbau, "cell 0 0 5 1,alignx center");
+		panel_command_5.add(lblAufbau, "cell 0 0 6 1,alignx center");
 		
 		ButtonGroup group_building = new ButtonGroup();
 		
@@ -417,34 +419,49 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		rdbtnAufbauen.setBackground(Color.GRAY);
 		rdbtnAufbauen.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		group_building.add(rdbtnAufbauen);
-		panel_command_5.add(rdbtnAufbauen, "cell 1 2 2 1");
+		panel_command_5.add(rdbtnAufbauen, "cell 1 2 3 1");
 		
 		rdbtnAufrsten = new JRadioButton("Aufr\u00FCsten");
 		rdbtnAufrsten.setEnabled(false);
 		rdbtnAufrsten.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rdbtnAufrsten.setBackground(Color.GRAY);
 		group_building.add(rdbtnAufrsten);
-		panel_command_5.add(rdbtnAufrsten, "cell 3 2");
+		panel_command_5.add(rdbtnAufrsten, "cell 4 2");
 		
 		rdbtnAbreien = new JRadioButton("Abrei\u00DFen");
 		rdbtnAbreien.setEnabled(false);
 		rdbtnAbreien.setBackground(Color.GRAY);
 		rdbtnAbreien.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		group_building.add(rdbtnAbreien);
-		panel_command_5.add(rdbtnAbreien, "cell 1 3 3 1,alignx center");
+		panel_command_5.add(rdbtnAbreien, "cell 1 3 4 1,alignx center");
 		
 		JLabel lblGebude_2 = new JLabel("Geb\u00E4ude:");
 		lblGebude_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_5.add(lblGebude_2, "cell 0 5 2 1");
+		panel_command_5.add(lblGebude_2, "cell 0 5 3 1");
 		
 		JScrollPane scrollPane_building = new JScrollPane();
-		panel_command_5.add(scrollPane_building, "cell 0 6 5 1,grow");
+		panel_command_5.add(scrollPane_building, "cell 0 6 6 1,grow");
 		
 		list_building = new JList<Building>(buildingModel);
+		list_building.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				updateKosts();
+			}
+		});
 		list_building.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_building.setBackground(Color.LIGHT_GRAY);
 		list_building.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		scrollPane_building.setViewportView(list_building);
+		
+		JLabel lblKosten = new JLabel("Kosten:");
+		lblKosten.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_5.add(lblKosten, "cell 0 7 2 1");
+		
+		txtKosten = new JTextField();
+		txtKosten.setBackground(Color.LIGHT_GRAY);
+		txtKosten.setEditable(false);
+		panel_command_5.add(txtKosten, "cell 2 7 4 1,growx");
+		txtKosten.setColumns(10);
 		
 		JPanel panel_command_6 = new JPanel();
 		panel_command_row_3.add(panel_command_6, "cell 0 2,grow");
@@ -502,9 +519,17 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	@Override
 	public void receiveTurnBonusSelection(TurnBonus selectedBonus) {
 		game.getGameTurnBonusManager().chooseTurnBonus(game.getLocalUser(), selectedBonus);
-		game.setState(GameState.WAIT);
+		//game.setState(GameState.WAIT);
 		game.getGameFrame().getTurnGoalTurnBonusDialog().setTurnBonusSelectable(false, null);
+		try {
+			game.getPlayerOrder().nextMove();			
+		}
+		catch (TurnOrderException toe) {
+			game.getPlayerOrder().nextTurn();
+			game.setState(GameState.PLAN);
+		}
 		game.getTurnExecutionManager().commit();
+		game.getGameFrame().update();
 	}
 	
 	private List<Field> findPossibleMovingTargets(Field field) {
@@ -514,7 +539,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		for (int i = 0; i < field.getBuilding().getMoveDistance(); i++) {
 			newTargets = new ArrayList<Field>();
 			for (Field start : possibleTargets) {
-				if (start.getAffiliation().equals(game.getLocalUser())) {
+				if (start.getAffiliation() != null && start.getAffiliation().equals(game.getLocalUser())) {
 					for (Field neighbour : start.getNeighbours()) {
 						newTargets.add(neighbour);
 					}
@@ -533,6 +558,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		updateField();
 		updateFieldList();
 		updateFieldCommandList();
+		updateKosts();
 	}
 	
 	private void updateBoard() {
@@ -593,6 +619,39 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		repaint();
 	}
 	
+	private void updateKosts() {
+		if (rdbtnAufbauen.isSelected()) {
+			Building building = list_building.getSelectedValue();
+			if (building != null) {
+				int[] price = building.getBuildingPrice();
+				txtKosten.setText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
+			}
+			else {
+				txtKosten.setText("");
+			}
+		}
+		else if (rdbtnAufrsten.isSelected()) {
+			Building building = selectedField.getBuilding();
+			if (building != null) {
+				int[] price = building.getExtensionPrice();
+				txtKosten.setText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
+			}
+			else {
+				txtKosten.setText("");
+			}
+		}
+		else if (rdbtnAbreien.isSelected()) {
+			Building building = selectedField.getBuilding();
+			if (building != null) {
+				int[] price = Building.getStorage().getBuildingBreakOffPrices();
+				txtKosten.setText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
+			}
+			else {
+				txtKosten.setText("");
+			}
+		}
+	}
+	
 	private void disableAll() {
 		btnBefehlAusfhren.setEnabled(false);
 		btnAusfhrungBeenden.setEnabled(false);
@@ -650,7 +709,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 				}
 				else if (command instanceof RaidCommand) {
 					for (Field target : field.getNeighbours()) {
-						if (target.getAffiliation().equals(game.getLocalUser())) {
+						if (target.getAffiliation() != null && target.getAffiliation().equals(game.getLocalUser())) {
 							if (target.getCommand() != null && target.getCommand().isRemovable()) {
 								fieldTargetModel.addElement(target);
 							}
@@ -662,7 +721,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops(), 1));
 					boolean badassesRecruitable = false;
 					for (Field boardField : game.getBoard().getFields()) {
-						badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation().equals(game.getLocalUser());
+						badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation() != null && boardField.getAffiliation().equals(game.getLocalUser());
 					}
 					if (badassesRecruitable) {
 						spinnerBadassTroops.setEnabled(true);
@@ -677,7 +736,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	
 	private void executeCommand() {
 		boolean commandExecuted = false;
-		if (selectedField.getAffiliation().equals(game.getLocalUser())) {
+		if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser())) {
 			Command command = selectedField.getCommand();
 			UserResourceManager resourceManager = game.getResourceManager();
 			if (command.isExecutable()) {
@@ -692,15 +751,15 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 									commandExecuted = true;
 								}
 								catch (ResourceException re) {
-									new ErrorDialog("Du hast nicht genug Resourcen um das Geb�ude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+									new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
 								}
 							}
 							else {
-								new ErrorDialog("Du musst ein Geb�ude ausw�hlen um es aufzubauen.\n\nOder glaubst du etwa, dass deine Truppen aus Architekten bestehen?!\nDas w�rde die Existenz von Gehirnzellen bedingen!").setVisible(true);
+								new ErrorDialog("Du musst ein Gebäude auswählen um es aufzubauen.\n\nOder glaubst du etwa, dass deine Truppen aus Architekten bestehen?!\nDas würde die Existenz von Gehirnzellen bedingen!").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Du kannst nicht zwei Geb�ude auf ein Feld bauen.\n\nAu�er du willst versuchen sie zu stapeln...\nIch muss zugeben das w�rde ich gerne sehen.").setVisible(true);
+							new ErrorDialog("Du kannst nicht zwei Gebäude auf ein Feld bauen.\n\nAußer du willst versuchen sie zu stapeln...\nIch muss zugeben das würde ich gerne sehen.").setVisible(true);
 						}
 					}
 					else if (rdbtnAufrsten.isSelected()) {
@@ -712,20 +771,20 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
-								new ErrorDialog("Du hast nicht genug Resourcen um das Geb�ude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Dieses Geb�ude kann man nicht aufr�sten.\n\nBau einfach ein paar mehr davon. Ist doch genug Platz da.\nAu�er Du spielst zu schlecht...").setVisible(true);
+							new ErrorDialog("Dieses Gebäude kann man nicht aufrüsten.\n\nBau einfach ein paar mehr davon. Ist doch genug Platz da.\nAußer Du spielst zu schlecht...").setVisible(true);
 						}
 					}
 					else if (rdbtnAbreien.isSelected()) {
 						Building building = selectedField.getBuilding();
 						if (building == null || building instanceof EmptyBuilding) {
-							new ErrorDialog("Du musst ein Geb�ude aufbauen bevor Du es einrei�en kannst.\n\nErst die Arbeit, dann das Vergn�gen...").setVisible(true);
+							new ErrorDialog("Du musst ein Gebäude aufbauen bevor Du es einreißen kannst.\n\nErst die Arbeit, dann das Vergnügen...").setVisible(true);
 						}
 						else if (building instanceof ArschgaulsPalace) {
-							new ErrorDialog("Du kannst doch nicht Arschgauls Palast abrei�en!!!\nWas soll der Schei�?!");
+							new ErrorDialog("Du kannst doch nicht Arschgauls Palast abreißen!!!\nWas soll der Scheiß?!");
 						}
 						else {
 							selectedField.setBuilding(new EmptyBuilding());
@@ -745,7 +804,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						collectionType = 3;
 					}
 					if (collectionType == 0) {
-						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du l�sst sie einfach ein paar h�bsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
+						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
 					}
 					else {
 						resourceManager.collectCommandResources(game.getLocalUser());
@@ -788,7 +847,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					else if (targets.length == 1) {
 						Field targetField = fieldTargetModel.getElementAt(targets[0]);
 						if (troops > 0) {
-							if (targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
+							if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
 								game.getBoard().moveTroops(selectedField, targetField, normalTroops, badassTroops);
 								commandExecuted = true;
 							}
@@ -802,25 +861,25 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						}
 					}
 					else {
-						new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\nOder Du l�sst sie einfach im Kreis rennen. Das kann auch lustig sein.\nNicht unbedingt zielf�hrend... aber lustig.").setVisible(true);
+						new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\nOder Du lässt sie einfach im Kreis rennen. Das kann auch lustig sein.\nNicht unbedingt zielführend... aber lustig.").setVisible(true);
 					}
 				}
 				else if (command instanceof RaidCommand) {
 					int[] targets = list_target_field.getSelectedIndices();
 					if (targets.length > 1) {
-						new ErrorDialog("Du kannst nicht in einem Zug mehrere Felder �berfallen.\n\nLass den Anderen auch noch was �brig.").setVisible(true);
+						new ErrorDialog("Du kannst nicht in einem Zug mehrere Felder überfallen.\n\nLass den Anderen auch noch was übrig.").setVisible(true);
 					}
 					else if (targets.length == 0) {
-						new ErrorDialog("Du musst schon ein Ziel aussuchen das deine Leute �berfallen k�nnen.\n\nOder Du �berf�llst dich einfach selbst.\nDas schl�gt auch die Zeit tot.").setVisible(true);
+						new ErrorDialog("Du musst schon ein Ziel aussuchen das deine Leute überfallen können.\n\nOder Du überfällst dich einfach selbst.\nDas schlägt auch die Zeit tot.").setVisible(true);
 					}
 					else {
 						Field target = fieldTargetModel.getElementAt(targets[0]);
 						Command selectedCommand = target.getCommand();
 						if (selectedCommand == null) {
-							new ErrorDialog("Du kannst keinen Befehl entfernen wo garkein Befehl ist.\n\nDu k�nntest sie aber nur so zum Spa� �berfallen...").setVisible(true);
+							new ErrorDialog("Du kannst keinen Befehl entfernen wo garkein Befehl ist.\n\nDu könntest sie aber nur so zum Spaß überfallen...").setVisible(true);
 						}
 						else if (!selectedCommand.isRemovable()) {
-							new ErrorDialog("Diesen Befehl kannst Du nicht entferenen.\n\nDie Anderen sollen doch auch noch ihren Spa� haben.").setVisible(true);
+							new ErrorDialog("Diesen Befehl kannst Du nicht entferenen.\n\nDie Anderen sollen doch auch noch ihren Spaß haben.").setVisible(true);
 						}
 						else {
 							if (target.getCommand() instanceof CollectCommand) {
@@ -840,7 +899,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						new ErrorDialog("Du willst also 0 Truppen Rekrutieren?!\n\nBist Du sicher, dass du das Spielprinzip verstanden hast?").setVisible(true);
 					}
 					else if (troops > selectedField.getBuilding().getRecruitableTroops()) {
-						new ErrorDialog("Du kannst nicht so viele Truppen auf einmal rekrutieren.\n\nDiese Selbstmordkandidaten wachsen nunmal nicht an B�umen.").setVisible(true);
+						new ErrorDialog("Du kannst nicht so viele Truppen auf einmal rekrutieren.\n\nDiese Selbstmordkandidaten wachsen nunmal nicht an Bäumen.").setVisible(true);
 					}
 					else {
 						if (upgrades <= selectedField.getNormalTroops()) {
@@ -850,13 +909,14 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 								selectedField.addBadassTroops(badassTroops);
 								selectedField.removeNormalTroops(upgrades);
 								selectedField.addBadassTroops(upgrades);
+								commandExecuted = true;
 							}
 							catch (ResourceException re) {
 								new ErrorDialog("Du hast nicht genug Resourcen um die Truppen zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Du hast nicht genug Truppen um sie aufzur�sten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder r�stest die Truppen deiner Gegner auf...").setVisible(true);
+							new ErrorDialog("Du hast nicht genug Truppen um sie aufzurüsten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rüstest die Truppen deiner Gegner auf...").setVisible(true);
 						}
 					}
 				}
@@ -864,7 +924,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		}
 		if (commandExecuted) {
 			selectedField.setCommand(null);
+			game.getPlayerOrder().nextMove();
 			game.getTurnExecutionManager().commit();
+			game.getGameFrame().update();
 		}
 		update();
 	}

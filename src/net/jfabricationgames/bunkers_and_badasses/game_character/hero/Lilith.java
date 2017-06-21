@@ -8,7 +8,8 @@ public class Lilith extends Hero {
 		attack = 4;
 		defence = 4;
 		name = "Lilith";
-		imagePath = "lilith_1.png";
+		imagePath = "heros/lilith_1.png";
+		cardImagePath = "hero_cards/card_lilith.png";
 		loadImage();
 		effectDescription = "Phasewalk:\n\nBis zu 5 Truppen (Normale oder Badasses) können ein feindliches Feld überspringen und hinter der feindlichen Linie angreifen";
 	}

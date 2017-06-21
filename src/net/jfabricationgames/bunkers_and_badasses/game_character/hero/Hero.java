@@ -25,14 +25,16 @@ public abstract class Hero implements Serializable {
 	protected String name;
 	protected String effectDescription;
 	protected String imagePath;
+	protected String cardImagePath;
 	
 	protected transient BufferedImage image;
+	protected transient BufferedImage cardImage;
 	
 	protected static ImageLoader imageLoader;
 	
 	static {
 		imageLoader = new ImageLoader();
-		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/heros/");
+		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/");
 	}
 	
 	public Hero() {
@@ -44,6 +46,7 @@ public abstract class Hero implements Serializable {
 	
 	public void loadImage() {
 		image = imageLoader.loadImage(imagePath);
+		cardImage = imageLoader.loadImage(cardImagePath);
 	}
 	
 	@Override
@@ -115,6 +118,9 @@ public abstract class Hero implements Serializable {
 	
 	public BufferedImage getImage() {
 		return image;
+	}
+	public BufferedImage getCardImage() {
+		return cardImage;
 	}
 	public void setImage(BufferedImage image) {
 		this.image = image;

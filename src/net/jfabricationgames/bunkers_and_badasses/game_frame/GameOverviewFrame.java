@@ -282,7 +282,7 @@ public class GameOverviewFrame extends JFrame {
 		list_fields_all.setBackground(Color.LIGHT_GRAY);
 		scrollPane_fields_all.setViewportView(list_fields_all);
 
-		fieldPanel = new FieldDescriptionPanel("Feld �bersicht", true);
+		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
 		panel.add(fieldPanel, "cell 3 2 2 2,grow");
 		
 		JPanel panel_buildings = new JPanel();

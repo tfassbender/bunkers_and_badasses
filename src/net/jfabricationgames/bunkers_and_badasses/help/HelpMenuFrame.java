@@ -18,6 +18,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -30,6 +31,7 @@ public class HelpMenuFrame extends JFrame {
 	private JTree tree;
 	
 	private List<HelpContent> contents;
+	private Map<Integer, HelpTreeNode> helpTreeNodes;
 	
 	public HelpMenuFrame() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(HelpMenuFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -106,17 +108,17 @@ public class HelpMenuFrame extends JFrame {
 	 * 		The loaded contents from the database.
 	 */
 	private void buildHelpTree(List<HelpContent> contents) {
-		Map<Integer, HelpTreeNode> nodes = new HashMap<Integer, HelpTreeNode>();
+		helpTreeNodes = new HashMap<Integer, HelpTreeNode>();
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
 		//generate all nodes and add them to the map
 		for (HelpContent helpContent : contents) {
 			HelpTreeNode helpNode = new HelpTreeNode(helpContent);
-			nodes.put(helpContent.getId(), helpNode);
+			helpTreeNodes.put(helpContent.getId(), helpNode);
 		}
 		//build the tree from the nodes
-		for (Integer key : nodes.keySet()) {
-			HelpTreeNode node = nodes.get(key);
-			DefaultMutableTreeNode superNode = nodes.get(node.getSuperId());
+		for (Integer key : helpTreeNodes.keySet()) {
+			HelpTreeNode node = helpTreeNodes.get(key);
+			DefaultMutableTreeNode superNode = helpTreeNodes.get(node.getSuperId());
 			if (superNode == null) {
 				superNode = root;
 			}
@@ -142,8 +144,16 @@ public class HelpMenuFrame extends JFrame {
 	}
 	
 	public void setHelpPanel(String name) {
+		//show the panel
 		CardLayout layout = (CardLayout) panel_card.getLayout();
 		layout.show(panel_card, name);
+		//expand the tree
+		for (Integer i : helpTreeNodes.keySet()) {
+			HelpTreeNode node = helpTreeNodes.get(i);
+			if (node.getPanelName() != null && node.getPanelName().equals(name)) {
+				tree.expandPath(new TreePath(node.getPath()));
+			}
+		}
 	}
 	
 	private class JFGCellRenderer extends DefaultTreeCellRenderer {
