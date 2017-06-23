@@ -719,7 +719,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		if (defend > 0) {
 			commandBoxModel.addElement(commandDefend);
 		}
-		if (commandBoxModel.getSize() >= index) {
+		if (commandBoxModel.getSize() > index) {
 			comboBox.setSelectedIndex(index);
 		}
 	}

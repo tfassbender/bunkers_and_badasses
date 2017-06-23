@@ -438,6 +438,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		JButton btnbersicht = new JButton("\u00DCbersicht");
 		btnbersicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				selectHeroCardFrame.update();
 				selectHeroCardFrame.setVisible(true);
 				selectHeroCardFrame.requestFocus();
 				selectHeroCardFrame.setCardSelectionEnabled(false, null);
@@ -520,6 +521,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		chatDialog = new ChatDialog(chatClient, this);
 		helpMenuFrame = MainMenuFrame.getHelpMenu();
 		SupportRequestFrame.setLocalPlayer(game.getLocalUser());
+		game.getFightManager().setFightExecutionFrame(fightExecutionFrame);
 	}
 	
 	/**

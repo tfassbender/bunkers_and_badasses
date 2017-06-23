@@ -290,6 +290,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 		}
 		this.selectable = selectable;
 		this.listener = listener;
+		btnBonusAuswhlen.setEnabled(selectable);
 	}
 	
 	public boolean isTurnBonusSelectable() {

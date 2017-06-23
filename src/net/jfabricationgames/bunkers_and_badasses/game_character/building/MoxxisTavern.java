@@ -9,7 +9,7 @@ public class MoxxisTavern extends Building {
 		extendedBuildingId = 7;
 		extendable = true;
 		commandExecutable = true;
-		name = "Moxxis' Taverne";
+		name = "Mad Moxxis' Taverne";
 		imagePath = "moxxis_1_small.png";
 		expandedImagePath = "moxxis_1_exp_small.png";
 		loadVariables();

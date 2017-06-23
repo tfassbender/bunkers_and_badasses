@@ -5,14 +5,9 @@ Bunkers and Badasses - Tasks
 	- open new dialogs centered to the game frame ?
 	- support image in help menu is shown very small
 	- somehow board images are sent (overwritten to no image send; check why images were sent)
-	- game request can't be sent when an error in the dialog once occurred
-	- the start user is not set in the game
-	- hero images are not loaded after sending
 	- the board image is not updated in all dialogs (e.g. TurnExecution)
 	- make recruiting heros a turn
-	- fix graphic problems in select hero card frame (not loaded after sending?)
-	- sometimes when raiding the target can't be chosen
-	- raids don't remove the command
+	- debug fights
 	
 - Next versions:
 	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line

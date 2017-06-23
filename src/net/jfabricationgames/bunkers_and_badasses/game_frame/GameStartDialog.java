@@ -148,9 +148,6 @@ public class GameStartDialog extends JDialog {
 	public void receiveGame(Game game) {
 		this.game = new Game(client, game.getPlayers());
 		this.game.merge(game);//merge the game to keep the transient fields
-		if (game.getStartingPlayer() == null) {
-			game.setStartingPlayer(startingPlayer);
-		}
 		if (board != null && gameId != -1) {
 			startGameFrame();
 		}
@@ -168,6 +165,9 @@ public class GameStartDialog extends JDialog {
 			else {
 				//set only the image because it's not included in the loaded board
 				game.getBoard().setBaseImage(board.getBaseImage());
+			}
+			if (game.getStartingPlayer() == null) {
+				game.setStartingPlayer(startingPlayer);
 			}
 			board.setGame(game);
 			//add the skill profile manager from the main menu
@@ -197,6 +197,7 @@ public class GameStartDialog extends JDialog {
 		this.isLoaded = false;
 		this.skillProfileManager = skillProfileManager;
 		this.boardImage = board.getBaseImage();
+		this.startingPlayer = UserManager.getLocalUser();
 		changeClientInterpreter(client);
 		//send a game start message containing the board id to all players
 		//this message is received by the MainMenuClientInterpreter and starts the GameStartDialog that adds the BunkersAndBadassesClientInterpreter

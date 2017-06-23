@@ -177,7 +177,6 @@ public class GameCreationDialog extends JFrame {
 							startGame();
 						}
 						else if (!requestSent) {
-							requestSent = true;
 							invitedUsers = list_players.getSelectedValuesList();
 							if (!invitedUsers.isEmpty()) {
 								Board board = list_map.getSelectedValue();
@@ -185,6 +184,7 @@ public class GameCreationDialog extends JFrame {
 									if (invitedUsers.size()+1 >= board.getPlayersMin() && invitedUsers.size()+1 <= board.getPlayersMax()) {//+1 is the player himself
 										sendGameRequest(invitedUsers, board);
 										selectedBoard = board;
+										requestSent = true;
 									}
 									else {
 										lblError.setText("Zu viele/wenig Spieler für diese Karte");

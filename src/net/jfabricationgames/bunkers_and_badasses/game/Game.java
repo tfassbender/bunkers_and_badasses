@@ -81,6 +81,7 @@ public class Game implements Serializable {
 			board = newData.getBoard();
 		}
 		players = newData.getPlayers();
+		startingPlayer = newData.getStartingPlayer();
 		gameState = newData.getGameState();
 		playerOrder.merge(newData.getPlayerOrder());
 		resourceManager.merge(newData.getResourceManager());

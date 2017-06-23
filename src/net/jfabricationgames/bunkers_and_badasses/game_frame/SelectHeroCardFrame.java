@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -34,6 +35,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.error.BunkersAndBadassesException;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
@@ -76,8 +78,8 @@ public class SelectHeroCardFrame extends JFrame {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
-		setBounds(100, 100, 601, 700);
-		//setMinimumSize(new Dimension(1000, 500));
+		setBounds(100, 100, 600, 700);
+		setMinimumSize(new Dimension(600, 700));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -87,7 +89,7 @@ public class SelectHeroCardFrame extends JFrame {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.GRAY);
 			contentPanel.add(panel, "cell 0 0,grow");
-			panel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[300px,grow][150px,grow][150px,grow]"));
+			panel.setLayout(new MigLayout("", "[250px,grow][200px,grow]", "[300px,grow][:150px:200px,grow][:150px:200px,grow]"));
 			
 			JPanel panel_heroes = new JPanel();
 			panel_heroes.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -254,23 +256,7 @@ public class SelectHeroCardFrame extends JFrame {
 			btnRekrutieren.setEnabled(false);
 			btnRekrutieren.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					try {
-						int cards = (Integer) spinner.getValue();
-						game.getResourceManager().getResources().get(game.getLocalUser()).payHeroCards(cards);
-						try {
-							game.getHeroCardManager().takeCards(game.getLocalUser(), cards);
-							game.getHeroCardManager().setHeroCardsTaken(game.getLocalUser());
-							updateComponents();
-							updateHeroList();
-							updateResources();
-						}
-						catch (BunkersAndBadassesException be) {
-							new ErrorDialog(be.getErrorText()).setVisible(true);
-						}						
-					}
-					catch (ResourceException re) {
-						new ErrorDialog(re.getErrorText()).setVisible(true);
-					}
+					recruitHeros();
 				}
 			});
 			btnRekrutieren.setBackground(Color.GRAY);
@@ -279,6 +265,29 @@ public class SelectHeroCardFrame extends JFrame {
 			panel_resources = new ResourceInfoPanel();
 			panel.add(panel_resources, "cell 1 2,grow");
 			panel_resources.setBackground(Color.GRAY);
+		}
+	}
+	
+	private void recruitHeros() {
+		try {
+			int cards = (Integer) spinner.getValue();
+			game.getResourceManager().getResources().get(game.getLocalUser()).payHeroCards(cards);
+			try {
+				game.getHeroCardManager().takeCards(game.getLocalUser(), cards);
+				game.getHeroCardManager().setHeroCardsTaken(game.getLocalUser());
+				game.getPlayerOrder().nextMove();
+				game.getTurnExecutionManager().commit();
+				game.getGameFrame().update();
+				updateComponents();
+				updateHeroList();
+				updateResources();
+			}
+			catch (BunkersAndBadassesException be) {
+				new ErrorDialog(be.getErrorText()).setVisible(true);
+			}						
+		}
+		catch (ResourceException re) {
+			new ErrorDialog(re.getErrorText()).setVisible(true);
 		}
 	}
 	
@@ -291,8 +300,10 @@ public class SelectHeroCardFrame extends JFrame {
 	
 	private void updateComponents() {
 		int cardsLeft = Game.getGameVariableStorage().getMaxHerosCards() - game.getHeroCardManager().getHeroCards(game.getLocalUser()).size();
+		boolean herosRecruitable = game.getGameState().equals(GameState.ACT) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && !game.getHeroCardManager().isHeroCardsTaken(game.getLocalUser()) && cardsLeft >= 1;
 		spinner.setModel(new SpinnerNumberModel(1, 1, (cardsLeft < 1 ? 1 : cardsLeft), 1));
-		btnRekrutieren.setEnabled(!game.getHeroCardManager().isHeroCardsTaken(game.getLocalUser()) && cardsLeft >= 1);
+		txtKosten.setText("10 Eridium");
+		btnRekrutieren.setEnabled(herosRecruitable);
 	}
 	
 	private void updateHeroList() {

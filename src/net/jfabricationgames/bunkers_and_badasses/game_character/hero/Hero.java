@@ -119,10 +119,13 @@ public abstract class Hero implements Serializable {
 	public BufferedImage getImage() {
 		return image;
 	}
+	public void setImage(BufferedImage image) {
+		this.image = image;
+	}
 	public BufferedImage getCardImage() {
 		return cardImage;
 	}
-	public void setImage(BufferedImage image) {
-		this.image = image;
+	public void setCardImage(BufferedImage cardImage) {
+		this.cardImage = cardImage;
 	}
 }

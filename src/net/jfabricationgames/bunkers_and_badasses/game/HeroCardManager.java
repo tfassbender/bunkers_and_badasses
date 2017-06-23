@@ -104,29 +104,31 @@ public class HeroCardManager implements Serializable {
 	 */
 	public void merge(HeroCardManager heroCardManager) {
 		//if the card images are already loaded copy the references; otherwise load the images
-		List<Hero> allHeroCards = new ArrayList<Hero>(heroCardManager.getHeroCardStack());
+		List<Hero> allHeroCards = new ArrayList<Hero>(heroCardStack);
 		for (User user : heroCards.keySet()) {
 			allHeroCards.addAll(heroCards.get(user));
 		}
 		if (!heroCardStack.isEmpty() && heroCardStack.get(0).getImage() != null) {
 			//copy the image references from the previous heroes to the new ones
 			boolean instanceFound;
-			for (Hero hero : allHeroCards) {
+			for (Hero hero : heroCardManager.getHeroCardStack()) {
 				instanceFound = false;
-				for (Hero prev : heroCardStack) {
-					if (!instanceFound && hero.getClass().equals(prev.getClass())) {
-						hero.setImage(prev.getImage());
+				for (Hero localHero : allHeroCards) {
+					if (!instanceFound && hero.getClass().equals(localHero.getClass())) {
+						hero.setImage(localHero.getImage());
+						hero.setCardImage(localHero.getCardImage());
 						instanceFound = true;
 					}
 				}
-				//also search in the players heros
-				if (!instanceFound) {
-					for (User user : heroCards.keySet()) {
-						for (Hero prev : heroCards.get(user)) {
-							if (!instanceFound && hero.getClass().equals(prev.getClass())) {
-								hero.setImage(prev.getImage());
-								instanceFound = true;
-							}
+			}
+			for (User player : heroCardManager.getHeroCards().keySet()) {
+				for (Hero hero : heroCardManager.getHeroCards().get(player)) {
+					instanceFound = false;
+					for (Hero localHero : allHeroCards) {
+						if (!instanceFound && hero.getClass().equals(localHero.getClass())) {
+							hero.setImage(localHero.getImage());
+							hero.setCardImage(localHero.getCardImage());
+							instanceFound = true;
 						}
 					}
 				}

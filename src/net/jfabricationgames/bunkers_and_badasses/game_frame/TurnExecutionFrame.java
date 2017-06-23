@@ -348,6 +348,11 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		panel_command_2.add(scrollPane_target_field, "cell 0 2,grow");
 		
 		list_target_field = new JList<Field>(fieldTargetModel);
+		list_target_field.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				updateSpinners();
+			}
+		});
 		list_target_field.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		list_target_field.setBackground(Color.LIGHT_GRAY);
 		scrollPane_target_field.setViewportView(list_target_field);
@@ -521,6 +526,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		game.getGameTurnBonusManager().chooseTurnBonus(game.getLocalUser(), selectedBonus);
 		//game.setState(GameState.WAIT);
 		game.getGameFrame().getTurnGoalTurnBonusDialog().setTurnBonusSelectable(false, null);
+		game.getPlayerOrder().userPassed(game.getLocalUser());
 		try {
 			game.getPlayerOrder().nextMove();			
 		}
@@ -559,6 +565,52 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		updateFieldList();
 		updateFieldCommandList();
 		updateKosts();
+	}
+	
+	/**
+	 * Update the spinners for recruiting troops depending on the selected field.
+	 * 
+	 * This update method should not be called from the global update method.
+	 */
+	private void updateSpinners() {
+		if (selectedField != null && selectedField.getCommand() instanceof RecruitCommand && selectedField.getBuilding() instanceof MoxxisTavern) {
+			int[] selectedListFields = list_target_field.getSelectedIndices();
+			if (selectedListFields.length <= 1) {
+				Field selectedTarget;
+				if (selectedListFields.length == 0) {
+					selectedTarget = selectedField;
+				}
+				else {
+					selectedTarget = fieldTargetModel.getElementAt(selectedListFields[0]);
+				}
+				spinnerNormalTroops.setEnabled(true);
+				spinnerBadassTroops.setEnabled(true);
+				spinnerAufrstungen.setEnabled(true);
+				//save previous values
+				int normalTroops = (Integer) spinnerNormalTroops.getValue();
+				int badassTroops = (Integer) spinnerBadassTroops.getValue();
+				int upgradedTroops = (Integer) spinnerAufrstungen.getValue();
+				//set spinners to values for selected target
+				spinnerNormalTroops.setEnabled(true);
+				spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, selectedField.getBuilding().getRecruitableTroops(), normalTroops));
+				boolean badassesRecruitable = false;
+				for (Field boardField : game.getBoard().getFields()) {
+					badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation() != null && boardField.getAffiliation().equals(game.getLocalUser());
+				}
+				if (badassesRecruitable) {
+					spinnerBadassTroops.setEnabled(true);
+					spinnerAufrstungen.setEnabled(true);
+					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, selectedField.getBuilding().getRecruitableTroops()/2, badassTroops));
+					spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, Math.min(selectedTarget.getNormalTroops(), selectedField.getBuilding().getRecruitableTroops()), upgradedTroops));
+				}
+			}
+			else {
+				//no valid selection
+				spinnerNormalTroops.setEnabled(false);
+				spinnerBadassTroops.setEnabled(false);
+				spinnerAufrstungen.setEnabled(false);
+			}
+		}
 	}
 	
 	private void updateBoard() {
@@ -680,6 +732,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					btnAusfhrungBeenden.setEnabled(true);
 				}
 				if (command instanceof BuildCommand) {
+					//let the player select the type of building
 					if (field.getBuilding() instanceof EmptyBuilding) {
 						rdbtnAufbauen.setEnabled(true);
 						for (Building building : buildables) {
@@ -699,6 +752,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					rdbtnEridium.setEnabled(true);
 				}
 				else if (command instanceof MarchCommand) {
+					//add the targets to the list
 					for (Field target : findPossibleMovingTargets(field)) {
 						fieldTargetModel.addElement(target);
 					}
@@ -708,8 +762,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBadassTroops(), 1));
 				}
 				else if (command instanceof RaidCommand) {
+					//add all possible raid targets to the list
 					for (Field target : field.getNeighbours()) {
-						if (target.getAffiliation() != null && target.getAffiliation().equals(game.getLocalUser())) {
+						if (target.getAffiliation() != null && !target.getAffiliation().equals(game.getLocalUser())) {
 							if (target.getCommand() != null && target.getCommand().isRemovable()) {
 								fieldTargetModel.addElement(target);
 							}
@@ -717,6 +772,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					}
 				}
 				else if (command instanceof RecruitCommand) {
+					//enable the spinners
 					spinnerNormalTroops.setEnabled(true);
 					spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops(), 1));
 					boolean badassesRecruitable = false;
@@ -728,6 +784,14 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						spinnerAufrstungen.setEnabled(true);
 						spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops()/2, 1));
 						spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, Math.min(field.getNormalTroops(), field.getBuilding().getRecruitableTroops()), 1));
+					}
+					if (field.getBuilding() instanceof MoxxisTavern) {
+						//the player may recruit to neighbor fields
+						for (Field target : findPossibleMovingTargets(field)) {
+							if (target.getAffiliation() != null && target.getAffiliation().equals(game.getLocalUser())) {
+								fieldTargetModel.addElement(target);								
+							}
+						}
 					}
 				}
 			}
@@ -891,6 +955,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					}
 				}
 				else if (command instanceof RecruitCommand) {
+					int[] targets = list_target_field.getSelectedIndices();
 					int normalTroops = (Integer) spinnerNormalTroops.getValue();
 					int badassTroops = (Integer) spinnerBadassTroops.getValue();
 					int upgrades = (Integer) spinnerAufrstungen.getValue();
@@ -901,14 +966,24 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					else if (troops > selectedField.getBuilding().getRecruitableTroops()) {
 						new ErrorDialog("Du kannst nicht so viele Truppen auf einmal rekrutieren.\n\nDiese Selbstmordkandidaten wachsen nunmal nicht an Bäumen.").setVisible(true);
 					}
+					else if (targets.length > 1) {
+						new ErrorDialog("Du kannst deine Truppen nur in ein Feld rekrutieren.\n\nFür die ist es schon schwer genug sich ein Ziel zu merken.").setVisible(true);
+					}
 					else {
-						if (upgrades <= selectedField.getNormalTroops()) {
+						Field target;
+						if (selectedField.getBuilding() instanceof MoxxisTavern && targets.length != 0) {
+							target = fieldTargetModel.getElementAt(targets[0]);								
+						}
+						else {
+							target = selectedField;
+						}
+						if (upgrades <= target.getNormalTroops()) {
 							try {
 								resourceManager.payRecroutedTroops(normalTroops, badassTroops, upgrades, game.getLocalUser());
-								selectedField.addNormalTroops(normalTroops);
-								selectedField.addBadassTroops(badassTroops);
-								selectedField.removeNormalTroops(upgrades);
-								selectedField.addBadassTroops(upgrades);
+								target.addNormalTroops(normalTroops);
+								target.addBadassTroops(badassTroops);
+								target.removeNormalTroops(upgrades);
+								target.addBadassTroops(upgrades);
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
@@ -916,7 +991,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 							}
 						}
 						else {
-							new ErrorDialog("Du hast nicht genug Truppen um sie aufzurüsten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rüstest die Truppen deiner Gegner auf...").setVisible(true);
+							new ErrorDialog("Du hast nicht genug Truppen in diesem Feld um sie aufzurüsten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rüstest die Truppen deiner Gegner auf...").setVisible(true);
 						}
 					}
 				}

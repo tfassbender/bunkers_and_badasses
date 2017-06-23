@@ -123,9 +123,9 @@ public class PlayerOrder implements Serializable {
 	public void userPassed(User user) {
 		int playersPassed = nextOrder.size();
 		nextOrder.put(playersPassed, user);
-		if (!isTurnEnd()) {
+		/*if (!isTurnEnd()) {
 			nextMove();
-		}
+		}*/
 	}
 	
 	/**
