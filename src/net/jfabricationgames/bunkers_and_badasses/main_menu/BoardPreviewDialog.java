@@ -24,7 +24,7 @@ public class BoardPreviewDialog extends JDialog {
 	
 	public BoardPreviewDialog(GameCreationDialog callingFrame, Board board) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(BoardPreviewDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Karten\u00FCbersicht");
+		setTitle("Kartenvorschau - Bunkers and Badasses");
 		setBounds(100, 100, 900, 600);
 		setMinimumSize(new Dimension(450, 300));
 		setLocationRelativeTo(callingFrame);

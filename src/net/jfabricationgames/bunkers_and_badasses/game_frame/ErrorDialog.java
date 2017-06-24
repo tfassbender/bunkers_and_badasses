@@ -34,7 +34,7 @@ public class ErrorDialog extends JDialog {
 	public ErrorDialog(String errorText) {
 		setResizable(false);
 		setAlwaysOnTop(true);
-		setTitle("Bunkers and Badasses - Fehler");
+		setTitle("Fehler - Bunkers and Badasses");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ErrorDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 500, 450);

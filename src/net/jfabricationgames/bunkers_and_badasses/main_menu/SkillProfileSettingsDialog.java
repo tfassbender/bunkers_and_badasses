@@ -68,7 +68,7 @@ public class SkillProfileSettingsDialog extends JFrame {
 	private SkillProfileManager profileManager;
 	
 	public SkillProfileSettingsDialog(MainMenuFrame callingFrame, JFGClient client, SkillProfileManager profileManager) {
-		setTitle("Bunkers and Badasses - Skill-Profil");
+		setTitle("Skill Profil Einstellungen - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SkillProfileSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1100, 550);
 		setMinimumSize(new Dimension(1100, 550));

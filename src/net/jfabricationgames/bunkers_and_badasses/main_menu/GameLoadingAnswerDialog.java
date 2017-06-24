@@ -54,7 +54,7 @@ public class GameLoadingAnswerDialog extends JFrame {
 	
 	public GameLoadingAnswerDialog(GameLoadingDialog callingFrame, JFGClient client, List<User> players, MainMenuFrame mainMenu, Board selectedBoard, GameOverview overview) {
 		setResizable(false);
-		setTitle("Bunkers and Badasses - Spiel Laden");
+		setTitle("Spiel Laden - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingAnswerDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 500, 550);
 		setMinimumSize(new Dimension(500, 450));

@@ -47,7 +47,7 @@ public class AccountSettingsDialog extends JDialog {
 		this.client = client;
 
 		setResizable(false);
-		setTitle("Bunkers and Badasses - Profil Einstellungen");
+		setTitle("Profil Einstellungen - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AccountSettingsDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 500, 250);
 		setLocationRelativeTo(callingFrame);
@@ -170,13 +170,13 @@ public class AccountSettingsDialog extends JDialog {
 	
 	public void receiveUpdateAnswer(boolean updateSuccessfull, String username) {
 		if (updateSuccessfull) {
-			lblError.setText("Änderungen wurden eingetragen");
+			lblError.setText("ï¿½nderungen wurden eingetragen");
 			if (username != null) {
 				UserManager.setUsername(username);
 			}
 		}
 		else {
-			lblError.setText("Fehler: Änderungen fehlgeschlagen");
+			lblError.setText("Fehler: ï¿½nderungen fehlgeschlagen");
 		}
 		okButton.setEnabled(true);
 		cancelButton.setEnabled(true);

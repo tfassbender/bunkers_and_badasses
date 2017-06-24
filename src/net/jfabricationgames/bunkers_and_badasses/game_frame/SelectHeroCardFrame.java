@@ -77,7 +77,7 @@ public class SelectHeroCardFrame extends JFrame {
 		this.game = game;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SelectHeroCardFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Helden ausw\u00E4hlen");
+		setTitle("Helden auswählen - Bunkers and Badasses");
 		setBounds(100, 100, 600, 700);
 		setMinimumSize(new Dimension(600, 700));
 		getContentPane().setLayout(new BorderLayout());
@@ -338,7 +338,7 @@ public class SelectHeroCardFrame extends JFrame {
 	
 	private void selectHero() {
 		if (list_heroes.getSelectedIndex() == -1) {
-			new ErrorDialog("Du musst einen Helden aus der Liste ausw�hlen um ihn einzusetzen.").setVisible(true);
+			new ErrorDialog("Du musst einen Helden aus der Liste auswählen um ihn einzusetzen.").setVisible(true);
 		}
 		else {
 			if (selectionListener == null) {
@@ -347,6 +347,7 @@ public class SelectHeroCardFrame extends JFrame {
 			Hero hero = list_heroes.getSelectedValue();
 			game.getHeroCardManager().putBackCards(hero);
 			selectionListener.receiveSelectedHero(hero);
+			setVisible(false);
 		}
 	}
 	

@@ -37,7 +37,7 @@ public class BoardOverviewFrame extends JFrame {
 		
 		this.board = board;
 		
-		setTitle("Bunkers and Badasses - Spielfeld Übersicht");
+		setTitle("Spielfeld Übersicht - Bunkers and Badasses");
 		setBounds(100, 100, 1200, 700);
 		setMinimumSize(new Dimension(700, 400));
 		contentPane = new JPanel();

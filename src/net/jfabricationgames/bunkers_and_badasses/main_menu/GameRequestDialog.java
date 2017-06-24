@@ -56,7 +56,7 @@ public class GameRequestDialog extends JFrame {
 		
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameRequestDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Spiel Einladung");
+		setTitle("Spiel Einladung - Bunkers and Badasses");
 		
 		setBounds(100, 100, 500, 450);
 		setLocationRelativeTo(callingFrame);

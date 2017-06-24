@@ -69,7 +69,7 @@ public class TroopInfoFrame extends JFrame {
 		this.game = game;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TroopInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Truppen Info");
+		setTitle("Truppen Info - Bunkers and Badasses");
 		setBounds(100, 100, 900, 550);
 		setMinimumSize(new Dimension(900, 550));
 		

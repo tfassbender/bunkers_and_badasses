@@ -130,7 +130,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		this.game = game;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Zug Ausf\u00FChrung");
+		setTitle("Zug Ausführung - Bunkers and Badasses");
 		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1300, 800));
 		contentPane = new JPanel();

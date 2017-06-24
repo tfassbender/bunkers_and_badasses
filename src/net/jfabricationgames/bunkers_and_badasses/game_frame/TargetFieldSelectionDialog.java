@@ -69,7 +69,7 @@ public class TargetFieldSelectionDialog extends JDialog {
 		
 		setModal(true);
 		setResizable(false);
-		setTitle("Bunkers and Badasses - Ziel Auswahl");
+		setTitle("Ziel Auswahl - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TargetFieldSelectionDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
@@ -190,7 +190,7 @@ public class TargetFieldSelectionDialog extends JDialog {
 	
 	private void executeMoves() {
 		if (normalTroopsLeft == normalTroopsStart && badassTroopsLeft == badassTroopsStart) {
-			new ErrorDialog("Du hast keine Truppenbewegungen ausgewählt.\n\nDu solltest mindestens ein Ziel mit Truppen aussuchen.\nOder du lässt deine Truppen einfach im Kreis laufen.\nDas kann auch lustig sein.").setVisible(true);
+			new ErrorDialog("Du hast keine Truppenbewegungen ausgewï¿½hlt.\n\nDu solltest mindestens ein Ziel mit Truppen aussuchen.\nOder du lï¿½sst deine Truppen einfach im Kreis laufen.\nDas kann auch lustig sein.").setVisible(true);
 		}
 		else {
 			Field fight = null;

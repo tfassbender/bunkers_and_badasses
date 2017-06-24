@@ -68,7 +68,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 		this.selectable = selectable;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnGoalTurnBonusDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Runden Ziele");
+		setTitle("Runden Ziele / Boni - Bunkers and Badasses");
 		setBounds(100, 100, 1000, 300);
 		setMinimumSize(new Dimension(1000, 300));
 		
@@ -261,6 +261,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	private void chooseNewTurnBonus() {
 		if (selectedTurnBonus != null) {
 			listener.receiveTurnBonusSelection(selectedTurnBonus);
+			setVisible(false);
 		}
 	}
 	

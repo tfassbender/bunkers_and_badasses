@@ -81,7 +81,7 @@ public class LoginClientMain extends JFrame {
 		setContentPane(contentPane);
 		
 		setResizable(false);
-		setTitle("Bunkers And Badasses - Login");
+		setTitle("Login - Bunkers And Badasses");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 525, 275);
 		setLocationRelativeTo(null);

@@ -25,7 +25,7 @@ public class FightManager implements Serializable {
 	private Fight currentFight;
 	private transient FightExecutionFrame fightExecutionFrame;
 	
-	private transient User localPlayer;	
+	//private transient User localPlayer;	
 	private transient List<User> players;
 	
 	private transient GameTurnBonusManager gameTurnBonusManager;
@@ -34,12 +34,15 @@ public class FightManager implements Serializable {
 	private transient TurnExecutionManager turnExecutionManager;
 	private Board board;
 	
+	private Game game;
+	
 	private transient JFGClient client;
 	
-	public FightManager(JFGClient client, User localPlayer, List<User> players, GameTurnBonusManager gameTurnBonusManager, 
+	public FightManager(JFGClient client, Game game, List<User> players, GameTurnBonusManager gameTurnBonusManager, 
 			GameTurnGoalManager gameTurnGoalManager, PointManager pointManager, TurnExecutionManager turnExecutionManager, Board board) {
 		this.client = client;
-		this.localPlayer = localPlayer;
+		//this.localPlayer = localPlayer;
+		this.game = game;
 		this.players = players;
 		this.gameTurnBonusManager = gameTurnBonusManager;
 		this.gameTurnGoalManager = gameTurnGoalManager;
@@ -81,6 +84,12 @@ public class FightManager implements Serializable {
 		currentFight.setDefendingField(targetField);
 		currentFight.setAttackingNormalTroops(normalTroops);
 		currentFight.setAttackingBadassTroops(badassTroops);
+		currentFight.setAttackingPlayer(startField.getAffiliation());
+		currentFight.setDefendingPlayer(targetField.getAffiliation());
+		currentFight.calculateCurrentStrength();
+		if (targetField.getAffiliation() == null) {
+			currentFight.setDefendingHeroChosen(true);//skags can't chose heros
+		}
 		addPossibleSupportFields();
 		fightExecutionFrame.setVisible(true);
 		fightExecutionFrame.requestFocus();
@@ -134,7 +143,7 @@ public class FightManager implements Serializable {
 		}
 		else {
 			for (Field field : currentFight.getDefenceSupporters()) {
-				if (!field.getAffiliation().equals(currentFight.getDefendingPlayer())) {
+				if (currentFight.getDefendingPlayer() != null && !field.getAffiliation().equals(currentFight.getDefendingPlayer())) {
 					supporters.add(field.getAffiliation());
 				}
 			}
@@ -157,13 +166,15 @@ public class FightManager implements Serializable {
 	 */
 	public void update() {
 		boolean fightEnded = false;
-		if (currentFight.getAttackingPlayer().equals(localPlayer)) {
+		if (currentFight.getAttackingPlayer().equals(game.getLocalUser())) {
 			//check for a changed battle state and then send an update
 			if (currentFight.allSupportersAnswered()) {
 				//all supporters answered -> set battle state
+				currentFight.calculateCurrentStrength();
 				currentFight.setBattleState(Fight.STATE_HEROS);
 			}
 			if (currentFight.isAttackingHeroChosen() && currentFight.isDefendingHeroChosen()) {
+				currentFight.calculateWinner();
 				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
 			}
 			if (currentFight.isRetreatFieldChosen()) {
@@ -180,6 +191,7 @@ public class FightManager implements Serializable {
 				}
 			}
 			sendUpdate();
+			fightExecutionFrame.update();
 		}
 		else {
 			//just send an update and let the attacking player merge it
@@ -194,7 +206,8 @@ public class FightManager implements Serializable {
 	 * Send an update to the (fight-)starting player or the other player if the local player is the starter.
 	 */
 	private void sendUpdate() {
-		FightTransfereMessage message = new FightTransfereMessage(currentFight, currentFight.getAttackingPlayer().equals(localPlayer));
+		FightTransfereMessage message = new FightTransfereMessage(currentFight, currentFight.getAttackingPlayer().equals(game.getLocalUser()));
+		client.resetOutput();
 		client.sendMessage(message);
 	}
 	
@@ -207,7 +220,7 @@ public class FightManager implements Serializable {
 	 * 		The fight object sent from the server.
 	 */
 	public void receiveFight(Fight fight) {
-		if (fight.getAttackingPlayer().equals(localPlayer)) {
+		if (fight.getAttackingPlayer().equals(game.getLocalUser())) {
 			mergeFight(fight);
 		}
 		else {
@@ -238,6 +251,7 @@ public class FightManager implements Serializable {
 			}
 			if (fight.allSupportersAnswered()) {
 				//all supporters answered -> set battle state
+				fight.calculateCurrentStrength();
 				fight.setBattleState(Fight.STATE_HEROS);
 			}
 		}
@@ -247,6 +261,7 @@ public class FightManager implements Serializable {
 			currentFight.setDefendingHero(fight.getDefendingHero());
 			currentFight.setUseDefendingHeroEffect(fight.isUseDefendingHeroEffect());
 			if (currentFight.isAttackingHeroChosen()) {
+				fight.calculateCurrentStrength();
 				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
 			}
 		}
@@ -282,6 +297,7 @@ public class FightManager implements Serializable {
 			//execute the fight end after the update was sent
 			endFight();
 		}
+		fightExecutionFrame.update();
 	}
 	/**
 	 * Just override the current fight with the update from the server.
@@ -290,12 +306,16 @@ public class FightManager implements Serializable {
 	 * 		The fight update from the server.
 	 */
 	private void overrideFight(Fight fight) {
-		boolean fightStarted = currentFight == null;
-		this.currentFight = fight;
-		if (fightStarted) {
+		//if the fight is started there is no current fight -> just override
+		if (currentFight == null) {
+			this.currentFight = fight;
 			fightExecutionFrame.setVisible(true);
 			fightExecutionFrame.requestFocus();
 			showSupportRequests();
+		}
+		else {
+			//if there is already a fight overriding causes problems (references...) so use another kind of merge
+			currentFight.merge(fight);
 		}
 	}
 	
@@ -310,8 +330,8 @@ public class FightManager implements Serializable {
 	
 	private void showSupportRequests() {
 		for (Field field : currentFight.getPossibleSupporters()) {
-			if (field.getAffiliation().equals(localPlayer)) {
-				new SupportRequestFrame(currentFight, field, this).setVisible(true);
+			if (field.getAffiliation().equals(game.getLocalUser())) {
+				new SupportRequestFrame(field, this).setVisible(true);
 			}
 		}
 	}

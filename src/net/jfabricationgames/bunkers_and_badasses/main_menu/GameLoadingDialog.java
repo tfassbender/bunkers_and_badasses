@@ -74,7 +74,7 @@ public class GameLoadingDialog extends JFrame {
 		this.playableBoards = playableBoards;
 		
 		setResizable(false);
-		setTitle("Bunkers and Badasses - Spiel Laden");
+		setTitle("Spiel Laden - Bunkers and Badasses");
 		setBounds(100, 100, 450, 600);
 		setLocationRelativeTo(callingFrame);
 		getContentPane().setLayout(new BorderLayout());

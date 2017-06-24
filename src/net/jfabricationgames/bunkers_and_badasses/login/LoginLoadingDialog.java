@@ -26,7 +26,7 @@ public class LoginLoadingDialog extends JDialog {
 	
 	public LoginLoadingDialog(JFGClient client) {
 		setUndecorated(true);
-		setTitle("Bunkers And Badasses - Verbindungsaufbau");
+		setTitle("Verbindungsaufbau - Bunkers And Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginLoadingDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		this.client = client;
 		

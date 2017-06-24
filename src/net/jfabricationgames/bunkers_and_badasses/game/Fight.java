@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
+import net.jfabricationgames.bunkers_and_badasses.game_command.DefendCommand;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Fight implements Serializable {
@@ -75,6 +76,47 @@ public class Fight implements Serializable {
 		fallingTroopsSupport = new HashMap<Field, Integer>();
 		fallenTroops = new HashMap<Field, int[]>();
 		battleState = STATE_SUPPORT;
+	}
+	
+	/**
+	 * Merge the fights by overriding all data with the data from the new fight.
+	 * 
+	 * This method is just used to keep the fight references clear.
+	 * 
+	 * @param fight
+	 * 		The fight with the new data.
+	 */
+	public void merge(Fight fight) {
+		attackingPlayer = fight.attackingPlayer;
+		defendingPlayer = fight.defendingPlayer;
+		attackingField = fight.attackingField;
+		defendingField = fight.defendingField;
+		battleState = fight.battleState;
+		winner = fight.winner;
+		possibleSupporters = fight.possibleSupporters;
+		supportRejections = fight.supportRejections;
+		attackSupporters = fight.attackSupporters;
+		defenceSupporters = fight.defenceSupporters;
+		attackingNormalTroops = fight.attackingNormalTroops;
+		attackingBadassTroops = fight.attackingBadassTroops;
+		attackingSupportStrength = fight.attackingSupportStrength;
+		defendingSupportStrength = fight.defendingSupportStrength;
+		currentAttackingStrength = fight.currentAttackingStrength;
+		currentDefendingStrength = fight.currentDefendingStrength;
+		attackingHero = fight.attackingHero;
+		defendingHero = fight.defendingHero;
+		useAttackingHeroEffect = fight.useAttackingHeroEffect;
+		useDefendingHeroEffect = fight.useDefendingHeroEffect;
+		attackingHeroChosen = fight.attackingHeroChosen;
+		defendingHeroChosen = fight.defendingHeroChosen;
+		retreatField = fight.retreatField;
+		retreatFieldChosen = fight.retreatFieldChosen;
+		fallingTroopsTotal = fight.fallingTroopsTotal;
+		fallingTroopsLooser = fight.fallingTroopsLooser;
+		fallingTroopsSupport = fight.fallingTroopsSupport;
+		fallingTroopsChosen = fight.fallingTroopsChosen;
+		fallenTroops = fight.fallenTroops;
+		fallenTroopsChosen = fight.fallenTroopsChosen;
 	}
 	
 	public void executeHerosEffect(Hero hero) {
@@ -149,19 +191,43 @@ public class Fight implements Serializable {
 	}
 	
 	public void calculateCurrentStrength() {
-		currentAttackingStrength = attackingField.getTroopStrength();
+		//attacking troops
+		currentAttackingStrength = attackingNormalTroops + 2*attackingBadassTroops;
+		attackingSupportStrength = 0;
+		//attacking support
 		for (Field supporter : attackSupporters) {
-			currentAttackingStrength += supporter.getTroopStrength();
+			attackingSupportStrength += supporter.getTroopStrength();
 		}
+		currentAttackingStrength += attackingSupportStrength;
+		//attacking hero
 		if (attackingHero != null && !useAttackingHeroEffect && battleState > STATE_HEROS) {
 			currentAttackingStrength += attackingHero.getAttack();
 		}
+		//defending troops and building
 		currentDefendingStrength = defendingField.getDefenceStrength();
+		defendingSupportStrength = 0;
+		//defending support
 		for (Field supporter : defenceSupporters) {
-			currentDefendingStrength += supporter.getTroopStrength();
+			defendingSupportStrength += supporter.getTroopStrength();
 		}
+		currentDefendingStrength += defendingSupportStrength;
+		//defend command
+		if (defendingField.getCommand() != null && defendingField.getCommand() instanceof DefendCommand) {
+			currentDefendingStrength++;
+		}
+		//defending hero
 		if (defendingHero != null && !useDefendingHeroEffect && battleState > STATE_HEROS) {
 			currentDefendingStrength += defendingHero.getAttack();
+		}
+	}
+	
+	public void calculateWinner() {
+		calculateCurrentStrength();
+		if (currentAttackingStrength > currentDefendingStrength) {
+			winner = ATTACKERS;
+		}
+		else {
+			winner = DEFENDERS;
 		}
 	}
 	
@@ -233,6 +299,17 @@ public class Fight implements Serializable {
 		}
 		else if (winner == DEFENDERS) {
 			return defendingPlayer;
+		}
+		else {
+			return null;
+		}
+	}
+	public User getLoosingPlayer() {
+		if (winner == ATTACKERS) {
+			return defendingPlayer;
+		}
+		else if (winner == DEFENDERS) {
+			return attackingPlayer;
 		}
 		else {
 			return null;

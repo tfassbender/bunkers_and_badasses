@@ -71,7 +71,7 @@ public class GameOverviewFrame extends JFrame {
 		selectedUser = game.getLocalUser();
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Spiel \u00DCbersicht");
+		setTitle("Spiel Übersicht - Bunkers and Badasses");
 		setBounds(100, 100, 1100, 600);
 		setMinimumSize(new Dimension(1100, 600));
 		

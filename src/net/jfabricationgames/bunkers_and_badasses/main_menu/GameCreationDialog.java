@@ -69,7 +69,7 @@ public class GameCreationDialog extends JFrame {
 			}
 		});
 		setResizable(false);
-		setTitle("Bunkers and Badasses - Spiel Erstellen");
+		setTitle("Spiel Erstellen - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameCreationDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		
 		this.client = client;

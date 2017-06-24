@@ -26,7 +26,7 @@ public class ConfirmDialog extends JDialog {
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		setResizable(false);
-		setTitle("Bunkers and Badasses - Best\u00E4tigung");
+		setTitle("Bestätigung - Bunkers and Badasses");
 		setBounds(100, 100, 400, 150);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());

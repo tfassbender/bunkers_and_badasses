@@ -308,11 +308,15 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	private void interpreteFightTransfereMessage(FightTransfereMessage message, JFGConnection connection) {
 		if (message.isFromStartingPlayer()) {
 			//broadcast the message to all but the starting player
-			connection.getGroup().sendMessage(message, connection);
+			BunkersAndBadassesConnectionGroup group = ((BunkersAndBadassesConnectionGroup) connection.getGroup());
+			group.resetAll();
+			group.sendMessageUnshared(message, connection);
 		}
 		else {
 			//send the message to the starting player to merge the new data
-			server.getUserMap().get(message.getFight().getAttackingPlayer()).sendMessage(message);
+			JFGConnection startingPlayer = server.getUserMap().get(message.getFight().getAttackingPlayer());
+			startingPlayer.resetOutput();
+			startingPlayer.sendMessage(message);
 		}
 	}
 }

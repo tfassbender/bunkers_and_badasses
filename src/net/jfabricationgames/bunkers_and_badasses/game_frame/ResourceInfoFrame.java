@@ -84,7 +84,7 @@ public class ResourceInfoFrame extends JFrame {
 		});
 		this.game = game;
 		
-		setTitle("Bunkers and Badasses - Resourcen Info");
+		setTitle("Resourcen Info - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ResourceInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1050, 650);
 		setMinimumSize(new Dimension(1050, 650));

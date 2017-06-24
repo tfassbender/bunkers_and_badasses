@@ -132,7 +132,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		fallenTroops = new HashMap<Field, int[]>();
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FightExecutionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Kampf Ausf\u00FChrung");
+		setTitle("Kampf Ausführung - Bunkers and Badasses");
 		setBounds(100, 100, 1250, 825);
 		setMinimumSize(new Dimension(1200, 825));
 		
@@ -451,6 +451,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		scrollPane_hero_effect_atk.setViewportView(txtrHeroEffectAttacker);
 		
 		btnHeldAuswhlen = new JButton("Held Ausw\u00E4hlen");
+		btnHeldAuswhlen.setEnabled(false);
 		btnHeldAuswhlen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectHero();
@@ -460,6 +461,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_hero_attacker.add(btnHeldAuswhlen, "cell 0 7 4 1,alignx center");
 		
 		btnKeinenHeldenVerwenden = new JButton("Keinen Helden Verwenden");
+		btnKeinenHeldenVerwenden.setEnabled(false);
 		btnKeinenHeldenVerwenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectEmptyHero();
@@ -536,10 +538,12 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		scrollPane_hero_effect_def.setViewportView(txtrHeroEffectDefender);
 		
 		btnHeldAuswhlen_1 = new JButton("Held Ausw\u00E4hlen");
+		btnHeldAuswhlen_1.setEnabled(false);
 		btnHeldAuswhlen_1.setBackground(Color.GRAY);
 		panel_hero_defender.add(btnHeldAuswhlen_1, "cell 0 7 4 1,alignx center");
 		
 		btnKeinenHeldenVerwenden_1 = new JButton("Keinen Helden Verwenden");
+		btnKeinenHeldenVerwenden_1.setEnabled(false);
 		btnKeinenHeldenVerwenden_1.setBackground(Color.GRAY);
 		panel_hero_defender.add(btnKeinenHeldenVerwenden_1, "cell 0 8 4 1,alignx center");
 		
@@ -626,6 +630,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups.add(lblGesammt, "cell 1 2");
 		
 		spinner_fallende_truppen_gesammt = new JSpinner();
+		spinner_fallende_truppen_gesammt.setEnabled(false);
 		spinner_fallende_truppen_gesammt.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fallingTroops = (Integer) spinner_fallende_truppen_gesammt.getValue();
@@ -645,6 +650,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups.add(lblVerlierer_1, "cell 1 3");
 		
 		spinner_fallende_truppen_verlierer = new JSpinner();
+		spinner_fallende_truppen_verlierer.setEnabled(false);
 		spinner_fallende_truppen_verlierer.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				fallingTroopsLooser = (Integer) spinner_fallende_truppen_verlierer.getValue();
@@ -688,6 +694,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups.add(lblUntersttzer_1, "cell 1 5");
 		
 		spinner_fallende_truppen_unterstuetzer = new JSpinner();
+		spinner_fallende_truppen_unterstuetzer.setEnabled(false);
 		spinner_fallende_truppen_unterstuetzer.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				int fallingSupport = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
@@ -704,6 +711,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups.add(spinner_fallende_truppen_unterstuetzer, "cell 2 5");
 		
 		btnBesttigen_1 = new JButton("Best\u00E4tigen");
+		btnBesttigen_1.setEnabled(false);
 		btnBesttigen_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				confirmFallingTroopSelection();
@@ -711,6 +719,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		});
 		
 		btnAuswahlZurcksetzen = new JButton("Auswahl zur\u00FCcksetzen");
+		btnAuswahlZurcksetzen.setEnabled(false);
 		btnAuswahlZurcksetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearFallingSupportTroops();
@@ -742,6 +751,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		scrollPane_rueckzug.setViewportView(list_rueckzug);
 		
 		btnAuswhlen = new JButton("Ausw\u00E4hlen");
+		btnAuswhlen.setEnabled(false);
 		btnAuswhlen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectRetreatField();
@@ -807,6 +817,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups_looser.add(lblNormaleTruppen_1, "cell 1 4 2 1");
 		
 		spinner_normal_troups = new JSpinner();
+		spinner_normal_troups.setEnabled(false);
 		spinner_normal_troups.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				updateFallenTroops();
@@ -819,6 +830,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups_looser.add(lblBadassTruppen_1, "cell 1 5 2 1");
 		
 		spinner_badass_troups = new JSpinner();
+		spinner_badass_troups.setEnabled(false);
 		spinner_badass_troups.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				updateFallenTroops();
@@ -827,6 +839,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups_looser.add(spinner_badass_troups, "cell 3 5,growx");
 		
 		btnAuswahlZurcksetzen_1 = new JButton("Auswahl zur\u00FCcksetzen");
+		btnAuswahlZurcksetzen_1.setEnabled(false);
 		btnAuswahlZurcksetzen_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearFallenTroops();
@@ -836,6 +849,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_fallen_troups_looser.add(btnAuswahlZurcksetzen_1, "cell 5 5,alignx center");
 		
 		btnBesttigen = new JButton("Best\u00E4tigen");
+		btnBesttigen.setEnabled(false);
 		btnBesttigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				confirmFallenTroopSelection();
@@ -853,11 +867,15 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				fight.setAttackingHero(hero);
 				fight.setAttackingHeroChosen(true);
 				fight.setUseAttackingHeroEffect(rdbtnEffektAttacker.isSelected());
+				btnHeldAuswhlen.setEnabled(false);
+				btnKeinenHeldenVerwenden.setEnabled(false);
 			}
-			else if (fight.getDefendingPlayer().equals(game.getLocalUser())) {
+			else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser())) {
 				fight.setDefendingHero(hero);
 				fight.setDefendingHeroChosen(true);
 				fight.setUseDefendingHeroEffect(rdbtnEffectDefender.isSelected());
+				btnHeldAuswhlen_1.setEnabled(false);
+				btnKeinenHeldenVerwenden_1.setEnabled(false);
 			}
 			else {
 				throw new IllegalArgumentException("Selecting player is neither attacker nor defender.");
@@ -879,11 +897,15 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			fight.setAttackingHero(null);
 			fight.setAttackingHeroChosen(true);
 			fight.setUseAttackingHeroEffect(false);
+			btnHeldAuswhlen.setEnabled(false);
+			btnKeinenHeldenVerwenden.setEnabled(false);
 		}
-		else if (fight.getDefendingPlayer().equals(game.getLocalUser())) {
+		else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser())) {
 			fight.setDefendingHero(null);
 			fight.setDefendingHeroChosen(true);
 			fight.setUseDefendingHeroEffect(false);
+			btnHeldAuswhlen_1.setEnabled(false);
+			btnKeinenHeldenVerwenden_1.setEnabled(false);
 		}
 		else {
 			throw new IllegalArgumentException("Selecting player is neither attacker nor defender.");
@@ -894,7 +916,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void selectRetreatField() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		if (list_rueckzug.getSelectedIndex() == -1 && !fieldRetreadModel.isEmpty()) {
-			new ErrorDialog("Du musst ein Feld ausw�hlen um den R�ckzug zu befehlen. ").setVisible(true);
+			new ErrorDialog("Du musst ein Feld auswählen um den Rückzug zu befehlen. ").setVisible(true);
 		}
 		else if (fieldRetreadModel.isEmpty()) {
 			fight.setRetreatField(null);
@@ -911,10 +933,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void confirmFallingTroopSelection() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		if (fallingTroopsLeft > 0) {
-			new ErrorDialog("Du kannst die Fallenden Truppen nicht best�tigen wenn noch Truppen �brig sind.\n\nGnade ist hier unangebracht (und nicht erlaubt).").setVisible(true);
+			new ErrorDialog("Du kannst die Fallenden Truppen nicht bestätigen wenn noch Truppen übrig sind.\n\nGnade ist hier unangebracht (und nicht erlaubt).").setVisible(true);
 		}
 		else if (fallingTroopsLeft < 0) {
-			new ErrorDialog("Du kannst nicht mehr Truppen t�ten als du insgesammt ausgew�hlt hast.\n\nWenn alle auf einmal draufgehn wird Dein n�chster Zug doch total langweilig.").setVisible(true);
+			new ErrorDialog("Du kannst nicht mehr Truppen töten als du insgesammt ausgewählt hast.\n\nWenn alle auf einmal draufgehn wird Dein nächster Zug doch total langweilig.").setVisible(true);
 		}
 		else {
 			fight.setFallingTroopsTotal(fallingTroops);
@@ -945,7 +967,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			fallenTroopsSelected &= fallingTroops >= fallenTroopCount[0] + 2*fallenTroopCount[1];
 		}
 		if (!fallenTroopsSelected) {
-			new ErrorDialog("Du hast in (mindestens) einem Feld zu wenige Truppen ausgew�hlt die fallen.").setVisible(true);
+			new ErrorDialog("Du hast in (mindestens) einem Feld zu wenige Truppen ausgewählt die fallen.").setVisible(true);
 		}
 		else {
 			fight.setFallenTroops(fallenTroops);
@@ -972,7 +994,12 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		Fight fight = game.getFightManager().getCurrentFight();
 		if (fight != null) {
 			txtAngreifer.setText(fight.getAttackingPlayer().getUsername());
-			txtVerteidiger.setText(fight.getDefendingPlayer().getUsername());
+			if (fight.getDefendingPlayer() != null) {
+				txtVerteidiger.setText(fight.getDefendingPlayer().getUsername());				
+			}
+			else {
+				txtVerteidiger.setText("Skags (Neutral)");
+			}
 			txtAngreifendesfeld.setText(fight.getAttackingField().getName());
 			txtVerteidigendesFeld.setText(fight.getDefendingField().getName());
 			txtTruppenangreifer.setText(Integer.toString(fight.getCurrentAttackingStrength()));
@@ -981,16 +1008,16 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			txtUntersttzerverteidiger.setText(Integer.toString(fight.getDefendingSupportStrength()));
 			switch (fight.getBattleState()) {
 				case Fight.STATE_SUPPORT:
-					txtPhase.setText("Verst�rkung anfordern");
+					txtPhase.setText("Verstärkung anfordern");
 					break;
 				case Fight.STATE_HEROS:
 					txtPhase.setText("Helden einsetzen");
 					break;
 				case Fight.STATE_RETREAT_FIELD:
-					txtPhase.setText("R�ckzugsfeld bestimmen");
+					txtPhase.setText("Rückzugsfeld bestimmen");
 					break;
 				case Fight.STATE_FALLEN_TROOP_SELECTION:
-					txtPhase.setText("Fallende Truppen ausw�hlen");
+					txtPhase.setText("Fallende Truppen auswählen");
 					break;
 				case Fight.STATE_FALLEN_TROOP_REMOVING:
 					txtPhase.setText("Gefallene Truppen vom Feld nehmen");
@@ -1028,10 +1055,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void updateDefendingField() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		if (fight != null) {
-			fieldPanelAttacker.updateField(fight.getDefendingField());			
+			fieldPanelDefender.updateField(fight.getDefendingField());			
 		}
 		else {
-			fieldPanelAttacker.updateField(null);
+			fieldPanelDefender.updateField(null);
 		}
 	}
 	
@@ -1068,10 +1095,14 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		txtHeroDefenderDef.setText("");
 		txtrHeroEffectDefender.setText("");
 		if (fight != null && fight.getBattleState() >= Fight.STATE_HEROS) {
-			btnHeldAuswhlen.setEnabled(true);
-			btnHeldAuswhlen_1.setEnabled(true);
-			btnKeinenHeldenVerwenden.setEnabled(true);
-			btnKeinenHeldenVerwenden_1.setEnabled(true);
+			if (fight.getAttackingPlayer().equals(game.getLocalUser()) && !fight.isAttackingHeroChosen()) {
+				btnHeldAuswhlen.setEnabled(true);
+				btnKeinenHeldenVerwenden.setEnabled(true);				
+			}
+			else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser()) && !fight.isDefendingHeroChosen()) {
+				btnHeldAuswhlen_1.setEnabled(true);
+				btnKeinenHeldenVerwenden_1.setEnabled(true);				
+			}
 			Hero attackingHero = fight.getAttackingHero();
 			Hero defendingHero = fight.getDefendingHero();
 			//only show the players own choice
@@ -1084,7 +1115,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				}
 			}
 			if (defendingHero != null) {
-				if (fight.getBattleState() > Fight.STATE_HEROS || fight.getDefendingPlayer().equals(game.getLocalUser())) {
+				if (fight.getBattleState() > Fight.STATE_HEROS || (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser()))) {
 					txtHerodefender.setText(fight.getDefendingHero().getName());
 					txtHeroDefenderAtk.setText(Integer.toString(defendingHero.getAttack()));
 					txtHeroDefenderDef.setText(Integer.toString(defendingHero.getDefence()));
@@ -1099,17 +1130,21 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		if (fight != null && fight.getBattleState() >= Fight.STATE_RETREAT_FIELD) {
 			switch (fight.getWinner()) {
 				case Fight.ATTACKERS:
+					if (fight.getDefendingPlayer() != null) {
+						txtVerlierer.setText(fight.getDefendingPlayer().getUsername());						
+					}
+					else {
+						txtVerlierer.setText("Skags (Neutral)");
+					}
 					txtSieger.setText(fight.getAttackingPlayer().getUsername());
 					break;
 				case Fight.DEFENDERS:
-					txtSieger.setText(fight.getDefendingPlayer().getUsername());
-					break;
-			}
-			switch (fight.getWinner()) {
-				case Fight.ATTACKERS:
-					txtVerlierer.setText(fight.getDefendingPlayer().getUsername());
-					break;
-				case Fight.DEFENDERS:
+					if (fight.getDefendingPlayer() != null) {
+						txtSieger.setText(fight.getDefendingPlayer().getUsername());						
+					}
+					else {
+						txtSieger.setText("Skags (Neutral)");
+					}
 					txtVerlierer.setText(fight.getAttackingPlayer().getUsername());
 					break;
 			}
@@ -1124,7 +1159,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void updateRetreatField() {
 		fieldRetreadModel.removeAllElements();
 		Fight fight = game.getFightManager().getCurrentFight();
-		if (fight != null && fight.getBattleState() >= Fight.STATE_RETREAT_FIELD) {
+		if (fight != null && fight.getBattleState() >= Fight.STATE_RETREAT_FIELD && fight.getLoosingPlayer().equals(game.getLocalUser())) {
 			for (Field field : fight.calculateRetreatFields()) {
 				fieldRetreadModel.addElement(field);
 			}
@@ -1165,8 +1200,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			int current = (Integer) spinner_fallende_truppen_verlierer.getValue();
 			spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(current, fallingTroopsTotal/2, fallingTroops[1], 1));
 			current = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
-			int maxFallingSupport = fight.calculateMaxFallingSupportTroops(fallingTroopsTotal, selectedFallenTroopsField);
-			spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(current, 0, maxFallingSupport, 1));
+			if (selectedFallenTroopsField != null) {
+				int maxFallingSupport = fight.calculateMaxFallingSupportTroops(fallingTroopsTotal, selectedFallenTroopsField);
+				spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(current, 0, maxFallingSupport, 1));				
+			}
 		}
 	}
 	private void updateFallingTroopSupportSelection(Field field) {
@@ -1196,7 +1233,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				fieldSelectionModel.addElement(fight.getAttackingField());
 				fieldsFallenTroops.add(fight.getAttackingField());
 			}
-			else if (fight.getDefendingField().getAffiliation().equals(game.getLocalUser())) {
+			else if (fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser())) {
 				fieldSelectionModel.addElement(fight.getDefendingField());
 				fieldsFallenTroops.add(fight.getDefendingField());
 			}
@@ -1226,7 +1263,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	}
 	private void updateSelectedFallenTroopField() {
 		Fight fight = game.getFightManager().getCurrentFight();
-		if (fight != null) {
+		if (fight != null && selectedFallenTroopsField != null) {
 			int[] troops = fallenTroops.get(selectedFallenTroopsField);
 			if (troops == null) {
 				troops = new int[2];

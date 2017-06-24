@@ -119,7 +119,7 @@ public class MainMenuFrame extends JFrame {
 	       //e.printStackTrace();
 	    }
 		
-		setTitle("Bunkers and Badasses - Hauptmen\u00FC");
+		setTitle("Hauptmenü - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainMenuFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		
 		imageLoader = new ImageLoader();

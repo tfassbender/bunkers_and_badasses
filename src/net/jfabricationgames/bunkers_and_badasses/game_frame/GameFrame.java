@@ -641,12 +641,17 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		else {
 			txtSelectedfield.setText("");
 		}
-		User activePlayer = game.getTurnManager().getPlayerOrder().getActivePlayer();
-		if (activePlayer != null) {
-			txtActiveplayer.setText(activePlayer.getUsername());
+		if (game.getGameState().equals(GameState.PLAN)) {
+			txtActiveplayer.setText("Alle (Planungsphase)");
 		}
 		else {
-			txtActiveplayer.setText("");
+			User activePlayer = game.getTurnManager().getPlayerOrder().getActivePlayer();
+			if (activePlayer != null) {
+				txtActiveplayer.setText(activePlayer.getUsername());
+			}
+			else {
+				txtActiveplayer.setText("");
+			}			
 		}
 		if (selectedField != null && selectedField.getCommand() != null) {
 			txtCommand.setText(selectedField.getCommand().getName());

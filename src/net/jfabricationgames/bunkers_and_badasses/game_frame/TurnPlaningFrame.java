@@ -110,7 +110,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		this.game = game;
 		
-		setTitle("Bunkers and Badasses - Zug Planung");
+		setTitle("Zug Planung - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1300, 800));

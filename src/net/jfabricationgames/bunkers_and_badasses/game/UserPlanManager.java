@@ -159,7 +159,7 @@ public class UserPlanManager implements Serializable {
 			message.setType(GameTransferMessage.TransferType.TURN_OVER);//start the next (first) turn (broadcasted) (turn is not really over but the other game knows what's to do)
 			this.game.getClient().resetOutput();
 			this.game.getClient().sendMessage(message);
-			this.game.getGameFrame().update();
+			this.game.getGameFrame().updateAllFrames();
 		}
 	}
 	

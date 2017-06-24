@@ -56,7 +56,7 @@ public class AdditionalCommandFrame extends JFrame {
 		this.callingFrame = callingFrame;
 		this.game = game;
 		
-		setTitle("Bunkers and Badasses - Zus\u00E4tzliche Befehle Kaufen");
+		setTitle("Zusätzliche Befehle Kaufen - Bunkers and Badasses");
 		setResizable(false);
 		setBounds(100, 100, 600, 300);
 		setLocationRelativeTo(callingFrame);
@@ -144,7 +144,7 @@ public class AdditionalCommandFrame extends JFrame {
 			resource.payAdditionalCommand();
 			game.getPlanManager().addCommand(command.getIdentifier());
 			callingFrame.update();
-			dispose();
+			setVisible(false);
 		}
 	}
 }

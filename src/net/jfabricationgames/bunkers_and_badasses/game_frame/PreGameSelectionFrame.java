@@ -116,7 +116,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		
 		turnDialog = new TurnGoalTurnBonusDialog(game, false, false);
 		
-		setTitle("Bunkers and Badasses - Spiel Start");
+		setTitle("Spiel Vorbereitung - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PreGameSelectionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1100, 600);

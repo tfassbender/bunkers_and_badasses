@@ -30,7 +30,7 @@ public class SupportRequestFrame extends JFrame {
 	
 	private static User localPlayer;
 	
-	private Fight fight;
+	//private Fight fight;
 	private Field supportField;
 	private FightManager manager;
 	
@@ -45,15 +45,15 @@ public class SupportRequestFrame extends JFrame {
 	private JRadioButton rdbtnAngreifer;
 	private JRadioButton rdbtnVerteidiger;
 	
-	public SupportRequestFrame(Fight fight, Field supportField, FightManager manager) {
+	public SupportRequestFrame(Field supportField, FightManager manager) {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.fight = fight;
+		//this.fight = fight;
 		this.supportField = supportField;
 		this.manager = manager;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SupportRequestFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setTitle("Bunkers and Badasses - Unterst\u00FCtzungs Anfrage");
+		setTitle("Unterstützungs Anfrage - Bunkers and Badasses");
 		setBounds(100, 100, 400, 500);
 		setMinimumSize(new Dimension(400, 500));
 		
@@ -222,38 +222,49 @@ public class SupportRequestFrame extends JFrame {
 		panel_6.add(btnUntersttzungVerweigern, "cell 2 1");
 		btnUntersttzungVerweigern.setBackground(Color.GRAY);
 		
-		updateRequest(fight, supportField);
+		updateRequest(manager.getCurrentFight(), supportField);
 	}
 	
 	private void support() {
 		if (!rdbtnAngreifer.isSelected() && !rdbtnVerteidiger.isSelected()) {
-			new ErrorDialog("Du musst auch aussuchen wen Du unterst�tzen willst.\n\nEinfach auf alles ballern was sich bewegt gillt leider nicht.").setVisible(true);
-		}
-		if (rdbtnAngreifer.isSelected()) {
-			fight.getAttackSupporters().add(supportField);
+			new ErrorDialog("Du musst auch aussuchen wen Du unterstützen willst.\n\nEinfach auf alles ballern was sich bewegt gillt leider nicht.").setVisible(true);
 		}
 		else {
-			fight.getDefenceSupporters().add(supportField);
+			if (rdbtnAngreifer.isSelected()) {
+				manager.getCurrentFight().getAttackSupporters().add(supportField);
+			}
+			else {
+				manager.getCurrentFight().getDefenceSupporters().add(supportField);
+			}
+			manager.update();
+			dispose();
 		}
-		manager.update();
 	}
 	private void reject() {
-		fight.getSupportRejections().add(supportField);
+		manager.getCurrentFight().getSupportRejections().add(supportField);
 		manager.update();
+		dispose();
 	}
 	
 	private void updateRequest(Fight fight, Field support) {
 		txtAttacked.setText(fight.getDefendingField().getName());
 		txtSupport.setText(support.getName());
 		txtAttacker.setText(fight.getAttackingPlayer().getUsername());
-		txtDefender.setText(fight.getDefendingPlayer().getUsername());
+		if (fight.getDefendingPlayer() != null) {
+			txtDefender.setText(fight.getDefendingPlayer().getUsername());			
+		}
+		else {
+			txtDefender.setText("Skags (Neutral)");
+		}
 		txtPoweratk.setText(Integer.toString(fight.getAttackingStrength()));
 		txtPowerdef.setText(Integer.toString(fight.getDefendingStrength()));
 		txtSupporttroups.setText(Integer.toString(support.getTroopStrength()));
-		if (fight.getDefendingPlayer().equals(localPlayer)) {
+		rdbtnAngreifer.setEnabled(true);
+		rdbtnVerteidiger.setEnabled(true);
+		if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(localPlayer)) {
 			rdbtnAngreifer.setEnabled(false);
 		}
-		else if (fight.getAttackingPlayer().equals(localPlayer)) {
+		else if (fight.getAttackingPlayer().equals(localPlayer) || fight.getDefendingPlayer() == null) {
 			rdbtnVerteidiger.setEnabled(false);
 		}
 	}
