@@ -7,7 +7,7 @@ Bunkers and Badasses - Tasks
 	- somehow board images are sent (overwritten to no image send; check why images were sent)
 	- the board image is not updated in all dialogs (e.g. TurnExecution)
 	- make recruiting heros a turn
-	- debug fights (supporting the defending player is not received correctly on the defenders side (but on the attackers side...; seems to be a reset problem))
+	- debug fights (hero cards can't be chosen (buttons not enabled))
 	- start resources seem to be added to much or to often
 	
 - Next versions:

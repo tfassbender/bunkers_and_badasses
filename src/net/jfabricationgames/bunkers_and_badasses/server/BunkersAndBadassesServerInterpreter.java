@@ -310,7 +310,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			//broadcast the message to all but the starting player
 			BunkersAndBadassesConnectionGroup group = ((BunkersAndBadassesConnectionGroup) connection.getGroup());
 			group.resetAll();
-			group.sendMessageUnshared(message, connection);
+			group.sendMessage(message, connection);
 		}
 		else {
 			//send the message to the starting player to merge the new data

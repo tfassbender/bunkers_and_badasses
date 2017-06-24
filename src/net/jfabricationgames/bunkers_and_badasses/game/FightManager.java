@@ -291,8 +291,7 @@ public class FightManager implements Serializable {
 				fightEnded = true;
 			}
 		}
-		FightTransfereMessage message = new FightTransfereMessage(currentFight, true);
-		client.sendMessage(message);
+		sendUpdate();
 		if (fightEnded) {
 			//execute the fight end after the update was sent
 			endFight();
