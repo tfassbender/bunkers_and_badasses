@@ -32,7 +32,7 @@ public class FightManager implements Serializable {
 	private transient GameTurnGoalManager gameTurnGoalManager;
 	private PointManager pointManager;
 	private transient TurnExecutionManager turnExecutionManager;
-	private Board board;
+	//private Board board;
 	
 	private Game game;
 	
@@ -48,7 +48,7 @@ public class FightManager implements Serializable {
 		this.gameTurnGoalManager = gameTurnGoalManager;
 		this.pointManager = pointManager;
 		this.turnExecutionManager = turnExecutionManager;
-		this.board = board;
+		//this.board = board;
 		fights = new HashMap<Integer, List<Fight>>();
 	}
 	
@@ -116,13 +116,13 @@ public class FightManager implements Serializable {
 			//move the loosing troops to the retreat field
 			Field retreatField = currentFight.getRetreatField();
 			if (retreatField != null) {
-				board.moveTroops(currentFight.getDefendingField(), currentFight.getRetreatField(), currentFight.getDefendingField().getNormalTroops(), 
+				game.getBoard().moveTroops(currentFight.getDefendingField(), currentFight.getRetreatField(), currentFight.getDefendingField().getNormalTroops(), 
 						currentFight.getDefendingField().getBadassTroops());
 			}
 			//move the surviving attackers to their new field
 			fallenTroops = currentFight.getFallenTroops().get(currentFight.getAttackingField());
 			int[] movingTroops = {currentFight.getAttackingNormalTroops() - fallenTroops[0], currentFight.getAttackingBadassTroops() - fallenTroops[1]};
-			board.moveTroops(currentFight.getAttackingField(), currentFight.getDefendingField(), movingTroops[0], movingTroops[1]);
+			game.getBoard().moveTroops(currentFight.getAttackingField(), currentFight.getDefendingField(), movingTroops[0], movingTroops[1]);
 		}
 		//end the players turn
 		turnExecutionManager.commit();

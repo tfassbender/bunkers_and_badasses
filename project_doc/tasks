@@ -7,7 +7,7 @@ Bunkers and Badasses - Tasks
 	- somehow board images are sent (overwritten to no image send; check why images were sent)
 	- the board image is not updated in all dialogs (e.g. TurnExecution)
 	- make recruiting heros a turn
-	- debug fights (hero cards can't be chosen (buttons not enabled))
+	- debug fights (fallen troops selection doesn't seem to work correctly)
 	- start resources seem to be added to much or to often
 	- can't go on in PreGameSelection when the base is chosen before the second player confirms his skill
 	- additional commands from turn bonus cards don't seem to work
