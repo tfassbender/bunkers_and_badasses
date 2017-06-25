@@ -168,19 +168,19 @@ public class FightManager implements Serializable {
 		boolean fightEnded = false;
 		if (currentFight.getAttackingPlayer().equals(game.getLocalUser())) {
 			//check for a changed battle state and then send an update
-			if (currentFight.allSupportersAnswered()) {
+			if (currentFight.allSupportersAnswered() && currentFight.getBattleState() < Fight.STATE_HEROS) {
 				//all supporters answered -> set battle state
 				currentFight.calculateCurrentStrength();
 				currentFight.setBattleState(Fight.STATE_HEROS);
 			}
-			if (currentFight.isAttackingHeroChosen() && currentFight.isDefendingHeroChosen()) {
+			if (currentFight.isAttackingHeroChosen() && currentFight.isDefendingHeroChosen() && currentFight.getBattleState() < Fight.STATE_RETREAT_FIELD) {
 				currentFight.calculateWinner();
 				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
 			}
-			if (currentFight.isRetreatFieldChosen()) {
+			if (currentFight.isRetreatFieldChosen() && currentFight.getBattleState() < Fight.STATE_FALLEN_TROOP_SELECTION) {
 				currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
 			}
-			if (currentFight.isFallingTroopsChosen()) {
+			if (currentFight.isFallingTroopsChosen() && currentFight.getBattleState() < Fight.STATE_FALLEN_TROOP_REMOVING) {
 				currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);
 			}
 			if (currentFight.isFallenTroopsChosen()) {
@@ -251,28 +251,27 @@ public class FightManager implements Serializable {
 			}
 			if (fight.allSupportersAnswered()) {
 				//all supporters answered -> set battle state
-				fight.calculateCurrentStrength();
-				fight.setBattleState(Fight.STATE_HEROS);
+			currentFight.setBattleState(Fight.STATE_HEROS);
 			}
 		}
 		//merge the defenders hero card (if one)
-		if (fight.isDefendingHeroChosen()) {
+		if (fight.isDefendingHeroChosen() && fight.getBattleState() < Fight.STATE_RETREAT_FIELD) {
 			currentFight.setDefendingHeroChosen(true);
 			currentFight.setDefendingHero(fight.getDefendingHero());
 			currentFight.setUseDefendingHeroEffect(fight.isUseDefendingHeroEffect());
 			if (currentFight.isAttackingHeroChosen()) {
-				fight.calculateCurrentStrength();
+				currentFight.calculateWinner();
 				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
 			}
 		}
 		//merge the retreat field
-		if (fight.isRetreatFieldChosen()) {
+		if (fight.isRetreatFieldChosen() && fight.getBattleState() < Fight.STATE_FALLEN_TROOP_SELECTION) {
 			currentFight.setRetreatFieldChosen(true);
 			currentFight.setRetreatField(fight.getRetreatField());
 			currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
 		}
 		//merge the falling troops (chosen by the winner)
-		if (fight.isFallingTroopsChosen()) {
+		if (fight.isFallingTroopsChosen() && fight.getBattleState() < Fight.STATE_FALLEN_TROOP_REMOVING) {
 			currentFight.setFallingTroopsChosen(true);
 			currentFight.setFallingTroopsTotal(fight.getFallingTroopsTotal());
 			currentFight.setFallingTroopsLooser(fight.getFallingTroopsLooser());
@@ -280,7 +279,7 @@ public class FightManager implements Serializable {
 			currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);
 		}
 		//merge the fallen troops (as selected by all losing players)
-		if (fight.isFallenTroopsChosen()) {
+		if (fight.isFallenTroopsChosen() && fight.getBattleState() < Fight.STATE_FIGHT_ENDED) {
 			Map<Field, int[]> fallenTroops = currentFight.getFallenTroops();
 			for (Field field : fight.getFallenTroops().keySet()) {
 				fallenTroops.put(field, fight.getFallenTroops().get(field));
@@ -315,6 +314,7 @@ public class FightManager implements Serializable {
 		else {
 			//if there is already a fight overriding causes problems (references...) so use another kind of merge
 			currentFight.merge(fight);
+			fightExecutionFrame.update();
 		}
 	}
 	

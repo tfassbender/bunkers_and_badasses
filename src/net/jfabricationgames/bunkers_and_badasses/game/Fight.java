@@ -200,7 +200,7 @@ public class Fight implements Serializable {
 		}
 		currentAttackingStrength += attackingSupportStrength;
 		//attacking hero
-		if (attackingHero != null && !useAttackingHeroEffect && battleState > STATE_HEROS) {
+		if (attackingHero != null && !useAttackingHeroEffect && battleState >= STATE_HEROS) {
 			currentAttackingStrength += attackingHero.getAttack();
 		}
 		//defending troops and building
@@ -216,8 +216,8 @@ public class Fight implements Serializable {
 			currentDefendingStrength++;
 		}
 		//defending hero
-		if (defendingHero != null && !useDefendingHeroEffect && battleState > STATE_HEROS) {
-			currentDefendingStrength += defendingHero.getAttack();
+		if (defendingHero != null && !useDefendingHeroEffect && battleState >= STATE_HEROS) {
+			currentDefendingStrength += defendingHero.getDefence();
 		}
 	}
 	
@@ -240,6 +240,40 @@ public class Fight implements Serializable {
 		}
 		else {
 			return null;
+		}
+	}
+	
+	public User getWinningPlayer() {
+		if (winner == ATTACKERS) {
+			return attackingPlayer;
+		}
+		else if (winner == DEFENDERS) {
+			return defendingPlayer;
+		}
+		else {
+			return null;
+		}
+	}
+	public User getLoosingPlayer() {
+		if (winner == ATTACKERS) {
+			return defendingPlayer;
+		}
+		else if (winner == DEFENDERS) {
+			return attackingPlayer;
+		}
+		else {
+			return null;
+		}
+	}
+	
+	public void addFallenTroops(Map<Field, int[]> troops) {
+		if (fallenTroops == null) {
+			fallenTroops = troops;
+		}
+		else {
+			for (Field field : troops.keySet()) {
+				fallenTroops.put(field, troops.get(field));
+			}
 		}
 	}
 	
@@ -291,29 +325,6 @@ public class Fight implements Serializable {
 	}
 	public void setWinner(int winner) {
 		this.winner = winner;
-	}
-	
-	public User getWinningPlayer() {
-		if (winner == ATTACKERS) {
-			return attackingPlayer;
-		}
-		else if (winner == DEFENDERS) {
-			return defendingPlayer;
-		}
-		else {
-			return null;
-		}
-	}
-	public User getLoosingPlayer() {
-		if (winner == ATTACKERS) {
-			return defendingPlayer;
-		}
-		else if (winner == DEFENDERS) {
-			return attackingPlayer;
-		}
-		else {
-			return null;
-		}
 	}
 	
 	public List<Field> getPossibleSupporters() {
