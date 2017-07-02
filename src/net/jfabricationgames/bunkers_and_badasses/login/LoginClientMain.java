@@ -3,9 +3,14 @@ package net.jfabricationgames.bunkers_and_badasses.login;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -52,6 +57,16 @@ public class LoginClientMain extends JFrame {
 	    catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 	       //e.printStackTrace();
 	    }
+		
+		//let the program end when escape is pressed
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "EXIT");
+		getRootPane().getActionMap().put("EXIT", new AbstractAction() {
+			private static final long serialVersionUID = -3655815721132450273L;
+
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+	    });
 		
 		//set the icon
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginClientMain.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));

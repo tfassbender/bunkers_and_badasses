@@ -91,6 +91,9 @@ public class FightManager implements Serializable {
 			currentFight.setDefendingHeroChosen(true);//skags can't chose heros
 		}
 		addPossibleSupportFields();
+		if (currentFight.getPossibleSupporters().isEmpty()) {
+			currentFight.setBattleState(Fight.STATE_HEROS);
+		}
 		fightExecutionFrame.setVisible(true);
 		fightExecutionFrame.requestFocus();
 		fightExecutionFrame.update();
@@ -106,23 +109,31 @@ public class FightManager implements Serializable {
 		giveOutPoints();
 		//remove the fallen troops
 		int[] fallenTroops;
+		Field localField;
+		//the fields are sometimes added twice; fix it by remembering the names...
+		List<String> troopsRemoved = new ArrayList<String>();//the names of all fields where troops were removed
 		for (Field field : currentFight.getFallenTroops().keySet()) {
-			fallenTroops = currentFight.getFallenTroops().get(field);
-			field.removeNormalTroops(fallenTroops[0]);
-			field.removeBadassTroops(fallenTroops[1]);
+			if (!troopsRemoved.contains(field.getName())) {
+				fallenTroops = currentFight.getFallenTroops().get(field);
+				localField = game.getBoard().getFieldByName(field.getName());
+				localField.removeNormalTroops(fallenTroops[0]);
+				localField.removeBadassTroops(fallenTroops[1]);
+				troopsRemoved.add(field.getName());
+			}
 		}
 		//move the attacking troops to the new field and the loosing troops to the retreat field 
 		if (currentFight.getWinner() == Fight.ATTACKERS) {
 			//move the loosing troops to the retreat field
-			Field retreatField = currentFight.getRetreatField();
+			Field retreatField = game.getBoard().getFieldByName(currentFight.getRetreatField().getName());//right retreat field reference
+			Field defendingField = currentFight.getDefendingField();
+			Field attackingField = currentFight.getAttackingField();
 			if (retreatField != null) {
-				game.getBoard().moveTroops(currentFight.getDefendingField(), currentFight.getRetreatField(), currentFight.getDefendingField().getNormalTroops(), 
-						currentFight.getDefendingField().getBadassTroops());
+				game.getBoard().moveTroops(defendingField, retreatField, defendingField.getNormalTroops(), defendingField.getBadassTroops());
 			}
 			//move the surviving attackers to their new field
-			fallenTroops = currentFight.getFallenTroops().get(currentFight.getAttackingField());
+			fallenTroops = currentFight.getFallenTroops().get(attackingField);
 			int[] movingTroops = {currentFight.getAttackingNormalTroops() - fallenTroops[0], currentFight.getAttackingBadassTroops() - fallenTroops[1]};
-			game.getBoard().moveTroops(currentFight.getAttackingField(), currentFight.getDefendingField(), movingTroops[0], movingTroops[1]);
+			game.getBoard().moveTroops(attackingField, defendingField, movingTroops[0], movingTroops[1]);
 		}
 		//end the players turn
 		turnExecutionManager.commit();
@@ -191,12 +202,12 @@ public class FightManager implements Serializable {
 				}
 			}
 			sendUpdate();
-			fightExecutionFrame.update();
 		}
 		else {
 			//just send an update and let the attacking player merge it
 			sendUpdate();
 		}
+		fightExecutionFrame.update();
 		if (fightEnded) {
 			//execute the fight end after the update was sent
 			endFight();
@@ -295,7 +306,7 @@ public class FightManager implements Serializable {
 			//execute the fight end after the update was sent
 			endFight();
 		}
-		fightExecutionFrame.update();
+		//fightExecutionFrame.update(); //done in receive method
 	}
 	/**
 	 * Just override the current fight with the update from the server.
@@ -314,7 +325,7 @@ public class FightManager implements Serializable {
 		else {
 			//if there is already a fight overriding causes problems (references...) so use another kind of merge
 			currentFight.merge(fight);
-			fightExecutionFrame.update();
+			//fightExecutionFrame.update();//done in receive
 		}
 	}
 	
@@ -329,7 +340,7 @@ public class FightManager implements Serializable {
 	
 	private void showSupportRequests() {
 		for (Field field : currentFight.getPossibleSupporters()) {
-			if (field.getAffiliation().equals(game.getLocalUser())) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				new SupportRequestFrame(field, this).setVisible(true);
 			}
 		}

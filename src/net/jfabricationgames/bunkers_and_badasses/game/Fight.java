@@ -282,7 +282,7 @@ public class Fight implements Serializable {
 	}
 	
 	public boolean isAllFallenTroopsChosen() {
-		return getFallenTroops().keySet().size() == getFallingTroopsSupport().keySet().size() + 2;
+		return getFallenTroops().keySet().size() >= getFallingTroopsSupport().keySet().size() + 2;
 	}
 	
 	public User getAttackingPlayer() {

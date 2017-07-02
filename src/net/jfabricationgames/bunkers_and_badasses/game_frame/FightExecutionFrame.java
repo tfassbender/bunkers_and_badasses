@@ -145,7 +145,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[400px,grow]", "[300px,grow][400px,grow]"));
+		panel.setLayout(new MigLayout("", "[400px,grow]", "[300px,grow][400px,grow][]"));
 		
 		JPanel panel_top_bar = new JPanel();
 		panel_top_bar.setBackground(Color.GRAY);
@@ -674,7 +674,14 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		list_support_field = new JList<Field>(fieldFallingSupportModel);
 		list_support_field.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
+				int fallingSupport = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
+				if (list_support_field.getSelectedValue() != null) {
+					fallingSupportTroops.put(list_support_field.getSelectedValue(), fallingSupport);
+					updateFallingTroopsLeft();					
+				}
+				fallingTroopsLooser = (Integer) spinner_fallende_truppen_verlierer.getValue();
 				updateFallingTroopSupportSelection(list_support_field.getSelectedValue());
+				updateFallingTroopsLeft();
 			}
 		});
 		list_support_field.setToolTipText("<html>\r\nDie Felder die den verlierer unterst\u00FCtzt <br>\r\nhaben und in denen Truppen fallen k\u00F6nnen\r\n</html>");
@@ -865,6 +872,15 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		});
 		panel_fallen_troups_looser.add(btnBesttigen, "cell 0 7 7 1,alignx center");
 		btnBesttigen.setBackground(Color.GRAY);
+		
+		JButton btnDebug = new JButton("debug");
+		btnDebug.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("debug");
+				update();
+			}
+		});
+		panel.add(btnDebug, "cell 0 2");
 	}
 	
 	@Override
@@ -989,7 +1005,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				fallenTroopCount = new int[2];
 				fallenTroops.put(field, fallenTroopCount);
 			}
-			fallenTroopsSelected &= fallingTroops >= fallenTroopCount[0] + 2*fallenTroopCount[1];
+			fallenTroopsSelected &= fallingTroops <= fallenTroopCount[0] + 2*fallenTroopCount[1];
 		}
 		if (!fallenTroopsSelected) {
 			new ErrorDialog("Du hast in (mindestens) einem Feld zu wenige Truppen ausgewählt die fallen.").setVisible(true);
@@ -1265,25 +1281,38 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		fieldsFallenTroops = new ArrayList<Field>();
 		fieldSelectionModel.removeAllElements();
 		if (fight != null && fight.getBattleState() == Fight.STATE_FALLEN_TROOP_REMOVING) {
-			spinner_normal_troups.setEnabled(true);
-			spinner_badass_troups.setEnabled(true);
-			if (fight.getAttackingField().getAffiliation().equals(game.getLocalUser())) {
-				fieldSelectionModel.addElement(fight.getAttackingField());
-				fieldsFallenTroops.add(fight.getAttackingField());
-			}
-			else if (fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser())) {
-				fieldSelectionModel.addElement(fight.getDefendingField());
-				fieldsFallenTroops.add(fight.getDefendingField());
-			}
-			Map<Field, Integer> fallingTroopsSupport = fight.getFallingTroopsSupport();
-			for (Field field : fallingTroopsSupport.keySet()) {
-				if (field.getAffiliation().equals(game.getLocalUser())) {
-					fieldSelectionModel.addElement(field);
-					fieldsFallenTroops.add(field);
+			//check if the fallen troops contain the one of this player's fields
+			boolean fallenTroopsChosen = false;
+			if (fight.getFallenTroops() != null) {
+				for (Field field : fight.getFallenTroops().keySet()) {
+					fallenTroopsChosen |= fight.getAttackingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getAttackingField().getName());
+					fallenTroopsChosen |= fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getDefendingField().getName());
+					for (Field supportField : fight.getFallingTroopsSupport().keySet()) {
+						fallenTroopsChosen |= field.getName().equals(supportField.getName());
+					}
 				}
 			}
-			btnBesttigen.setEnabled(true);
-			btnAuswahlZurcksetzen_1.setEnabled(true);
+			if (!fallenTroopsChosen) {
+				spinner_normal_troups.setEnabled(true);
+				spinner_badass_troups.setEnabled(true);
+				if (fight.getAttackingField().getAffiliation().equals(game.getLocalUser())) {
+					fieldSelectionModel.addElement(fight.getAttackingField());
+					fieldsFallenTroops.add(fight.getAttackingField());
+				}
+				else if (fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser())) {
+					fieldSelectionModel.addElement(fight.getDefendingField());
+					fieldsFallenTroops.add(fight.getDefendingField());
+				}
+				Map<Field, Integer> fallingTroopsSupport = fight.getFallingTroopsSupport();
+				for (Field field : fallingTroopsSupport.keySet()) {
+					if (field.getAffiliation().equals(game.getLocalUser())) {
+						fieldSelectionModel.addElement(field);
+						fieldsFallenTroops.add(field);
+					}
+				}
+				btnBesttigen.setEnabled(true);
+				btnAuswahlZurcksetzen_1.setEnabled(true);				
+			}
 		}
 	}
 	private void clearFallenTroops() {

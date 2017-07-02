@@ -527,6 +527,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		//game.setState(GameState.WAIT);
 		game.getGameFrame().getTurnGoalTurnBonusDialog().setTurnBonusSelectable(false, null);
 		game.getPlayerOrder().userPassed(game.getLocalUser());
+		game.setState(GameState.ACT);
 		try {
 			game.getPlayerOrder().nextMove();			
 		}
@@ -729,7 +730,6 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 			if (command != null) {
 				if (command.isExecutable() && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
 					btnBefehlAusfhren.setEnabled(true);
-					btnAusfhrungBeenden.setEnabled(true);
 				}
 				if (command instanceof BuildCommand) {
 					//let the player select the type of building
@@ -795,6 +795,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					}
 				}
 			}
+		}
+		if (game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+			btnAusfhrungBeenden.setEnabled(true);
 		}
 	}
 	
@@ -896,7 +899,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 							new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\nDas ist keine freiwillige Aktion hier.").setVisible(true);
 						}
 						/*else if (troops < targets.length) {
-							new ErrorDialog("Das sind mehr Felder als du Truppen hast.\n\nDeine Truppen k�nnen sich nicht Zweiteilen.\nNaja k�nnen sie schon aber dannach sind sie meistens ein wenig... tot...").setVisible(true);
+							new ErrorDialog("Das sind mehr Felder als du Truppen hast.\n\nDeine Truppen können sich nicht Zweiteilen.\nNaja können sie schon aber dannach sind sie meistens ein wenig... tot...").setVisible(true);
 						}*/
 						else {
 							List<Field> targetFields = new ArrayList<Field>(targets.length);
@@ -917,7 +920,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 							}
 							else {
 								game.getFightManager().startFight(selectedField, targetField, normalTroops, badassTroops);
-								commandExecuted = true;
+								//commandExecuted = true;
+								//the command is executed when the fight is over (however set the command to null but don't commit)
+								selectedField.setCommand(null);
 							}
 						}
 						else {
