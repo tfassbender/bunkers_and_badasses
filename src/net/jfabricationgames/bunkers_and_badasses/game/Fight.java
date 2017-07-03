@@ -130,6 +130,13 @@ public class Fight implements Serializable {
 		return currentDefendingStrength;
 	}
 	
+	public int getAttackingTroopStrength() {
+		return 2*attackingBadassTroops + attackingNormalTroops;
+	}
+	public int getDefendingTroopStrength() {
+		return defendingField.getTroopStrength();
+	}
+	
 	public int[] calculateFallingTroops() {
 		int[] fallingTroops = new int[2];
 		int overhead;
@@ -282,6 +289,7 @@ public class Fight implements Serializable {
 	}
 	
 	public boolean isAllFallenTroopsChosen() {
+		//TODO check for multiple fields
 		return getFallenTroops().keySet().size() >= getFallingTroopsSupport().keySet().size() + 2;
 	}
 	

@@ -728,7 +728,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 			Command command = field.getCommand();
 			if (command != null) {
-				if (command.isExecutable() && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+				if (command.isExecutable()) {
 					btnBefehlAusfhren.setEnabled(true);
 				}
 				if (command instanceof BuildCommand) {
@@ -803,7 +803,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	
 	private void executeCommand() {
 		boolean commandExecuted = false;
-		if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser())) {
+		if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
 			Command command = selectedField.getCommand();
 			UserResourceManager resourceManager = game.getResourceManager();
 			if (command.isExecutable()) {
@@ -1001,6 +1001,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 					}
 				}
 			}
+		}
+		else if (!game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+			new ErrorDialog("Du bist nicht an der reihe.").setVisible(true);
 		}
 		if (commandExecuted) {
 			selectedField.setCommand(null);

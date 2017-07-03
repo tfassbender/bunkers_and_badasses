@@ -190,7 +190,7 @@ public class Field implements Serializable {
 	public void removeNormalTroops(int num) throws IllegalArgumentException {
 		int removedTroops = 0;
 		if (getNormalTroops() < num) {
-			throw new IllegalArgumentException("Not enough normal troops to remove (troops: " + getNormalTroops() + "; removed: " + num + ").");
+			throw new IllegalArgumentException("Not enough normal troops to remove (troops: " + getNormalTroops() + "; removed: " + num + "; " + name + ").");
 		}
 		for (int i = 0; i < troops.size(); i++) {
 			if (removedTroops < num && troops.get(i).getStrength() == 1) {
@@ -217,6 +217,10 @@ public class Field implements Serializable {
 				removedTroops++;
 			}
 		}
+	}
+	
+	public void removeAllTroops() {
+		troops = new ArrayList<Troop>();
 	}
 	
 	/**

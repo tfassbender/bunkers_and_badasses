@@ -7,16 +7,22 @@ Bunkers and Badasses - Tasks
 	- somehow board images are sent (overwritten to no image send; check why images were sent)
 	- the board image is not updated in all dialogs (e.g. TurnExecution)
 	- make recruiting heros a turn
-	- debug fights (fallen troops are not taken from the field correctly; end fight seems to be never called)
 	- start resources seem to be added to much or to often
 	- can't go on in PreGameSelection when the base is chosen before the second player confirms his skill
 	- additional commands from turn bonus cards don't seem to work
+	- debug fights:
+		- skag fights: support ends when one player sends the support answer
+		- skag fights: to many troops fall on players side (more than there are on the field)
+		- skag fights: skip hero choosing when there are no supports doesn't work
+		- fights don't end a turn 
 	
 - Next versions:
-	- all frames are named "Bunkers and Badasses - ...", makes it hard to differentiate in the task line
 	- fix the stream corrupted exception
 	- slider for zoom on board
 	- implement the storing of the used resources
 	- implement hero and building functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends
+
+- New ideas:
+	- New neutral troops like Threshers (maybe moving each turn)

@@ -145,7 +145,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[400px,grow]", "[300px,grow][400px,grow][]"));
+		panel.setLayout(new MigLayout("", "[400px,grow]", "[300px,grow][400px,grow]"));
 		
 		JPanel panel_top_bar = new JPanel();
 		panel_top_bar.setBackground(Color.GRAY);
@@ -674,12 +674,6 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		list_support_field = new JList<Field>(fieldFallingSupportModel);
 		list_support_field.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				int fallingSupport = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
-				if (list_support_field.getSelectedValue() != null) {
-					fallingSupportTroops.put(list_support_field.getSelectedValue(), fallingSupport);
-					updateFallingTroopsLeft();					
-				}
-				fallingTroopsLooser = (Integer) spinner_fallende_truppen_verlierer.getValue();
 				updateFallingTroopSupportSelection(list_support_field.getSelectedValue());
 				updateFallingTroopsLeft();
 			}
@@ -872,15 +866,6 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		});
 		panel_fallen_troups_looser.add(btnBesttigen, "cell 0 7 7 1,alignx center");
 		btnBesttigen.setBackground(Color.GRAY);
-		
-		JButton btnDebug = new JButton("debug");
-		btnDebug.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("debug");
-				update();
-			}
-		});
-		panel.add(btnDebug, "cell 0 2");
 	}
 	
 	@Override
@@ -983,6 +968,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void confirmFallenTroopSelection() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		boolean fallenTroopsSelected = true;
+		boolean toManyFallenTroopsSelected = false;
 		int fallingTroops;
 		int[] fallenTroopCount;
 		for (Field field : fieldsFallenTroops) {
@@ -1005,10 +991,14 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				fallenTroopCount = new int[2];
 				fallenTroops.put(field, fallenTroopCount);
 			}
-			fallenTroopsSelected &= fallingTroops <= fallenTroopCount[0] + 2*fallenTroopCount[1];
+			fallenTroopsSelected &= fallingTroops <= fallenTroopCount[0] + 2*fallenTroopCount[1];//minimum amount selected
+			toManyFallenTroopsSelected |= (fallingTroops - fallenTroopCount[0] - 2*fallenTroopCount[1]) < -1;//maximum of 1 more than needed selected
 		}
 		if (!fallenTroopsSelected) {
 			new ErrorDialog("Du hast in (mindestens) einem Feld zu wenige Truppen ausgewählt die fallen.").setVisible(true);
+		}
+		else if (toManyFallenTroopsSelected) {
+			new ErrorDialog("Du hast in (mindestens) einem Feld zu viele Truppen ausgewählt die fallen.\n\nLass deinen Gegnern doch auch noch was zu tun übrig.").setVisible(true);
 		}
 		else {
 			fight.addFallenTroops(fallenTroops);
@@ -1234,6 +1224,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				list_support_field.setSelectedIndex(selectedField);
 			}
 			updateFallingTroopSpinnerModels();
+			updateFallingTroopsLeft();
 			btnBesttigen_1.setEnabled(true);
 			btnAuswahlZurcksetzen.setEnabled(true);
 		}
@@ -1264,6 +1255,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	}
 	private void updateFallingTroopsLeft() {
 		fallingTroops = (Integer) spinner_fallende_truppen_gesammt.getValue();
+		fallingTroopsLooser = (Integer) spinner_fallende_truppen_verlierer.getValue(); 
 		fallingTroopsLeft = fallingTroops - fallingTroopsLooser;
 		for (Field field : fallingSupportTroops.keySet()) {
 			fallingTroopsLeft -= fallingSupportTroops.get(field);
@@ -1351,6 +1343,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			else {
 				txtFallendeTruppen.setText(Integer.toString(fight.getFallingTroopsSupport().get(selectedFallenTroopsField)));
 			}
+			updateFallenTroops();
 		}
 	}
 	

@@ -743,14 +743,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			boolean fieldSelectable = true;
 			if (field != null) {
 				if (selectionType == SELECTION_TYPE_BASE) {
-					for (Field neighbour : field.getNeighbours()) {
-						fieldSelectable &= neighbour.getBuilding() instanceof EmptyBuilding;
-					}
-					fieldSelectable &= field.getBuilding() instanceof EmptyBuilding;
-					if (fieldSelectable) {
-						selectedBaseField = field;
-						txtBase.setText(field.getName());
-					}
+					selectedBaseField = field;
+					txtBase.setText(field.getName());
 				}
 				else if (selectionType == SELECTION_TYPE_FIELDS && field != null) {
 					fieldSelectable = selectedBaseField.equals(field);
@@ -796,17 +790,33 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 */
 	private void confirmBase() {
 		if (selectedBaseField != null && selectedBaseField.getBuilding() instanceof EmptyBuilding) {
-			selectedBaseField.setAffiliation(game.getLocalUser());
-			selectedBaseField.setBuilding(new ArschgaulsPalace());
-			//send an update to all users
-			PreGameDataMessage message = new PreGameDataMessage();
-			message.setData(PreGameDataMessage.DATA_BASE_POSITION);
-			message.setBasePosition(selectedBaseField);
-			message.setUser(game.getLocalUser());
-			game.getClient().sendMessage(message);
-			//update the frame functions
-			nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_BASE_POSITION);
-			updateBoardImage();
+			boolean fieldSelectable = true;
+			for (Field neighbour : selectedBaseField.getNeighbours()) {
+				fieldSelectable &= neighbour.getBuilding() instanceof EmptyBuilding;
+			}
+			fieldSelectable &= selectedBaseField.getBuilding() instanceof EmptyBuilding;
+			if (fieldSelectable) {
+				selectedBaseField.setAffiliation(game.getLocalUser());
+				selectedBaseField.setBuilding(new ArschgaulsPalace());
+				//send an update to all users
+				PreGameDataMessage message = new PreGameDataMessage();
+				message.setData(PreGameDataMessage.DATA_BASE_POSITION);
+				message.setBasePosition(selectedBaseField);
+				message.setUser(game.getLocalUser());
+				game.getClient().sendMessage(message);
+				//update the frame functions
+				nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_BASE_POSITION);
+				updateBoardImage();				
+			}
+			else {
+				new ErrorDialog("Du kannst deine Basis nicht auf einem Feld aufbauen, dass direkt an die Basis eines anderen Spielers angrenzt.\n\nEs wird schon früh genug Schießereien geben.\nNur keine Sorge.").setVisible(true);
+			}
+		}
+		else if (selectedBaseField == null) {
+			new ErrorDialog("Du solltest ein Feld auswählen wenn du deine Basis aufbauen willst.").setVisible(true);
+		}
+		else if (!(selectedBaseField.getBuilding() instanceof EmptyBuilding)) {
+			new ErrorDialog("Du kannst nicht deine Basis auf einem Feld aufbauen auf dem schon eine Basis steht.\n\nAußer du willst versuchen sie zu stapeln...\nIch muss zugeben das würde ich gerne sehen.").setVisible(true);
 		}
 	}
 	/**
@@ -849,6 +859,9 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			//update the frame functions
 			nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_STARTING_POSITION);
 			updateBoardImage();
+		}
+		else {
+			new ErrorDialog("Du musst alle deine Starttruppen auf dem Spielfeld verteilen.").setVisible(true);
 		}
 	}
 	/**

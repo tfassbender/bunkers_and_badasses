@@ -46,9 +46,11 @@ public class PlayerOrderPanel extends JPanel {
 		list_order.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		JLabel lblAktuellerSpieler = new JLabel("Am Zug:");
+		lblAktuellerSpieler.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		add(lblAktuellerSpieler, "cell 0 3,alignx trailing");
 		
 		txtPlayer = new JTextField();
+		txtPlayer.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtPlayer.setEditable(false);
 		txtPlayer.setBackground(Color.LIGHT_GRAY);
 		add(txtPlayer, "cell 1 3,growx");
