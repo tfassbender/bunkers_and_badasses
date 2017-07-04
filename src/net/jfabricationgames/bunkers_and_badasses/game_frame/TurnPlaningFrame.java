@@ -358,7 +358,9 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		btnAlleBefehleBesttigen = new JButton("Alle Befehle Best\u00E4tigen");
 		btnAlleBefehleBesttigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ConfirmDialog("Zug-Planung wirklich beenden?", TurnPlaningFrame.this, 0).setVisible(true);
+				ConfirmDialog confirmDialog = new ConfirmDialog("Zug-Planung wirklich beenden?", TurnPlaningFrame.this, 0);
+				confirmDialog.setLocationRelativeTo(TurnPlaningFrame.this);
+				confirmDialog.setVisible(true);
 			}
 		});
 		

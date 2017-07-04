@@ -140,22 +140,22 @@ public class GameTurnGoalManager implements Serializable {
 	}
 	
 	public void receivePointsFight(User user, Fight fight) {
-		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsFight(user, fight);
+		turnGoals.get(gameTurnManager.getTurn()).receivePointsFight(user, fight);
 	}
 	public void receivePointsTurnEnd(User user, Game game) {
-		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsTurnEnd(user, game);
+		turnGoals.get(gameTurnManager.getTurn()).receivePointsTurnEnd(user, game);
 	}
 	public void receivePointsRecruitment(User user, int recruitedTroops) {
-		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsRecruitment(user, recruitedTroops);
+		turnGoals.get(gameTurnManager.getTurn()).receivePointsRecruitment(user, recruitedTroops);
 	}
 	public void receivePointsPlaning(User user, int ammoConsumption) {
-		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsPlaning(user, ammoConsumption);
+		turnGoals.get(gameTurnManager.getTurn()).receivePointsPlaning(user, ammoConsumption);
 	}
 	public void receivePointsPassing(User user, int passingOrder, int players) {
-		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsPassing(user, passingOrder, players);
+		turnGoals.get(gameTurnManager.getTurn()).receivePointsPassing(user, passingOrder, players);
 	}
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
-		turnGoals.get(gameTurnManager.getTurn()-1).receivePointsMoving(user, startField, fieldConquered);
+		turnGoals.get(gameTurnManager.getTurn()).receivePointsMoving(user, startField, fieldConquered);
 	}
 	
 	public void setGameTurnManager(GameTurnManager gameTurnManager) {

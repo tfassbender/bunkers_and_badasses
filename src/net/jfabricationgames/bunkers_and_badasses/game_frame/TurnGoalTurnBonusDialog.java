@@ -110,7 +110,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 						}
 					});
 					btnRundenBoniAnzeigen.setBackground(Color.GRAY);
-					panel_turn_goals.add(btnRundenBoniAnzeigen, "cell 0 2,alignx right");
+					panel_turn_goals.add(btnRundenBoniAnzeigen, "cell 0 2,alignx left");
 				}
 			}
 			{
@@ -169,6 +169,16 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 					panel_user_bonus.setLayout(new BorderLayout(0, 0));
 				}
 				{
+					JButton btnRundenZieleAnzeigen = new JButton("Runden Ziele Anzeigen");
+					btnRundenZieleAnzeigen.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							showPanel(TURN_GOAL_PANEL);
+						}
+					});
+					btnRundenZieleAnzeigen.setBackground(Color.GRAY);
+					panel_turn_bonuses.add(btnRundenZieleAnzeigen, "cell 0 3");
+				}
+				{
 					btnBonusAuswhlen = new JButton("Bonus Ausw\u00E4hlen");
 					btnBonusAuswhlen.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -177,17 +187,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 					});
 					btnBonusAuswhlen.setEnabled(turnBonusChangeEnabled);
 					btnBonusAuswhlen.setBackground(Color.GRAY);
-					panel_turn_bonuses.add(btnBonusAuswhlen, "cell 0 3");
-				}
-				{
-					JButton btnRundenZieleAnzeigen = new JButton("Runden Ziele Anzeigen");
-					btnRundenZieleAnzeigen.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							showPanel(TURN_GOAL_PANEL);
-						}
-					});
-					btnRundenZieleAnzeigen.setBackground(Color.GRAY);
-					panel_turn_bonuses.add(btnRundenZieleAnzeigen, "cell 3 3,alignx right");
+					panel_turn_bonuses.add(btnBonusAuswhlen, "cell 3 3,alignx right");
 				}
 			}
 		}

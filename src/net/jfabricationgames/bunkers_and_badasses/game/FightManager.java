@@ -98,6 +98,7 @@ public class FightManager implements Serializable {
 				update();
 			}
 		}
+		fightExecutionFrame.clearAll();
 		fightExecutionFrame.setVisible(true);
 		fightExecutionFrame.requestFocus();
 		fightExecutionFrame.update();
@@ -117,10 +118,10 @@ public class FightManager implements Serializable {
 		//the fields are sometimes added twice; fix it by remembering the names...
 		List<String> troopsRemoved = new ArrayList<String>();//the names of all fields where troops were removed
 		for (Field field : currentFight.getFallenTroops().keySet()) {
-			if (!troopsRemoved.contains(field.getName())) {//TODO nullpointer here
+			if (troopsRemoved != null && field != null && !troopsRemoved.contains(field.getName())) {//TODO nullpointer here
 				fallenTroops = currentFight.getFallenTroops().get(field);
 				localField = game.getBoard().getFieldByName(field.getName());
-				localField.removeNormalTroops(fallenTroops[0]);
+				localField.removeNormalTroops(fallenTroops[0]);//TODO not enough troops to remove exception here
 				localField.removeBadassTroops(fallenTroops[1]);
 				troopsRemoved.add(field.getName());
 			}
@@ -146,7 +147,10 @@ public class FightManager implements Serializable {
 			game.getBoard().moveTroops(attackingField, defendingField, movingTroops[0], movingTroops[1]);
 		}
 		//end the players turn
+		game.getPlayerOrder().nextMove();
+		game.getGameFrame().updateAllFrames();
 		turnExecutionManager.commit();
+		currentFight = null;//delete the current fight
 	}
 	
 	public void giveOutPoints() {
@@ -204,12 +208,12 @@ public class FightManager implements Serializable {
 					if (currentFight.getWinner() == Fight.ATTACKERS) {
 						//attacking player wins
 						currentFight.setRetreatField(null);//no retreat for skags
-						currentFight.setFallingTroopsTotal(Math.max(currentFight.getDefendingStrength(), currentFight.getAttackingTroopStrength()-1));//real winner losses are chosen later
+						currentFight.setFallingTroopsTotal(currentFight.calculateFallingTroopsSkagFight());
 						currentFight.setFallingTroopsLooser(currentFight.getDefendingStrength());
 						Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
 						fallenTroops.put(currentFight.getDefendingField(), new int[2]);//no retreat -> all skags fall
 						currentFight.addFallenTroops(fallenTroops);
-						currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);						
+						currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);
 					}
 					//let the player choose the retreat field when the skags win
 				}
@@ -218,8 +222,9 @@ public class FightManager implements Serializable {
 				currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
 				if (currentFight.getDefendingPlayer() == null) {
 					//player lost against skags
-					currentFight.setFallingTroopsTotal(currentFight.getAttackingTroopStrength());
-					currentFight.setFallingTroopsLooser(currentFight.getAttackingTroopStrength());
+					int[] lostTroops = currentFight.calculateFallingTroopsSkagFightLost();
+					currentFight.setFallingTroopsTotal(lostTroops[0]);
+					currentFight.setFallingTroopsLooser(lostTroops[1]);
 					Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
 					fallenTroops.put(currentFight.getDefendingField(), new int[] {currentFight.getDefendingField().getNormalTroops()-1, 0});//one skag survives
 					currentFight.addFallenTroops(fallenTroops);
@@ -297,7 +302,7 @@ public class FightManager implements Serializable {
 			}
 			if (fight.allSupportersAnswered()) {
 				//all supporters answered -> set battle state
-			currentFight.setBattleState(Fight.STATE_HEROS);
+				currentFight.setBattleState(Fight.STATE_HEROS);
 			}
 		}
 		//merge the defenders hero card (if one)
@@ -308,6 +313,18 @@ public class FightManager implements Serializable {
 			if (currentFight.isAttackingHeroChosen()) {
 				currentFight.calculateWinner();
 				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
+				if (currentFight.getDefendingPlayer() == null) {
+					//fight against neutral troops (only occurs here if there is support against them) 
+					if (currentFight.getWinner() == Fight.ATTACKERS) {
+						currentFight.setRetreatFieldChosen(true);//skags can't retreat
+						currentFight.setFallingTroopsTotal(currentFight.calculateFallingTroopsSkagFight());
+						currentFight.setFallingTroopsLooser(currentFight.getDefendingStrength());
+						Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
+						fallenTroops.put(currentFight.getDefendingField(), new int[2]);//no retreat -> all skags fall
+						currentFight.addFallenTroops(fallenTroops);
+						currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);	
+					}
+				}
 			}
 		}
 		//merge the retreat field

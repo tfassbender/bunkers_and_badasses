@@ -318,6 +318,15 @@ public class Board implements Serializable {
 	}
 	
 	/**
+	 * Remove all the commands that are left on the field at the end of the turn.
+	 */
+	public void removeAllCommands() {
+		for (Field field : fields) {
+			field.setCommand(null);
+		}
+	}
+	
+	/**
 	 * Write the object to a serialized file. The not-serializabel parts (the buffered image) is stored separately at the end of the file.
 	 * This method is somehow used by the Serializable interface.
 	 * 

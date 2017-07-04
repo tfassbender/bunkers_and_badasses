@@ -39,6 +39,7 @@ public class GameTurnManager implements Serializable {
 	}
 	public void nextTurn() {
 		giveOutPoints();
+		game.getBoard().removeAllCommands();
 		playerOrder.nextTurn();
 		resourceManager.collectTurnStartResources();
 		resourceManager.payFixCosts();
@@ -64,7 +65,7 @@ public class GameTurnManager implements Serializable {
 				pointManager.addPoints(player, region.getPoints());
 			}
 			//points for turn goals
-			gameTurnGoalManager.receivePointsTurnEnd(player, game);			
+			gameTurnGoalManager.receivePointsTurnEnd(player, game);
 		}
 	}
 	

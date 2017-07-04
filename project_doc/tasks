@@ -12,10 +12,9 @@ Bunkers and Badasses - Tasks
 	- additional commands from turn bonus cards don't seem to work
 	- debug fights:
 		- skag fights: support ends when one player sends the support answer
-		- skag fights: to many troops fall on players side (more than there are on the field)
-		- skag fights: skip hero choosing when there are no supports doesn't work
-		- fights don't end a turn 
-	
+		- sometimes a player can't choose his fallen troops and the battle doesn't end
+		- surviving troops in normal fights are calculated wrong
+			
 - Next versions:
 	- fix the stream corrupted exception
 	- slider for zoom on board

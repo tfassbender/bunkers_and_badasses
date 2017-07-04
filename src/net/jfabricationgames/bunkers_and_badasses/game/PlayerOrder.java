@@ -78,13 +78,11 @@ public class PlayerOrder implements Serializable {
 	 * 		The player's order.
 	 */
 	public User[] getOrder() {
-		User[] users = new User[order.size()-nextOrder.size()];
+		User[] users = new User[order.size()];
 		int index = 0;
 		for (int i : order.keySet()) {
-			if (nextOrder.get(i) == null) {
-				users[index] = order.get(i);
-				index++;
-			}
+			users[index] = order.get(i);
+			index++;
 		}
 		return users;
 	}
@@ -123,6 +121,15 @@ public class PlayerOrder implements Serializable {
 	public void userPassed(User user) {
 		int playersPassed = nextOrder.size();
 		nextOrder.put(playersPassed, user);
+		Integer userOrder = null;
+		for (Integer i : order.keySet()) {
+			if (order.get(i).equals(user)) {
+				userOrder = i;
+			}
+		}
+		if (userOrder != null) {
+			order.remove(userOrder);
+		}
 		/*if (!isTurnEnd()) {
 			nextMove();
 		}*/
@@ -149,7 +156,7 @@ public class PlayerOrder implements Serializable {
 	/**
 	 * Start the next turn and set the active player to the first player of this turn.
 	 */
-	public void nextTurn() {
+	protected void nextTurn() {
 		order = nextOrder;
 		nextOrder = new HashMap<Integer, User>();
 		move = 0;

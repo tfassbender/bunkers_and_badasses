@@ -100,6 +100,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private JButton btnHeldAuswhlen_1;
 	private JButton btnBesttigen_1;
 	private JButton btnBesttigen;
+	private JButton btnAuswahlZurcksetzen_1;
 	private JSpinner spinner_fallende_truppen_gesammt;
 	private JSpinner spinner_fallende_truppen_verlierer;
 	private JSpinner spinner_fallende_truppen_unterstuetzer;
@@ -117,7 +118,6 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private JList<Field> list_field_fallen_troops;
 	
 	private Game game;
-	private JButton btnAuswahlZurcksetzen_1;
 	
 	public FightExecutionFrame(Game game) {
 		addFocusListener(new FocusAdapter() {
@@ -1012,6 +1012,53 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		}
 	}
 	
+	public void clearAll() {
+		//reset the stored fields
+		fallingSupportTroops = new HashMap<Field, Integer>();
+		fallingTroops = 0;
+		fallingTroopsLooser = 0;
+		fallingTroopsLeft = 0;
+		selectedFallenTroopsField = null;
+		fallenTroops = new HashMap<Field, int[]>();
+		fieldsFallenTroops = new ArrayList<Field>();
+		//clear all list models
+		fieldNeighboursSupportModel.removeAllElements();
+		fieldDeniedSupportModel.removeAllElements();
+		fieldAttackerSupportModel.removeAllElements();
+		fieldDefenderSupportModel.removeAllElements();
+		fieldRetreadModel.removeAllElements();
+		fieldFallingSupportModel.removeAllElements();
+		fieldSelectionModel.removeAllElements();
+		//clear all text fields
+		fieldPanelAttacker.updateField(null);
+		fieldPanelDefender.updateField(null);
+		txtAngreifer.setText("");
+		txtVerteidiger.setText("");
+		txtTruppenangreifer.setText("");
+		txtTruppenverteidiger.setText("");
+		txtUntersttzerangreifer.setText("");
+		txtUntersttzerverteidiger.setText("");
+		txtAngreifendesfeld.setText("");
+		txtVerteidigendesFeld.setText("");
+		txtHeroAttacker.setText("");
+		txtHerodefender.setText("");
+		txtHeroAttackerAtk.setText("");
+		txtHeroAttackerDef.setText("");
+		txtHeroDefenderAtk.setText("");
+		txtHeroDefenderDef.setText("");
+		txtSieger.setText("");
+		txtVerlierer.setText("");
+		txtOverhead.setText("");
+		txtFallendetruppen.setText("");
+		txtFallendetruppenbis.setText("");
+		txtFallendetruppengesammt.setText("");
+		txtPhase.setText("");
+		txtbrig.setText("");
+		txtFallendeTruppen.setText("");
+		txtrHeroEffectAttacker.setText("");
+		txtrHeroEffectDefender.setText("");
+	}
+	
 	public void update() {
 		disableAll();
 		updateFightInfo();
@@ -1184,11 +1231,13 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 					txtVerlierer.setText(fight.getAttackingPlayer().getUsername());
 					break;
 			}
-			int overhead = Math.abs(fight.getCurrentAttackingStrength() - fight.getCurrentDefendingStrength());
-			int[] fallingTroops = fight.calculateFallingTroops();
-			txtOverhead.setText(Integer.toString(overhead));
-			txtFallendetruppen.setText(Integer.toString(fallingTroops[0]));
-			txtFallendetruppenbis.setText(Integer.toString(fallingTroops[1]));
+			if (fight.getDefendingPlayer() != null) {
+				int overhead = Math.abs(fight.getCurrentAttackingStrength() - fight.getCurrentDefendingStrength());
+				int[] fallingTroops = fight.calculateFallingTroops();
+				txtOverhead.setText(Integer.toString(overhead));
+				txtFallendetruppen.setText(Integer.toString(fallingTroops[0]));
+				txtFallendetruppenbis.setText(Integer.toString(fallingTroops[1]));				
+			}
 		}
 	}
 	
@@ -1278,7 +1327,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			if (fight.getFallenTroops() != null) {
 				for (Field field : fight.getFallenTroops().keySet()) {
 					fallenTroopsChosen |= fight.getAttackingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getAttackingField().getName());
-					fallenTroopsChosen |= fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getDefendingField().getName());
+					fallenTroopsChosen |= fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getDefendingField().getName());//TODO nullpointer here (?!)
 					for (Field supportField : fight.getFallingTroopsSupport().keySet()) {
 						fallenTroopsChosen |= field.getName().equals(supportField.getName());
 					}

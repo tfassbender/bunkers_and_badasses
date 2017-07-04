@@ -529,14 +529,15 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		game.getPlayerOrder().userPassed(game.getLocalUser());
 		game.setState(GameState.ACT);
 		try {
-			game.getPlayerOrder().nextMove();			
+			game.getPlayerOrder().nextMove();
 		}
 		catch (TurnOrderException toe) {
-			game.getPlayerOrder().nextTurn();
+			//start next turn
+			game.getTurnManager().nextTurn();
 			game.setState(GameState.PLAN);
 		}
 		game.getTurnExecutionManager().commit();
-		game.getGameFrame().update();
+		game.getGameFrame().updateAllFrames();
 	}
 	
 	private List<Field> findPossibleMovingTargets(Field field) {

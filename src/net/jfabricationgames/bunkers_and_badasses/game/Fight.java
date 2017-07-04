@@ -181,6 +181,16 @@ public class Fight implements Serializable {
 		}
 		return maximumFallingSupportTroops;
 	}
+	public int calculateFallingTroopsSkagFight() {
+		int fallingTroops = getDefendingStrength();//as much troops as there are skags
+		fallingTroops = Math.min(fallingTroops, attackingNormalTroops + 2*attackingBadassTroops - 1);//one attacker survives
+		return fallingTroops;
+	}
+	public int[] calculateFallingTroopsSkagFightLost() {
+		int[] fallingTroops = new int[] {attackingNormalTroops + 2*attackingBadassTroops, attackingNormalTroops + 2*attackingBadassTroops};
+		fallingTroops[1] = Math.min(fallingTroops[1], getDefendingStrength() - 1);//one skag survives
+		return fallingTroops;
+	}
 	
 	public List<Field> calculateRetreatFields() {
 		List<Field> retreatFields = new ArrayList<Field>();
