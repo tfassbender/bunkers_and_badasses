@@ -28,6 +28,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.error.TurnOrderException;
@@ -59,8 +61,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 
 public class TurnExecutionFrame extends JFrame implements BoardPanelListener, ConfirmDialogListener, TurnBonusSelectionListener {
 	
@@ -322,7 +322,12 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		btnAusfhrungBeenden = new JButton("Ausf\u00FChrung Beenden");
 		btnAusfhrungBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ConfirmDialog("Ausführung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);
+				if (game.getGameState().equals(GameState.ACT) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+					new ConfirmDialog("Ausführung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);					
+				}
+				else {
+					btnAusfhrungBeenden.setEnabled(false);
+				}
 			}
 		});
 		btnAusfhrungBeenden.setEnabled(false);
@@ -512,7 +517,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	@Override
 	public void receiveConfirmAnswer(boolean confirm, int type) {
 		if (confirm) {
-			game.setState(GameState.SELECT_BONUS);
+			//game.setState(GameState.SELECT_BONUS);
 			TurnGoalTurnBonusDialog dialog = game.getGameFrame().getTurnGoalTurnBonusDialog();
 			dialog.showPanel(TurnGoalTurnBonusDialog.TURN_BONUS_PANEL);
 			dialog.setTurnBonusSelectable(true, this);
@@ -594,7 +599,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 				int upgradedTroops = (Integer) spinnerAufrstungen.getValue();
 				//set spinners to values for selected target
 				spinnerNormalTroops.setEnabled(true);
-				spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, selectedField.getBuilding().getRecruitableTroops(), normalTroops));
+				spinnerNormalTroops.setModel(new SpinnerNumberModel(normalTroops, 0, selectedField.getBuilding().getRecruitableTroops(), 1));
 				boolean badassesRecruitable = false;
 				for (Field boardField : game.getBoard().getFields()) {
 					badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation() != null && boardField.getAffiliation().equals(game.getLocalUser());
@@ -602,8 +607,12 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 				if (badassesRecruitable) {
 					spinnerBadassTroops.setEnabled(true);
 					spinnerAufrstungen.setEnabled(true);
-					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, selectedField.getBuilding().getRecruitableTroops()/2, badassTroops));
-					spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, Math.min(selectedTarget.getNormalTroops(), selectedField.getBuilding().getRecruitableTroops()), upgradedTroops));
+					spinnerBadassTroops.setModel(new SpinnerNumberModel(badassTroops, 0, selectedField.getBuilding().getRecruitableTroops()/2, 1));
+					spinnerAufrstungen.setModel(new SpinnerNumberModel(upgradedTroops, 0, Math.min(selectedTarget.getNormalTroops(), selectedField.getBuilding().getRecruitableTroops()), 1));
+				}
+				else {
+					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, 0, 1));
+					spinnerAufrstungen.setModel(new SpinnerNumberModel(0, 0, 0, 1));
 				}
 			}
 			else {
@@ -908,7 +917,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 								targetFields.add(fieldTargetModel.getElementAt(i));
 							}
 							fieldSelectionSucessfull = false;
-							new TargetFieldSelectionDialog(this, game, selectedField, targetFields, normalTroops, badassTroops).setVisible(true);
+							TargetFieldSelectionFrame selection = new TargetFieldSelectionFrame(this, game, selectedField, targetFields, normalTroops, badassTroops);
+							selection.setLocationRelativeTo(this);
+							selection.setVisible(true);
 							commandExecuted = fieldSelectionSucessfull;
 						}
 					}

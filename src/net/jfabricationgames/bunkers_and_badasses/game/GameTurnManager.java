@@ -40,6 +40,9 @@ public class GameTurnManager implements Serializable {
 	public void nextTurn() {
 		giveOutPoints();
 		game.getBoard().removeAllCommands();
+		game.getPlanManager().turnEnded();
+		game.setState(GameState.PLAN);
+		game.getPlanManager().countCommands();
 		playerOrder.nextTurn();
 		resourceManager.collectTurnStartResources();
 		resourceManager.payFixCosts();

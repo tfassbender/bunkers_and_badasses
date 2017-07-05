@@ -3,13 +3,14 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -18,20 +19,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
-public class TargetFieldSelectionDialog extends JDialog {
+public class TargetFieldSelectionFrame extends JFrame {
 	
 	private static final long serialVersionUID = 483050552559369915L;
 	
@@ -57,7 +56,7 @@ public class TargetFieldSelectionDialog extends JDialog {
 	private TurnExecutionFrame turnExecutionFrame;
 	private Game game;
 	
-	public TargetFieldSelectionDialog(TurnExecutionFrame callingFrame, Game game, Field startField, List<Field> targets, int normalTroops, int badassTroops) {
+	public TargetFieldSelectionFrame(TurnExecutionFrame callingFrame, Game game, Field startField, List<Field> targets, int normalTroops, int badassTroops) {
 		this.turnExecutionFrame = callingFrame;
 		this.game = game;
 		this.startField = startField;
@@ -67,11 +66,10 @@ public class TargetFieldSelectionDialog extends JDialog {
 		this.normalTroopsStart = normalTroops;
 		this.badassTroopsStart = badassTroops;
 		
-		setModal(true);
 		setResizable(false);
 		setTitle("Ziel Auswahl - Bunkers and Badasses");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TargetFieldSelectionDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(TargetFieldSelectionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);

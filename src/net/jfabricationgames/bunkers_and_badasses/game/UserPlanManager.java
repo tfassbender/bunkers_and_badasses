@@ -163,6 +163,12 @@ public class UserPlanManager implements Serializable {
 		}
 	}
 	
+	public void turnEnded() {
+		fieldCommands = new HashMap<Field, Command>();
+		allCommands = new HashMap<Field, Command>();
+		playerCommitted = new HashMap<User, UserResource>();
+	}
+	
 	public static void receiveStartCommands(int[] startCommands) {
 		START_COMMANDS = startCommands;
 	}

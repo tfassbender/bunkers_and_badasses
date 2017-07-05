@@ -39,7 +39,7 @@ public class PointManager implements Serializable {
 
 		@Override
 		public int compareTo(UserPoints userPoints) {
-			return points - userPoints.getPoints();
+			return userPoints.getPoints() - points;
 		}
 	}
 	

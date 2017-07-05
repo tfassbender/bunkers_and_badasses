@@ -10,6 +10,10 @@ Bunkers and Badasses - Tasks
 	- start resources seem to be added to much or to often
 	- can't go on in PreGameSelection when the base is chosen before the second player confirms his skill
 	- additional commands from turn bonus cards don't seem to work
+	- given commands are not reseted after the turn ends (game state is not set to plan when the turn starts)
+	- users can select the same bonus after passing (even the bonus an other player holds)
+	- additional commands that are bought can't be payed (?)
+	- the commands a player has are not resetet at the turn beginning
 	- debug fights:
 		- skag fights: support ends when one player sends the support answer
 		- sometimes a player can't choose his fallen troops and the battle doesn't end
@@ -22,6 +26,8 @@ Bunkers and Badasses - Tasks
 	- implement hero and building functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends
+	- marker position bug in Rakk's Hive
 
 - New ideas:
 	- New neutral troops like Threshers (maybe moving each turn)
+	- dragging the board with the mouse
