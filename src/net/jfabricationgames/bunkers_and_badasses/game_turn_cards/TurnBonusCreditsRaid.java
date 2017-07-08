@@ -9,6 +9,7 @@ public class TurnBonusCreditsRaid extends TurnBonus {
 	public TurnBonusCreditsRaid() {
 		bonusId = 5;
 		loadVariables();
+		raidCommands = 1;
 		imagePath = "turn_bonus_credits_1_raid_command.png";
 		loadImage();
 		name = "Credits - Überfall Befehl";

@@ -29,6 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 public class TargetFieldSelectionFrame extends JFrame {
 	
@@ -95,20 +96,26 @@ public class TargetFieldSelectionFrame extends JFrame {
 		panel.add(lblNormal, "cell 2 2,alignx trailing");
 		
 		txtNormalTroopsLeft = new JTextField();
+		txtNormalTroopsLeft.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtNormalTroopsLeft.setHorizontalAlignment(SwingConstants.CENTER);
 		txtNormalTroopsLeft.setBackground(Color.LIGHT_GRAY);
 		txtNormalTroopsLeft.setEnabled(false);
 		panel.add(txtNormalTroopsLeft, "cell 3 2,growx");
 		txtNormalTroopsLeft.setColumns(10);
+		txtNormalTroopsLeft.setText(Integer.toString(normalTroops));
 		
 		JLabel lblBadasses = new JLabel("Badasses:");
 		lblBadasses.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblBadasses, "cell 5 2,alignx trailing");
 		
 		txtBadassTroopsLeft = new JTextField();
+		txtBadassTroopsLeft.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtBadassTroopsLeft.setHorizontalAlignment(SwingConstants.CENTER);
 		txtBadassTroopsLeft.setBackground(Color.LIGHT_GRAY);
 		txtBadassTroopsLeft.setEnabled(false);
 		panel.add(txtBadassTroopsLeft, "cell 6 2,growx");
 		txtBadassTroopsLeft.setColumns(10);
+		txtBadassTroopsLeft.setText(Integer.toString(badassTroops));
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.GRAY);
@@ -145,7 +152,11 @@ public class TargetFieldSelectionFrame extends JFrame {
 			public void stateChanged(ChangeEvent arg0) {
 				Field field = list.getSelectedValue();
 				int[] currentTroops = troops.get(field);
-				currentTroops[0] = (int) spinnerNormal.getValue();
+				Integer val = (Integer) spinnerNormal.getValue();
+				if (val == null) {
+					val = new Integer(0);
+				}
+				currentTroops[0] = val;
 				troops.put(field, currentTroops);
 				countTroopsLeft();
 			}
@@ -188,27 +199,46 @@ public class TargetFieldSelectionFrame extends JFrame {
 	
 	private void executeMoves() {
 		if (normalTroopsLeft == normalTroopsStart && badassTroopsLeft == badassTroopsStart) {
-			new ErrorDialog("Du hast keine Truppenbewegungen ausgew�hlt.\n\nDu solltest mindestens ein Ziel mit Truppen aussuchen.\nOder du l�sst deine Truppen einfach im Kreis laufen.\nDas kann auch lustig sein.").setVisible(true);
+			new ErrorDialog("Du hast keine Truppenbewegungen ausgewählt.\n\nDu solltest mindestens ein Ziel mit Truppen aussuchen.\nOder du lässt deine Truppen einfach im Kreis laufen.\nDas kann auch lustig sein.").setVisible(true);
 		}
 		else {
-			Field fight = null;
+			int attacks = 0;
 			for (Field field : targets) {
 				int[] movedTroops = troops.get(field);
-				if (movedTroops[0] + movedTroops[1] > 0) {
-					if (field.getAffiliation() != null && !field.getAffiliation().equals(game.getLocalUser())) {
-						fight = field;
-					}
-					else {
-						game.getBoard().moveTroops(startField, field, movedTroops[0], movedTroops[1]);
-					}
+				if (movedTroops[0] + movedTroops[1] > 0 && field.getAffiliation() == null || !field.getAffiliation().equals(game.getLocalUser())) {
+					attacks++;
 				}
 			}
-			if (fight != null) {
-				int[] attackingTroops = troops.get(fight);
-				game.getFightManager().startFight(startField, fight, attackingTroops[0], attackingTroops[1]);
+			if (attacks > 1) {
+				new ErrorDialog("Du hast zu viele Felder ausgewählt, die erobert werden sollen.\n\nDeine Truppen können maximal ein Gebiet (feindlich oder neutral) erobern.");
 			}
-			turnExecutionFrame.setFieldSelectionSucessfull(true);
-			dispose();
+			else {
+				Field fight = null;
+				for (Field field : targets) {
+					int[] movedTroops = troops.get(field);
+					if (movedTroops[0] + movedTroops[1] > 0) {
+						if (field.getAffiliation() != null && !field.getAffiliation().equals(game.getLocalUser())) {
+							fight = field;
+						}
+						else {
+							game.getBoard().moveTroops(startField, field, movedTroops[0], movedTroops[1]);
+						}
+					}
+				}
+				if (fight != null) {
+					int[] attackingTroops = troops.get(fight);
+					game.getFightManager().startFight(startField, fight, attackingTroops[0], attackingTroops[1]);
+					startField.setCommand(null);
+				}
+				else {
+					startField.setCommand(null);
+					game.getPlayerOrder().nextMove();
+					game.getTurnExecutionManager().commit();
+					game.getGameFrame().updateAllFrames();
+				}
+				turnExecutionFrame.setFieldSelectionSucessfull(true);
+				dispose();
+			}
 		}
 	}
 	
@@ -217,6 +247,7 @@ public class TargetFieldSelectionFrame extends JFrame {
 		normalTroopsLeft = normalTroopsStart;
 		badassTroopsLeft = badassTroopsStart;
 		initSpinners(normalTroopsStart, badassTroopsStart);
+		countTroopsLeft();
 	}
 	
 	private void countTroopsLeft() {
@@ -229,6 +260,8 @@ public class TargetFieldSelectionFrame extends JFrame {
 		}
 		normalTroopsLeft = normalTroopsStart - normalTroops;
 		badassTroopsLeft = badassTroopsStart - badassTroops;
+		txtNormalTroopsLeft.setText(Integer.toString(normalTroopsLeft));
+		txtBadassTroopsLeft.setText(Integer.toString(badassTroopsLeft));
 	}
 	
 	private void addTargets(List<Field> targets) {
@@ -249,7 +282,7 @@ public class TargetFieldSelectionFrame extends JFrame {
 	}
 	private void updateSpinners(Field field) {
 		int[] currentTroops = troops.get(field);
-		spinnerNormal.setModel(new SpinnerNumberModel(currentTroops[0], 0, normalTroopsLeft, 1));
-		spinnerBadass.setModel(new SpinnerNumberModel(currentTroops[1], 0, badassTroopsLeft, 1));
+		spinnerNormal.setModel(new SpinnerNumberModel(currentTroops[0], 0, normalTroopsLeft+currentTroops[0], 1));
+		spinnerBadass.setModel(new SpinnerNumberModel(currentTroops[1], 0, badassTroopsLeft+currentTroops[1], 1));
 	}
 }

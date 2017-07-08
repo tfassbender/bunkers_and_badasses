@@ -10,6 +10,7 @@ public class TurnBonusDefendFight extends TurnBonus {
 	public TurnBonusDefendFight() {
 		bonusId = 6;
 		loadVariables();
+		defenseCommands = 1;
 		imagePath = "turn_bonus_defend_command_fight.png";
 		loadImage();
 		name = "Verteidungungs Befehl - Kampf";

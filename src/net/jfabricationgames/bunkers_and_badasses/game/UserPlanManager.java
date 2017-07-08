@@ -167,6 +167,7 @@ public class UserPlanManager implements Serializable {
 		fieldCommands = new HashMap<Field, Command>();
 		allCommands = new HashMap<Field, Command>();
 		playerCommitted = new HashMap<User, UserResource>();
+		countCommands();
 	}
 	
 	public static void receiveStartCommands(int[] startCommands) {

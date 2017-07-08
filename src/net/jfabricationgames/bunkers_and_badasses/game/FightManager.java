@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.FightExecutionFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.SupportRequestFrame;
@@ -87,22 +88,38 @@ public class FightManager implements Serializable {
 		currentFight.setAttackingPlayer(startField.getAffiliation());
 		currentFight.setDefendingPlayer(targetField.getAffiliation());
 		currentFight.calculateCurrentStrength();
-		if (targetField.getAffiliation() == null) {
-			currentFight.setDefendingHeroChosen(true);//skags can't chose heros
-			currentFight.setAttackingHeroChosen(true);
+		if (targetField.getCommand() instanceof RetreatCommand && currentFight.retreatPossible()) {
+			//the attacked player retreated -> let him choose the retreat field
+			currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
+			currentFight.setWinner(Fight.ATTACKERS);
+			currentFight.setFallingTroopsChosen(true);
+			currentFight.setFallingTroopsTotal(0);
+			currentFight.setFallingTroopsLooser(0);
+			currentFight.setFallingTroopsSupport(new HashMap<Field, Integer>());
+			Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
+			fallenTroops.put(startField, new int[2]);
+			fallenTroops.put(targetField, new int[2]);
+			currentFight.setFallenTroops(fallenTroops);
+			currentFight.setFallenTroopsChosen(true);
 		}
-		addPossibleSupportFields();
-		if (currentFight.getPossibleSupporters().isEmpty()) {
-			currentFight.setBattleState(Fight.STATE_HEROS);
-			if (currentFight.getDefendingField().getAffiliation() == null) {
-				update();
+		else {
+			if (targetField.getAffiliation() == null) {
+				currentFight.setDefendingHeroChosen(true);//skags can't chose heros
+				currentFight.setAttackingHeroChosen(true);
 			}
+			addPossibleSupportFields();
+			if (currentFight.getPossibleSupporters().isEmpty()) {
+				currentFight.setBattleState(Fight.STATE_HEROS);
+				if (currentFight.getDefendingField().getAffiliation() == null) {
+					update();
+				}
+			}
+			fightExecutionFrame.clearAll();//resets stored fields
+			fightExecutionFrame.setVisible(true);
+			fightExecutionFrame.requestFocus();
+			fightExecutionFrame.update();
+			showSupportRequests();
 		}
-		fightExecutionFrame.clearAll();
-		fightExecutionFrame.setVisible(true);
-		fightExecutionFrame.requestFocus();
-		fightExecutionFrame.update();
-		showSupportRequests();
 		FightTransfereMessage message = new FightTransfereMessage(currentFight, true);
 		client.sendMessage(message);
 	}
@@ -118,11 +135,17 @@ public class FightManager implements Serializable {
 		//the fields are sometimes added twice; fix it by remembering the names...
 		List<String> troopsRemoved = new ArrayList<String>();//the names of all fields where troops were removed
 		for (Field field : currentFight.getFallenTroops().keySet()) {
-			if (troopsRemoved != null && field != null && !troopsRemoved.contains(field.getName())) {//TODO nullpointer here
+			if (troopsRemoved != null && field != null && !troopsRemoved.contains(field.getName())) {
 				fallenTroops = currentFight.getFallenTroops().get(field);
 				localField = game.getBoard().getFieldByName(field.getName());
-				localField.removeNormalTroops(fallenTroops[0]);//TODO not enough troops to remove exception here
-				localField.removeBadassTroops(fallenTroops[1]);
+				System.out.println("Removing troops from " + localField.getName() + ": " + fallenTroops[0] + ", " + fallenTroops[1]);
+				try {
+					localField.removeNormalTroops(fallenTroops[0]);//TODO not enough troops to remove exception here (trying to remove troops in retreat field?)
+					localField.removeBadassTroops(fallenTroops[1]);
+				}
+				catch (IllegalArgumentException iae) {
+					iae.printStackTrace();
+				}
 				troopsRemoved.add(field.getName());
 			}
 		}
@@ -145,6 +168,8 @@ public class FightManager implements Serializable {
 			fallenTroops = currentFight.getFallenTroops().get(attackingField);
 			int[] movingTroops = {currentFight.getAttackingNormalTroops() - fallenTroops[0], currentFight.getAttackingBadassTroops() - fallenTroops[1]};
 			game.getBoard().moveTroops(attackingField, defendingField, movingTroops[0], movingTroops[1]);
+			//remove any command that could be on the conquered field
+			defendingField.setCommand(null);
 		}
 		//end the players turn
 		game.getPlayerOrder().nextMove();
@@ -372,6 +397,7 @@ public class FightManager implements Serializable {
 			this.currentFight = fight;
 			fightExecutionFrame.setVisible(true);
 			fightExecutionFrame.requestFocus();
+			fightExecutionFrame.clearAll();//resets all saved fields
 			showSupportRequests();
 		}
 		else {

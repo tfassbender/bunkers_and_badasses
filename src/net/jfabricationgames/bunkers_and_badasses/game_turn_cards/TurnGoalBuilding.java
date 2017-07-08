@@ -23,7 +23,7 @@ public class TurnGoalBuilding extends TurnGoal {
 	public void receivePointsTurnEnd(User user, Game game) {
 		int points = 0;
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(user) && !(field.getBuilding() instanceof EmptyBuilding)) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(user) && !(field.getBuilding() instanceof EmptyBuilding)) {
 				if (field.getBuilding() instanceof ArschgaulsPalace) {
 					points += 3;
 				}

@@ -10,6 +10,7 @@ public class TurnBonusMineNeutrals extends TurnBonus {
 	public TurnBonusMineNeutrals() {
 		bonusId = 11;
 		loadVariables();
+		collectCommands = 1;
 		imagePath = "turn_bonus_mine_command_neutrals.png";
 		loadImage();
 		name = "Resourcen Befehl - Neutrale";

@@ -531,6 +531,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		game.getGameTurnBonusManager().chooseTurnBonus(game.getLocalUser(), selectedBonus);
 		//game.setState(GameState.WAIT);
 		game.getGameFrame().getTurnGoalTurnBonusDialog().setTurnBonusSelectable(false, null);
+		game.getGameFrame().getTurnGoalTurnBonusDialog().updateTurnBonuses();
 		game.getPlayerOrder().userPassed(game.getLocalUser());
 		game.setState(GameState.ACT);
 		try {
@@ -549,17 +550,29 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		List<Field> possibleTargets = new ArrayList<Field>();
 		List<Field> newTargets;
 		possibleTargets.add(field);
+		boolean containsTarget = false;
 		for (int i = 0; i < field.getBuilding().getMoveDistance(); i++) {
 			newTargets = new ArrayList<Field>();
 			for (Field start : possibleTargets) {
 				if (start.getAffiliation() != null && start.getAffiliation().equals(game.getLocalUser())) {
 					for (Field neighbour : start.getNeighbours()) {
-						newTargets.add(neighbour);
+						if (!newTargets.contains(neighbour) && !possibleTargets.contains(neighbour)) {
+							newTargets.add(neighbour);
+						}
 					}
 				}
 			}
-			possibleTargets.addAll(newTargets);
+			for (Field target : newTargets) {
+				containsTarget = false;
+				for (Field included : possibleTargets) {
+					containsTarget |= target.getName().equals(included.getName());
+				}
+				if (!containsTarget) {
+					possibleTargets.add(target);
+				}
+			}
 		}
+		possibleTargets.remove(0);//remove the start field
 		return possibleTargets;
 	}
 	
@@ -1021,7 +1034,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 			selectedField.setCommand(null);
 			game.getPlayerOrder().nextMove();
 			game.getTurnExecutionManager().commit();
-			game.getGameFrame().update();
+			game.getGameFrame().updateAllFrames();
 		}
 		update();
 	}

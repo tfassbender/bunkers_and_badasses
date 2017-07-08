@@ -9,6 +9,7 @@ public class TurnBonusAmmoRetreat extends TurnBonus {
 	public TurnBonusAmmoRetreat() {
 		bonusId = 2;
 		loadVariables();
+		retreatCommands = 1;
 		imagePath = "turn_bonus_ammo_1_retreat_command.png";
 		loadImage();
 		name = "Munition - Rückzugs Befehl";

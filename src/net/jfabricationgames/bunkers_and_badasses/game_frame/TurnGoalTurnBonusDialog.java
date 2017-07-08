@@ -193,7 +193,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 		}
 		
 		addTurnGoals();
-		addTurnBonuses();
+		updateTurnBonuses();
 		addUsers();
 	}
 	
@@ -227,9 +227,9 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 			panel_turn_goal_list.add(imagePanel, "cell " + i + " 1,grow");
 		}
 	}
-	private void addTurnBonuses() {
+	public void updateTurnBonuses() {
 		panel_choosable_bonuses.removeAll();
-		List<TurnBonus> bonusCards = game.getGameTurnBonusManager().getBonuses();
+		List<TurnBonus> bonusCards = game.getGameTurnBonusManager().getChoosableTurnBonuses();
 		if (bonusCards != null) {
 			int bonuses = bonusCards.size();
 			StringBuilder sb = new StringBuilder();
@@ -280,7 +280,7 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	 */
 	public void update() {
 		addTurnGoals();
-		addTurnBonuses();
+		updateTurnBonuses();
 		revalidate();
 		repaint();
 	}

@@ -1000,6 +1000,9 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		else if (toManyFallenTroopsSelected) {
 			new ErrorDialog("Du hast in (mindestens) einem Feld zu viele Truppen ausgewählt die fallen.\n\nLass deinen Gegnern doch auch noch was zu tun übrig.").setVisible(true);
 		}
+		else if (fallenTroops.isEmpty()) {
+			new ErrorDialog("Du hast an diesem Kampf garnicht teilgenommen.\n\nDu musst schon kämpfen wenn du willst das deine Truppen ins Gras beißen.");
+		}
 		else {
 			fight.addFallenTroops(fallenTroops);
 			fight.setFallenTroopsChosen(true);
@@ -1327,7 +1330,13 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			if (fight.getFallenTroops() != null) {
 				for (Field field : fight.getFallenTroops().keySet()) {
 					fallenTroopsChosen |= fight.getAttackingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getAttackingField().getName());
-					fallenTroopsChosen |= fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getDefendingField().getName());//TODO nullpointer here (?!)
+					try {
+						fallenTroopsChosen |= fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getDefendingField().getName());//TODO nullpointer here (?!)						
+					}
+					catch (Exception e) {
+						//TODO remove try-catch after debugging
+						e.printStackTrace();
+					}
 					for (Field supportField : fight.getFallingTroopsSupport().keySet()) {
 						fallenTroopsChosen |= field.getName().equals(supportField.getName());
 					}

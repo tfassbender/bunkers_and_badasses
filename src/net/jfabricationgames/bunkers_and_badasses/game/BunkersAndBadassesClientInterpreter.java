@@ -99,6 +99,7 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 			case TURN_OVER:
 				//merge the complete game
 				game.merge(message.getGame());
+				game.getPlanManager().turnEnded();
 				break;
 		}
 	}

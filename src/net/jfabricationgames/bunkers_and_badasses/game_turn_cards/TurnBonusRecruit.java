@@ -7,6 +7,7 @@ public class TurnBonusRecruit extends TurnBonus {
 	public TurnBonusRecruit() {
 		bonusId = 12;
 		loadVariables();
+		recruitmentCommands = 1;
 		imagePath = "turn_bonus_recruit_command.png";
 		loadImage();
 		name = "Rekrutierungs Befehl";

@@ -207,6 +207,14 @@ public class Fight implements Serializable {
 		return retreatFields;
 	}
 	
+	public boolean retreatPossible() {
+		boolean retreatPossible = false;
+		for (Field field : defendingField.getNeighbours()) {
+			retreatPossible |= field.getAffiliation() != null && field.getAffiliation().equals(defendingPlayer);
+		}
+		return retreatPossible;
+	}
+	
 	public void calculateCurrentStrength() {
 		//attacking troops
 		currentAttackingStrength = attackingNormalTroops + 2*attackingBadassTroops;

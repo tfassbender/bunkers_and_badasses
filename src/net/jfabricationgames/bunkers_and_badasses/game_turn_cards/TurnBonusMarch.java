@@ -7,6 +7,7 @@ public class TurnBonusMarch extends TurnBonus {
 	public TurnBonusMarch() {
 		bonusId = 10;
 		loadVariables();
+		marchCommands = 1;
 		imagePath = "turn_bonus_march_command.png";
 		loadImage();
 		name = "Marschbefehl";

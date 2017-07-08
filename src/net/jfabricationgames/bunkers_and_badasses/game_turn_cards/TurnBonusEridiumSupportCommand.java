@@ -9,6 +9,7 @@ public class TurnBonusEridiumSupportCommand extends TurnBonus {
 	public TurnBonusEridiumSupportCommand() {
 		bonusId = 9;
 		loadVariables();
+		supportCommands = 1;
 		imagePath = "turn_bonus_eridium_1_support_command.png";
 		loadImage();
 		name = "Eridium - Unterstützungs Befehl";
