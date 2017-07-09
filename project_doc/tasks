@@ -2,20 +2,16 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- make recruiting heros a turn
 	- start resources seem to be added to much or to often
-	- can't go on in PreGameSelection when the base is chosen before the second player confirms his skill
-	- turn bonus images are not always shown in the selection screen (images not loaded?; the one that a player puts back)
-	- a player can't pass when it's the first move and he has no commands (or nothing executed)
+	- a player can't pass when it's the first move and he has no commands (or nothing executed) (?)
+	- some turn goals seem to be not added to the points (capitalism)
 	- debug fights:
-		- sometimes a player can't choose his fallen troops and the battle doesn't end
+		- sometimes a player can't choose his fallen troops and the battle doesn't end (?)
 		- surviving troops in normal fights are calculated wrong
 		- fight end text fields need to be cleared (fight execution frame)
 		- some fallen troops are selected in fields that didn't even take part in the fight (only possible retreat)
-		- sometimes the support requests are not shown (defender)
 		- when a fight isn't executed till end another execution can be started (any command)
 		- when attacking with only crimson raiders also bandits can fall (if there are any in the attacking field)
-		- sometimes the fight execution frame doesn't appear
 			
 - Next versions:
 	- fix the stream corrupted exception

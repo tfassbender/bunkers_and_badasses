@@ -868,7 +868,13 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 * Confirm the selected turn bonus and send an update to all users.
 	 */
 	private void confirmBonus() {
-		if (selectedBonus != null && game.getGameTurnBonusManager().isTurnBonusChoosable(selectedBonus)) {
+		if (selectedBonus == null) {
+			new ErrorDialog("Du must einen Bonus auswählen bevor du ihn bestätigen kannst.").setVisible(true);
+		}
+		else if (!game.getGameTurnBonusManager().isTurnBonusChoosable(selectedBonus)) {
+			new ErrorDialog("Du solltest einen Bonus auswählen, den dir noch kein anderer Spieler weggeschnappt hat.\n\nNatürlich nachdem Du ihn dafür zur Sau gemacht hast, dass er einfach so deinen Bonus nimmt.");
+		}
+		else {
 			game.getGameTurnBonusManager().chooseFirstTurnBonus(game.getLocalUser(), selectedBonus);
 			addTurnBonuses(panel_selectable_turn_bonuses, true);
 			turnDialog.update();
@@ -992,7 +998,9 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		CardLayout layout = (CardLayout) panel_6.getLayout();
 		layout.show(panel_6, TROOP_POSITIONING_PANEL);
 		User[] playerOrder = game.getPlayerOrder().getOrder();
-		setPlayersTurn(playerOrder[playerOrder.length-1]);
+		if (!usersTurn) {
+			setPlayersTurn(playerOrder[playerOrder.length-1]);			
+		}
 	}
 	/**
 	 * Change to the turn bonus selection panel.

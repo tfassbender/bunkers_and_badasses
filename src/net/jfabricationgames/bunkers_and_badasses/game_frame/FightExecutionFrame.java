@@ -1001,17 +1001,26 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			new ErrorDialog("Du hast in (mindestens) einem Feld zu viele Truppen ausgewählt die fallen.\n\nLass deinen Gegnern doch auch noch was zu tun übrig.").setVisible(true);
 		}
 		else if (fallenTroops.isEmpty()) {
-			new ErrorDialog("Du hast an diesem Kampf garnicht teilgenommen.\n\nDu musst schon kämpfen wenn du willst das deine Truppen ins Gras beißen.");
+			new ErrorDialog("Du hast an diesem Kampf garnicht teilgenommen.\n\nDu musst schon kämpfen wenn du willst das deine Truppen ins Gras beißen.").setVisible(true);
 		}
 		else {
-			fight.addFallenTroops(fallenTroops);
-			fight.setFallenTroopsChosen(true);
-			game.getFightManager().update();
-			//disable the components
-			btnBesttigen.setEnabled(false);
-			btnAuswahlZurcksetzen_1.setEnabled(false);
-			spinner_normal_troups.setEnabled(false);
-			spinner_badass_troups.setEnabled(false);
+			boolean onlyNeutralFallenTroops = true;
+			for (Field field : fallenTroops.keySet()) {
+				onlyNeutralFallenTroops &= field.getAffiliation() == null;
+			}
+			if (onlyNeutralFallenTroops) {
+				new ErrorDialog("Du hast an diesem Kampf garnicht teilgenommen.\n\nDu musst schon kämpfen wenn du willst das deine Truppen ins Gras beißen.").setVisible(true);
+			}
+			else {
+				fight.addFallenTroops(fallenTroops);
+				fight.setFallenTroopsChosen(true);
+				game.getFightManager().update();
+				//disable the components
+				btnBesttigen.setEnabled(false);
+				btnAuswahlZurcksetzen_1.setEnabled(false);
+				spinner_normal_troups.setEnabled(false);
+				spinner_badass_troups.setEnabled(false);				
+			}
 		}
 	}
 	

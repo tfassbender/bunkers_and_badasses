@@ -238,6 +238,9 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 			}
 			panel_choosable_bonuses.setLayout(new MigLayout("", sb.toString(), "[grow]"));
 			for (int i = 0; i < bonuses; i++) {
+				if (bonusCards.get(i).getImage() == null) {
+					bonusCards.get(i).loadImage();
+				}
 				TurnBonusCardPanel imagePanel = new TurnBonusCardPanel(bonusCards.get(i));
 				if (selectable) {
 					imagePanel.setSelectionListener(this);

@@ -341,13 +341,15 @@ public class GameOverviewFrame extends JFrame {
 				}
 			}
 		}
-		txtSpieler_1.setText(player.getUsername());
+		if (player != null) {
+			txtSpieler_1.setText(player.getUsername());	
+			txtHelden.setText(Integer.toString(game.getHeroCardManager().getHeroCards(player).size()));
+			txtPunkte.setText(Integer.toString(game.getPointManager().getPoints(player)));
+			txtPosition.setText(Integer.toString(game.getPointManager().getPosition(player)));		
+		}
 		txtTruppenstrke.setText(Integer.toString(troops));
 		txtGebiete.setText(Integer.toString(fields));
 		txtGebude_1.setText(Integer.toString(buildings));
-		txtHelden.setText(Integer.toString(game.getHeroCardManager().getHeroCards(player).size()));
-		txtPunkte.setText(Integer.toString(game.getPointManager().getPoints(player)));
-		txtPosition.setText(Integer.toString(game.getPointManager().getPosition(player)));
 		txtGrenzen.setText("---");
 		userBorderListModel.removeAllElements();
 		for (User user : game.getPlayers()) {

@@ -100,6 +100,7 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 				//merge the complete game
 				game.merge(message.getGame());
 				game.getPlanManager().turnEnded();
+				game.getFightManager().setCurrentFight(null);//the turn ended so the fight did too
 				break;
 		}
 	}
