@@ -151,6 +151,8 @@ public class FightManager implements Serializable {
 		}
 		//move the attacking troops to the new field and the loosing troops to the retreat field 
 		if (currentFight.getWinner() == Fight.ATTACKERS) {
+			//give out points for movements
+			game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), currentFight.getAttackingField(), true);
 			//move the loosing troops to the retreat field
 			Field retreatField = null;
 			if (currentFight.getRetreatField() != null) {
@@ -171,6 +173,7 @@ public class FightManager implements Serializable {
 			//remove any command that could be on the conquered field
 			defendingField.setCommand(null);
 		}
+		game.setState(GameState.ACT);
 		//end the players turn
 		game.getPlayerOrder().nextMove();
 		game.getGameFrame().updateAllFrames();

@@ -1006,7 +1006,9 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		else {
 			boolean onlyNeutralFallenTroops = true;
 			for (Field field : fallenTroops.keySet()) {
-				onlyNeutralFallenTroops &= field.getAffiliation() == null;
+				if (field != null) {
+					onlyNeutralFallenTroops &= field.getAffiliation() == null;
+				}
 			}
 			if (onlyNeutralFallenTroops) {
 				new ErrorDialog("Du hast an diesem Kampf garnicht teilgenommen.\n\nDu musst schon kämpfen wenn du willst das deine Truppen ins Gras beißen.").setVisible(true);
@@ -1399,8 +1401,14 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				troops = new int[2];
 				fallenTroops.put(selectedFallenTroopsField, troops);
 			}
-			spinner_normal_troups.setModel(new SpinnerNumberModel(troops[0], 0, selectedFallenTroopsField.getNormalTroops(), 1));
-			spinner_badass_troups.setModel(new SpinnerNumberModel(troops[1], 0, selectedFallenTroopsField.getBadassTroops(), 1));
+			int [] maxFallenTroops = new int[] {selectedFallenTroopsField.getNormalTroops(), selectedFallenTroopsField.getBadassTroops()};
+			if (selectedFallenTroopsField.equals(fight.getAttackingField())) {
+				//only the attacking troops can fall
+				maxFallenTroops[0] = fight.getAttackingNormalTroops();
+				maxFallenTroops[1] = fight.getAttackingBadassTroops();
+			}
+			spinner_normal_troups.setModel(new SpinnerNumberModel(troops[0], 0, maxFallenTroops[0], 1));
+			spinner_badass_troups.setModel(new SpinnerNumberModel(troops[1], 0, maxFallenTroops[1], 1));
 			if (fight.getAttackingField().equals(selectedFallenTroopsField)) {
 				txtFallendeTruppen.setText(Integer.toString(fight.getFallingTroopsTotal()));
 			}

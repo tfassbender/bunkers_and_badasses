@@ -12,7 +12,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 
-public class UserResource implements Serializable {
+public class UserResource implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 425801597894620740L;
 	
@@ -26,6 +26,14 @@ public class UserResource implements Serializable {
 	/*private int eridiumBuilding;
 	private int ammoBuilding;
 	private int creditsBuilding;*/
+	
+	public UserResource clone() {
+		UserResource clone = new UserResource();
+		clone.credits = credits;
+		clone.ammo = ammo;
+		clone.eridium = eridium;
+		return clone;
+	}
 	
 	public static int getCreditsForCommand(Command command, Field field) {
 		int costs = command.getCostsCredits();
@@ -75,10 +83,16 @@ public class UserResource implements Serializable {
 	 * Collect all resources for the turn start (default, buildings, skill, turn bonus).
 	 */
 	public void collectTurnStartResources(Game game) {
-		//default turn start
-		credits += Game.getGameVariableStorage().getTurnStartCredits();
-		ammo += Game.getGameVariableStorage().getTurnStartAmmo();
-		eridium += Game.getGameVariableStorage().getTurnStartEridium();
+		int[] turnStartResources = calculateTurnStartResources(game);
+		credits += turnStartResources[0];
+		ammo += turnStartResources[1];
+		eridium += turnStartResources[2];
+	}
+	
+	public int[] calculateTurnStartResources(Game game) {
+		int credits = Game.getGameVariableStorage().getTurnStartCredits();
+		int ammo = Game.getGameVariableStorage().getTurnStartAmmo();
+		int eridium = Game.getGameVariableStorage().getTurnStartEridium();
 		//buildings, skills
 		SkillProfile skill = game.getSkillProfileManager().getSelectedProfile(game.getLocalUser());
 		for (Field field : game.getBoard().getFields()) {
@@ -99,9 +113,12 @@ public class UserResource implements Serializable {
 		}
 		//turn bonuses
 		TurnBonus bonus = game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser());
-		credits += bonus.getCredits();
-		ammo += bonus.getAmmo();
-		eridium += bonus.getEridium();
+		if (bonus != null) {
+			credits += bonus.getCredits();
+			ammo += bonus.getAmmo();
+			eridium += bonus.getEridium();			
+		}
+		return new int[] {credits, ammo, eridium};
 	}
 	
 	public void collectTurnBonusResources(TurnBonus turnBonus) {
@@ -217,30 +234,30 @@ public class UserResource implements Serializable {
 	public int getCredits() {
 		return credits;
 	}
-	/*public void setCredits(int credits) {
+	public void setCredits(int credits) {
 		this.credits = credits;
 	}
-	public void addCredits(int credits) {
+	/*public void addCredits(int credits) {
 		this.credits += credits;
 	}*/
 	
 	public int getAmmo() {
 		return ammo;
 	}
-	/*public void setAmmo(int ammo) {
+	public void setAmmo(int ammo) {
 		this.ammo = ammo;
 	}
-	public void addAmmo(int ammo) {
+	/*public void addAmmo(int ammo) {
 		this.ammo += ammo;
 	}*/
 	
 	public int getEridium() {
 		return eridium;
 	}
-	/*public void setEridium(int eridium) {
+	public void setEridium(int eridium) {
 		this.eridium = eridium;
 	}
-	public void addEridium(int eridium) {
+	/*public void addEridium(int eridium) {
 		this.eridium += eridium;
 	}*/
 	

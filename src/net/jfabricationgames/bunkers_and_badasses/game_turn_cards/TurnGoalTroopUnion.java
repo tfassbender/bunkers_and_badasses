@@ -22,7 +22,7 @@ public class TurnGoalTroopUnion extends TurnGoal {
 	public void receivePointsTurnEnd(User user, Game game) {
 		int troops = 0;
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation().equals(user)) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(user)) {
 				troops = Math.max(troops, field.getTroops().size());
 			}
 		}

@@ -30,6 +30,7 @@ public class UserPlanManager implements Serializable {
 	public static final int COMMAND_COLLECT = 6;
 	public static final int COMMAND_DEFEND = 7;
 	private int[] commands = new int[START_COMMANDS.length];
+	private UserResource previouseResource;
 	private UserResource currentResource;
 	private GameTurnBonusManager gameTurnBonusManager;
 	
@@ -62,6 +63,7 @@ public class UserPlanManager implements Serializable {
 		//commands[COMMAND_DEFEND] += turnBonus.getDefendCommands();
 		//build, recruit and defend commands can not be added by turn bonuses
 		currentResource = game.getResourceManager().getResources().get(game.getLocalUser());
+		previouseResource = currentResource.clone();
 	}
 	
 	/**
@@ -114,6 +116,14 @@ public class UserPlanManager implements Serializable {
 	 * Add the commands to the board and commit them to the server.
 	 */
 	public void commit() {
+		//calculate the used resources and give out points (capitalism bonus)
+		UserResource usedResource = previouseResource.clone();
+		usedResource.setCredits(usedResource.getCredits()-currentResource.getAmmo());
+		usedResource.setAmmo(usedResource.getAmmo()-currentResource.getAmmo());
+		usedResource.setEridium(usedResource.getEridium()-currentResource.getEridium());
+		game.getResourceManager().receiveUsedResources(game.getLocalUser(), game.getTurnManager().getTurn(), usedResource);
+		//TODO the planing points seem to be only added for the starting player
+		game.getGameTurnGoalManager().receivePointsPlaning(game.getLocalUser(), previouseResource.getAmmo()-currentResource.getAmmo());
 		//commands are added to the field in the merge method
 		/*for (Field field : fieldCommands.keySet()) {
 			field.setCommand(fieldCommands.get(field));
@@ -150,7 +160,9 @@ public class UserPlanManager implements Serializable {
 			//all players have committed their planes -> apply the changes and send an update
 			for (Field field : allCommands.keySet()) {
 				field.setCommand(allCommands.get(field));
-				field.getCommand().loadImage();
+				if (field.getCommand() != null) {
+					field.getCommand().loadImage();
+				}
 			}
 			this.game.getResourceManager().receiveChanges(playerCommitted);
 			this.game.setState(GameState.ACT);

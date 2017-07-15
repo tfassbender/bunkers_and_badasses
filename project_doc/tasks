@@ -4,15 +4,17 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- start resources seem to be added to much or to often
 	- a player can't pass when it's the first move and he has no commands (or nothing executed) (?)
-	- some turn goals seem to be not added to the points (capitalism)
+	- some turn goals seem to be not added to the points or only for some players (capitalism)
+	- a player doesn't get the additional commands from the turn bonus cards
+	- the resources seem to be not taken after planing or acting
 	- debug fights:
 		- sometimes a player can't choose his fallen troops and the battle doesn't end (?)
-		- surviving troops in normal fights are calculated wrong
+		- surviving troops in normal fights are calculated wrong (maybe fixed...)
 		- fight end text fields need to be cleared (fight execution frame)
-		- some fallen troops are selected in fields that didn't even take part in the fight (only possible retreat)
+		- some fallen troops are selected in fields that didn't even take part in the fight (only possible retreat) (?)
 		- when a fight isn't executed till end another execution can be started (any command)
-		- when attacking with only crimson raiders also bandits can fall (if there are any in the attacking field)
-			
+		- heros seem to be not removed from the players hand sometimes
+		
 - Next versions:
 	- fix the stream corrupted exception
 	- slider for zoom on board
@@ -25,6 +27,7 @@ Bunkers and Badasses - Tasks
 	- support image in help menu is shown very small
 	- somehow board images are sent (overwritten to no image send; check why images were sent)
 	- implement the back to main menu button in the fight end frame 
+	- no need to choose a turn bonus in the last turn
 
 - New ideas:
 	- New neutral troops like Threshers (maybe moving each turn)

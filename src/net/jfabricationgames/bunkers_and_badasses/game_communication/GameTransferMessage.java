@@ -19,7 +19,8 @@ public class GameTransferMessage implements JFGServerMessage, JFGClientMessage {
 	public static enum TransferType {
 		NEW_GAME,
 		TURN_OVER,
-		PLANING_COMMIT;
+		PLANING_COMMIT,
+		GAME_ENDED;
 	}
 	
 	public Game getGame() {

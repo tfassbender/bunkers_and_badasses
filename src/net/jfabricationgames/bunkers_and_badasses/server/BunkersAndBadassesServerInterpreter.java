@@ -285,6 +285,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 				//group.sendToStartingPlayerUnshared(message);
 				group.sendToStartingPlayer(message);
 				break;
+			case GAME_ENDED:
+				group.resetAll();
+				group.sendMessage(message, connection);
+				break;
 		}
 	}
 	

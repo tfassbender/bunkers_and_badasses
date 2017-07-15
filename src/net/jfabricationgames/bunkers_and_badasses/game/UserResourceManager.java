@@ -20,7 +20,7 @@ public class UserResourceManager implements Serializable{
 	private Game game;
 	
 	private Map<User, UserResource> resources;
-	private Map<User, Map<Integer, UserResource>> resourceUse;//store the resources the used used in every turn
+	private Map<User, Map<Integer, UserResource>> resourceUse;//store the resources used in every turn
 	
 	public UserResourceManager() {
 		loadStartResources();
@@ -101,6 +101,13 @@ public class UserResourceManager implements Serializable{
 	 */
 	public void collectCommandResources(User user) {
 		resources.get(user).collectCommandResources();
+	}
+	
+	public void receiveUsedResources(User user, int turn, UserResource resource) {
+		Map<Integer, UserResource> turnResource = resourceUse.get(user);
+		if (turnResource != null) {
+			turnResource.put(turn, resource);
+		}
 	}
 	
 	public void payBuilding(Building building, User user) throws ResourceException {

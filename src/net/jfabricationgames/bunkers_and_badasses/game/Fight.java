@@ -144,13 +144,19 @@ public class Fight implements Serializable {
 		Field loosingField;
 		calculateCurrentStrength();
 		overhead = Math.abs(currentAttackingStrength - currentDefendingStrength);
+		int winningTroopStrength;
+		boolean winnerHasBandits;
 		if (winner == ATTACKERS) {
 			winningField = attackingField;
 			loosingField = defendingField;
+			winningTroopStrength = attackingNormalTroops + 2*attackingBadassTroops;
+			winnerHasBandits = attackingNormalTroops > 0;
 		}
 		else {
 			winningField = defendingField;
 			loosingField = attackingField;
+			winningTroopStrength = defendingField.getTroopStrength();
+			winnerHasBandits = defendingField.getNormalTroops() > 0;
 		}
 		fallingTroops[0] = overhead/2;
 		fallingTroops[1] = overhead;
@@ -165,11 +171,14 @@ public class Fight implements Serializable {
 		//not more falling troops that troops in the fields
 		fallingTroops[1] = Math.min(fallingTroops[1], loosingField.getTroopStrength());
 		//winner must remain one troop
-		if (winningField.getNormalTroops() > 0) {
-			fallingTroops[1] = Math.min(fallingTroops[1], winningField.getTroopStrength()-1);			
+		if (winnerHasBandits) {
+			fallingTroops[1] = Math.min(fallingTroops[1], winningTroopStrength-1);			
 		}
 		else {
-			fallingTroops[1] = Math.min(fallingTroops[1], winningField.getTroopStrength()-2);
+			fallingTroops[1] = Math.min(fallingTroops[1], winningTroopStrength-2);
+		}
+		if (fallingTroops[0] > fallingTroops[1]) {
+			fallingTroops[0] = fallingTroops[1];
 		}
 		return fallingTroops;
 	}
@@ -184,6 +193,9 @@ public class Fight implements Serializable {
 	public int calculateFallingTroopsSkagFight() {
 		int fallingTroops = getDefendingStrength();//as much troops as there are skags
 		fallingTroops = Math.min(fallingTroops, attackingNormalTroops + 2*attackingBadassTroops - 1);//one attacker survives
+		if (attackingNormalTroops == 0 && fallingTroops > attackingBadassTroops*2 - 2) {
+			fallingTroops = 0;//if there are only crimson raiders one of them survives
+		}
 		return fallingTroops;
 	}
 	public int[] calculateFallingTroopsSkagFightLost() {

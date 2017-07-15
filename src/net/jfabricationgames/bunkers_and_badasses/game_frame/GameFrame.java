@@ -596,6 +596,20 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		}
 	}
 	
+	public void disposeAll() {
+		fieldOverviewFrame.dispose();
+		fightExecutionFrame.dispose();
+		gameOverviewFrame.dispose();
+		resourceInfoFrame.dispose();
+		selectHeroCardFrame.dispose();
+		troopInfoFrame.dispose();
+		turnExecutionFrame.dispose();
+		turnGoalTurnBonusDialog.dispose();
+		turnPlaningFrame.dispose();
+		boardOverviewFrame.dispose();
+		dispose();
+	}
+	
 	public void updateAllFrames() {
 		update();
 		fieldOverviewFrame.update();
@@ -670,7 +684,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	}
 	
 	private void updateTurnCards() {
-		if (game.getGameTurnBonusManager().getBonuses() != null) {
+		if (game.getGameTurnBonusManager().getBonuses() != null && game.getTurnManager().getTurn() < Game.getGameVariableStorage().getGameTurns()) {
 			panel_turn_bonus.setTurnBonus(game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser()));
 			panel_turn_goal.setTurnGoal(game.getTurnManager().getGameTurnGoalManager().getTurnGoal());
 		}

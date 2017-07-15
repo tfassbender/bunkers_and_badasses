@@ -47,6 +47,7 @@ public class GameEndFrame extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameEndFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1250, 800);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -56,7 +57,7 @@ public class GameEndFrame extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[200px,grow][600px,grow][200px,grow]", "[][200px,grow][300px,grow][300px,grow][]"));
+		panel.setLayout(new MigLayout("", "[:200px:300px,grow][600px,grow][:200px:300px,grow]", "[][200px,grow][300px,grow][300px,grow][]"));
 		
 		JLabel lblBunkersAndBadasses = new JLabel("Bunkers and Badasses");
 		lblBunkersAndBadasses.setFont(new Font("Tahoma", Font.BOLD, 30));
@@ -176,6 +177,7 @@ public class GameEndFrame extends JFrame {
 		panel_turns.add(lblRundenboni, "cell 1 0,alignx center");
 		
 		JScrollPane scrollPane_turns = new JScrollPane();
+		scrollPane_turns.getVerticalScrollBar().setUnitIncrement(20);
 		panel_turns.add(scrollPane_turns, "cell 0 1,grow");
 		
 		JPanel panel_turn_goals = new JPanel();
@@ -184,6 +186,7 @@ public class GameEndFrame extends JFrame {
 		addGameTurns(panel_turn_goals);
 		
 		JScrollPane scrollPane_bonuses = new JScrollPane();
+		scrollPane_bonuses.getVerticalScrollBar().setUnitIncrement(20);
 		panel_turns.add(scrollPane_bonuses, "cell 1 1,grow");
 		
 		JPanel panel_turn_bonuses = new JPanel();

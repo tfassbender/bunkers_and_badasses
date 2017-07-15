@@ -170,6 +170,19 @@ public class TargetFieldSelectionFrame extends JFrame {
 		panel_1.add(lblBadassTruppen, "cell 2 3");
 		
 		spinnerBadass = new JSpinner();
+		spinnerBadass.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				Field field = list.getSelectedValue();
+				int[] currentTroops = troops.get(field);
+				Integer val = (Integer) spinnerBadass.getValue();
+				if (val == null) {
+					val = new Integer(0);
+				}
+				currentTroops[1] = val;
+				troops.put(field, currentTroops);
+				countTroopsLeft();
+			}
+		});
 		spinnerBadass.setBackground(Color.LIGHT_GRAY);
 		spinnerBadass.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(spinnerBadass, "cell 3 3,growx");
@@ -210,14 +223,14 @@ public class TargetFieldSelectionFrame extends JFrame {
 				}
 			}
 			if (attacks > 1) {
-				new ErrorDialog("Du hast zu viele Felder ausgewählt, die erobert werden sollen.\n\nDeine Truppen können maximal ein Gebiet (feindlich oder neutral) erobern.");
+				new ErrorDialog("Du hast zu viele Felder ausgewählt, die erobert werden sollen.\n\nDeine Truppen können maximal ein Gebiet (feindlich oder neutral) erobern.").setVisible(true);
 			}
 			else {
 				Field fight = null;
 				for (Field field : targets) {
 					int[] movedTroops = troops.get(field);
 					if (movedTroops[0] + movedTroops[1] > 0) {
-						if (field.getAffiliation() != null && !field.getAffiliation().equals(game.getLocalUser())) {
+						if (field.getAffiliation() != null && !field.getAffiliation().equals(game.getLocalUser()) || field.getAffiliation() == null && field.getTroopStrength() > 0) {
 							fight = field;
 						}
 						else {
@@ -231,6 +244,8 @@ public class TargetFieldSelectionFrame extends JFrame {
 					startField.setCommand(null);
 				}
 				else {
+					//give out points for movements
+					game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), startField, attacks > 0);
 					startField.setCommand(null);
 					game.getPlayerOrder().nextMove();
 					game.getTurnExecutionManager().commit();

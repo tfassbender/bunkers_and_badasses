@@ -42,7 +42,7 @@ public class Game implements Serializable {
 		this.players = players;
 		this.localUser = new User(UserManager.getUsername());
 		gameState = GameState.PLAN;
-		playerOrder = new PlayerOrder(players.size());
+		playerOrder = new PlayerOrder(players.size(), this);
 		playerOrder.chooseRandomOrder(players);
 		resourceManager = new UserResourceManager(players, this);
 		pointManager = new PointManager();

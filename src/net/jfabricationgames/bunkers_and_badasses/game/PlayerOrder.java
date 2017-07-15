@@ -17,10 +17,13 @@ public class PlayerOrder implements Serializable {
 	private int move;
 	private final int players;
 	
-	public PlayerOrder(int players) {
+	private Game game;
+	
+	public PlayerOrder(int players, Game game) {
 		order = new HashMap<Integer, User>();
 		nextOrder = new HashMap<Integer, User>();
 		this.players = players;
+		this.game = game;
 	}
 	
 	public void merge(PlayerOrder playerOrder) {
@@ -157,6 +160,10 @@ public class PlayerOrder implements Serializable {
 	 * Start the next turn and set the active player to the first player of this turn.
 	 */
 	protected void nextTurn() {
+		//give out the turn end points
+		for (User user : game.getPlayers()) {
+			game.getGameTurnGoalManager().receivePointsTurnEnd(user, game);			
+		}
 		order = nextOrder;
 		nextOrder = new HashMap<Integer, User>();
 		move = 0;

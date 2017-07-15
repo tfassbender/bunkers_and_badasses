@@ -8,6 +8,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMes
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.PreGameDataMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.GameEndFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.PreGameSelectionFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
@@ -101,6 +102,10 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 				game.merge(message.getGame());
 				game.getPlanManager().turnEnded();
 				game.getFightManager().setCurrentFight(null);//the turn ended so the fight did too
+				break;
+			case GAME_ENDED:
+				game.getGameFrame().disposeAll();
+				new GameEndFrame(message.getGame()).setVisible(true);
 				break;
 		}
 	}

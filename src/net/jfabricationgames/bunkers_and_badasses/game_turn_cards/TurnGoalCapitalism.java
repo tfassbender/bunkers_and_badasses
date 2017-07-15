@@ -10,7 +10,7 @@ public class TurnGoalCapitalism extends TurnGoal {
 		imagePath = "turn_goal_capitalism.png";
 		loadImage();
 		description = "<html>Kapitalismus Baby!:<br/>"
-				+ "Kapitalismus Baby!: Marcus muss sein Geschäft ankurbeln;<br/>"
+				+ "Marcus muss sein Geschäft ankurbeln;<br/>"
 				+ "Mit Bestechung für Munitionsverschwendung [3 Punkte pro<br/>"
 				+ "100 verbrauchter Munition (in der Planungsphase)]</html>";
 	}

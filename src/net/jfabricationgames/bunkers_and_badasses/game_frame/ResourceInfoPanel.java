@@ -2,7 +2,6 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -10,7 +9,6 @@ import javax.swing.border.EtchedBorder;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
-import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
@@ -111,20 +109,12 @@ public class ResourceInfoPanel extends JPanel {
 			lblLA.setText(Integer.toString(resource.getAmmo()));
 			lblLE.setText(Integer.toString(resource.getEridium()));
 			//update the resources the user gets through buildings
-			List<Building> usersBuildings = game.getBoard().getUsersBuildings(user);
-			int credits = 0;
-			int ammo = 0;
-			int eridium = 0;
-			for (Building building : usersBuildings) {
-				credits += building.getCreditMining();
-				ammo += building.getAmmoMining();
-				eridium += building.getEridiumMining();
-			}
-			lblGC.setText(Integer.toString(credits));
-			lblGA.setText(Integer.toString(ammo));
-			lblGE.setText(Integer.toString(eridium));
+			int[] resources = game.getResourceManager().getResources().get(game.getLocalUser()).calculateTurnStartResources(game);
+			lblGC.setText(Integer.toString(resources[0]));
+			lblGA.setText(Integer.toString(resources[1]));
+			lblGE.setText(Integer.toString(resources[2]));
 			//update the resources the user used in the last turn
-			UserResource resourcesUsed = game.getResourceManager().getResourceUse().get(user).get(game.getTurnManager().getTurn());
+			UserResource resourcesUsed = game.getResourceManager().getResourceUse().get(user).get(game.getTurnManager().getTurn()-1);
 			if (resourcesUsed != null) {
 				lblUC.setText(Integer.toString(resourcesUsed.getCredits()));
 				lblUA.setText(Integer.toString(resourcesUsed.getAmmo()));

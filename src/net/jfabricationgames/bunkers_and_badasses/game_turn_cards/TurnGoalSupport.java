@@ -29,7 +29,7 @@ public class TurnGoalSupport extends TurnGoal {
 				support++;
 			}
 		}
-		if (user.equals(fight.getAttackingPlayer()) || user.equals(fight.getDefendingPlayer())) {
+		if (user.equals(fight.getAttackingPlayer()) || fight.getDefendingPlayer() != null && user.equals(fight.getDefendingPlayer())) {
 			pointManager.addPoints(user, support*2);			
 		}
 		else {

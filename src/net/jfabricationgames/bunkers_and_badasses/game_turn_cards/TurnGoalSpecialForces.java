@@ -17,7 +17,7 @@ public class TurnGoalSpecialForces extends TurnGoal {
 	
 	public void receivePointsFight(User user, Fight fight) {
 		if ((user.equals(fight.getAttackingPlayer()) && fight.getAttackingHero() != null) || 
-				(user.equals(fight.getDefendingPlayer()) && fight.getDefendingHero() != null)) {
+				(fight.getDefendingPlayer() != null && user.equals(fight.getDefendingPlayer()) && fight.getDefendingHero() != null)) {
 			pointManager.addPoints(user, 3);
 		}
 	}

@@ -323,7 +323,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		btnAusfhrungBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (game.getGameState().equals(GameState.ACT) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
-					new ConfirmDialog("Ausführung wirklich beenden?", TurnExecutionFrame.this, 0).setVisible(true);					
+					ConfirmDialog confirm = new ConfirmDialog("Ausführung wirklich beenden?", TurnExecutionFrame.this, 0);
+					confirm.setLocationRelativeTo(TurnExecutionFrame.this);
+					confirm.setVisible(true);
 				}
 				else {
 					btnAusfhrungBeenden.setEnabled(false);
@@ -532,6 +534,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		//game.setState(GameState.WAIT);
 		game.getGameFrame().getTurnGoalTurnBonusDialog().setTurnBonusSelectable(false, null);
 		game.getGameFrame().getTurnGoalTurnBonusDialog().updateTurnBonuses();
+		//give out the turn goal points for passing
+		int passingOrder = game.getPlayers().size() - game.getPlayerOrder().getOrder().length + 1;
+		game.getGameTurnGoalManager().receivePointsPassing(game.getLocalUser(), passingOrder, game.getPlayers().size());
 		game.getPlayerOrder().userPassed(game.getLocalUser());
 		game.setState(GameState.ACT);
 		try {
@@ -940,6 +945,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						Field targetField = fieldTargetModel.getElementAt(targets[0]);
 						if (troops > 0) {
 							if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
+								//give out points for movement
+								game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), selectedField, targetField.getAffiliation() == null);
 								game.getBoard().moveTroops(selectedField, targetField, normalTroops, badassTroops);
 								commandExecuted = true;
 							}
@@ -1014,6 +1021,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 								target.addBadassTroops(badassTroops);
 								target.removeNormalTroops(upgrades);
 								target.addBadassTroops(upgrades);
+								//give out the points for the recruitment
+								game.getGameTurnGoalManager().receivePointsRecruitment(game.getLocalUser(), normalTroops+2*badassTroops+upgrades);
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
