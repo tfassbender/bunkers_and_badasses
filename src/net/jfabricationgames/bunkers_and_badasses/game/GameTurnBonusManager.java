@@ -178,6 +178,17 @@ public class GameTurnBonusManager implements Serializable {
 		userBonuses.put(user, chosen);
 	}
 	
+	/**
+	 * Put back a turn bonus without taking a new one after the last turn ends.
+	 */
+	public void putBackTurnBonus(User user) {
+		TurnBonus empty = new TurnBonus() {
+			private static final long serialVersionUID = -6582681601257266132L;
+		};
+		choosableTurnBonuses.add(userBonuses.get(user));
+		userBonuses.put(user, empty);
+	}
+	
 	private void removeBonus(List<TurnBonus> list, TurnBonus bonus) {
 		boolean removedBonus = false;
 		for (int i = 0; i < list.size(); i++) {

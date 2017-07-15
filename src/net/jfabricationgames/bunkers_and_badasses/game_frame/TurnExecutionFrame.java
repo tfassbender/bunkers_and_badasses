@@ -82,6 +82,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	private DefaultListModel<Field> fieldTargetModel = new DefaultListModel<Field>();
 	private DefaultListModel<Building> buildingModel = new DefaultListModel<Building>();
 	private DefaultListModel<FieldCommand> fieldCommandModel = new DefaultListModel<FieldCommand>();
+	private DefaultListModel<FieldCommand> executableFieldCommandModel = new DefaultListModel<FieldCommand>();
 	
 	private JTextField txtFeld_1;
 	private JTextField txtBefehl;
@@ -151,12 +152,12 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
 		panel.add(panel_side_bar, "cell 1 0 1 2,grow");
-		panel_side_bar.setLayout(new MigLayout("", "[250px,grow][200px,grow][200px,grow]", "[300px,grow][:100px:100px,grow][:100px:100px,grow][:200px:300px,grow]"));
+		panel_side_bar.setLayout(new MigLayout("", "[250px,grow][200px,grow][200px,grow]", "[250px,grow][100px,grow][:150px:150px,grow][:50px:100px,grow][:200px:300px,grow]"));
 		
 		JPanel panel_fields_all = new JPanel();
 		panel_fields_all.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_fields_all.setBackground(Color.GRAY);
-		panel_side_bar.add(panel_fields_all, "cell 0 0 1 2,grow");
+		panel_side_bar.add(panel_fields_all, "cell 0 0,grow");
 		panel_fields_all.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
 		
 		JLabel lblAlleGebiete = new JLabel("Alle Gebiete:");
@@ -179,35 +180,54 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		scrollPane_fields_all.setViewportView(list_fields_all);
 
 		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
-		panel_side_bar.add(fieldPanel, "cell 1 0 2 1,grow");
+		panel_side_bar.add(fieldPanel, "cell 1 0 2 2,grow");
+		
+		JPanel panel_all_commands = new JPanel();
+		panel_all_commands.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_all_commands.setBackground(Color.GRAY);
+		panel_side_bar.add(panel_all_commands, "cell 0 1 1 2,grow");
+		panel_all_commands.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
+		
+		JLabel lblAusfhrbareBefehle = new JLabel("Alle Befehle:");
+		lblAusfhrbareBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_all_commands.add(lblAusfhrbareBefehle, "cell 0 0,alignx center");
+		
+		JScrollPane scrollPane_executable_commands = new JScrollPane();
+		panel_all_commands.add(scrollPane_executable_commands, "cell 0 2,grow");
+		
+		JList<FieldCommand> list_commands = new JList<FieldCommand>(fieldCommandModel);
+		list_commands.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_commands.setBackground(Color.LIGHT_GRAY);
+		list_commands.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrollPane_executable_commands.setViewportView(list_commands);
+		
+		resourcePanel = new ResourceInfoPanel();
+		panel_side_bar.add(resourcePanel, "cell 1 2 2 2,grow");
 		
 		JPanel panel_executable_commands = new JPanel();
 		panel_executable_commands.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_executable_commands.setBackground(Color.GRAY);
-		panel_side_bar.add(panel_executable_commands, "cell 0 2 1 2,grow");
+		panel_side_bar.add(panel_executable_commands, "cell 0 3 1 2,grow");
 		panel_executable_commands.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
 		
-		JLabel lblAusfhrbareBefehle = new JLabel("Ausf\u00FChrbare Befehle:");
-		lblAusfhrbareBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_executable_commands.add(lblAusfhrbareBefehle, "cell 0 0,alignx center");
+		JLabel lblAusfhrbareBefehle_1 = new JLabel("Ausführbare Befehle:");
+		lblAusfhrbareBefehle_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_executable_commands.add(lblAusfhrbareBefehle_1, "cell 0 0,alignx center");
 		
-		JScrollPane scrollPane_executable_commands = new JScrollPane();
-		panel_executable_commands.add(scrollPane_executable_commands, "cell 0 2,grow");
+		JScrollPane scrollPane = new JScrollPane();
+		panel_executable_commands.add(scrollPane, "cell 0 2,grow");
 		
-		JList<FieldCommand> list_executable_commands = new JList<FieldCommand>(fieldCommandModel);
+		JList<FieldCommand> list_executable_commands = new JList<FieldCommand>(executableFieldCommandModel);
 		list_executable_commands.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_executable_commands.setBackground(Color.LIGHT_GRAY);
 		list_executable_commands.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		scrollPane_executable_commands.setViewportView(list_executable_commands);
-		
-		resourcePanel = new ResourceInfoPanel();
-		panel_side_bar.add(resourcePanel, "cell 1 1 2 2,grow");
+		scrollPane.setViewportView(list_executable_commands);
 
 		orderPanel = new PlayerOrderPanel();
-		panel_side_bar.add(orderPanel, "cell 1 3,grow");
+		panel_side_bar.add(orderPanel, "cell 1 4,grow");
 		
 		pointPanel = new PointPanel();
-		panel_side_bar.add(pointPanel, "cell 2 3,grow");
+		panel_side_bar.add(pointPanel, "cell 2 4,grow");
 		
 		JPanel panel_low_bar = new JPanel();
 		panel_low_bar.setBackground(Color.GRAY);
@@ -520,11 +540,32 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	public void receiveConfirmAnswer(boolean confirm, int type) {
 		if (confirm) {
 			//game.setState(GameState.SELECT_BONUS);
-			TurnGoalTurnBonusDialog dialog = game.getGameFrame().getTurnGoalTurnBonusDialog();
-			dialog.showPanel(TurnGoalTurnBonusDialog.TURN_BONUS_PANEL);
-			dialog.setTurnBonusSelectable(true, this);
-			dialog.setVisible(true);
-			dialog.requestFocus();
+			if (game.getTurnManager().getTurn() < Game.getGameVariableStorage().getGameTurns() - 1) {
+				TurnGoalTurnBonusDialog dialog = game.getGameFrame().getTurnGoalTurnBonusDialog();
+				dialog.showPanel(TurnGoalTurnBonusDialog.TURN_BONUS_PANEL);
+				dialog.setTurnBonusSelectable(true, this);
+				dialog.setVisible(true);
+				dialog.requestFocus();
+			}
+			else {
+				//no need to choose a bonus after the last turn
+				game.getGameTurnBonusManager().putBackTurnBonus(game.getLocalUser());
+				game.getGameFrame().getTurnGoalTurnBonusDialog().updateTurnBonuses();
+				//give out the turn goal points for passing
+				int passingOrder = game.getPlayers().size() - game.getPlayerOrder().getOrder().length + 1;
+				game.getGameTurnGoalManager().receivePointsPassing(game.getLocalUser(), passingOrder, game.getPlayers().size());
+				game.getPlayerOrder().userPassed(game.getLocalUser());
+				game.setState(GameState.ACT);
+				try {
+					game.getPlayerOrder().nextMove();
+				}
+				catch (TurnOrderException toe) {
+					//start next turn
+					game.getTurnManager().nextTurn();
+					game.setState(GameState.PLAN);
+				}
+				game.getTurnExecutionManager().commit();
+			}
 		}
 	}
 	
@@ -548,7 +589,6 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 			game.setState(GameState.PLAN);
 		}
 		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 	}
 	
 	private List<Field> findPossibleMovingTargets(Field field) {
@@ -655,9 +695,13 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	
 	private void updateFieldCommandList() {
 		fieldCommandModel.removeAllElements();
+		executableFieldCommandModel.removeAllElements();
 		for (Field field : game.getBoard().getFields()) {
 			if (field.getCommand() != null) {
 				fieldCommandModel.addElement(new FieldCommand(field, field.getCommand()));
+				if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser()) && field.getCommand().isExecutable()) {
+					executableFieldCommandModel.addElement(new FieldCommand(field, field.getCommand()));
+				}
 			}
 		}
 	}

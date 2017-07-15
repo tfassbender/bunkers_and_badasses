@@ -345,7 +345,7 @@ public class SelectHeroCardFrame extends JFrame {
 				throw new IllegalArgumentException("The listener mussn't be null.");
 			}
 			Hero hero = list_heroes.getSelectedValue();
-			game.getHeroCardManager().putBackCards(hero);
+			//game.getHeroCardManager().putBackCards(hero);
 			selectionListener.receiveSelectedHero(hero);
 			setVisible(false);
 		}

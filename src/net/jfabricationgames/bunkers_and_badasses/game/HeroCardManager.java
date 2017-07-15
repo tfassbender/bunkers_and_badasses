@@ -189,11 +189,16 @@ public class HeroCardManager implements Serializable {
 	 * @param heroCards
 	 * 		The cards that go back to the stack.
 	 */
-	public void putBackCards(Hero... heroCards) {
+	private void putBackCards(Hero... heroCards) {
 		for (Hero hero : heroCards) {
 			heroCardStack.add(hero);
 		}
 		Collections.shuffle(heroCardStack);
+	}
+	
+	public void heroCardUsed(Hero heroCard, User user) {
+		heroCards.get(user).remove(heroCard);
+		putBackCards(heroCard);
 	}
 	
 	public List<Hero> getHeroCards(User user) {

@@ -138,7 +138,7 @@ public class FightManager implements Serializable {
 			if (troopsRemoved != null && field != null && !troopsRemoved.contains(field.getName())) {
 				fallenTroops = currentFight.getFallenTroops().get(field);
 				localField = game.getBoard().getFieldByName(field.getName());
-				System.out.println("Removing troops from " + localField.getName() + ": " + fallenTroops[0] + ", " + fallenTroops[1]);
+				//System.out.println("Removing troops from " + localField.getName() + ": " + fallenTroops[0] + ", " + fallenTroops[1]);
 				try {
 					localField.removeNormalTroops(fallenTroops[0]);//TODO not enough troops to remove exception here (trying to remove troops in retreat field?)
 					localField.removeBadassTroops(fallenTroops[1]);
@@ -148,6 +148,13 @@ public class FightManager implements Serializable {
 				}
 				troopsRemoved.add(field.getName());
 			}
+		}
+		//remove the used heros from the players hands
+		if (currentFight.getAttackingHero() != null) {
+			game.getHeroCardManager().heroCardUsed(currentFight.getAttackingHero(), currentFight.getAttackingPlayer());
+		}
+		if (currentFight.getDefendingHero() != null) {
+			game.getHeroCardManager().heroCardUsed(currentFight.getDefendingHero(), currentFight.getDefendingPlayer());
 		}
 		//move the attacking troops to the new field and the loosing troops to the retreat field 
 		if (currentFight.getWinner() == Fight.ATTACKERS) {
