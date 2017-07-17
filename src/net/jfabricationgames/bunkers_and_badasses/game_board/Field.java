@@ -139,7 +139,7 @@ public class Field implements Serializable {
 			}
 			if (badassTroops > 0) {
 				g.drawImage(badassTroopImage, (int) badassTroopsPosition.getX(), (int) badassTroopsPosition.getY(), null);
-				g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImage.getWidth(), (int) badassTroopsPosition.getY()+badassTroopImage.getHeight()-15);				
+				g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImage.getWidth(), (int) badassTroopsPosition.getY()+badassTroopImage.getHeight()-15);
 			}
 		}
 		//draw the building image
@@ -151,6 +151,13 @@ public class Field implements Serializable {
 		if (command != null) {
 			g.drawImage(command.getImage(), (int) commandMarkerPosition.getX(), (int) commandMarkerPosition.getY(), 50, 50, null); 
 		}
+		/*else {
+			//test the positions
+			g.fillOval((int) commandMarkerPosition.getX(), (int) commandMarkerPosition.getY(), 50, 50);
+		}
+		if (building instanceof EmptyBuilding) {
+			g.drawOval((int) buildingPosition.getX(), (int) buildingPosition.getY(), 50, 30);
+		}*/
 	}
 	
 	/**
