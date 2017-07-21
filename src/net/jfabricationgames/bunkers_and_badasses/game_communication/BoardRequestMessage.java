@@ -1,12 +1,10 @@
 package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
-
 /**
  * Send a request to the server to load a basic map from the file system.
  * The id is the primary key in the maps table in the database that identifies the map that is to be loaded.
  */
-public class BoardRequestMessage implements JFGServerMessage {
+public class BoardRequestMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = -1598848885636908438L;
 	

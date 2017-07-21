@@ -1,8 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
 /**
  * Store the game in the database.
@@ -11,7 +9,7 @@ import net.jfabricationgames.jfgserver.client.JFGServerMessage;
  * After the game is stored the server sends a new GameSaveMessage back to the client.
  * This message only tells the user whether the game was saved correctly or some error occurred.
  */
-public class GameSaveMessage implements JFGServerMessage, JFGClientMessage {
+public class GameSaveMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = -4591114359505923149L;
 

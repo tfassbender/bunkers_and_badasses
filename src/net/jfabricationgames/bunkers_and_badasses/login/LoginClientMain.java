@@ -16,6 +16,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
+import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClient;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClientInterpreter;
@@ -117,7 +118,8 @@ public class LoginClientMain extends JFrame {
 	}
 	
 	public void startLoginLoadingDialog() {
-		loginLoadingDialog = new LoginLoadingDialog(client.getClient());
+		BunkersAndBadassesClient gameClient = new BunkersAndBadassesClient(client.getClient());
+		loginLoadingDialog = new LoginLoadingDialog(gameClient);
 		((LoginClientInterpreter) client.getClient().getClientInterpreter()).setLoginLoadingDialog(loginLoadingDialog);
 		loginLoadingDialog.setVisible(true);
 		dispose();

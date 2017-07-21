@@ -8,10 +8,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.TroopStor
 import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpContent;
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
-public class DynamicVariableRequestMessage implements JFGServerMessage, JFGClientMessage {
+public class DynamicVariableRequestMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = 5552024155044358210L;
 	

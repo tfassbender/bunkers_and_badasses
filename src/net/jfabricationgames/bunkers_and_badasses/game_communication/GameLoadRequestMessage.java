@@ -2,10 +2,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
-public class GameLoadRequestMessage implements JFGServerMessage, JFGClientMessage {
+public class GameLoadRequestMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = 2618838452517465888L;
 	

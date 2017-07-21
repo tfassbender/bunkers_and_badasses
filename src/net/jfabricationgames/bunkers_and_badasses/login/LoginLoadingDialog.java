@@ -3,8 +3,9 @@ package net.jfabricationgames.bunkers_and_badasses.login;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
 
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,9 +15,8 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuFrame;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
-import java.awt.Toolkit;
 
-public class LoginLoadingDialog extends JDialog {
+public class LoginLoadingDialog extends JFrame {
 	
 	private static final long serialVersionUID = 3471266476453409610L;
 	

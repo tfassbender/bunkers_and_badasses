@@ -6,15 +6,13 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
 /**
  * Send information about the pre-game to the server and the clients.
  * 
  * Transient fields are considered when receiving this message.
  */
-public class PreGameDataMessage implements JFGClientMessage, JFGServerMessage {
+public class PreGameDataMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = 4148323940215935109L;
 	

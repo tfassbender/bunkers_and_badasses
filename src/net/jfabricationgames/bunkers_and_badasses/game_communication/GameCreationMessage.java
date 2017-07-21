@@ -3,9 +3,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_communication;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
-public class GameCreationMessage implements JFGServerMessage {
+public class GameCreationMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = -2467630736705262025L;
 	
