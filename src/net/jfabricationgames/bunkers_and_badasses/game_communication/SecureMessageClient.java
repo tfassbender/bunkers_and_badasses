@@ -1,17 +1,14 @@
-package net.jfabricationgames.bunkers_and_badasses.game;
+package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
-import net.jfabricationgames.bunkers_and_badasses.game_communication.AcknowledgeMessage;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.BunkersAndBadassesMessage;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.CommunicationSecurity;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
-public class BunkersAndBadassesClient extends JFGClient {
+public class SecureMessageClient extends JFGClient {
 	
 	private CommunicationSecurity communicationSecurity;
 	
-	public BunkersAndBadassesClient(JFGClient client) {
+	public SecureMessageClient(JFGClient client) {
 		super(client);//create a clone of the client
 		communicationSecurity = new CommunicationSecurity(this);
 	}
@@ -25,7 +22,7 @@ public class BunkersAndBadassesClient extends JFGClient {
 	 */
 	@Override
 	public void sendMessage(JFGServerMessage message) {
-		communicationSecurity.secureMessage((BunkersAndBadassesMessage) message);
+		communicationSecurity.secureMessage(message);
 		super.sendMessage(message);
 	}
 	/**
@@ -37,7 +34,7 @@ public class BunkersAndBadassesClient extends JFGClient {
 	 */
 	@Override
 	public void sendMessageUnshared(JFGServerMessage message) {
-		communicationSecurity.secureMessage((BunkersAndBadassesMessage) message);
+		communicationSecurity.secureMessage(message);
 		super.sendMessageUnshared(message);
 	}
 	
@@ -56,7 +53,10 @@ public class BunkersAndBadassesClient extends JFGClient {
 			communicationSecurity.receiveAcknoledgeMessage((AcknowledgeMessage) message);
 		}
 		else {
-			super.receiveMessage(message);
+			if (!communicationSecurity.isResentMessage(message)) {
+				super.receiveMessage(message);
+			}
+			communicationSecurity.sendAcknowledge(message);
 		}
 	}
 }

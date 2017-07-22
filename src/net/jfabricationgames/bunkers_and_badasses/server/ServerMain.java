@@ -44,7 +44,7 @@ public class ServerMain {
 		//start the server
 		try {
 			server.startServer();
-			System.out.println("Server started");
+			System.out.println("Bunkers and Badasses - Server started");
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();

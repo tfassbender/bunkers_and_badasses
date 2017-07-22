@@ -42,6 +42,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.SecureMessageClient;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
@@ -93,14 +94,16 @@ public class MainMenuFrame extends JFrame {
 	private JMenuItem mntmSkillProfil;
 	private JMenuItem mntmHilfeMenu;
 	
-	public MainMenuFrame(JFGClient client) {
+	public MainMenuFrame(JFGClient clientOld) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				client.sendMessage(new UserLogoutMessage());
 			}
 		});
-		this.client = client;
+		this.client = clientOld;
+		
+		startSecureConnection(client);
 		
 		gameStore = new GameStore(client);
 		skillProfileManager = new SkillProfileManager();
@@ -329,6 +332,17 @@ public class MainMenuFrame extends JFrame {
 		txtrPlayers.setText(inGameUsers.toString());
 		revalidate();
 		repaint();
+	}
+	
+	/**
+	 * Start the secure connection protocol by changing the client to a SecureMessageClient.
+	 *  
+	 * @param client
+	 * 		The current used client.
+	 */
+	private void startSecureConnection(JFGClient client) {
+		SecureMessageClient secureClient = new SecureMessageClient(client);
+		this.client = secureClient;
 	}
 	
 	/*private void requireBoards() {
