@@ -42,7 +42,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.SecureMessageClient;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.JFGSecureMessageClient;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
@@ -341,7 +341,7 @@ public class MainMenuFrame extends JFrame {
 	 * 		The current used client.
 	 */
 	private void startSecureConnection(JFGClient client) {
-		SecureMessageClient secureClient = new SecureMessageClient(client);
+		JFGSecureMessageClient secureClient = new JFGSecureMessageClient(client);
 		this.client = secureClient;
 	}
 	

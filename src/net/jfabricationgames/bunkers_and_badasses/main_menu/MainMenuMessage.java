@@ -2,12 +2,11 @@ package net.jfabricationgames.bunkers_and_badasses.main_menu;
 
 import java.util.List;
 
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BunkersAndBadassesMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
-public class MainMenuMessage implements JFGClientMessage, JFGServerMessage {
+public class MainMenuMessage extends BunkersAndBadassesMessage {
 	
 	public enum MessageType {
 		PASSWORD_UPDATE,

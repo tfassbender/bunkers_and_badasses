@@ -2,10 +2,10 @@ package net.jfabricationgames.bunkers_and_badasses.server;
 
 import java.util.List;
 
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BunkersAndBadassesMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 
-public class UserUpdateMessage implements JFGClientMessage {
+public class UserUpdateMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = -6984320232005291887L;
 	

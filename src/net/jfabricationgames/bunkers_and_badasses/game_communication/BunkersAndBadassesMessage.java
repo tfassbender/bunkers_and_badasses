@@ -3,7 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_communication;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
-public class BunkersAndBadassesMessage implements JFGClientMessage, JFGServerMessage, SecurableMessage {
+public class BunkersAndBadassesMessage implements JFGClientMessage, JFGServerMessage, JFGSecurableMessage {
 	
 	private static final long serialVersionUID = 5360301314766023754L;
 	

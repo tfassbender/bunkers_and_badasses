@@ -8,12 +8,12 @@ import net.jfabricationgames.bunkers_and_badasses.error.CommunicationException;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 
-public class CommunicationSecurity {
+public class JFGCommunicationSecurity {
 	
 	private Thread ackTimerThread;
 	
-	private SecureMessageClient client;
-	private SecureMessageConnection connection;
+	private JFGSecureMessageClient client;
+	private JFGSecureMessageConnection connection;
 	
 	private Map<Integer, Serializable> securedMessages;
 	private Map<Integer, Integer> messageTimers;
@@ -30,11 +30,11 @@ public class CommunicationSecurity {
 	 */
 	public static final int STORE_RECEIVED_MESSAGES = 60;
 	
-	public CommunicationSecurity(SecureMessageClient client) {
+	public JFGCommunicationSecurity(JFGSecureMessageClient client) {
 		this.client = client;
 		init();
 	}
-	public CommunicationSecurity(SecureMessageConnection connection) {
+	public JFGCommunicationSecurity(JFGSecureMessageConnection connection) {
 		this.connection = connection;
 		init();
 	}
@@ -59,8 +59,8 @@ public class CommunicationSecurity {
 	 * 		A CommunicationException is thrown when the message that is to be secured doesn't implement SecurableMessage.
 	 */
 	public void secureMessage(Serializable message) {
-		if (message instanceof SecurableMessage) {
-			SecurableMessage msg = (SecurableMessage) message;
+		if (message instanceof JFGSecurableMessage) {
+			JFGSecurableMessage msg = (JFGSecurableMessage) message;
 			securedMessages.put(msg.getMessageId(), message);
 			messageTimers.put(msg.getMessageId(), 0);
 			System.out.println("Sending secured message (id: " + msg.getMessageId() + ")");
@@ -75,7 +75,7 @@ public class CommunicationSecurity {
 	 * @param ackMessage
 	 * 		The acknowledge message containing the acknowledgement id.
 	 */
-	public void receiveAcknoledgeMessage(AcknowledgeMessage ackMessage) {
+	public void receiveAcknoledgeMessage(JFGAcknowledgeMessage ackMessage) {
 		int ackId = ackMessage.getAcknoledgingMessageId();
 		//synchronize using this object to be sure to not get a concurrent modification in the timer thread
 		synchronized (this) {
@@ -96,8 +96,8 @@ public class CommunicationSecurity {
 	 * 		Returns true if the message is already known.
 	 */
 	public boolean isResentMessage(Serializable message) {
-		if (message instanceof SecurableMessage) {
-			SecurableMessage msg = (SecurableMessage) message;
+		if (message instanceof JFGSecurableMessage) {
+			JFGSecurableMessage msg = (JFGSecurableMessage) message;
 			Serializable received = receivedMessages.get(msg.getMessageId()); 
 			if (received == null) {
 				return false;
@@ -119,9 +119,9 @@ public class CommunicationSecurity {
 	 * 		The received message.
 	 */
 	public void sendAcknowledge(Serializable message) {
-		if (message instanceof SecurableMessage) {
-			SecurableMessage msg = (SecurableMessage) message;
-			AcknowledgeMessage ackMessage = new AcknowledgeMessage(msg.getMessageId());
+		if (message instanceof JFGSecurableMessage) {
+			JFGSecurableMessage msg = (JFGSecurableMessage) message;
+			JFGAcknowledgeMessage ackMessage = new JFGAcknowledgeMessage(msg.getMessageId());
 			if (client != null) {
 				client.sendMessage(ackMessage);
 			}
@@ -165,7 +165,7 @@ public class CommunicationSecurity {
 			public void run() {
 				try {
 					while (true) {
-						synchronized (CommunicationSecurity.this) {
+						synchronized (JFGCommunicationSecurity.this) {
 							for (int messageId : messageTimers.keySet()) {
 								int timer = messageTimers.get(messageId);
 								if (timer < 5) {

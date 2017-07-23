@@ -31,7 +31,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadReq
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.SecureMessageConnection;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.JFGSecureMessageConnection;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
@@ -153,7 +153,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * 		The user to map the new connection and user.
 	 */
 	private void startSecureConnection(JFGConnection connection, User user) {
-		SecureMessageConnection secureConnection = new SecureMessageConnection(connection);
+		JFGSecureMessageConnection secureConnection = new JFGSecureMessageConnection(connection);
 		userMap.remove(user);
 		connectionMap.remove(connection);
 		userMap.put(user, secureConnection);

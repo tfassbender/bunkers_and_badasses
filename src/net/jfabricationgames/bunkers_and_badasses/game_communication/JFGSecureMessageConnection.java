@@ -4,13 +4,13 @@ import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
 
-public class SecureMessageConnection extends JFGConnection {
+public class JFGSecureMessageConnection extends JFGConnection {
 	
-	private CommunicationSecurity communicationSecurity;
+	private JFGCommunicationSecurity communicationSecurity;
 	
-	public SecureMessageConnection(JFGConnection connection) {
+	public JFGSecureMessageConnection(JFGConnection connection) {
 		super(connection);//create a clone of the server
-		communicationSecurity = new CommunicationSecurity(this);
+		communicationSecurity = new JFGCommunicationSecurity(this);
 	}
 	
 
@@ -50,8 +50,8 @@ public class SecureMessageConnection extends JFGConnection {
 	 */
 	@Override
 	public void receiveMessage(JFGServerMessage message) {
-		if (message instanceof AcknowledgeMessage) {
-			communicationSecurity.receiveAcknoledgeMessage((AcknowledgeMessage) message);
+		if (message instanceof JFGAcknowledgeMessage) {
+			communicationSecurity.receiveAcknoledgeMessage((JFGAcknowledgeMessage) message);
 		}
 		else {
 			if (!communicationSecurity.isResentMessage(message)) {
