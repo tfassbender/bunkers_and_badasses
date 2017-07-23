@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_communication;
 
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
+import net.jfabricationgames.jfgserver.secured_message.JFGSecurableMessage;
 
 public class BunkersAndBadassesMessage implements JFGClientMessage, JFGServerMessage, JFGSecurableMessage {
 	

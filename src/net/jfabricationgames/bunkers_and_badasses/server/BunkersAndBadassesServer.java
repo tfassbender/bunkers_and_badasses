@@ -31,7 +31,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadReq
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.JFGSecureMessageConnection;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
@@ -114,12 +113,12 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		user.setOnline(true);
 		userMap.put(user, connection);
 		connectionMap.put(connection, user);
+		//inform the ping manager
+		pingManager.addUser(user);
 		//send updates to the users
 		sendUserUpdate();
 		//start the secure connection after the user update was sent
-		startSecureConnection(connection, user);
-		//inform the ping manager
-		pingManager.addUser(user);
+		//startSecureConnection(connection, user);
 	}
 	
 	/**
@@ -152,13 +151,13 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * @param user
 	 * 		The user to map the new connection and user.
 	 */
-	private void startSecureConnection(JFGConnection connection, User user) {
+	/*private void startSecureConnection(JFGConnection connection, User user) {
 		JFGSecureMessageConnection secureConnection = new JFGSecureMessageConnection(connection);
 		userMap.remove(user);
 		connectionMap.remove(connection);
 		userMap.put(user, secureConnection);
 		connectionMap.put(secureConnection, user);
-	}
+	}*/
 	
 	/**
 	 * Inform the players about a game creation request to which the player is invited.
