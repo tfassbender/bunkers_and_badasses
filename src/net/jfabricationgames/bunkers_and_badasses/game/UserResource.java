@@ -41,11 +41,15 @@ public class UserResource implements Serializable, Cloneable {
 	}
 	
 	public static int getCreditsForCommand(Command command, Field field) {
-		int costs = command.getCostsCredits();
+		int costs = 0;
 		if (command.isCostDependencyCredits()) {
 			for (Troop troop : field.getTroops()) {
 				costs += troop.getBaseCostsCredits();
 			}
+			costs += command.getCostsCredits() * Math.pow(field.getTroops().size(), 2);
+		}
+		else {
+			costs += command.getCostsCredits();
 		}
 		return costs;
 	}

@@ -32,11 +32,11 @@ public class UserPlanManager implements Serializable {
 	private int[] commands = new int[START_COMMANDS.length];
 	private UserResource previouseResource;
 	private UserResource currentResource;
-	private GameTurnBonusManager gameTurnBonusManager;
+	//private GameTurnBonusManager gameTurnBonusManager;
 	
-	public UserPlanManager(Game game, GameTurnBonusManager gameTurnBonusManager) {
+	public UserPlanManager(Game game) {
 		this.game = game;
-		this.gameTurnBonusManager = gameTurnBonusManager;
+		//this.gameTurnBonusManager = gameTurnBonusManager;
 		fieldCommands = new HashMap<Field, Command>();
 		allCommands = new HashMap<Field, Command>();
 		playerCommitted = new HashMap<User, UserResource>();
@@ -52,7 +52,7 @@ public class UserPlanManager implements Serializable {
 			commands[i] = START_COMMANDS[i];
 		}
 		//add the commands gained by turn bonuses
-		TurnBonus turnBonus = gameTurnBonusManager.getUsersBonus(game.getLocalUser());
+		TurnBonus turnBonus = game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser());
 		commands[COMMAND_SUPPORT] += turnBonus.getSupportCommands();
 		commands[COMMAND_RAID] += turnBonus.getRaidCommands();
 		commands[COMMAND_MARCH] += turnBonus.getMarchCommands();

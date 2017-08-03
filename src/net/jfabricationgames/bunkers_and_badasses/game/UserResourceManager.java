@@ -60,6 +60,7 @@ public class UserResourceManager implements Serializable{
 	}
 	
 	public void collectAllGameStartResources(List<User> players) {
+		game.getSkillProfileManager().collectAllSkillResources(game.getPlayers());
 		for (User user : players) {
 			collectGameStartResources(user);
 		}

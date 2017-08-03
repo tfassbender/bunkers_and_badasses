@@ -49,7 +49,7 @@ public class Game implements Serializable {
 		pointManager.initialize(players);
 		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
 		gameTurnBonusManager.chooseTurnBonusForGame(players.size());
-		planManager = new UserPlanManager(this, gameTurnBonusManager);
+		planManager = new UserPlanManager(this);
 		gameTurnGoalManager = new GameTurnGoalManager(pointManager);
 		turnManager = new GameTurnManager(this);
 		gameTurnGoalManager.setGameTurnManager(turnManager);

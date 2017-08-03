@@ -100,7 +100,7 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 			case TURN_OVER:
 				//merge the complete game
 				game.merge(message.getGame());
-				game.getPlanManager().turnEnded();
+				game.getPlanManager().turnEnded();//counts to often but works
 				game.getFightManager().setCurrentFight(null);//the turn ended so the fight did too
 				break;
 			case GAME_ENDED:
