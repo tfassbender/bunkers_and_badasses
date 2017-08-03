@@ -1,7 +1,5 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
-import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
-
 public class TurnBonusAmmo extends TurnBonus {
 	
 	private static final long serialVersionUID = 3577890652879933227L;
@@ -12,6 +10,6 @@ public class TurnBonusAmmo extends TurnBonus {
 		imagePath = "turn_bonus_ammo_2.png";
 		loadImage();
 		name = "Munition 2";
-		description = "<html>Zusätzliche " + SkillProfileManager.AMMO_SKILL_LEVEL[2] + " Munition zu Beginn der Runde.</html>";
+		description = "<html>Zusätzliche " + ammo + " Munition zu Beginn der Runde.</html>";
 	}
 }

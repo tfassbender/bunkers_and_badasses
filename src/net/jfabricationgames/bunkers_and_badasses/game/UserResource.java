@@ -35,6 +35,11 @@ public class UserResource implements Serializable, Cloneable {
 		return clone;
 	}
 	
+	@Override
+	public String toString() {
+		return "UserResource (Credits: " + credits + "; Ammo: " + ammo + "; Eridium: " + eridium + ")";
+	}
+	
 	public static int getCreditsForCommand(Command command, Field field) {
 		int costs = command.getCostsCredits();
 		if (command.isCostDependencyCredits()) {
@@ -99,25 +104,25 @@ public class UserResource implements Serializable, Cloneable {
 			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				if (field.getBuilding().getCreditMining() > 0) {
 					credits += field.getBuilding().getCreditMining();
-					credits += SkillProfileManager.CREDITS_SKILL_LEVEL[skill.getCreditsBuilding()];
+					credits += SkillProfileManager.CREDITS_BUILDING_SKILL_LEVEL[skill.getCreditsBuilding()];
 				}
 				if (field.getBuilding().getAmmoMining() > 0) {
 					ammo += field.getBuilding().getAmmoMining();
-					ammo += SkillProfileManager.AMMO_SKILL_LEVEL[skill.getAmmoBuilding()];
+					ammo += SkillProfileManager.AMMO_BUILDING_SKILL_LEVEL[skill.getAmmoBuilding()];
 				}
 				if (field.getBuilding().getEridiumMining() > 0) {
 					eridium += field.getBuilding().getEridiumMining();
-					eridium += SkillProfileManager.ERIDIUM_SKILL_LEVEL[skill.getEridiumBuilding()];
+					eridium += SkillProfileManager.ERIDIUM_BUILDING_SKILL_LEVEL[skill.getEridiumBuilding()];
 				}
 			}
 		}
 		//turn bonuses
-		TurnBonus bonus = game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser());
+		/*TurnBonus bonus = game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser());
 		if (bonus != null) {
 			credits += bonus.getCredits();
 			ammo += bonus.getAmmo();
 			eridium += bonus.getEridium();			
-		}
+		}*/
 		return new int[] {credits, ammo, eridium};
 	}
 	
@@ -227,7 +232,7 @@ public class UserResource implements Serializable, Cloneable {
 	 * No exception is thrown because nothing happens if there are not enough resources left.
 	 */
 	public void payFields(int fields) {
-		credits += fields * Game.getGameVariableStorage().getFieldCosts();
+		credits -= fields * Game.getGameVariableStorage().getFieldCosts();
 		credits = Math.max(credits, 0);
 	}
 	

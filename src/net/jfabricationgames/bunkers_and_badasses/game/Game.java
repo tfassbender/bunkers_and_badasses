@@ -120,7 +120,7 @@ public class Game implements Serializable {
 		skillProfileManager.setManagers(pointManager, heroCardManager);
 		//collect the start resources
 		resourceManager.collectAllGameStartResources(players);
-		skillProfileManager.collectAllSkillResources(players);
+		//skillProfileManager.collectAllSkillResources(players);
 		//prepare the turn start
 		planManager.countCommands();
 		gameFrame.getBoardOverviewFrame().setBoard(board);
