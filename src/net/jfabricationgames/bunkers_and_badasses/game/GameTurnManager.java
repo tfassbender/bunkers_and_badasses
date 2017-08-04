@@ -18,16 +18,16 @@ public class GameTurnManager implements Serializable {
 	private Game game;
 	
 	private PlayerOrder playerOrder;
-	private GameTurnGoalManager gameTurnGoalManager;
+	//private GameTurnGoalManager gameTurnGoalManager;
 	private UserResourceManager resourceManager;
-	private PointManager pointManager;
+	//private PointManager pointManager;
 	
 	public GameTurnManager(Game game) {
 		this.game = game;
 		this.playerOrder = game.getPlayerOrder();
-		this.gameTurnGoalManager = game.getGameTurnGoalManager();
+		//this.gameTurnGoalManager = game.getGameTurnGoalManager();
 		this.resourceManager = game.getResourceManager();
-		this.pointManager = game.getPointManager();
+		//this.pointManager = game.getPointManager();
 		numTurns = Game.getGameVariableStorage().getGameTurns();
 		turn = 0;
 	}
@@ -72,25 +72,25 @@ public class GameTurnManager implements Serializable {
 			int fields = game.getBoard().getUsersFields(player).size();
 			int points = fields/Game.getGameVariableStorage().getFieldPointCount();
 			points *= Game.getGameVariableStorage().getFieldPoints();
-			pointManager.addPoints(player, points);
+			game.getPointManager().addPoints(player, points);
 			//points for regions
 			for (Region region : game.getBoard().getUsersRegions(player)) {
-				pointManager.addPoints(player, region.getPoints());
+				game.getPointManager().addPoints(player, region.getPoints());
 			}
 			//points for turn goals
-			gameTurnGoalManager.receivePointsTurnEnd(player, game);
+			game.getGameTurnGoalManager().receivePointsTurnEnd(player, game);
 		}
 	}
 	
 	public PlayerOrder getPlayerOrder() {
-		return playerOrder;
+		return game.getPlayerOrder();
 	}
 	
 	public GameTurnGoalManager getGameTurnGoalManager() {
-		return gameTurnGoalManager;
+		return game.getGameTurnGoalManager();
 	}
 	
 	public UserResourceManager getResourceManager() {
-		return resourceManager;
+		return game.getResourceManager();
 	}
 }

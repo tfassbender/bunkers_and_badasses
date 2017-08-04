@@ -17,6 +17,6 @@ public class TurnBonusAmmoBuild extends TurnBonus {
 	
 	@Override
 	public void receivePointsBuild(User user) {
-		pointManager.addPoints(user, 2);
+		game.getPointManager().addPoints(user, 2);
 	}
 }

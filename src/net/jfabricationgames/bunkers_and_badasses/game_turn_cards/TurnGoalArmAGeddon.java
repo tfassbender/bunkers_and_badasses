@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
@@ -24,12 +26,16 @@ public class TurnGoalArmAGeddon extends TurnGoal {
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getAttackingPlayer().equals(user)) {
 			int fallenTroops = 0;
-			Map<Field, int[]> troops = fight.getFallenTroops();
+			Map<Field, int[]> troops = fight.getFallenTroops();//TODO check for same field twice here
+			List<String> countedFields = new ArrayList<String>(troops.size());//the names of all fields that were already counted
 			for (Field field : troops.keySet()) {
-				fallenTroops += troops.get(field)[0];
-				fallenTroops += troops.get(field)[1];
+				if (field != null && !countedFields.contains(field.getName())) {
+					countedFields.add(field.getName());
+					fallenTroops += troops.get(field)[0];
+					fallenTroops += troops.get(field)[1];					
+				}
 			}
-			pointManager.addPoints(user, fallenTroops);
+			game.getPointManager().addPoints(user, fallenTroops);
 		}
 	}
 }

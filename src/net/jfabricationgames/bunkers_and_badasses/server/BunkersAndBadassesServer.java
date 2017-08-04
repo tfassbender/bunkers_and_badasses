@@ -1232,6 +1232,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				gameStorage.setFightAttackerPoints(result.getInt(5));
 				gameStorage.setFightWinnerPoints(result.getInt(6));
 				gameStorage.setFightSupporterPoints(result.getInt(7));
+				gameStorage.setFieldConquerPoints(result.getInt(8));
 			}
 			try {
 				result.close();

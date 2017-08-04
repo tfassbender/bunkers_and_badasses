@@ -47,10 +47,10 @@ public class Game implements Serializable {
 		resourceManager = new UserResourceManager(players, this);
 		pointManager = new PointManager();
 		pointManager.initialize(players);
-		gameTurnBonusManager = new GameTurnBonusManager(pointManager);
+		gameTurnBonusManager = new GameTurnBonusManager(this);
 		gameTurnBonusManager.chooseTurnBonusForGame(players.size());
 		planManager = new UserPlanManager(this);
-		gameTurnGoalManager = new GameTurnGoalManager(pointManager);
+		gameTurnGoalManager = new GameTurnGoalManager(this);
 		turnManager = new GameTurnManager(this);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
 		gameTurnGoalManager.chooseTurnGoals();

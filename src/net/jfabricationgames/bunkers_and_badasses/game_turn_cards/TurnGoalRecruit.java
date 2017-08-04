@@ -17,6 +17,6 @@ public class TurnGoalRecruit extends TurnGoal {
 	
 	@Override
 	public void receivePointsRecruitment(User user, int recruitedTroops) {
-		pointManager.addPoints(user, recruitedTroops);
+		game.getPointManager().addPoints(user, recruitedTroops);
 	}
 }

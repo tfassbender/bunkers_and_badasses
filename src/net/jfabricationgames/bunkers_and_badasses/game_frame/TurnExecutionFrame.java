@@ -989,7 +989,10 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 						Field targetField = fieldTargetModel.getElementAt(targets[0]);
 						if (troops > 0) {
 							if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
-								//give out points for movement
+								//give out points for movement and conquering (empty) fields
+								if (targetField.getAffiliation() == null || !targetField.getAffiliation().equals(game.getLocalUser())) {
+									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints());
+								}
 								game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), selectedField, targetField.getAffiliation() == null);
 								game.getBoard().moveTroops(selectedField, targetField, normalTroops, badassTroops);
 								commandExecuted = true;

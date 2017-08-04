@@ -41,9 +41,10 @@ public class GameTurnGoalManager implements Serializable {
 	
 	private GameTurnManager gameTurnManager;
 	
-	public GameTurnGoalManager(PointManager pointManager) {
+	public GameTurnGoalManager(Game game) {
 		for (TurnGoal goal : TURN_GOALS) {
-			goal.setPointManager(pointManager);
+			//goal.setPointManager(pointManager);
+			goal.setGame(game);
 		}
 	}
 	

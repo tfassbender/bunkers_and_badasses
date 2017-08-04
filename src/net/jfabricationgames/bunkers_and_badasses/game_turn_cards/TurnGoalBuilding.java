@@ -35,6 +35,6 @@ public class TurnGoalBuilding extends TurnGoal {
 				}
 			}
 		}
-		pointManager.addPoints(user, points);
+		game.getPointManager().addPoints(user, points);
 	}
 }

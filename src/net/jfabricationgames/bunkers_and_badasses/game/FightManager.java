@@ -198,6 +198,7 @@ public class FightManager implements Serializable {
 		List<User> supporters = new ArrayList<User>();
 		if (currentFight.getWinner() == Fight.ATTACKERS) {
 			for (Field field : currentFight.getAttackSupporters()) {
+				//no points for self-support
 				if (!field.getAffiliation().equals(currentFight.getAttackingPlayer())) {
 					supporters.add(field.getAffiliation());
 				}

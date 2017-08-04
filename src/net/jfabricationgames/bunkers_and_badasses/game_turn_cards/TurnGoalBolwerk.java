@@ -18,7 +18,7 @@ public class TurnGoalBolwerk extends TurnGoal {
 	@Override
 	public void receivePointsFight(User user, Fight fight) {
 		if (user.equals(fight.getDefendingPlayer()) && fight.getWinner() == Fight.DEFENDERS) {
-			pointManager.addPoints(user, 3);
+			game.getPointManager().addPoints(user, 3);
 		}
 	}
 }

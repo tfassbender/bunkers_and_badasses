@@ -19,7 +19,7 @@ public class TurnBonusCreditsFight extends TurnBonus {
 	@Override
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getWinningPlayer() != null && fight.getWinningPlayer().equals(user)) {
-			pointManager.addPoints(user, 2);
+			game.getPointManager().addPoints(user, 2);
 		}
 	}
 }

@@ -43,6 +43,7 @@ public class GameVariableStorage implements Serializable {
 	private int fightAttackerPoints;
 	private int fightWinnerPoints;
 	private int fightSupporterPoints;
+	private int fieldConquerPoints;
 
 	public GameVariableStorage() {
 		creditsSkillLevel = new int[6];
@@ -209,5 +210,12 @@ public class GameVariableStorage implements Serializable {
 	}
 	public void setFightSupporterPoints(int fightSupporterPoints) {
 		this.fightSupporterPoints = fightSupporterPoints;
+	}
+	
+	public int getFieldConquerPoints() {
+		return fieldConquerPoints;
+	}
+	public void setFieldConquerPoints(int fieldConquerPoints) {
+		this.fieldConquerPoints = fieldConquerPoints;
 	}
 }

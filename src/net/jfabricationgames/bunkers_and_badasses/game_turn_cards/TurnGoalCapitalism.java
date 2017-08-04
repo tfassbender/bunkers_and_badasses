@@ -17,6 +17,6 @@ public class TurnGoalCapitalism extends TurnGoal {
 	
 	@Override
 	public void receivePointsPlaning(User user, int ammoConsumption) {
-		pointManager.addPoints(user, (ammoConsumption/100)*3); 
+		game.getPointManager().addPoints(user, (ammoConsumption/100)*3); 
 	}
 }

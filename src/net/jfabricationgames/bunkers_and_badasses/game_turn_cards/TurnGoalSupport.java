@@ -30,10 +30,10 @@ public class TurnGoalSupport extends TurnGoal {
 			}
 		}
 		if (user.equals(fight.getAttackingPlayer()) || fight.getDefendingPlayer() != null && user.equals(fight.getDefendingPlayer())) {
-			pointManager.addPoints(user, support*2);			
+			game.getPointManager().addPoints(user, support*2);			
 		}
 		else {
-			pointManager.addPoints(user, support*3);
+			game.getPointManager().addPoints(user, support*3);
 		}
 	}
 }

@@ -43,9 +43,10 @@ public class GameTurnBonusManager implements Serializable {
 		}
 	}
 	
-	public GameTurnBonusManager(PointManager pointManager) {
+	public GameTurnBonusManager(Game game) {
 		for (TurnBonus bonus : TURN_BONUSES) {
-			bonus.setPointManager(pointManager);
+			//bonus.setPointManager(pointManager);
+			bonus.setGame(game);
 		}
 		userBonuses = new HashMap<User, TurnBonus>();
 	}

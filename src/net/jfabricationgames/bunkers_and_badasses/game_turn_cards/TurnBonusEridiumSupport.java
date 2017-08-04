@@ -30,6 +30,6 @@ public class TurnBonusEridiumSupport extends TurnBonus {
 				support++;
 			}
 		}
-		pointManager.addPoints(user, support);
+		game.getPointManager().addPoints(user, support);
 	}
 }

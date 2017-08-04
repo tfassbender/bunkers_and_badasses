@@ -7,7 +7,6 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
-import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 /**
@@ -25,7 +24,8 @@ public abstract class TurnBonus implements Serializable {
 		loader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/turn_bonuses/");
 	}
 	
-	protected PointManager pointManager;
+	//protected PointManager pointManager;
+	protected Game game;
 	
 	protected transient BufferedImage image;
 
@@ -101,8 +101,11 @@ public abstract class TurnBonus implements Serializable {
 		return name;
 	}
 	
-	public void setPointManager(PointManager pointManager) {
+	/*public void setPointManager(PointManager pointManager) {
 		this.pointManager = pointManager;
+	}*/
+	public void setGame(Game game) {
+		this.game = game;
 	}
 	
 	public BufferedImage getImage() {

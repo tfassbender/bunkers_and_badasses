@@ -18,7 +18,7 @@ public class TurnGoalWildHunt extends TurnGoal {
 	
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getAttackingPlayer().equals(user) && fight.getDefendingField().getAffiliation() == null && fight.getWinner() == Fight.ATTACKERS) {
-			pointManager.addPoints(user, 2*fight.getDefendingStrength());
+			game.getPointManager().addPoints(user, 2*fight.getDefendingStrength());
 		}
 	}
 }
