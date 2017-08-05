@@ -48,12 +48,12 @@ public class SkillProfile implements Serializable {
 		sb.append(SkillProfileManager.ERIDIUM_BUILDING_SKILL_LEVEL[eridiumBuilding]);
 		sb.append(" Eridium zusätzlich (pro Gebäude pro Runde)]\n");
 		sb.append("Credits Gebäude: ");
-		sb.append(credits);
+		sb.append(creditsBuilding);
 		sb.append(" [");
 		sb.append(SkillProfileManager.CREDITS_BUILDING_SKILL_LEVEL[creditsBuilding]);
 		sb.append(" Credits zusätzlich (pro Gebäude pro Runde)]\n");
 		sb.append("Munition Gebäude: ");
-		sb.append(ammo);
+		sb.append(ammoBuilding);
 		sb.append(" [");
 		sb.append(SkillProfileManager.AMMO_BUILDING_SKILL_LEVEL[ammoBuilding]);
 		sb.append(" Munition zusätzlich (pro Gebäude pro Runde)]\n\n");

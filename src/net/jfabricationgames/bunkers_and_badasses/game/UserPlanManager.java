@@ -118,7 +118,7 @@ public class UserPlanManager implements Serializable {
 	public void commit() {
 		//calculate the used resources and give out points (capitalism bonus)
 		UserResource usedResource = previouseResource.clone();
-		usedResource.setCredits(usedResource.getCredits()-currentResource.getAmmo());
+		usedResource.setCredits(usedResource.getCredits()-currentResource.getCredits());
 		usedResource.setAmmo(usedResource.getAmmo()-currentResource.getAmmo());
 		usedResource.setEridium(usedResource.getEridium()-currentResource.getEridium());
 		game.getResourceManager().receiveUsedResources(game.getLocalUser(), game.getTurnManager().getTurn(), usedResource);
@@ -164,7 +164,10 @@ public class UserPlanManager implements Serializable {
 					field.getCommand().loadImage();
 				}
 			}
+			User commitedUser = game.getLocalUser();
+			int turn = game.getTurnManager().getTurn();
 			this.game.getResourceManager().receiveChanges(playerCommitted);
+			this.game.getResourceManager().receiveUsedResources(commitedUser, turn, game.getResourceManager().getResourceUse().get(commitedUser).get(turn));
 			this.game.setState(GameState.ACT);
 			GameTransferMessage message = new GameTransferMessage();
 			message.setGame(this.game);

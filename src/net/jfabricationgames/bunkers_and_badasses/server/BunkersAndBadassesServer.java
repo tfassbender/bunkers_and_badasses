@@ -962,9 +962,11 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				", credits_building = " + update.getCreditsBuilding() + ", ammo_building = " + update.getAmmoBuilding() + ", heroes = " + update.getHero() + 
 				" WHERE id = " + update.getId();
 		try (Statement statement = con.createStatement()) {
-			if (!statement.execute(query)) {
+			/*if (!statement.execute(query)) {
 				throw new SQLException();
-			}
+			}*/
+			//execute returns false but the update is successful...
+			statement.execute(query);
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
