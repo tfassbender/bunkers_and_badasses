@@ -112,7 +112,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private UserColorPanel userColorPanel_2;
 	private JTextField txtActiveplayer_2;
 	private JTextField txtPhase_2;
-	private BoardPanel boardPanel_1;
+	private BoardPanel boardPanel_2;
 	private JPanel panel_game_type;
 	
 	public GameFrame(Game game) {
@@ -134,7 +134,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		setTitle("Bunkers and Badasses");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1300, 800);
-		setMinimumSize(new Dimension(1000, 675));
+		setMinimumSize(new Dimension(1000, 600));
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -315,27 +315,27 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		chatPanel.setBackground(Color.GRAY);
 		panel_side_bar.add(chatPanel, "cell 0 0,grow");
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_1.setBackground(Color.GRAY);
-		panel_side_bar.add(panel_1, "cell 0 1,grow");
-		panel_1.setLayout(new MigLayout("", "[100px,grow][100px,grow]", "[][grow]"));
+		JPanel panel_turn_goals_bonuses = new JPanel();
+		panel_turn_goals_bonuses.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_turn_goals_bonuses.setBackground(Color.GRAY);
+		panel_side_bar.add(panel_turn_goals_bonuses, "cell 0 1,grow");
+		panel_turn_goals_bonuses.setLayout(new MigLayout("", "[100px,grow][100px,grow]", "[][grow]"));
 		
 		JLabel lblRundenZiel = new JLabel("Runden Ziel:");
 		lblRundenZiel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_1.add(lblRundenZiel, "cell 0 0,alignx center");
+		panel_turn_goals_bonuses.add(lblRundenZiel, "cell 0 0,alignx center");
 		
 		JLabel lblRundenBonus = new JLabel("Runden Bonus:");
 		lblRundenBonus.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_1.add(lblRundenBonus, "cell 1 0,alignx center");
+		panel_turn_goals_bonuses.add(lblRundenBonus, "cell 1 0,alignx center");
 		
 		panel_turn_goal = new TurnGoalCardPanel();
 		panel_turn_goal.setBackground(Color.GRAY);
-		panel_1.add(panel_turn_goal, "cell 0 1,grow");
+		panel_turn_goals_bonuses.add(panel_turn_goal, "cell 0 1,grow");
 		
 		panel_turn_bonus = new TurnBonusCardPanel();
 		panel_turn_bonus.setBackground(Color.GRAY);
-		panel_1.add(panel_turn_bonus, "cell 1 1,grow");
+		panel_turn_goals_bonuses.add(panel_turn_bonus, "cell 1 1,grow");
 		
 		fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
 		panel_side_bar.add(fieldPanel, "cell 0 2,grow");
@@ -381,7 +381,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		JButton btnWenigerEinblenden = new JButton("Weniger Einblenden");
 		btnWenigerEinblenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showExtendedInfo();
+				showReducedInfo();
 			}
 		});
 		btnWenigerEinblenden.setBackground(Color.GRAY);
@@ -465,40 +465,40 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		JPanel panel_reduced_info_set = new JPanel();
 		panel_reduced_info_set.setBackground(Color.GRAY);
 		panel_game_type.add(panel_reduced_info_set, REDUCED_INFO_VIEW);
-		panel_reduced_info_set.setLayout(new MigLayout("", "[grow][:300px:400px,grow]", "[grow]"));
+		panel_reduced_info_set.setLayout(new MigLayout("", "[800px,grow][:400px:400px,grow]", "[grow]"));
 		
-		boardPanel_1 = new BoardPanel();
-		boardPanel_1.addBoardPanelListener(this);
-		panel_reduced_info_set.add(boardPanel_1, "cell 0 0,grow");
+		boardPanel_2 = new BoardPanel();
+		boardPanel_2.addBoardPanelListener(this);
+		panel_reduced_info_set.add(boardPanel_2, "cell 0 0,grow");
 		
 		JPanel panel_side_bar_2 = new JPanel();
 		panel_side_bar_2.setBackground(Color.GRAY);
 		panel_reduced_info_set.add(panel_side_bar_2, "cell 1 0,grow");
-		panel_side_bar_2.setLayout(new MigLayout("", "[100px:150px:200px,grow][100px:150px:200px,grow]", "[:150px:150px,grow][200px][150px][grow]"));
+		panel_side_bar_2.setLayout(new MigLayout("", "[grow][grow]", "[:175px:175px,grow][200px][175px][][grow 99]"));
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_2.setBackground(Color.GRAY);
-		panel_side_bar_2.add(panel_2, "cell 0 0 2 1,grow");
-		panel_2.setLayout(new MigLayout("", "[100px,grow][100px,grow]", "[][grow]"));
+		JPanel panel_turn_goals_bonuses_2 = new JPanel();
+		panel_turn_goals_bonuses_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_turn_goals_bonuses_2.setBackground(Color.GRAY);
+		panel_side_bar_2.add(panel_turn_goals_bonuses_2, "cell 0 0 2 1,grow");
+		panel_turn_goals_bonuses_2.setLayout(new MigLayout("", "[100px,grow][100px,grow]", "[][grow]"));
 		
 		JLabel lblRundenZiel_2 = new JLabel("Runden Ziel:");
 		lblRundenZiel_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_2.add(lblRundenZiel_2, "cell 0 0,alignx center");
+		panel_turn_goals_bonuses_2.add(lblRundenZiel_2, "cell 0 0,alignx center");
 		
 		JLabel lblRundenBonus_2 = new JLabel("Runden Bonus:");
 		lblRundenBonus_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_2.add(lblRundenBonus_2, "cell 1 0,alignx center");
+		panel_turn_goals_bonuses_2.add(lblRundenBonus_2, "cell 1 0,alignx center");
 		
 		panel_turn_goal_2 = new TurnGoalCardPanel();
 		panel_turn_goal_2.setBackground(Color.GRAY);
-		panel_2.add(panel_turn_goal_2, "cell 0 1,grow");
+		panel_turn_goals_bonuses_2.add(panel_turn_goal_2, "cell 0 1,grow");
 		
 		panel_turn_bonus_2 = new TurnBonusCardPanel();
 		panel_turn_bonus_2.setBackground(Color.GRAY);
-		panel_2.add(panel_turn_bonus_2, "cell 1 1,grow");
+		panel_turn_goals_bonuses_2.add(panel_turn_bonus_2, "cell 1 1,grow");
 		
-		panel_heroes_2 = new HeroPanel((GameFrame) null);
+		panel_heroes_2 = new HeroPanel(this);
 		panel_heroes_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_heroes_2.setBackground(Color.GRAY);
 		panel_side_bar_2.add(panel_heroes_2, "cell 0 1,grow");
@@ -516,49 +516,62 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		userColorPanel.addPlayerColors(game.getPlayers(), game.getColorManager());
 		userColorPanel_2.addPlayerColors(game.getPlayers(), game.getColorManager());
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.GRAY);
-		panel_side_bar_2.add(panel, "cell 0 3 2 1,grow");
-		panel.setLayout(new MigLayout("", "[][grow][]", "[][][]"));
+		JPanel panel_controlls = new JPanel();
+		panel_controlls.setBackground(Color.GRAY);
+		panel_side_bar_2.add(panel_controlls, "cell 0 3 2 1,grow");
+		panel_controlls.setLayout(new MigLayout("", "[][grow][]", "[][]"));
 		
 		JLabel lblAktiverSpieler_1 = new JLabel("Aktiver Spieler:");
 		lblAktiverSpieler_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel.add(lblAktiverSpieler_1, "cell 0 0,alignx trailing");
+		panel_controlls.add(lblAktiverSpieler_1, "cell 0 0,alignx trailing");
 		
 		txtActiveplayer_2 = new JTextField();
 		txtActiveplayer_2.setEditable(false);
 		txtActiveplayer_2.setBackground(Color.LIGHT_GRAY);
 		txtActiveplayer_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel.add(txtActiveplayer_2, "cell 1 0,growx");
+		panel_controlls.add(txtActiveplayer_2, "cell 1 0,growx");
 		txtActiveplayer_2.setColumns(10);
 		
 		JButton btnSpielfeldbersicht_1 = new JButton("Spielfeld Übersicht");
 		btnSpielfeldbersicht_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boardPanel_1.showOtherView();
+				boardPanel_2.showOtherView();
 			}
 		});
 		btnSpielfeldbersicht_1.setBackground(Color.GRAY);
-		panel.add(btnSpielfeldbersicht_1, "cell 2 0,growx");
+		panel_controlls.add(btnSpielfeldbersicht_1, "cell 2 0,growx");
 		
 		JLabel label = new JLabel("Spielphase:");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel.add(label, "flowx,cell 0 1,alignx trailing");
+		panel_controlls.add(label, "flowx,cell 0 1,alignx trailing");
 		
 		txtPhase_2 = new JTextField();
 		txtPhase_2.setEditable(false);
 		txtPhase_2.setBackground(Color.LIGHT_GRAY);
-		panel.add(txtPhase_2, "cell 1 1,growx");
+		panel_controlls.add(txtPhase_2, "cell 1 1,growx");
 		txtPhase_2.setColumns(10);
 		
 		JButton btnMehrInformationenEinblenden = new JButton("Mehr Einblenden");
 		btnMehrInformationenEinblenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showReducedInfo();
+				showExtendedInfo();
 			}
 		});
 		btnMehrInformationenEinblenden.setBackground(Color.GRAY);
-		panel.add(btnMehrInformationenEinblenden, "cell 2 1,growx");
+		panel_controlls.add(btnMehrInformationenEinblenden, "cell 2 1,growx");
+		
+		JPanel panel_image_wrapper = new JPanel();
+		panel_image_wrapper.setBackground(Color.GRAY);
+		panel_side_bar_2.add(panel_image_wrapper, "cell 0 4 2 1,grow");
+		panel_image_wrapper.setLayout(new MigLayout("", "[50px,grow][:200px:300px,grow][50px,grow]", "[20px,grow][:100px:300px,grow][5px,grow]"));
+		
+		ImagePanel panel_logo_2 = new ImagePanel(imageLoader.loadImage("game_frame/logo_1.png"));
+		panel_logo_2.setImageMinimumSize(new int[] {100, 100});
+		panel_logo_2.setRemoveIfToSmall(true);
+		panel_logo_2.setCentered(true);
+		panel_logo_2.setAdaptSizeKeepProportion(true);
+		panel_logo_2.setBackground(Color.GRAY);
+		panel_image_wrapper.add(panel_logo_2, "cell 1 1,grow");
 		
 		
 		showReducedInfo();
@@ -645,12 +658,12 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	}
 	
 	private void showReducedInfo() {
-		CardLayout cl_panel_game_type = (CardLayout) panel_game_type.getLayout();
-		cl_panel_game_type.show(GameFrame.this, REDUCED_INFO_VIEW);
-	}
-	public void showExtendedInfo() {
 		CardLayout layout = (CardLayout) panel_game_type.getLayout();
-		layout.show(GameFrame.this, COMPLETE_INFO_VIEW);
+		layout.show(panel_game_type, REDUCED_INFO_VIEW);
+	}
+	private void showExtendedInfo() {
+		CardLayout layout = (CardLayout) panel_game_type.getLayout();
+		layout.show(panel_game_type, COMPLETE_INFO_VIEW);
 	}
 	
 	private void selectCurrentField() {
@@ -662,6 +675,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private void updateBoard() {
 		BufferedImage boardImage = game.getBoard().displayBoard();
 		boardPanel.updateBoardImage(boardImage);
+		boardPanel_2.updateBoardImage(boardImage);
 		boardOverviewFrame.updateBoardImage(boardImage);
 	}
 	

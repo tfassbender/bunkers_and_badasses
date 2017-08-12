@@ -121,7 +121,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private JButton btnAlleBefehleBesttigen_2;
 	private JButton btnZustzlicheBefehle_2;
 	private JComboBox<Command> comboBox_2;
-	private BoardPanel boardPanel_1;
+	private BoardPanel boardPanel_2;
 	
 	private static final String REDUCED_INFO_VIEW = "reduced_info";
 	private static final String COMPLETE_INFO_VIEW = "complete_info";
@@ -139,7 +139,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		setTitle("Zug Planung - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1300, 800);
-		setMinimumSize(new Dimension(1000, 500));
+		setMinimumSize(new Dimension(1000, 600));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -153,15 +153,16 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		JPanel panel_reduced_info_set = new JPanel();
 		panel_reduced_info_set.setBackground(Color.GRAY);
 		panel_game_type.add(panel_reduced_info_set, REDUCED_INFO_VIEW);
-		panel_reduced_info_set.setLayout(new MigLayout("", "[800px,grow][500px,grow]", "[500px,grow][300px,grow]"));
+		panel_reduced_info_set.setLayout(new MigLayout("", "[800px,grow][:450px:450px,grow]", "[500px,grow][:250px:260px,grow]"));
 		
-		boardPanel_1 = new BoardPanel();
-		panel_reduced_info_set.add(boardPanel_1, "cell 0 0,grow");
+		boardPanel_2 = new BoardPanel();
+		boardPanel_2.addBoardPanelListener(this);
+		panel_reduced_info_set.add(boardPanel_2, "cell 0 0,grow");
 		
 		JPanel panel_side_bar_2 = new JPanel();
 		panel_side_bar_2.setBackground(Color.GRAY);
 		panel_reduced_info_set.add(panel_side_bar_2, "cell 1 0 1 2,grow");
-		panel_side_bar_2.setLayout(new MigLayout("", "[:250px:250px,grow][:250px:250px]", "[300px,grow][100px,grow]"));
+		panel_side_bar_2.setLayout(new MigLayout("", "[:250px:250px,grow][:250px:250px]", "[300px,grow][:100px:300px,grow]"));
 		
 		JPanel panel_fields_no_command_2 = new JPanel();
 		panel_fields_no_command_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -221,7 +222,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		JPanel panel_low_bar_2 = new JPanel();
 		panel_low_bar_2.setBackground(Color.GRAY);
 		panel_reduced_info_set.add(panel_low_bar_2, "cell 0 1,grow");
-		panel_low_bar_2.setLayout(new MigLayout("", "[400px,grow][200px,grow][200px,grow]", "[grow]"));
+		panel_low_bar_2.setLayout(new MigLayout("", "[:400px:500px,grow][:150px:200px,grow][:200px:250px,grow][grow]", "[grow]"));
 		
 		JPanel panel_command_2 = new JPanel();
 		panel_command_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -246,19 +247,19 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		lblFeld_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_2.add(lblFeld_2, "cell 0 3,alignx trailing");
 		
+		JButton btnbersicht_2 = new JButton("\u00DCbersicht");
+		btnbersicht_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boardPanel_2.showOtherView();
+			}
+		});
+		
 		txtField_2 = new JTextField();
 		txtField_2.setEditable(false);
 		txtField_2.setBackground(Color.LIGHT_GRAY);
 		txtField_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command_2.add(txtField, "cell 1 2 2 1,growx");
+		panel_command_2.add(txtField_2, "cell 1 3 2 1,growx");
 		txtField_2.setColumns(10);
-		
-		JButton btnbersicht_2 = new JButton("\u00DCbersicht");
-		btnbersicht_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boardPanel_1.showOtherView();
-			}
-		});
 		btnbersicht_2.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
 		btnbersicht_2.setBackground(Color.GRAY);
 		panel_command_2.add(btnbersicht_2, "cell 3 3");
@@ -351,7 +352,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		
 		JLabel lblbrigeBefehle_2 = new JLabel("\u00DCbrige Befehle:");
 		lblbrigeBefehle_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_commands_left_2.add(lblbrigeBefehle_2, "cell 1 0 3 1,alignx center");
+		panel_commands_left_2.add(lblbrigeBefehle_2, "cell 0 0 4 1,alignx center");
 		
 		JLabel lblberflle_2 = new JLabel("\u00DCberf\u00E4lle:");
 		lblberflle_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -451,6 +452,15 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		
 		orderPanel_2 = new PlayerOrderPanel();
 		panel_low_bar_2.add(orderPanel_2, "cell 2 0,grow");
+		
+		ImagePanel panel_image_2 = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/claptrap_1.png"));
+		panel_image_2.setBackground(Color.GRAY);
+		panel_image_2.setToolTipText("Claptrap: Interplanetarer Ninja Assasine");
+		panel_image_2.setRemoveIfToSmall(true);
+		panel_image_2.setAdaptSizeKeepProportion(true);
+		panel_image_2.setCentered(true);
+		panel_image_2.setImageMinimumSize(new int[] {75, 150});
+		panel_low_bar_2.add(panel_image_2, "cell 3 0,grow");
 		
 		JPanel panel_complete_info_set = new JPanel();
 		panel_game_type.add(panel_complete_info_set, COMPLETE_INFO_VIEW);
@@ -719,110 +729,110 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		btnAlleBefehleBesttigen.setBackground(Color.GRAY);
 		panel_command.add(btnAlleBefehleBesttigen, "cell 2 8 2 1,alignx right");
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_1.setBackground(Color.GRAY);
-		panel_low_bar.add(panel_1, "cell 2 0,grow");
-		panel_1.setLayout(new MigLayout("", "[grow][][25px:40px,grow][grow]", "[][5px][][][][][][][][]"));
+		JPanel panel_commands_left = new JPanel();
+		panel_commands_left.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_commands_left.setBackground(Color.GRAY);
+		panel_low_bar.add(panel_commands_left, "cell 2 0,grow");
+		panel_commands_left.setLayout(new MigLayout("", "[grow][][25px:40px,grow][grow]", "[][5px][][][][][][][][]"));
 		
 		JLabel lblbrigeBefehle = new JLabel("\u00DCbrige Befehle:");
 		lblbrigeBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel_1.add(lblbrigeBefehle, "cell 1 0 3 1,alignx center");
+		panel_commands_left.add(lblbrigeBefehle, "cell 0 0 4 1,alignx center");
 		
 		JLabel lblberflle = new JLabel("\u00DCberf\u00E4lle:");
 		lblberflle.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblberflle, "cell 1 2,alignx trailing");
+		panel_commands_left.add(lblberflle, "cell 1 2,alignx trailing");
 		
 		txtberflle = new JTextField();
 		txtberflle.setHorizontalAlignment(SwingConstants.CENTER);
 		txtberflle.setBackground(Color.LIGHT_GRAY);
 		txtberflle.setEditable(false);
 		txtberflle.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtberflle, "cell 2 2,growx");
+		panel_commands_left.add(txtberflle, "cell 2 2,growx");
 		txtberflle.setColumns(10);
 		
 		JLabel lblRckzge = new JLabel("R\u00FCckz\u00FCge:");
 		lblRckzge.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblRckzge, "cell 1 3,alignx trailing");
+		panel_commands_left.add(lblRckzge, "cell 1 3,alignx trailing");
 		
 		txtRckzge = new JTextField();
 		txtRckzge.setHorizontalAlignment(SwingConstants.CENTER);
 		txtRckzge.setBackground(Color.LIGHT_GRAY);
 		txtRckzge.setEditable(false);
 		txtRckzge.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtRckzge, "cell 2 3,growx");
+		panel_commands_left.add(txtRckzge, "cell 2 3,growx");
 		txtRckzge.setColumns(10);
 		
 		JLabel lblMrsche = new JLabel("M\u00E4rsche:");
 		lblMrsche.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblMrsche, "cell 1 4,alignx trailing");
+		panel_commands_left.add(lblMrsche, "cell 1 4,alignx trailing");
 		
 		txtMrsche = new JTextField();
 		txtMrsche.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMrsche.setBackground(Color.LIGHT_GRAY);
 		txtMrsche.setEditable(false);
 		txtMrsche.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtMrsche, "cell 2 4,growx");
+		panel_commands_left.add(txtMrsche, "cell 2 4,growx");
 		txtMrsche.setColumns(10);
 		
 		JLabel lblAufbauten = new JLabel("Aufbauten:");
 		lblAufbauten.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblAufbauten, "cell 1 5,alignx trailing");
+		panel_commands_left.add(lblAufbauten, "cell 1 5,alignx trailing");
 		
 		txtAufbauten = new JTextField();
 		txtAufbauten.setHorizontalAlignment(SwingConstants.CENTER);
 		txtAufbauten.setBackground(Color.LIGHT_GRAY);
 		txtAufbauten.setEditable(false);
 		txtAufbauten.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtAufbauten, "cell 2 5,growx");
+		panel_commands_left.add(txtAufbauten, "cell 2 5,growx");
 		txtAufbauten.setColumns(10);
 		
 		JLabel lblRekrutierungen = new JLabel("Rekrutierungen:");
 		lblRekrutierungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblRekrutierungen, "cell 1 6,alignx trailing");
+		panel_commands_left.add(lblRekrutierungen, "cell 1 6,alignx trailing");
 		
 		txtRekrutierungen = new JTextField();
 		txtRekrutierungen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtRekrutierungen.setBackground(Color.LIGHT_GRAY);
 		txtRekrutierungen.setEditable(false);
 		txtRekrutierungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtRekrutierungen, "cell 2 6,growx");
+		panel_commands_left.add(txtRekrutierungen, "cell 2 6,growx");
 		txtRekrutierungen.setColumns(10);
 		
 		JLabel lblResourcen = new JLabel("Resourcen:");
 		lblResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblResourcen, "cell 1 7,alignx trailing");
+		panel_commands_left.add(lblResourcen, "cell 1 7,alignx trailing");
 		
 		txtResourcen = new JTextField();
 		txtResourcen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtResourcen.setBackground(Color.LIGHT_GRAY);
 		txtResourcen.setEditable(false);
 		txtResourcen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtResourcen, "cell 2 7,growx");
+		panel_commands_left.add(txtResourcen, "cell 2 7,growx");
 		txtResourcen.setColumns(10);
 		
 		JLabel lblUntersttzungen = new JLabel("Unterst\u00FCtzungen:");
 		lblUntersttzungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblUntersttzungen, "cell 1 8,alignx trailing");
+		panel_commands_left.add(lblUntersttzungen, "cell 1 8,alignx trailing");
 		
 		txtSupport = new JTextField();
 		txtSupport.setHorizontalAlignment(SwingConstants.CENTER);
 		txtSupport.setEditable(false);
 		txtSupport.setBackground(Color.LIGHT_GRAY);
 		txtSupport.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(txtSupport, "cell 2 8,growx");
+		panel_commands_left.add(txtSupport, "cell 2 8,growx");
 		txtSupport.setColumns(10);
 		
 		JLabel lblVerteidigungen = new JLabel("Verteidigungen:");
 		lblVerteidigungen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_1.add(lblVerteidigungen, "cell 1 9,alignx trailing");
+		panel_commands_left.add(lblVerteidigungen, "cell 1 9,alignx trailing");
 		
 		txtVerteidigung = new JTextField();
 		txtVerteidigung.setHorizontalAlignment(SwingConstants.CENTER);
 		txtVerteidigung.setEditable(false);
 		txtVerteidigung.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtVerteidigung.setBackground(Color.LIGHT_GRAY);
-		panel_1.add(txtVerteidigung, "cell 2 9,growx");
+		panel_commands_left.add(txtVerteidigung, "cell 2 9,growx");
 		txtVerteidigung.setColumns(10);
 		
 		ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/claptrap_1.png"));
@@ -840,6 +850,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		orderPanel = new PlayerOrderPanel();
 		panel_low_bar.add(orderPanel, "cell 1 1 3 1,grow");
 		
+		showReducedInfo();
 		initCommands();
 		update();
 	}
@@ -864,8 +875,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	 * Delete the command from the current field
 	 */
 	private void deleteCommand() {
-		if (selectedField != null && selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && 
-				selectedField.getCommand() != null) {
+		if (selectedField != null && selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && selectedField.getCommand() != null) {
 			game.getPlanManager().deleteCommand(selectedField);
 			updateBoard();
 			updateResources();
@@ -877,8 +887,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	 * Add a command to the current field
 	 */
 	private void addCommand(Command command) {
-		if (selectedField != null && selectedField.getAffiliation() != null &&  selectedField.getAffiliation().equals(game.getLocalUser()) && 
-				selectedField.getCommand() == null && command != null) {
+		if (selectedField != null && selectedField.getAffiliation() != null &&  selectedField.getAffiliation().equals(game.getLocalUser()) && selectedField.getCommand() == null && command != null) {
 			try {
 				game.getPlanManager().addCommand(selectedField, command);
 				updateBoard();
@@ -933,22 +942,23 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	
 	private void showReducedInfo() {
 		CardLayout layout = (CardLayout) panel_game_type.getLayout();
-		layout.show(this, REDUCED_INFO_VIEW);
+		layout.show(panel_game_type, REDUCED_INFO_VIEW);
 	}
-	public void showExtendedInfo() {
+	private void showExtendedInfo() {
 		CardLayout layout = (CardLayout) panel_game_type.getLayout();
-		layout.show(this, COMPLETE_INFO_VIEW);
+		layout.show(panel_game_type, COMPLETE_INFO_VIEW);
 	}
 	
 	private void updateBoard() {
 		boardPanel.updateBoardImage(game.getBoard().displayBoard());
-		boardPanel_1.updateBoardImage(game.getBoard().displayBoard());
+		boardPanel_2.updateBoardImage(game.getBoard().displayBoard());
 	}
 	
 	private void updateField() {
 		fieldPanel.updateField(selectedField);
 		if (selectedField != null) {
 			txtField.setText(selectedField.getName());
+			txtField_2.setText(selectedField.getName());
 			if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser())) {
 				if (selectedField.getCommand() != null) {
 					txtCurrcommand.setText(selectedField.getCommand().getName());

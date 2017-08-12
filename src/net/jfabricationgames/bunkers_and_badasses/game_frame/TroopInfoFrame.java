@@ -170,7 +170,7 @@ public class TroopInfoFrame extends JFrame {
 			resourcePanel = new ResourceInfoPanel();
 			panel.add(resourcePanel, "cell 0 1,grow");
 			
-			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/mr_torgue_1.png"));
+			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/hammerlock_1.png"));
 			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setToolTipText("Mr. Torgue: EXPLOSIONSGERÄUSCH");
 			panel_image.setCentered(true);

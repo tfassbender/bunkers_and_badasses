@@ -38,7 +38,7 @@ public class FieldDescriptionPanel extends JPanel {
 		if (addNeighbours) {
 			layoutY += "[5px][][50px,grow]";
 		}
-		setLayout(new MigLayout("", "[][grow][][grow]", layoutY));
+		setLayout(new MigLayout("", "[][150px,grow][][50px:50px,grow]", layoutY));
 		
 		JLabel lblFeldbersicht = new JLabel(title);
 		lblFeldbersicht.setFont(new Font("Tahoma", Font.PLAIN, 14));

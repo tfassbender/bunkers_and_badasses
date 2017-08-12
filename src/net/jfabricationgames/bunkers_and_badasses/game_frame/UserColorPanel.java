@@ -68,6 +68,8 @@ public class UserColorPanel extends JPanel {
 		for (int i = 0; i < players.size(); i++) {
 			rows.append(singleRow);
 		}
+		panel_colors.removeAll();
+		panel_colors.setLayout(new MigLayout("", "[grow][20px]", rows.toString()));
 		Font font = new Font("Tahoma", Font.PLAIN, 12);
 		for (int i = 0; i < players.size(); i++) {
 			//create a label for the players name and a panel for his color
