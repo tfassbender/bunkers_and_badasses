@@ -637,7 +637,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	 * 
 	 * This update method should not be called from the global update method.
 	 */
-	private void updateSpinners() {
+	protected void updateSpinners() {
 		if (selectedField != null && selectedField.getCommand() instanceof RecruitCommand && selectedField.getBuilding() instanceof MoxxisTavern) {
 			int[] selectedListFields = list_target_field.getSelectedIndices();
 			if (selectedListFields.length <= 1) {
@@ -744,7 +744,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		repaint();
 	}
 	
-	private void updateKosts() {
+	protected void updateKosts() {
 		if (rdbtnAufbauen.isSelected()) {
 			Building building = list_building.getSelectedValue();
 			if (building != null) {
@@ -873,7 +873,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		}
 	}
 	
-	private void executeCommand() {
+	protected void executeCommand() {
 		boolean commandExecuted = false;
 		if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
 			Command command = selectedField.getCommand();
@@ -1093,6 +1093,10 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 			game.getGameFrame().updateAllFrames();
 		}
 		update();
+	}
+	
+	protected Game getGame() {
+		return game;
 	}
 	
 	public void setSelectedField(Field field) {

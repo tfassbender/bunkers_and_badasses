@@ -49,6 +49,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.SupportCommand;
 import net.miginfocom.swing.MigLayout;
+import java.awt.CardLayout;
 
 public class TurnPlaningFrame extends JFrame implements BoardPanelListener, ConfirmDialogListener {
 	
@@ -63,8 +64,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private AdditionalCommandFrame additionalCommandFrame;
 	
 	private ResourceInfoPanel resourcePanel;
+	private ResourceInfoPanel resourcePanel_2;
 	private FieldDescriptionPanel fieldPanel;
 	private PlayerOrderPanel orderPanel;
+	private PlayerOrderPanel orderPanel_2;
 	private BoardPanel boardPanel;
 	
 	private JTextField txtField;
@@ -76,6 +79,16 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private JTextField txtAufbauten;
 	private JTextField txtRekrutierungen;
 	private JTextField txtResourcen;
+
+	private JTextField txtField_2;
+	private JTextField txtCurrcommand_2;
+	private JTextField txtKosts_2;
+	private JTextField txtberflle_2;
+	private JTextField txtRckzge_2;
+	private JTextField txtMrsche_2;
+	private JTextField txtAufbauten_2;
+	private JTextField txtRekrutierungen_2;
+	private JTextField txtResourcen_2;
 	
 	private Command commandRaid;
 	private Command commandRetreat;
@@ -101,6 +114,19 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private JButton btnZustzlicheBefehle;
 	private JComboBox<Command> comboBox;
 	
+	private JButton btnLschen_2;
+	private JButton btnHinzufgen_2;
+	private JTextField txtSupport_2;
+	private JTextField txtVerteidigung_2;
+	private JButton btnAlleBefehleBesttigen_2;
+	private JButton btnZustzlicheBefehle_2;
+	private JComboBox<Command> comboBox_2;
+	private BoardPanel boardPanel_1;
+	
+	private static final String REDUCED_INFO_VIEW = "reduced_info";
+	private static final String COMPLETE_INFO_VIEW = "complete_info";
+	private JPanel panel_game_type;
+	
 	public TurnPlaningFrame(Game game) {
 		addFocusListener(new FocusAdapter() {
 			@Override
@@ -113,25 +139,331 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		setTitle("Zug Planung - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1300, 800);
-		setMinimumSize(new Dimension(1300, 800));
+		setMinimumSize(new Dimension(1000, 500));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.GRAY);
-		contentPanel.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[450px,grow][:600px:800px,grow]", "[300px,grow][:400px:400px,grow]"));
+		panel_game_type = new JPanel();
+		contentPanel.add(panel_game_type, "cell 0 0,grow");
+		panel_game_type.setLayout(new CardLayout(0, 0));
+		
+		JPanel panel_reduced_info_set = new JPanel();
+		panel_reduced_info_set.setBackground(Color.GRAY);
+		panel_game_type.add(panel_reduced_info_set, REDUCED_INFO_VIEW);
+		panel_reduced_info_set.setLayout(new MigLayout("", "[800px,grow][500px,grow]", "[500px,grow][300px,grow]"));
+		
+		boardPanel_1 = new BoardPanel();
+		panel_reduced_info_set.add(boardPanel_1, "cell 0 0,grow");
+		
+		JPanel panel_side_bar_2 = new JPanel();
+		panel_side_bar_2.setBackground(Color.GRAY);
+		panel_reduced_info_set.add(panel_side_bar_2, "cell 1 0 1 2,grow");
+		panel_side_bar_2.setLayout(new MigLayout("", "[:250px:250px,grow][:250px:250px]", "[300px,grow][100px,grow]"));
+		
+		JPanel panel_fields_no_command_2 = new JPanel();
+		panel_fields_no_command_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_fields_no_command_2.setBackground(Color.GRAY);
+		panel_side_bar_2.add(panel_fields_no_command_2, "cell 0 0,grow");
+		panel_fields_no_command_2.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
+		
+		JLabel lblGebieteOhneBefehl_2 = new JLabel("Gebiete ohne Befehl:");
+		lblGebieteOhneBefehl_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_fields_no_command_2.add(lblGebieteOhneBefehl_2, "cell 0 0,alignx center");
+		
+		JScrollPane scrollPane_fields_no_command_2 = new JScrollPane();
+		panel_fields_no_command_2.add(scrollPane_fields_no_command_2, "cell 0 2,grow");
+		
+		JList<Field> list_fields_no_command_2 = new JList<Field>(fieldNoCommandListModel);
+		list_fields_no_command_2.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				selectedField = list_fields_no_command_2.getSelectedValue();
+				updateField();
+			}
+		});
+		list_fields_no_command_2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_fields_no_command_2.setToolTipText("<html>\r\nDiese Gebiete haben noch <br>\r\nkeinen Befehl erhalten.\r\n</html>");
+		list_fields_no_command_2.setBackground(Color.LIGHT_GRAY);
+		list_fields_no_command_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrollPane_fields_no_command_2.setViewportView(list_fields_no_command_2);
+		
+		JPanel panel_fields_command_2 = new JPanel();
+		panel_side_bar_2.add(panel_fields_command_2, "cell 1 0,grow");
+		panel_fields_command_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_fields_command_2.setBackground(Color.GRAY);
+		panel_fields_command_2.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
+		
+		JLabel lblGebieteMitBefehl_2 = new JLabel("Gebiete mit Befehl:");
+		lblGebieteMitBefehl_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_fields_command_2.add(lblGebieteMitBefehl_2, "cell 0 0,alignx center");
+		
+		JScrollPane scrollPane_fields_command_2 = new JScrollPane();
+		panel_fields_command_2.add(scrollPane_fields_command_2, "cell 0 2,grow");
+		
+		JList<FieldCommand> list_fields_command_2 = new JList<FieldCommand>(fieldCommandListModel);
+		list_fields_command_2.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				selectedField = list_fields_command_2.getSelectedValue().getField();
+				updateField();
+			}
+		});
+		list_fields_command_2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_fields_command_2.setToolTipText("<html>\r\nDiese Gebiete haben bereits <br>\r\neinen Befehl erhalten\r\n</html>");
+		list_fields_command_2.setBackground(Color.LIGHT_GRAY);
+		list_fields_command_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrollPane_fields_command_2.setViewportView(list_fields_command_2);
+		
+		resourcePanel_2 = new ResourceInfoPanel();
+		panel_side_bar_2.add(resourcePanel_2, "cell 0 1 2 1,grow");
+		
+		JPanel panel_low_bar_2 = new JPanel();
+		panel_low_bar_2.setBackground(Color.GRAY);
+		panel_reduced_info_set.add(panel_low_bar_2, "cell 0 1,grow");
+		panel_low_bar_2.setLayout(new MigLayout("", "[400px,grow][200px,grow][200px,grow]", "[grow]"));
+		
+		JPanel panel_command_2 = new JPanel();
+		panel_command_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_command_2.setBackground(Color.GRAY);
+		panel_low_bar_2.add(panel_command_2, "cell 0 0,grow");
+		panel_command_2.setLayout(new MigLayout("", "[][grow][][fill]", "[][5px,grow][][::35px,grow][::35px,grow][::35px,grow][::35px,grow][5px,grow][grow]"));
+		
+		JLabel lblBefehle_2 = new JLabel("Befehle:");
+		lblBefehle_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_command_2.add(lblBefehle_2, "cell 0 0 4 1,alignx center");
+		
+		JButton btnMehrEinblenden = new JButton("Mehr Einblenden");
+		btnMehrEinblenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showExtendedInfo();
+			}
+		});
+		btnMehrEinblenden.setBackground(Color.GRAY);
+		panel_command_2.add(btnMehrEinblenden, "cell 3 2,alignx center");
+		
+		JLabel lblFeld_2 = new JLabel("Feld:");
+		lblFeld_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_2.add(lblFeld_2, "cell 0 3,alignx trailing");
+		
+		txtField_2 = new JTextField();
+		txtField_2.setEditable(false);
+		txtField_2.setBackground(Color.LIGHT_GRAY);
+		txtField_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_2.add(txtField, "cell 1 2 2 1,growx");
+		txtField_2.setColumns(10);
+		
+		JButton btnbersicht_2 = new JButton("\u00DCbersicht");
+		btnbersicht_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boardPanel_1.showOtherView();
+			}
+		});
+		btnbersicht_2.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
+		btnbersicht_2.setBackground(Color.GRAY);
+		panel_command_2.add(btnbersicht_2, "cell 3 3");
+		
+		JLabel lblBefehl_2 = new JLabel("Aktueller Befehl:");
+		lblBefehl_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_2.add(lblBefehl_2, "cell 0 4,alignx trailing");
+		
+		txtCurrcommand_2 = new JTextField();
+		txtCurrcommand_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtCurrcommand_2.setBackground(Color.LIGHT_GRAY);
+		txtCurrcommand_2.setEditable(false);
+		panel_command_2.add(txtCurrcommand_2, "cell 1 4 2 1,growx");
+		txtCurrcommand_2.setColumns(10);
+		
+		btnLschen_2 = new JButton("L\u00F6schen");
+		btnLschen_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				deleteCommand();
+			}
+		});
+		btnLschen_2.setToolTipText("<html>\r\nDen bestehenden Befehl f\u00FCr <br>\r\ndas ausgew\u00E4hlte Feld entfernen\r\n</html>");
+		btnLschen_2.setBackground(Color.GRAY);
+		panel_command_2.add(btnLschen_2, "cell 3 4");
+		
+		JLabel lblNeuerBefehl_2 = new JLabel("Neuer Befehl:");
+		lblNeuerBefehl_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_2.add(lblNeuerBefehl_2, "cell 0 5,alignx trailing");
+		
+		comboBox_2 = new JComboBox<Command>(commandBoxModel);
+		comboBox_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateField();
+			}
+		});
+		comboBox_2.setBackground(Color.GRAY);
+		comboBox_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_2.add(comboBox_2, "cell 1 5 2 1,growx");
+		
+		btnHinzufgen_2 = new JButton("Hinzuf\u00FCgen");
+		btnHinzufgen_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addCommand((Command) comboBox_2.getSelectedItem());
+			}
+		});
+		btnHinzufgen_2.setToolTipText("<html>\r\nDen ausgew\u00E4hlten Befehl dem <br>\r\nausgew\u00E4hlten Feld zuweisen\r\n</html>");
+		btnHinzufgen_2.setBackground(Color.GRAY);
+		panel_command_2.add(btnHinzufgen_2, "cell 3 5");
+		
+		JLabel lblKosten_2 = new JLabel("Kosten:");
+		lblKosten_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_2.add(lblKosten_2, "cell 0 6,alignx trailing");
+		
+		txtKosts_2 = new JTextField();
+		txtKosts_2.setToolTipText("<html>\r\nDie Kosten die ein Befehl auf <br>\r\ndem ausgew\u00E4hlten Feld verursacht\r\n</html>");
+		txtKosts_2.setEditable(false);
+		txtKosts_2.setBackground(Color.LIGHT_GRAY);
+		txtKosts_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_command_2.add(txtKosts_2, "cell 1 6 3 1,growx");
+		txtKosts_2.setColumns(10);
+		
+		btnAlleBefehleBesttigen_2 = new JButton("Alle Befehle Best\u00E4tigen");
+		btnAlleBefehleBesttigen_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ConfirmDialog confirmDialog = new ConfirmDialog("Zug-Planung wirklich beenden?", TurnPlaningFrame.this, 0);
+				confirmDialog.setLocationRelativeTo(TurnPlaningFrame.this);
+				confirmDialog.setVisible(true);
+			}
+		});
+		
+		btnZustzlicheBefehle_2 = new JButton("Zus\u00E4tzliche Befehle Kaufen");
+		btnZustzlicheBefehle_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				additionalCommandFrame.setVisible(true);
+				additionalCommandFrame.requestFocus();
+				additionalCommandFrame.update();
+			}
+		});
+		btnZustzlicheBefehle_2.setBackground(Color.GRAY);
+		panel_command_2.add(btnZustzlicheBefehle_2, "cell 0 8 2 1");
+		btnAlleBefehleBesttigen_2.setToolTipText("<html>\r\nAlle aktuellen Befehle best\u00E4tigen<br>\r\nund die Planugsphase beenden.\r\n</html>");
+		btnAlleBefehleBesttigen_2.setBackground(Color.GRAY);
+		panel_command_2.add(btnAlleBefehleBesttigen_2, "cell 2 8 2 1,alignx right");
+		
+		JPanel panel_commands_left_2 = new JPanel();
+		panel_commands_left_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_commands_left_2.setBackground(Color.GRAY);
+		panel_low_bar_2.add(panel_commands_left_2, "cell 1 0,grow");
+		panel_commands_left_2.setLayout(new MigLayout("", "[grow][][25px:40px:40px,grow][grow]", "[][5px][][][][][][][][]"));
+		
+		JLabel lblbrigeBefehle_2 = new JLabel("\u00DCbrige Befehle:");
+		lblbrigeBefehle_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_commands_left_2.add(lblbrigeBefehle_2, "cell 1 0 3 1,alignx center");
+		
+		JLabel lblberflle_2 = new JLabel("\u00DCberf\u00E4lle:");
+		lblberflle_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblberflle_2, "cell 1 2,alignx trailing");
+		
+		txtberflle_2 = new JTextField();
+		txtberflle_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtberflle_2.setBackground(Color.LIGHT_GRAY);
+		txtberflle_2.setEditable(false);
+		txtberflle_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(txtberflle_2, "cell 2 2,growx");
+		txtberflle_2.setColumns(10);
+		
+		JLabel lblRckzge_2 = new JLabel("R\u00FCckz\u00FCge:");
+		lblRckzge_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblRckzge_2, "cell 1 3,alignx trailing");
+		
+		txtRckzge_2 = new JTextField();
+		txtRckzge_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtRckzge_2.setBackground(Color.LIGHT_GRAY);
+		txtRckzge_2.setEditable(false);
+		txtRckzge_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(txtRckzge_2, "cell 2 3,growx");
+		txtRckzge_2.setColumns(10);
+		
+		JLabel lblMrsche_2 = new JLabel("M\u00E4rsche:");
+		lblMrsche_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblMrsche_2, "cell 1 4,alignx trailing");
+		
+		txtMrsche_2 = new JTextField();
+		txtMrsche_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtMrsche_2.setBackground(Color.LIGHT_GRAY);
+		txtMrsche_2.setEditable(false);
+		txtMrsche_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(txtMrsche_2, "cell 2 4,growx");
+		txtMrsche_2.setColumns(10);
+		
+		JLabel lblAufbauten_2 = new JLabel("Aufbauten:");
+		lblAufbauten_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblAufbauten_2, "cell 1 5,alignx trailing");
+		
+		txtAufbauten_2 = new JTextField();
+		txtAufbauten_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtAufbauten_2.setBackground(Color.LIGHT_GRAY);
+		txtAufbauten_2.setEditable(false);
+		txtAufbauten_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(txtAufbauten_2, "cell 2 5,growx");
+		txtAufbauten_2.setColumns(10);
+		
+		JLabel lblRekrutierungen_2 = new JLabel("Rekrutierungen:");
+		lblRekrutierungen_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblRekrutierungen_2, "cell 1 6,alignx trailing");
+		
+		txtRekrutierungen_2 = new JTextField();
+		txtRekrutierungen_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtRekrutierungen_2.setBackground(Color.LIGHT_GRAY);
+		txtRekrutierungen_2.setEditable(false);
+		txtRekrutierungen_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(txtRekrutierungen_2, "cell 2 6,growx");
+		txtRekrutierungen_2.setColumns(10);
+		
+		JLabel lblResourcen_2 = new JLabel("Resourcen:");
+		lblResourcen_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblResourcen_2, "cell 1 7,alignx trailing");
+		
+		txtResourcen_2 = new JTextField();
+		txtResourcen_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtResourcen_2.setBackground(Color.LIGHT_GRAY);
+		txtResourcen_2.setEditable(false);
+		txtResourcen_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(txtResourcen_2, "cell 2 7,growx");
+		txtResourcen_2.setColumns(10);
+		
+		JLabel lblUntersttzungen_2 = new JLabel("Unterst\u00FCtzungen:");
+		lblUntersttzungen_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblUntersttzungen_2, "cell 1 8,alignx trailing");
+		
+		txtSupport_2 = new JTextField();
+		txtSupport_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSupport_2.setEditable(false);
+		txtSupport_2.setBackground(Color.LIGHT_GRAY);
+		txtSupport_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(txtSupport_2, "cell 2 8,growx");
+		txtSupport_2.setColumns(10);
+		
+		JLabel lblVerteidigungen_2 = new JLabel("Verteidigungen:");
+		lblVerteidigungen_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_commands_left_2.add(lblVerteidigungen_2, "cell 1 9,alignx trailing");
+		
+		txtVerteidigung_2 = new JTextField();
+		txtVerteidigung_2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVerteidigung_2.setEditable(false);
+		txtVerteidigung_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtVerteidigung_2.setBackground(Color.LIGHT_GRAY);
+		panel_commands_left_2.add(txtVerteidigung_2, "cell 2 9,growx");
+		txtVerteidigung_2.setColumns(10);
+		
+		orderPanel_2 = new PlayerOrderPanel();
+		panel_low_bar_2.add(orderPanel_2, "cell 2 0,grow");
+		
+		JPanel panel_complete_info_set = new JPanel();
+		panel_game_type.add(panel_complete_info_set, COMPLETE_INFO_VIEW);
+		panel_complete_info_set.setBackground(Color.GRAY);
+		panel_complete_info_set.setLayout(new MigLayout("", "[450px,grow][:600px:800px,grow]", "[300px,grow][:400px:400px,grow]"));
 		
 		boardPanel = new BoardPanel();
 		boardPanel.addBoardPanelListener(this);
-		panel.add(boardPanel, "cell 0 0,grow");
+		panel_complete_info_set.add(boardPanel, "cell 0 0,grow");
 		
 		JPanel panel_side_bar = new JPanel();
 		panel_side_bar.setBackground(Color.GRAY);
-		panel.add(panel_side_bar, "cell 1 0 1 2,grow");
+		panel_complete_info_set.add(panel_side_bar, "cell 1 0 1 2,grow");
 		panel_side_bar.setLayout(new MigLayout("", "[200px,grow][200px,grow][200px,grow]", "[250px,grow][150px,grow][300px,grow]"));
 		
 		JPanel panel_fields_no_command = new JPanel();
@@ -264,28 +596,37 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		
 		JPanel panel_low_bar = new JPanel();
 		panel_low_bar.setBackground(Color.GRAY);
-		panel.add(panel_low_bar, "cell 0 1,grow");
+		panel_complete_info_set.add(panel_low_bar, "cell 0 1,grow");
 		panel_low_bar.setLayout(new MigLayout("", "[350px,grow][75px,grow][100px,grow][50px,grow]", "[grow][100px:n,grow]"));
 		
 		JPanel panel_command = new JPanel();
 		panel_command.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_command.setBackground(Color.GRAY);
 		panel_low_bar.add(panel_command, "cell 0 0 2 1,grow");
-		panel_command.setLayout(new MigLayout("", "[][grow][][fill]", "[][5px,grow][::35px,grow][::35px,grow][::35px,grow][::35px,grow][5px,grow][grow]"));
+		panel_command.setLayout(new MigLayout("", "[][grow][][fill]", "[][5px,grow][][::35px,grow][::35px,grow][::35px,grow][::35px,grow][5px,grow][grow]"));
 		
 		JLabel lblBefehle = new JLabel("Befehle:");
 		lblBefehle.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_command.add(lblBefehle, "cell 0 0 4 1,alignx center");
 		
+		JButton btnWenigerEinblenden = new JButton("Weniger Einblenden");
+		btnWenigerEinblenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showReducedInfo();
+			}
+		});
+		btnWenigerEinblenden.setBackground(Color.GRAY);
+		panel_command.add(btnWenigerEinblenden, "cell 3 2");
+		
 		JLabel lblFeld = new JLabel("Feld:");
 		lblFeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(lblFeld, "cell 0 2,alignx trailing");
+		panel_command.add(lblFeld, "cell 0 3,alignx trailing");
 		
 		txtField = new JTextField();
 		txtField.setEditable(false);
 		txtField.setBackground(Color.LIGHT_GRAY);
 		txtField.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(txtField, "cell 1 2 2 1,growx");
+		panel_command.add(txtField, "cell 1 3 2 1,growx");
 		txtField.setColumns(10);
 		
 		JButton btnbersicht = new JButton("\u00DCbersicht");
@@ -296,17 +637,17 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		btnbersicht.setToolTipText("<html>\r\nZwichen einer \u00DCbersicht \u00FCber das <br>\r\ngesammte Spielfeld und einer kleineren <br>\r\ndetailierteren Sicht wechseln\r\n</html>");
 		btnbersicht.setBackground(Color.GRAY);
-		panel_command.add(btnbersicht, "cell 3 2");
+		panel_command.add(btnbersicht, "cell 3 3");
 		
 		JLabel lblBefehl = new JLabel("Aktueller Befehl:");
 		lblBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(lblBefehl, "cell 0 3,alignx trailing");
+		panel_command.add(lblBefehl, "cell 0 4,alignx trailing");
 		
 		txtCurrcommand = new JTextField();
 		txtCurrcommand.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtCurrcommand.setBackground(Color.LIGHT_GRAY);
 		txtCurrcommand.setEditable(false);
-		panel_command.add(txtCurrcommand, "cell 1 3 2 1,growx");
+		panel_command.add(txtCurrcommand, "cell 1 4 2 1,growx");
 		txtCurrcommand.setColumns(10);
 		
 		btnLschen = new JButton("L\u00F6schen");
@@ -317,11 +658,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		btnLschen.setToolTipText("<html>\r\nDen bestehenden Befehl f\u00FCr <br>\r\ndas ausgew\u00E4hlte Feld entfernen\r\n</html>");
 		btnLschen.setBackground(Color.GRAY);
-		panel_command.add(btnLschen, "cell 3 3");
+		panel_command.add(btnLschen, "cell 3 4");
 		
 		JLabel lblNeuerBefehl = new JLabel("Neuer Befehl:");
 		lblNeuerBefehl.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(lblNeuerBefehl, "cell 0 4,alignx trailing");
+		panel_command.add(lblNeuerBefehl, "cell 0 5,alignx trailing");
 		
 		comboBox = new JComboBox<Command>(commandBoxModel);
 		comboBox.addActionListener(new ActionListener() {
@@ -331,7 +672,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		comboBox.setBackground(Color.GRAY);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(comboBox, "cell 1 4 2 1,growx");
+		panel_command.add(comboBox, "cell 1 5 2 1,growx");
 		
 		btnHinzufgen = new JButton("Hinzuf\u00FCgen");
 		btnHinzufgen.addActionListener(new ActionListener() {
@@ -341,18 +682,18 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		});
 		btnHinzufgen.setToolTipText("<html>\r\nDen ausgew\u00E4hlten Befehl dem <br>\r\nausgew\u00E4hlten Feld zuweisen\r\n</html>");
 		btnHinzufgen.setBackground(Color.GRAY);
-		panel_command.add(btnHinzufgen, "cell 3 4");
+		panel_command.add(btnHinzufgen, "cell 3 5");
 		
 		JLabel lblKosten = new JLabel("Kosten:");
 		lblKosten.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(lblKosten, "cell 0 5,alignx trailing");
+		panel_command.add(lblKosten, "cell 0 6,alignx trailing");
 		
 		txtKosts = new JTextField();
 		txtKosts.setToolTipText("<html>\r\nDie Kosten die ein Befehl auf <br>\r\ndem ausgew\u00E4hlten Feld verursacht\r\n</html>");
 		txtKosts.setEditable(false);
 		txtKosts.setBackground(Color.LIGHT_GRAY);
 		txtKosts.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_command.add(txtKosts, "cell 1 5 3 1,growx");
+		panel_command.add(txtKosts, "cell 1 6 3 1,growx");
 		txtKosts.setColumns(10);
 		
 		btnAlleBefehleBesttigen = new JButton("Alle Befehle Best\u00E4tigen");
@@ -373,10 +714,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 			}
 		});
 		btnZustzlicheBefehle.setBackground(Color.GRAY);
-		panel_command.add(btnZustzlicheBefehle, "cell 0 7 2 1");
+		panel_command.add(btnZustzlicheBefehle, "cell 0 8 2 1");
 		btnAlleBefehleBesttigen.setToolTipText("<html>\r\nAlle aktuellen Befehle best\u00E4tigen<br>\r\nund die Planugsphase beenden.\r\n</html>");
 		btnAlleBefehleBesttigen.setBackground(Color.GRAY);
-		panel_command.add(btnAlleBefehleBesttigen, "cell 2 7 2 1,alignx right");
+		panel_command.add(btnAlleBefehleBesttigen, "cell 2 8 2 1,alignx right");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -584,10 +925,24 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		btnZustzlicheBefehle.setEnabled(false);
 		btnLschen.setEnabled(false);
 		btnHinzufgen.setEnabled(false);
+		btnAlleBefehleBesttigen_2.setEnabled(false);
+		btnZustzlicheBefehle_2.setEnabled(false);
+		btnLschen_2.setEnabled(false);
+		btnHinzufgen_2.setEnabled(false);
+	}
+	
+	private void showReducedInfo() {
+		CardLayout layout = (CardLayout) panel_game_type.getLayout();
+		layout.show(this, REDUCED_INFO_VIEW);
+	}
+	public void showExtendedInfo() {
+		CardLayout layout = (CardLayout) panel_game_type.getLayout();
+		layout.show(this, COMPLETE_INFO_VIEW);
 	}
 	
 	private void updateBoard() {
 		boardPanel.updateBoardImage(game.getBoard().displayBoard());
+		boardPanel_1.updateBoardImage(game.getBoard().displayBoard());
 	}
 	
 	private void updateField() {
@@ -596,10 +951,12 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 			txtField.setText(selectedField.getName());
 			if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser())) {
 				if (selectedField.getCommand() != null) {
-					txtCurrcommand.setText(selectedField.getCommand().getName());					
+					txtCurrcommand.setText(selectedField.getCommand().getName());
+					txtCurrcommand_2.setText(selectedField.getCommand().getName());
 				}
 				else {
 					txtCurrcommand.setText("-----");
+					txtCurrcommand_2.setText("-----");
 				}
 				Command command = (Command) comboBox.getSelectedItem();
 				int costsCredits = 0;
@@ -624,12 +981,37 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 					btnLschen.setEnabled(false);
 					btnHinzufgen.setEnabled(false);
 				}
+				Command command_2 = (Command) comboBox_2.getSelectedItem();
+				if (command_2 != null) {
+					costsCredits = UserResource.getCreditsForCommand(command_2, selectedField);
+					costsAmmo = UserResource.getAmmoForCommand(command_2, selectedField);
+				}
+				txtKosts_2.setText(costsCredits + " Credits, " + costsAmmo + " Munition");
+				if (game.getGameState().equals(GameState.PLAN)) {
+					if (selectedField.getCommand() != null) {
+						btnLschen_2.setEnabled(true);
+					}
+					if (command_2 != null && command_2.isExecutableOnField(selectedField)) {
+						btnHinzufgen_2.setEnabled(true);						
+					}
+					else {
+						btnHinzufgen_2.setEnabled(false);
+					}
+				}
+				else {
+					btnLschen_2.setEnabled(false);
+					btnHinzufgen_2.setEnabled(false);
+				}
 			}
 			else {
 				btnLschen.setEnabled(false);
 				btnHinzufgen.setEnabled(false);
 				txtCurrcommand.setText("");
 				txtKosts.setText("");
+				btnLschen_2.setEnabled(false);
+				btnHinzufgen_2.setEnabled(false);
+				txtCurrcommand_2.setText("");
+				txtKosts_2.setText("");
 			}
 		}
 		else {
@@ -638,10 +1020,17 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 			txtKosts.setText("");
 			btnLschen.setEnabled(false);
 			btnHinzufgen.setEnabled(false);
+			txtField_2.setText("");
+			txtCurrcommand_2.setText("");
+			txtKosts_2.setText("");
+			btnLschen_2.setEnabled(false);
+			btnHinzufgen_2.setEnabled(false);
 		}
 		if (game.getGameState().equals(GameState.PLAN)) {
 			btnAlleBefehleBesttigen.setEnabled(true);
 			btnZustzlicheBefehle.setEnabled(true);
+			btnAlleBefehleBesttigen_2.setEnabled(true);
+			btnZustzlicheBefehle_2.setEnabled(true);
 		}
 	}
 	
@@ -697,6 +1086,14 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		txtResourcen.setText(Integer.toString(mine));
 		txtSupport.setText(Integer.toString(support));
 		txtVerteidigung.setText(Integer.toString(defend));
+		txtberflle_2.setText(Integer.toString(raid));
+		txtRckzge_2.setText(Integer.toString(retreat));
+		txtMrsche_2.setText(Integer.toString(march));
+		txtAufbauten_2.setText(Integer.toString(build));
+		txtRekrutierungen_2.setText(Integer.toString(recruit));
+		txtResourcen_2.setText(Integer.toString(mine));
+		txtSupport_2.setText(Integer.toString(support));
+		txtVerteidigung_2.setText(Integer.toString(defend));
 		if (raid > 0) {
 			commandBoxModel.addElement(commandRaid);
 		}
@@ -728,9 +1125,11 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	
 	private void updateResources() {
 		resourcePanel.updateResources(game, game.getLocalUser());
+		resourcePanel_2.updateResources(game, game.getLocalUser());
 	}
 	
 	private void updatePlayerOrder() {
 		orderPanel.updateTurnOrder(game);
+		orderPanel_2.updateTurnOrder(game);
 	}
 }

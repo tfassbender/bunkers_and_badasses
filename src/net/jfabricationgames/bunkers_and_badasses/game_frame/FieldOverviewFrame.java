@@ -37,7 +37,7 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	
 	private Game game;
 	
-	private ResourceInfoPanel resourcePanel;
+	private RegionInfoPanel regionPanel;
 	
 	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
 	private DefaultListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
@@ -79,7 +79,7 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.GRAY);
 			contentPanel.add(panel, "cell 0 0,grow");
-			panel.setLayout(new MigLayout("", "[:300px:300px,grow][grow][:100px:250px,grow][grow][:200px:300px][:200px:300px,grow][:200px:300px,grow]", "[200px,grow][:100px:100px,grow][:200px:300px,grow]"));
+			panel.setLayout(new MigLayout("", "[:250px:250px,grow][grow][:100px:250px,grow][grow][:200px:300px][:200px:300px,grow][:200px:300px,grow]", "[200px,grow][:100px:100px,grow][:200px:300px,grow]"));
 			
 			boardPanel = new BoardPanel();
 			boardPanel.addBoardPanelListener(this);
@@ -273,8 +273,9 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			panel_image.setAdaptSizeKeepProportion(true);
 			panel_image.setBackground(Color.GRAY);
 			
-			resourcePanel = new ResourceInfoPanel();
-			panel.add(resourcePanel, "cell 0 2,grow");
+			regionPanel = new RegionInfoPanel();
+			regionPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+			panel.add(regionPanel, "cell 0 2,grow");
 			
 			ImagePanel panel_image_2 = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/skag_2.png"));
 			panel_image_2.setToolTipText("Skag: Frisst und scheißt aus einer Öffnung");
@@ -306,7 +307,7 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	public void update() {
 		updateBoard();
 		updateControlledFields();
-		updateResources();
+		updateRegions();
 	}
 	public void updateBoard() {
 		boardPanel.updateBoardImage(game.getBoard().displayBoard());
@@ -319,8 +320,8 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			}
 		}
 	}
-	public void updateResources() {
-		resourcePanel.updateResources(game, game.getLocalUser());
+	public void updateRegions() {
+		regionPanel.updateRegions(game.getBoard());
 	}
 
 	/**
