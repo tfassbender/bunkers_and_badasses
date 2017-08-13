@@ -12,7 +12,7 @@ public class MarchCommand extends Command {
 		identifier = UserPlanManager.COMMAND_MARCH;
 		imagePath = "marker_march.png";
 		loadImage();
-		name = "Angreifen";
+		name = "Bewegen";
 		loadVariables();
 	}
 	

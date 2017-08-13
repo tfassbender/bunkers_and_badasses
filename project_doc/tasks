@@ -2,14 +2,12 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- some turn goals seem to be not added to the points or only for some players (capitalism)
+	- some turn goals seem to be not added to the points or only for some players (capitalism) (?)
 	- used resources are sometimes calculated wrong (?)
 	- debug fights:
-		- surviving troops in normal fights are calculated wrong (all attackers can die if there are troops left in the attacking field)
 		- fight end text fields need to be cleared (fight execution frame)
 		- some fallen troops are selected in fields that didn't even take part in the fight (only possible retreat) (?)
-		- when a fight isn't executed till end another execution can be started (any command)
-		- heros seem to be not removed from the players hand sometimes
+		- heros seem to be not removed from the players hand sometimes (?)
 		
 - Next versions:
 	- fix the stream corrupted exception (almost)

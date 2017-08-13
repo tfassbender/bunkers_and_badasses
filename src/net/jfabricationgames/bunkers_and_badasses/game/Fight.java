@@ -180,6 +180,20 @@ public class Fight implements Serializable {
 		if (fallingTroops[0] > fallingTroops[1]) {
 			fallingTroops[0] = fallingTroops[1];
 		}
+		//if the attacker wins one attacking troop remains
+		if (winner == ATTACKERS && fallingTroops[1] >= attackingNormalTroops + 2*attackingBadassTroops - 1) {
+			if (winnerHasBandits) {
+				fallingTroops[1] = attackingNormalTroops + 2*attackingBadassTroops - 1;
+			}
+			else {
+				fallingTroops[1] = attackingNormalTroops + 2*attackingBadassTroops - 2;
+			}
+		}
+		//no negative falling troops
+		fallingTroops[0] = Math.max(0, fallingTroops[0]);
+		fallingTroops[1] = Math.max(0, fallingTroops[1]);
+		//max greater or equal min
+		fallingTroops[0] = Math.min(fallingTroops[0], fallingTroops[1]);
 		return fallingTroops;
 	}
 	public int calculateMaxFallingSupportTroops(int totalFallingTroops, Field field) {

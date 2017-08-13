@@ -638,7 +638,7 @@ public class CommandExecutionPanel extends JPanel {
 	protected void executeCommand() {
 		Field selectedField = turnExecutionFrame.getSelectedField();
 		boolean commandExecuted = false;
-		if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+		if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && game.getFightManager().getCurrentFight() == null) {
 			Command command = selectedField.getCommand();
 			UserResourceManager resourceManager = game.getResourceManager();
 			if (command.isExecutable()) {
@@ -848,6 +848,9 @@ public class CommandExecutionPanel extends JPanel {
 		}
 		else if (!game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
 			new ErrorDialog("Du bist nicht an der reihe.").setVisible(true);
+		}
+		else if (game.getFightManager().getCurrentFight() != null) {
+			new ErrorDialog("Du solltest erst deine Kämpfe zu Ende führen bevor du neue anzettelst.\n\nEs bleibt schon noch genug Zeit sie alle umzubringen.\nNur keine Sorge.").setVisible(true);
 		}
 		if (commandExecuted) {
 			selectedField.setCommand(null);
