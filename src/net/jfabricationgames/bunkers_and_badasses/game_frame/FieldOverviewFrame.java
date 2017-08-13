@@ -43,8 +43,6 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	private DefaultListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
 	private DefaultListModel<Field> fieldNeighbourListModel = new DefaultListModel<Field>();
 	
-	private BoardPanel boardPanel;
-	
 	private JTextField txtSpieler;
 	private JTextField txtFeld;
 	private JTextField txtRegion;
@@ -67,8 +65,8 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 		
 		setTitle("Gebiets Übersicht - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FieldOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setBounds(100, 100, 1150, 500);
-		setMinimumSize(new Dimension(1100, 500));
+		setBounds(100, 100, 1000, 500);
+		setMinimumSize(new Dimension(800, 500));
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
@@ -79,18 +77,13 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.GRAY);
 			contentPanel.add(panel, "cell 0 0,grow");
-			panel.setLayout(new MigLayout("", "[:250px:250px,grow][grow][:100px:250px,grow][grow][:200px:300px][:200px:300px,grow][:200px:300px,grow]", "[200px,grow][:100px:100px,grow][:200px:300px,grow]"));
-			
-			boardPanel = new BoardPanel();
-			boardPanel.addBoardPanelListener(this);
-			panel.add(boardPanel, "cell 0 0 4 2,grow");
-			boardPanel.showView(BoardPanel.OVERVIEW_BOARD);
+			panel.setLayout(new MigLayout("", "[:300px:350px,grow][:200px:300px,grow][:200px:300px,grow][:200px:300px,grow]", "[200px,grow][:100px:100px,grow][:200px:300px,grow]"));
 			
 			JPanel panel_fields_all = new JPanel();
 			panel_fields_all.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_fields_all.setBackground(Color.GRAY);
-			panel.add(panel_fields_all, "cell 4 0 1 3,grow");
-			panel_fields_all.setLayout(new MigLayout("", "[grow]", "[][5px][grow][15px][][5px][grow]"));
+			panel.add(panel_fields_all, "cell 1 0 1 3,grow");
+			panel_fields_all.setLayout(new MigLayout("", "[grow]", "[][5px][grow][10px][][5px][grow]"));
 			
 			JLabel lblAlleGebiete = new JLabel("Alle Gebiete:");
 			lblAlleGebiete.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -110,10 +103,6 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			list_fields_all.setBackground(Color.LIGHT_GRAY);
 			scrollPane_fields_all.setViewportView(list_fields_all);
 			
-			JLabel lblKontrollierteGebiete = new JLabel("Kontrollierte Gebiete:");
-			lblKontrollierteGebiete.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			panel_fields_all.add(lblKontrollierteGebiete, "cell 0 4,alignx center");
-			
 			JScrollPane scrollPane = new JScrollPane();
 			panel_fields_all.add(scrollPane, "cell 0 6,grow");
 			
@@ -128,10 +117,14 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			list.setBackground(Color.LIGHT_GRAY);
 			scrollPane.setViewportView(list);
 			
+			JLabel lblKontrollierteGebiete = new JLabel("Kontrollierte Gebiete:");
+			lblKontrollierteGebiete.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			panel_fields_all.add(lblKontrollierteGebiete, "cell 0 4,alignx center");
+			
 			JPanel panel_field_description = new JPanel();
 			panel_field_description.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_field_description.setBackground(Color.GRAY);
-			panel.add(panel_field_description, "cell 5 0 2 3,grow");
+			panel.add(panel_field_description, "cell 2 0 2 3,grow");
 			panel_field_description.setLayout(new MigLayout("", "[grow][grow][150px,grow][10px][][50px][100px][grow]", "[][5px][][][][][10px][grow]"));
 			
 			JLabel lblFeldDetail = new JLabel("Feld Detail:");
@@ -275,18 +268,10 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 			
 			regionPanel = new RegionInfoPanel();
 			regionPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-			panel.add(regionPanel, "cell 0 2,grow");
-			
-			ImagePanel panel_image_2 = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/skag_2.png"));
-			panel_image_2.setToolTipText("Skag: Frisst und scheißt aus einer Öffnung");
-			panel_image_2.setCentered(true);
-			panel_image_2.setRemoveIfToSmall(true);
-			panel_image_2.setAdaptSizeKeepProportion(true);
-			panel_image_2.setImageMinimumSize(new int[] {100, 50});
-			panel_image_2.setBackground(Color.GRAY);
-			panel.add(panel_image_2, "cell 2 2,grow");
+			panel.add(regionPanel, "cell 0 0 1 3,grow");
 			
 			addFields();
+			updateRegions();
 		}
 	}
 	
@@ -305,12 +290,8 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	}
 	
 	public void update() {
-		updateBoard();
 		updateControlledFields();
 		updateRegions();
-	}
-	public void updateBoard() {
-		boardPanel.updateBoardImage(game.getBoard().displayBoard());
 	}
 	public void updateControlledFields() {
 		fieldControlledListModel.removeAllElements();

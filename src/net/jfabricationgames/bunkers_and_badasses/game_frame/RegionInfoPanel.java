@@ -27,9 +27,10 @@ public class RegionInfoPanel extends JPanel {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 1,grow");
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		
 		panel_regions = new JPanel();
-		panel_regions.setLayout(new MigLayout("", "[grow][50px][40px]", "[30px]"));
+		panel_regions.setLayout(new MigLayout("", "[grow][50px,center][40px]", "[30px]"));
 		panel_regions.setBackground(Color.LIGHT_GRAY);
 		scrollPane.setViewportView(panel_regions);
 		
@@ -58,7 +59,7 @@ public class RegionInfoPanel extends JPanel {
 		}
 		
 		panel_regions.removeAll();
-		panel_regions.setLayout(new MigLayout("", "[grow][50px][40px]", layout));
+		panel_regions.setLayout(new MigLayout("", "[grow][50px,center][40px]", layout));
 		
 		for (int i = 0; i < board.getRegions().size(); i++) {
 			JLabel lblRegionname = new JLabel(board.getRegions().get(i).getName());
@@ -91,7 +92,7 @@ public class RegionInfoPanel extends JPanel {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.setColor(color);
-			g.fillOval(2, 2, getWidth()-4, getHeight()-4);//draw an oval of the regions color on the panel
+			g.fillOval(10, 10, getWidth()-20, getHeight()-20);//draw an oval of the regions color on the panel
 		}
 	}
 }
