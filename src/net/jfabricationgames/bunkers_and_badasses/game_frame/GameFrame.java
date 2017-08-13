@@ -734,6 +734,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	
 	private void updateHeroCards() {
 		panel_heroes.updateHeroCards(game);
+		panel_heroes_2.updateHeroCards(game);
 	}
 	
 	private void updateTurnOrder() {

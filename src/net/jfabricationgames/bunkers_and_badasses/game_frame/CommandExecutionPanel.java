@@ -184,7 +184,7 @@ public class CommandExecutionPanel extends JPanel {
 		JButton btnbersicht = new JButton("Spielfeld \u00DCbersicht");
 		btnbersicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				turnExecutionFrame.getBoardPanel().showOtherView();
+				turnExecutionFrame.showOtherBoardView();
 			}
 		});
 		panel_command_1.add(btnbersicht, "cell 0 8 2 1,alignx center");

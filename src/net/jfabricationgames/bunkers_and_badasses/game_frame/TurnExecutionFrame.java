@@ -61,13 +61,14 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	private BoardPanel boardPanel_2;
 	private JPanel panel_game_type;
 	
-	private static final String REDUCED_INFO_VIEW = "reduced_info";
-	private static final String COMPLETE_INFO_VIEW = "complete_info";
 	private ResourceInfoPanel resourcePanel_2;
 	private PointPanel pointPanel_2;
 	private PlayerOrderPanel orderPanel_2;
 	private FieldDescriptionPanel fieldPanel_2;
 	private UserColorPanel userColorPanel;
+	
+	private static final String REDUCED_INFO_VIEW = "reduced_info";
+	private static final String COMPLETE_INFO_VIEW = "complete_info";
 	
 	public TurnExecutionFrame(Game game) {
 		addFocusListener(new FocusAdapter() {
@@ -420,7 +421,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		panel_execution_2.setFieldSelectionSucessfull(fieldSelectionSucessfull);
 	}
 	
-	protected BoardPanel getBoardPanel() {
-		return boardPanel;
+	protected void showOtherBoardView() {
+		boardPanel.showOtherView();
+		boardPanel_2.showOtherView();
 	}
 }
