@@ -3,6 +3,8 @@ package net.jfabricationgames.bunkers_and_badasses.game_frame;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -11,6 +13,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
@@ -46,13 +50,14 @@ public class BoardPanel extends JPanel {
 		scrollPane_board.getVerticalScrollBar().setUnitIncrement(20);
 		
 		panel_scroll_board = new ImagePanel();
-		panel_scroll_board.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				informListeners(e);
-			}
-		});
 		panel_scroll_board.setBackground(Color.GRAY);
+		
+		//enable drag'n drop
+		panel_scroll_board.setAutoscrolls(true);
+		BoardMouseAdapter boardMouseAdapter = new BoardMouseAdapter(); 
+		panel_scroll_board.addMouseListener(boardMouseAdapter);
+		panel_scroll_board.addMouseMotionListener(boardMouseAdapter);
+		
 		scrollPane_board.setViewportView(panel_scroll_board);
 		
 		JPanel panel_board_overview_capture = new JPanel();
@@ -71,6 +76,36 @@ public class BoardPanel extends JPanel {
 		panel_board_overview.setAdaptSizeKeepProportion(true);
 		panel_board_overview.setBackground(Color.GRAY);
 		panel_board_overview_capture.add(panel_board_overview, "cell 0 0,grow");
+	}
+	
+	private class BoardMouseAdapter extends MouseAdapter {
+		
+		private Point origin;
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			informListeners(e);
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			origin = new Point(e.getPoint());
+		}
+		
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (origin != null) {
+				JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, panel_scroll_board);
+				if (viewPort != null) {
+					int deltaX = origin.x - e.getX();
+					int deltaY = origin.y - e.getY();
+					Rectangle view = viewPort.getViewRect();
+					view.x += deltaX;
+					view.y += deltaY;
+					panel_scroll_board.scrollRectToVisible(view);
+				}
+			}
+		}
 	}
 	
 	public void updateBoardImage(BufferedImage boardImage) {
