@@ -29,6 +29,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
+
 import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
@@ -106,7 +109,10 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	private JButton btnAusgewhltenBonusBesttigen;
 	private JButton btnSpielStarten;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public PreGameSelectionFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		this.game = game;
 		//Add a reference to this frame to the client interpreter
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
@@ -122,6 +128,8 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		setBounds(100, 100, 1100, 600);
 		setMinimumSize(new Dimension(1100, 600));
 		setLocationRelativeTo(null);
+		
+		propsFile.alignWindow();
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);

@@ -21,6 +21,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
@@ -59,7 +61,10 @@ public class TroopInfoFrame extends JFrame {
 	private DefaultListModel<Field> fieldAllListModel = new DefaultListModel<Field>();
 	private DefaultListModel<Field> fieldControlledListModel = new DefaultListModel<Field>();
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public TroopInfoFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -72,6 +77,8 @@ public class TroopInfoFrame extends JFrame {
 		setTitle("Truppen Info - Bunkers and Badasses");
 		setBounds(100, 100, 900, 550);
 		setMinimumSize(new Dimension(900, 550));
+		
+		propsFile.alignWindow();
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);

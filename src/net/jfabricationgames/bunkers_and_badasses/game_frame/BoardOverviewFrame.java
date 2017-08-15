@@ -13,6 +13,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
+
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.miginfocom.swing.MigLayout;
 import java.awt.Toolkit;
@@ -26,7 +29,10 @@ public class BoardOverviewFrame extends JFrame {
 	
 	private Board board;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public BoardOverviewFrame(Board board) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(BoardOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		addFocusListener(new FocusAdapter() {
 			@Override
@@ -40,6 +46,9 @@ public class BoardOverviewFrame extends JFrame {
 		setTitle("Spielfeld Übersicht - Bunkers and Badasses");
 		setBounds(100, 100, 1200, 700);
 		setMinimumSize(new Dimension(700, 400));
+		
+		propsFile.alignWindow();
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

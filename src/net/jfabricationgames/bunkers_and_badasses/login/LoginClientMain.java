@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -15,6 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
 
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
@@ -34,6 +36,10 @@ public class LoginClientMain extends JFrame {
 	private JFGDatabaseLoginClient client;
 	
 	private LoginLoadingDialog loginLoadingDialog;
+	
+	private static final String LAST_USER = "last_user";
+	
+	private PropertiesFile propsFile = new PropertiesFile(this);
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -86,7 +92,8 @@ public class LoginClientMain extends JFrame {
 		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/");
 		
 		//create the panels for logging in and signing up
-		panels = new LoginPanel[] {new LoginStartPanel(this, client), new LoginSignUpPanel1(this, client), new LoginSignUpPanel2(this, client)};
+		String lastUser = propsFile.getProperty(LAST_USER);
+		panels = new LoginPanel[] {new LoginStartPanel(this, client, lastUser), new LoginSignUpPanel1(this, client), new LoginSignUpPanel2(this, client)};
 		
 		//build the frame
 		contentPane = new JPanel();
@@ -103,6 +110,22 @@ public class LoginClientMain extends JFrame {
 		
 		revalidate();
 		repaint();
+	}
+	
+	/**
+	 * Store the last user name that logged in.
+	 * 
+	 * @param lastUser
+	 * 		The last user's name
+	 */
+	public void storeUserName(String lastUser) {
+		propsFile.setProperty(LAST_USER, lastUser);
+		try {
+			propsFile.store("");
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	/**

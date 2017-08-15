@@ -24,6 +24,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
+
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
@@ -57,7 +60,10 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 	private JPanel panel_choosable_bonuses;
 	private JButton btnBonusAuswhlen;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public TurnGoalTurnBonusDialog(Game game, boolean selectable, boolean turnBonusChangeEnabled) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -71,6 +77,8 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 		setTitle("Runden Ziele / Boni - Bunkers and Badasses");
 		setBounds(100, 100, 1000, 300);
 		setMinimumSize(new Dimension(1000, 300));
+		
+		propsFile.alignWindow();
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);

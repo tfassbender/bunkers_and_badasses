@@ -34,6 +34,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
+
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
@@ -116,7 +119,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	
 	private Game game;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public FightExecutionFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -132,6 +138,8 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		setTitle("Kampf Ausführung - Bunkers and Badasses");
 		setBounds(100, 100, 1100, 699);
 		setMinimumSize(new Dimension(800, 600));
+		
+		propsFile.alignWindow();
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);

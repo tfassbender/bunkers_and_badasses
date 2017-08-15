@@ -29,6 +29,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.error.CommandException;
 import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
@@ -127,7 +129,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private static final String COMPLETE_INFO_VIEW = "complete_info";
 	private JPanel panel_game_type;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public TurnPlaningFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -140,6 +145,9 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TurnPlaningFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1000, 600));
+		
+		propsFile.alignWindow();
+		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

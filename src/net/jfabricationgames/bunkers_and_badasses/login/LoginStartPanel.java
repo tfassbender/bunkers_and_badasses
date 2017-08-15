@@ -23,7 +23,7 @@ public class LoginStartPanel extends JPanel implements LoginPanel {
 	
 	private static final long serialVersionUID = 8609984790780328814L;
 	
-	private JTextField textField;
+	private JTextField txtTest;
 	private JPasswordField passwordField;
 	private JLabel lblError;
 	
@@ -33,7 +33,7 @@ public class LoginStartPanel extends JPanel implements LoginPanel {
 	
 	private boolean loggingIn = false;
 	
-	public LoginStartPanel(LoginClientMain superFrame, JFGDatabaseLoginClient client) {
+	public LoginStartPanel(LoginClientMain superFrame, JFGDatabaseLoginClient client, String lastUser) {
 		setBackground(Color.GRAY);
 		this.client = client;
 		this.loginClientMain = superFrame;
@@ -60,21 +60,22 @@ public class LoginStartPanel extends JPanel implements LoginPanel {
 		JLabel lblUsername = new JLabel("Username:");
 		add(lblUsername, "cell 1 2,alignx trailing");
 		
-		textField = new JTextField();
-		textField.setBackground(Color.LIGHT_GRAY);
-		textField.addFocusListener(new FocusAdapter() {
+		txtTest = new JTextField();
+		txtTest.setText(lastUser);
+		txtTest.setBackground(Color.LIGHT_GRAY);
+		txtTest.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				textField.selectAll();
+				txtTest.selectAll();
 			}
 		});
-		textField.addActionListener(new ActionListener() {
+		txtTest.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				login();
 			}
 		});
-		add(textField, "cell 2 2,growx");
-		textField.setColumns(10);
+		add(txtTest, "cell 2 2,growx");
+		txtTest.setColumns(10);
 		
 		JLabel lblPassword = new JLabel("Password:");
 		add(lblPassword, "cell 1 3,alignx trailing");
@@ -130,7 +131,7 @@ public class LoginStartPanel extends JPanel implements LoginPanel {
 	
 	@Override
 	public void requestFocusOnPanelChange() {
-		textField.requestFocus();
+		txtTest.requestFocus();
 	}
 
 	/**
@@ -139,14 +140,15 @@ public class LoginStartPanel extends JPanel implements LoginPanel {
 	 */
 	private void login() {
 		if (!loggingIn) {
+			loginClientMain.storeUserName(txtTest.getText());
 			lblError.setText("Logging in...");
 			loggingIn = true;
 			Thread login = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					if (textField.getText() != null && passwordField.getPassword().length > 0) {
-						loginClientMain.setUsername(textField.getText());
-						if (client.login(textField.getText(), new String(passwordField.getPassword()))) {
+					if (txtTest.getText() != null && passwordField.getPassword().length > 0) {
+						loginClientMain.setUsername(txtTest.getText());
+						if (client.login(txtTest.getText(), new String(passwordField.getPassword()))) {
 							lblError.setText("Login Successfull");
 							loginClientMain.startLoginLoadingDialog();
 						}

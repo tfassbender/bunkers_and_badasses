@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings/
+.window_properties/
 bin/
 build/
 dist/

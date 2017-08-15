@@ -18,6 +18,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
+
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.FightManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
@@ -45,7 +48,10 @@ public class SupportRequestFrame extends JFrame {
 	private JRadioButton rdbtnAngreifer;
 	private JRadioButton rdbtnVerteidiger;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public SupportRequestFrame(Field supportField, FightManager manager) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		//this.fight = fight;
@@ -56,6 +62,8 @@ public class SupportRequestFrame extends JFrame {
 		setTitle("Unterstützungs Anfrage - Bunkers and Badasses");
 		setBounds(100, 100, 400, 500);
 		setMinimumSize(new Dimension(400, 500));
+		
+		propsFile.alignWindow();
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);

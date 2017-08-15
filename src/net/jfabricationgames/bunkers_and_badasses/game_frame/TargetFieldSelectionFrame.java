@@ -26,6 +26,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
+
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.miginfocom.swing.MigLayout;
@@ -57,7 +60,10 @@ public class TargetFieldSelectionFrame extends JFrame {
 	private TurnExecutionFrame turnExecutionFrame;
 	private Game game;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public TargetFieldSelectionFrame(TurnExecutionFrame callingFrame, Game game, Field startField, List<Field> targets, int normalTroops, int badassTroops) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		this.turnExecutionFrame = callingFrame;
 		this.game = game;
 		this.startField = startField;
@@ -72,6 +78,9 @@ public class TargetFieldSelectionFrame extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TargetFieldSelectionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
+		
+		propsFile.alignWindow();
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

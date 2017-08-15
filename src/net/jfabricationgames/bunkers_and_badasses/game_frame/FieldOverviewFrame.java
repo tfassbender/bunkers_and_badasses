@@ -23,6 +23,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
@@ -54,7 +56,10 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	private JTextField txtGrenzenneutral;
 	private JTextField txtGrenzenfeindlich;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public FieldOverviewFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -67,6 +72,8 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FieldOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1000, 500);
 		setMinimumSize(new Dimension(800, 500));
+		
+		propsFile.alignWindow();
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);

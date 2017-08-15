@@ -22,6 +22,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
@@ -60,7 +62,10 @@ public class GameOverviewFrame extends JFrame {
 	private JTextField txtGrenzen;
 	private JTextField txtGebiete;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public GameOverviewFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -74,6 +79,8 @@ public class GameOverviewFrame extends JFrame {
 		setTitle("Spiel Übersicht - Bunkers and Badasses");
 		setBounds(100, 100, 1100, 600);
 		setMinimumSize(new Dimension(1100, 600));
+		
+		propsFile.alignWindow();
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);

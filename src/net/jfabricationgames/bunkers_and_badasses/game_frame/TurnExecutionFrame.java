@@ -25,6 +25,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.error.TurnOrderException;
 import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
@@ -70,7 +72,10 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	private static final String REDUCED_INFO_VIEW = "reduced_info";
 	private static final String COMPLETE_INFO_VIEW = "complete_info";
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public TurnExecutionFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -83,6 +88,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		setTitle("Zug Ausführung - Bunkers and Badasses");
 		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1000, 600));
+		
+		propsFile.alignWindow();
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

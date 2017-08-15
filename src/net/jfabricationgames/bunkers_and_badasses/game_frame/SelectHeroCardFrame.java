@@ -31,6 +31,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.error.BunkersAndBadassesException;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
@@ -67,7 +69,10 @@ public class SelectHeroCardFrame extends JFrame {
 	private ResourceInfoPanel panel_resources;
 	private JButton btnRekrutieren;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public SelectHeroCardFrame(Game game, boolean cardPlayable) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -80,6 +85,9 @@ public class SelectHeroCardFrame extends JFrame {
 		setTitle("Helden auswählen - Bunkers and Badasses");
 		setBounds(100, 100, 600, 700);
 		setMinimumSize(new Dimension(600, 700));
+		
+		propsFile.alignWindow();
+		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -27,6 +27,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
@@ -75,7 +77,10 @@ public class ResourceInfoFrame extends JFrame {
 	private JTextField txtGaineridium;
 	private JComboBox<Building> comboBox;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public ResourceInfoFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -88,6 +93,8 @@ public class ResourceInfoFrame extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ResourceInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setBounds(100, 100, 1050, 650);
 		setMinimumSize(new Dimension(1050, 650));
+		
+		propsFile.alignWindow();
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.DARK_GRAY);

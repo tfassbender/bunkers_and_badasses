@@ -2,6 +2,7 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
+	- chat panels don't work properly
 	- some turn goals seem to be not added to the points or only for some players (capitalism) (?)
 	- used resources are sometimes calculated wrong (?)
 	- debug fights:
@@ -11,7 +12,6 @@ Bunkers and Badasses - Tasks
 		
 - Next versions:
 	- fix the stream corrupted exception (almost)
-	- slider for zoom on board
 	- implement hero functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends
@@ -24,5 +24,4 @@ Bunkers and Badasses - Tasks
 
 - New ideas:
 	- New neutral troops like Threshers (maybe moving each turn)
-	- dragging the board with the mouse
 	- different skins for players troops (hyperion bots, ...)

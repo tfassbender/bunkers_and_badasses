@@ -1,9 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.chat;
 
-import net.jfabricationgames.jfgserver.client.JFGClientMessage;
-import net.jfabricationgames.jfgserver.client.JFGServerMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.BunkersAndBadassesMessage;
 
-public class ChatMessage implements JFGServerMessage, JFGClientMessage {
+public class ChatMessage extends BunkersAndBadassesMessage {
 	
 	private static final long serialVersionUID = -2344862251118965570L;
 	

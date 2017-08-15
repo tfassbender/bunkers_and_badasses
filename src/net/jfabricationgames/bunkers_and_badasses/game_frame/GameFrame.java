@@ -29,6 +29,8 @@ import javax.swing.border.EtchedBorder;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
+import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
+import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatDialog;
@@ -115,7 +117,10 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private BoardPanel boardPanel_2;
 	private JPanel panel_game_type;
 	
+	private PropertiesFile propsFile = new PropertiesFile(this);
+	
 	public GameFrame(Game game) {
+		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -135,6 +140,8 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1300, 800);
 		setMinimumSize(new Dimension(1000, 600));
+		
+		propsFile.alignWindow();
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
