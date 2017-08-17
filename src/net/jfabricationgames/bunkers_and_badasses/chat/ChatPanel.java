@@ -1,17 +1,19 @@
 package net.jfabricationgames.bunkers_and_badasses.chat;
 
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
-import net.miginfocom.swing.MigLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.ScrollPaneConstants;
+
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
+import net.miginfocom.swing.MigLayout;
 
 public class ChatPanel extends JPanel {
 	
@@ -21,13 +23,14 @@ public class ChatPanel extends JPanel {
 	private JTextField textField;
 	private JTextArea txtrChatpanel;
 	private JButton btnSenden;
+	private JScrollPane scrollPane;
 	
 	public ChatPanel(ChatClient client) {
 		setBackground(Color.GRAY);
 		this.client = client;
 		setLayout(new MigLayout("", "[grow][]", "[50px,grow][]"));
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, "cell 0 0 2 1,grow");
 		
@@ -61,14 +64,18 @@ public class ChatPanel extends JPanel {
 	private void sendMessage() {
 		String message = UserManager.getUsername() + ": " + textField.getText();
 		if (textField.getText() != null && !textField.getText().equals("")) {
-			client.sendMessage(message, this);
+			client.sendMessage(message);
+			//text is added by client
+			//txtrChatpanel.append(message + "\n");
+			textField.setText("");
 		}
-		txtrChatpanel.append(message + "\n");
-		textField.setText("");
 	}
 	
 	public void receiveMessage(String message) {
 		txtrChatpanel.append(message + "\n");
+		//scroll to bottom
+		JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+		verticalScrollBar.setValue(verticalScrollBar.getMaximum());
 	}
 	
 	public String getChatText() {
