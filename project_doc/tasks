@@ -24,3 +24,10 @@ Bunkers and Badasses - Tasks
 - New ideas:
 	- New neutral troops like Threshers (maybe moving each turn)
 	- different skins for players troops (hyperion bots, ...)
+	
+	- new falling troops calculation:
+		- falling troops can be chosen by the winner
+		- troops fall on both sides
+		- maximum is all troops on the side with less troops
+		- minimum is half troops on the side with less troops
+		- should result in more falling troops
