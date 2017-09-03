@@ -313,6 +313,11 @@ public class CommandExecutionPanel extends JPanel {
 		ButtonGroup group_building = new ButtonGroup();
 		
 		rdbtnAufbauen = new JRadioButton("Aufbauen");
+		rdbtnAufbauen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateKosts();
+			}
+		});
 		rdbtnAufbauen.setSelected(true);
 		rdbtnAufbauen.setEnabled(false);
 		rdbtnAufbauen.setBackground(Color.GRAY);
@@ -321,6 +326,11 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_5.add(rdbtnAufbauen, "cell 1 2 3 1");
 		
 		rdbtnAufrsten = new JRadioButton("Aufr\u00FCsten");
+		rdbtnAufrsten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateKosts();
+			}
+		});
 		rdbtnAufrsten.setEnabled(false);
 		rdbtnAufrsten.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rdbtnAufrsten.setBackground(Color.GRAY);
@@ -328,6 +338,11 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_5.add(rdbtnAufrsten, "cell 4 2");
 		
 		rdbtnAbreien = new JRadioButton("Abrei\u00DFen");
+		rdbtnAbreien.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateKosts();
+			}
+		});
 		rdbtnAbreien.setEnabled(false);
 		rdbtnAbreien.setBackground(Color.GRAY);
 		rdbtnAbreien.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -574,6 +589,10 @@ public class CommandExecutionPanel extends JPanel {
 							}
 						}
 					}
+					//enable the resource radio buttons for resource raids
+					rdbtnCredits.setEnabled(true);
+					rdbtnMunition.setEnabled(true);
+					rdbtnEridium.setEnabled(true);
 				}
 				else if (command instanceof RecruitCommand) {
 					//enable the spinners
@@ -709,7 +728,7 @@ public class CommandExecutionPanel extends JPanel {
 						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
 					}
 					else {
-						resourceManager.collectCommandResources(game.getLocalUser());
+						resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
 						commandExecuted = true;
 					}
 				}
@@ -794,7 +813,24 @@ public class CommandExecutionPanel extends JPanel {
 						}
 						else {
 							if (target.getCommand() instanceof CollectCommand) {
-								resourceManager.collectCommandResources(game.getLocalUser());
+								int collectionType = 0;
+								if (rdbtnCredits.isSelected()) {
+									collectionType = 1;
+								}
+								else if (rdbtnMunition.isSelected()) {
+									collectionType = 2;
+								}
+								else if (rdbtnEridium.isSelected()) {
+									collectionType = 3;
+								}
+								if (collectionType == 0) {
+									new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
+								}
+								else {
+									resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
+									commandExecuted = true;
+								}
+								resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
 							}
 							target.setCommand(null);
 							commandExecuted = true;

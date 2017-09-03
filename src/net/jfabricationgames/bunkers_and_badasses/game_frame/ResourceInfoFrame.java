@@ -393,17 +393,29 @@ public class ResourceInfoFrame extends JFrame {
 	}
 	
 	private Building[] createBuildings() {
-		Building[] buildings = new Building[10];
+		Building[] buildings = new Building[16];
 		buildings[0] = new ArschgaulsPalace();
 		buildings[1] = new CrazyEarlsBlackMarket();
-		buildings[2] = new MarcusGunshop();
-		buildings[3] = new MoxxisTavern();
-		buildings[4] = new MoxxisUnderdome();
-		buildings[5] = new RolandsTurret();
-		buildings[6] = new ScootersCatchARide();
-		buildings[7] = new TannisResearchStation();
-		buildings[8] = new TinyTinasMine();
-		buildings[9] = new TorguesBadassDome();
+		buildings[2] = new CrazyEarlsBlackMarket();
+		buildings[3] = new MarcusGunshop();
+		buildings[4] = new MarcusGunshop();
+		buildings[5] = new MoxxisTavern();
+		buildings[6] = new MoxxisTavern();
+		buildings[7] = new MoxxisUnderdome();
+		buildings[8] = new MoxxisUnderdome();
+		buildings[9] = new RolandsTurret();
+		buildings[10] = new RolandsTurret();
+		buildings[11] = new ScootersCatchARide();
+		buildings[12] = new TannisResearchStation();
+		buildings[13] = new TannisResearchStation();
+		buildings[14] = new TinyTinasMine();
+		buildings[15] = new TorguesBadassDome();
+		buildings[2].extend();
+		buildings[4].extend();
+		buildings[6].extend();
+		buildings[8].extend();
+		buildings[10].extend();
+		buildings[13].extend();
 		return buildings;
 	}
 	

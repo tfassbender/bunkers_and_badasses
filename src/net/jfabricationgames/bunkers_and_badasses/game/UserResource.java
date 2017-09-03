@@ -136,11 +136,19 @@ public class UserResource implements Serializable, Cloneable {
 		eridium += turnBonus.getEridium();
 	}
 	
-	public void collectCommandResources() {
+	public void collectCommandResources(int type) {
 		int[] resources = Command.getStorage().getResourceReception();
-		credits += resources[CommandStorage.CREDITS];
-		ammo += resources[CommandStorage.AMMO];
-		eridium += resources[CommandStorage.ERIDIUM];
+		switch (type) {
+			case 1:
+				credits += resources[CommandStorage.CREDITS];				
+				break;
+			case 2:
+				ammo += resources[CommandStorage.AMMO];
+				break;
+			case 3:
+				eridium += resources[CommandStorage.ERIDIUM];				
+				break;
+		}
 	}
 	
 	/**

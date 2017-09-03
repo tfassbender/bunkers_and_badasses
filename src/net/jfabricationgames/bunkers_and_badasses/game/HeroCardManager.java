@@ -142,6 +142,12 @@ public class HeroCardManager implements Serializable {
 		}
 		heroCards = heroCardManager.getHeroCards();
 		heroCardStack = heroCardManager.getHeroCardStack();
+		//merge the hero cards taken map
+		//only delete the entries if the new map has no entries
+		if (heroCardManager.getHeroCardsTaken().isEmpty()) {
+			resetHeroCardsTaken();
+		}
+		//only resets are needed
 	}
 	
 	public void intitialize(List<User> players) {
@@ -213,6 +219,10 @@ public class HeroCardManager implements Serializable {
 		return heroCards;
 	}
 	
+	private Map<User, Boolean> getHeroCardsTaken() {
+		return heroCardsTaken;
+	}
+
 	public void resetHeroCardsTaken() {
 		heroCardsTaken = new HashMap<User, Boolean>();
 	}

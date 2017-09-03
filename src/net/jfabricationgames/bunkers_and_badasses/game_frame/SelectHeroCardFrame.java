@@ -320,7 +320,12 @@ public class SelectHeroCardFrame extends JFrame {
 			heroListModel.addElement(hero);
 		}
 		if (!heroListModel.contains(selectedHero)) {
-			selectedHero = null;
+			if (heroListModel.isEmpty()) {
+				list_heroes.setSelectedIndex(0);
+			}
+			else {
+				selectedHero = null;
+			}
 		}
 	}
 	

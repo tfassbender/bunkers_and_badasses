@@ -100,9 +100,12 @@ public class UserResourceManager implements Serializable{
 	 * 
 	 * @param user
 	 * 		The user that executed the command.
+	 * 
+	 * @param type
+	 * 		The type of the collected resources (1 = credits; 2 = ammo; 3 = eridium)
 	 */
-	public void collectCommandResources(User user) {
-		resources.get(user).collectCommandResources();
+	public void collectCommandResources(User user, int type) {
+		resources.get(user).collectCommandResources(type);
 	}
 	
 	public void receiveUsedResources(User user, int turn, UserResource resource) {

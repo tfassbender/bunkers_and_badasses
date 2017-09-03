@@ -139,11 +139,12 @@ public class Fight implements Serializable {
 	
 	public int[] calculateFallingTroops() {
 		int[] fallingTroops = new int[2];
-		int overhead;
+		//int overhead;
+		int minTroops;//use the minimum of troops instead of the overhead
 		Field winningField;
 		Field loosingField;
-		calculateCurrentStrength();
-		overhead = Math.abs(currentAttackingStrength - currentDefendingStrength);
+		//calculateCurrentStrength();
+		//overhead = Math.abs(currentAttackingStrength - currentDefendingStrength);
 		int winningTroopStrength;
 		boolean winnerHasBandits;
 		if (winner == ATTACKERS) {
@@ -158,12 +159,15 @@ public class Fight implements Serializable {
 			winningTroopStrength = defendingField.getTroopStrength();
 			winnerHasBandits = defendingField.getNormalTroops() > 0;
 		}
-		fallingTroops[0] = overhead/2;
-		fallingTroops[1] = overhead;
-		if (fallingTroops[0] == 0 && overhead != 0) {
+		minTroops = Math.min(getAttackingTroopStrength(), loosingField.getTroopStrength());
+		/*fallingTroops[0] = overhead/2;
+		fallingTroops[1] = overhead;*/
+		fallingTroops[0] = minTroops/2;
+		fallingTroops[1] = minTroops;
+		/*if (fallingTroops[0] == 0 && minTroops != 0) {
 			//only zero troops if overhead is 0
 			fallingTroops[0] = 1;
-		}
+		}*/
 		if (winningField.getTroops().size() == 1) {
 			//attacker must remain one troop
 			fallingTroops[0] = 0;
