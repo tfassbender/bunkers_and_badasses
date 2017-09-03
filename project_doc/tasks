@@ -15,9 +15,6 @@ Bunkers and Badasses - Tasks
 	- implement hero functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends
-	- marker position bug in Rakk's Hive
-	- open new dialogs centered to the game frame ?
-	- support image in help menu is shown very small
 	- somehow board images are sent (overwritten to no image send; check why images were sent)
 	- implement the back to main menu button in the fight end frame 
 	- no need to choose a turn bonus in the last turn

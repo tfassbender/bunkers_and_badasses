@@ -361,15 +361,22 @@ public class ResourceInfoFrame extends JFrame {
 	private void updateBuildingCosts() {
 		Building building = (Building) comboBox.getSelectedItem();
 		if (building != null) {
-			if (building.getBuildingPrice()[0] >= 0) {
-				txtCostscredits.setText(Integer.toString(building.getBuildingPrice()[0]));
-				txtCostsammo.setText(Integer.toString(building.getBuildingPrice()[1]));
-				txtCostseridium.setText(Integer.toString(building.getBuildingPrice()[2]));				
+			if (building.isExtended()) {
+				if (building.getBuildingPrice()[0] >= 0) {
+					txtCostscredits.setText(Integer.toString(building.getBuildingPrice()[0]));
+					txtCostsammo.setText(Integer.toString(building.getBuildingPrice()[1]));
+					txtCostseridium.setText(Integer.toString(building.getBuildingPrice()[2]));				
+				}
+				else {
+					txtCostscredits.setText("∞");
+					txtCostsammo.setText("∞");
+					txtCostseridium.setText("∞");
+				}
 			}
 			else {
-				txtCostscredits.setText("∞");
-				txtCostsammo.setText("∞");
-				txtCostseridium.setText("∞");
+				txtCostscredits.setText(Integer.toString(building.getExtensionPrice()[0]));
+				txtCostsammo.setText(Integer.toString(building.getExtensionPrice()[1]));
+				txtCostseridium.setText(Integer.toString(building.getExtensionPrice()[2]));
 			}
 			txtGaincredits.setText(Integer.toString(building.getCreditMining()));
 			txtGainammo.setText(Integer.toString(building.getAmmoMining()));

@@ -122,7 +122,7 @@ public abstract class Building implements Serializable {
 	
 	public String getName() {
 		if (extended) {
-			return name + "(erweitert)";
+			return name + " (erweitert)";
 		}
 		else {
 			return name;	
