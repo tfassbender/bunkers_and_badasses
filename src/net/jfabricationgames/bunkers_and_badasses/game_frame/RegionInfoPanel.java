@@ -30,14 +30,14 @@ public class RegionInfoPanel extends JPanel {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		
 		panel_regions = new JPanel();
-		panel_regions.setLayout(new MigLayout("", "[grow][50px,center][40px]", "[30px]"));
+		panel_regions.setLayout(new MigLayout("", "[grow][50px,center][50px,center][40px]", "[30px]"));
 		panel_regions.setBackground(Color.LIGHT_GRAY);
 		scrollPane.setViewportView(panel_regions);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.LIGHT_GRAY);
 		scrollPane.setColumnHeaderView(panel);
-		panel.setLayout(new MigLayout("", "[grow][50px][40px]", "[]"));
+		panel.setLayout(new MigLayout("", "[grow][50px][50px][40px]", "[]"));
 		
 		JLabel lblRegion = new JLabel("Region");
 		lblRegion.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -47,9 +47,12 @@ public class RegionInfoPanel extends JPanel {
 		lblFelder.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel.add(lblFelder, "cell 1 0,alignx center");
 		
+		JLabel lblPunkte = new JLabel("Punkte");
+		panel.add(lblPunkte, "cell 2 0,alignx center");
+		
 		JLabel lblFarbe = new JLabel("Farbe");
 		lblFarbe.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel.add(lblFarbe, "cell 2 0,alignx center");
+		panel.add(lblFarbe, "cell 3 0,alignx center");
 	}
 	
 	public void updateRegions(Board board) {
@@ -59,7 +62,7 @@ public class RegionInfoPanel extends JPanel {
 		}
 		
 		panel_regions.removeAll();
-		panel_regions.setLayout(new MigLayout("", "[grow][50px,center][40px]", layout));
+		panel_regions.setLayout(new MigLayout("", "[grow][50px,center][50px,center][40px]", layout));
 		
 		for (int i = 0; i < board.getRegions().size(); i++) {
 			JLabel lblRegionname = new JLabel(board.getRegions().get(i).getName());
@@ -69,8 +72,11 @@ public class RegionInfoPanel extends JPanel {
 			JLabel lblFields = new JLabel(Integer.toString(board.getRegions().get(i).getFields().size()));
 			panel_regions.add(lblFields, "cell 1 " + i);
 			
+			JLabel lblPoints = new JLabel(Integer.toString(board.getRegions().get(i).getPoints()));
+			panel_regions.add(lblPoints, "cell 2 " + i);
+			
 			RegionColorPanel panel = new RegionColorPanel(board.getRegions().get(i));
-			panel_regions.add(panel, "cell 2 " + i + ",grow");
+			panel_regions.add(panel, "cell 3 " + i + ",grow");
 		}
 	}
 	

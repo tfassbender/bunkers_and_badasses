@@ -770,7 +770,10 @@ public class CommandExecutionPanel extends JPanel {
 					else if (targets.length == 1) {
 						Field targetField = fieldTargetModel.getElementAt(targets[0]);
 						if (troops > 0) {
-							if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
+							if (targetField.getBuilding() instanceof ArschgaulsPalace && game.getTurnManager().getTurn() == 0 && targetField.getAffiliation() != null && !targetField.getAffiliation().equals(game.getLocalUser())) {
+								new ErrorDialog("Du kannst in der ersten Runde keine Basis angreifen.\n\nLass den anderen doch auch mal ne Chance.").setVisible(true);
+							}
+							else if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
 								//give out points for movement and conquering (empty) fields
 								if (targetField.getAffiliation() == null || !targetField.getAffiliation().equals(game.getLocalUser())) {
 									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints());
@@ -830,7 +833,6 @@ public class CommandExecutionPanel extends JPanel {
 									resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
 									commandExecuted = true;
 								}
-								resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
 							}
 							target.setCommand(null);
 							commandExecuted = true;

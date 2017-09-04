@@ -180,6 +180,13 @@ public class FightManager implements Serializable {
 			//remove any command that could be on the conquered field
 			defendingField.setCommand(null);
 		}
+		else {
+			//defenders won
+			int[] fallen = currentFight.getFallenTroops().get(currentFight.getAttackingField());
+			int normalTroopsRetreat = currentFight.getAttackingNormalTroops() - fallen[0];
+			int badassTroopsRetreat = currentFight.getAttackingBadassTroops() - fallen[1];
+			game.getBoard().moveTroops(currentFight.getAttackingField(), currentFight.getRetreatField(), normalTroopsRetreat, badassTroopsRetreat);
+		}
 		game.setState(GameState.ACT);
 		//end the players turn
 		game.getPlayerOrder().nextMove();

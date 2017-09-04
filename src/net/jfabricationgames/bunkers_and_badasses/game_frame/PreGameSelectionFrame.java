@@ -8,6 +8,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
 import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
+import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameTurnManager;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
@@ -50,7 +53,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPa
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 
-public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelectionListener, BoardPanelListener {
+public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelectionListener, BoardPanelListener, ConfirmDialogListener {
 	
 	private static final long serialVersionUID = 3805066039018442763L;
 	
@@ -113,6 +116,12 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	
 	public PreGameSelectionFrame(Game game) {
 		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				new ConfirmDialog("Spiel wirklich beenden?", PreGameSelectionFrame.this, 0).setVisible(true);
+			}
+		});
 		this.game = game;
 		//Add a reference to this frame to the client interpreter
 		((BunkersAndBadassesClientInterpreter) game.getClient().getClientInterpreter()).setPreGameSelectionFrame(this);
@@ -124,7 +133,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		
 		setTitle("Spiel Vorbereitung - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PreGameSelectionFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1100, 600);
 		setMinimumSize(new Dimension(1100, 600));
 		setLocationRelativeTo(null);
@@ -562,6 +571,13 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		selectedBonus = bonus;
 		txtBonus.setText(bonus.getName());
 		txtrBonusDescription.setText(bonus.getDescriptionNoHtml());
+	}
+	
+	@Override
+	public void receiveConfirmAnswer(boolean confirm, int type) {
+		if (confirm) {
+			System.exit(0);
+		}
 	}
 	
 	private void addGameTurns(JPanel panel) {

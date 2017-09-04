@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClientInterpreter;
+import net.jfabricationgames.bunkers_and_badasses.game.ConfirmDialogListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
@@ -34,7 +37,7 @@ import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
-public class GameStartDialog extends JDialog {
+public class GameStartDialog extends JDialog implements ConfirmDialogListener {
 	
 	private static final long serialVersionUID = 8041792943271736351L;
 	
@@ -54,6 +57,12 @@ public class GameStartDialog extends JDialog {
 	//private boolean dynamicVariablesLoaded;
 	
 	public GameStartDialog() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				new ConfirmDialog("Spiel wirklich beenden?", GameStartDialog.this, 0).setVisible(true);
+			}
+		});
 		setResizable(false);
 		setTitle("Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameStartDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -102,6 +111,13 @@ public class GameStartDialog extends JDialog {
 				panel_1.setBackground(Color.GRAY);
 				panel.add(panel_1, "cell 2 1 1 2,grow");
 			}
+		}
+	}
+	
+	@Override
+	public void receiveConfirmAnswer(boolean confirm, int type) {
+		if (confirm) {
+			System.exit(0);
 		}
 	}
 	

@@ -31,6 +31,7 @@ import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
 
@@ -225,43 +226,50 @@ public class TargetFieldSelectionFrame extends JFrame {
 		}
 		else {
 			int attacks = 0;
+			Field attackedField = null;
 			for (Field field : targets) {
 				int[] movedTroops = troops.get(field);
 				if (movedTroops[0] + movedTroops[1] > 0 && field.getAffiliation() == null || !field.getAffiliation().equals(game.getLocalUser())) {
 					attacks++;
+					attackedField = field;
 				}
 			}
 			if (attacks > 1) {
 				new ErrorDialog("Du hast zu viele Felder ausgewählt, die erobert werden sollen.\n\nDeine Truppen können maximal ein Gebiet (feindlich oder neutral) erobern.").setVisible(true);
 			}
 			else {
-				Field fight = null;
-				for (Field field : targets) {
-					int[] movedTroops = troops.get(field);
-					if (movedTroops[0] + movedTroops[1] > 0) {
-						if (field.getAffiliation() != null && !field.getAffiliation().equals(game.getLocalUser()) || field.getAffiliation() == null && field.getTroopStrength() > 0) {
-							fight = field;
-						}
-						else {
-							game.getBoard().moveTroops(startField, field, movedTroops[0], movedTroops[1]);
-						}
-					}
-				}
-				if (fight != null) {
-					int[] attackingTroops = troops.get(fight);
-					game.getFightManager().startFight(startField, fight, attackingTroops[0], attackingTroops[1]);
-					startField.setCommand(null);
+				if (attacks == 1 && attackedField.getBuilding() instanceof ArschgaulsPalace && game.getTurnManager().getTurn() == 0) {
+					new ErrorDialog("Du kannst in der ersten Runde keine Basis angreifen.\n\nLass den anderen doch auch mal ne Chance.").setVisible(true);
 				}
 				else {
-					//give out points for movements
-					game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), startField, attacks > 0);
-					startField.setCommand(null);
-					game.getPlayerOrder().nextMove();
-					game.getTurnExecutionManager().commit();
-					game.getGameFrame().updateAllFrames();
+					Field fight = null;
+					for (Field field : targets) {
+						int[] movedTroops = troops.get(field);
+						if (movedTroops[0] + movedTroops[1] > 0) {
+							if (field.getAffiliation() != null && !field.getAffiliation().equals(game.getLocalUser()) || field.getAffiliation() == null && field.getTroopStrength() > 0) {
+								fight = field;
+							}
+							else {
+								game.getBoard().moveTroops(startField, field, movedTroops[0], movedTroops[1]);
+							}
+						}
+					}
+					if (fight != null) {
+						int[] attackingTroops = troops.get(fight);
+						game.getFightManager().startFight(startField, fight, attackingTroops[0], attackingTroops[1]);
+						startField.setCommand(null);
+					}
+					else {
+						//give out points for movements
+						game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), startField, attacks > 0);
+						startField.setCommand(null);
+						game.getPlayerOrder().nextMove();
+						game.getTurnExecutionManager().commit();
+						game.getGameFrame().updateAllFrames();
+					}
+					turnExecutionFrame.setFieldSelectionSucessfull(true);
+					dispose();
 				}
-				turnExecutionFrame.setFieldSelectionSucessfull(true);
-				dispose();
 			}
 		}
 	}

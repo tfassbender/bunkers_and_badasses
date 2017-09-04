@@ -232,7 +232,28 @@ public class Fight implements Serializable {
 			}
 		}
 		else {
-			retreatFields.add(attackingField);
+			//check if the attack comes from a distant field (via Scooter's Catch-A-Ride)
+			boolean distantAttack = true;
+			for (Field field : defendingField.getNeighbours()) {
+				distantAttack &= !(field.getName().equals(attackingField.getName()));
+			}
+			if (distantAttack) {
+				//retreat fields are all fields that are connected to the attacking and defending field (there has to be at least one) 
+				for (Field field : defendingField.getNeighbours()) {
+					if (field.getAffiliation() != null && field.getAffiliation().equals(attackingPlayer)) {
+						boolean isMidField = false;
+						for (Field midField : attackingField.getNeighbours()) {
+							isMidField |= midField.getName().equals(field.getName());
+						}
+						if (isMidField) {
+							retreatFields.add(field);							
+						}
+					}
+				}
+			}
+			else {
+				retreatFields.add(attackingField);				
+			}
 		}
 		return retreatFields;
 	}

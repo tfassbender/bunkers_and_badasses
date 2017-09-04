@@ -70,7 +70,7 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 		
 		setTitle("Gebiets Übersicht - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FieldOverviewFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setBounds(100, 100, 1000, 500);
+		setBounds(100, 100, 1100, 500);
 		setMinimumSize(new Dimension(800, 500));
 		
 		propsFile.alignWindow();
