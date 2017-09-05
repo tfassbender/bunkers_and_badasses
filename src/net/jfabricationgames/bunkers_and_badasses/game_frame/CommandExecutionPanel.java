@@ -522,6 +522,13 @@ public class CommandExecutionPanel extends JPanel {
 				txtKosten.setText("");
 			}
 		}
+		else if (selectedField.getCommand() instanceof RecruitCommand) {
+			int normalTroops = (Integer) spinnerNormalTroops.getValue();
+			int badassTroops = (Integer) spinnerBadassTroops.getValue();
+			int upgrades = (Integer) spinnerAufrstungen.getValue();
+			int[] costs = game.getResourceManager().getResources().get(game.getLocalUser()).getRecroutedTroopCosts(normalTroops, badassTroops, upgrades);
+			txtKosten.setText(costs[0] + " Credits, " + costs[1] + " Munition");
+		}
 	}
 	
 	protected void disableAll() {

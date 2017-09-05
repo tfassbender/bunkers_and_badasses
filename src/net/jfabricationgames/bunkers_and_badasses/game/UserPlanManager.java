@@ -117,7 +117,7 @@ public class UserPlanManager implements Serializable {
 	 */
 	public void commit() {
 		//calculate the used resources and give out points (capitalism bonus)
-		UserResource usedResource = previouseResource.clone();
+		UserResource usedResource = previouseResource.clone();//TODO check for correct calculation of used resources
 		usedResource.setCredits(usedResource.getCredits()-currentResource.getCredits());
 		usedResource.setAmmo(usedResource.getAmmo()-currentResource.getAmmo());
 		usedResource.setEridium(usedResource.getEridium()-currentResource.getEridium());

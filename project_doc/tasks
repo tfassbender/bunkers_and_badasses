@@ -2,9 +2,8 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- some turn goals seem to be not added to the points or only for some players (capitalism) (?)
+	- some turn goals seem to be not added to the points (capitalism)
 	- used resources are sometimes calculated wrong (?)
-	- recuiting heros seems to be not reactivated (cards taken is not reseted) (test implementation)
 	- debug fights:
 		- fight end text fields need to be cleared (fight execution frame)
 		- some fallen troops are selected in fields that didn't even take part in the fight (only possible retreat) (?)
@@ -21,8 +20,7 @@ Bunkers and Badasses - Tasks
 
 - New ideas:
 	- New neutral troops like Threshers (maybe moving each turn)
-	- different skins for players troops (hyperion bots, ...)
-	
+	- different skins for players troops (hyperion bots, guardians, ...)
 	- new falling troops calculation:
 		- falling troops can be chosen by the winner
 		- troops fall on both sides

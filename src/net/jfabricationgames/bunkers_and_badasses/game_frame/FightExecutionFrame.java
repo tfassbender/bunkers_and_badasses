@@ -85,7 +85,6 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private JTextField txtHeroDefenderDef;
 	private JTextField txtSieger;
 	private JTextField txtVerlierer;
-	private JTextField txtOverhead;
 	private JTextField txtFallendetruppen;
 	private JTextField txtFallendetruppenbis;
 	private JTextField txtFallendetruppengesammt;
@@ -516,7 +515,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_end.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_end.setBackground(Color.GRAY);
 		panel_low_right_bar.add(panel_end, "cell 0 0,grow");
-		panel_end.setLayout(new MigLayout("", "[grow][][25px][25px:n:25px][][25px:n:25px][50px][grow]", "[][5px,grow][][][5px][][5px][][grow]"));
+		panel_end.setLayout(new MigLayout("", "[grow][][25px][25px:n:25px][][25px:n:25px][50px][grow]", "[][5px,grow][][][5px][][grow]"));
 		
 		JLabel lblKampfAusgang = new JLabel("Kampf Ausgang:");
 		lblKampfAusgang.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -544,40 +543,28 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		panel_end.add(txtVerlierer, "cell 2 3 5 1,growx");
 		txtVerlierer.setColumns(10);
 		
-		JLabel lblOverhead = new JLabel("Overhead:");
-		lblOverhead.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblOverhead, "cell 1 5");
-		
-		txtOverhead = new JTextField();
-		txtOverhead.setHorizontalAlignment(SwingConstants.CENTER);
-		txtOverhead.setEditable(false);
-		txtOverhead.setBackground(Color.LIGHT_GRAY);
-		txtOverhead.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtOverhead, "cell 2 5,growx");
-		txtOverhead.setColumns(10);
-		
 		JLabel lblFallendeTruppen = new JLabel("Fallende Truppen:");
 		lblFallendeTruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblFallendeTruppen, "cell 1 7 2 1");
+		panel_end.add(lblFallendeTruppen, "cell 1 5 2 1");
 		
 		txtFallendetruppen = new JTextField();
 		txtFallendetruppen.setHorizontalAlignment(SwingConstants.CENTER);
 		txtFallendetruppen.setEditable(false);
 		txtFallendetruppen.setBackground(Color.LIGHT_GRAY);
 		txtFallendetruppen.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtFallendetruppen, "cell 3 7,growx");
+		panel_end.add(txtFallendetruppen, "cell 3 5,growx");
 		txtFallendetruppen.setColumns(10);
 		
 		JLabel lblBis = new JLabel("bis");
 		lblBis.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(lblBis, "cell 4 7,alignx center");
+		panel_end.add(lblBis, "cell 4 5,alignx center");
 		
 		txtFallendetruppenbis = new JTextField();
 		txtFallendetruppenbis.setHorizontalAlignment(SwingConstants.CENTER);
 		txtFallendetruppenbis.setEditable(false);
 		txtFallendetruppenbis.setBackground(Color.LIGHT_GRAY);
 		txtFallendetruppenbis.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		panel_end.add(txtFallendetruppenbis, "cell 5 7,growx");
+		panel_end.add(txtFallendetruppenbis, "cell 5 5,growx");
 		txtFallendetruppenbis.setColumns(10);
 		
 		JPanel panel_retread = new JPanel();
@@ -629,6 +616,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		spinner_fallende_truppen_gesammt.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fallingTroops = (Integer) spinner_fallende_truppen_gesammt.getValue();
+				updateFallingTroopsLeft();
 			}
 		});
 		spinner_fallende_truppen_gesammt.setToolTipText("<html>\r\nDie gesammte Anzahl an fallenden Truppen (auf <br>\r\nbeiden Seiten). Die maximal m\u00F6gliche Anzahl entspricht<br>\r\ndem Overhead, die minimal m\u00F6gliche Anzahl dem <br>\r\nhalben abgerundeten Overhead (genauere Beschreibung <br>\r\nin der Regel Hilfe)\r\n</html>");
@@ -1018,7 +1006,6 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		txtHeroDefenderDef.setText("");
 		txtSieger.setText("");
 		txtVerlierer.setText("");
-		txtOverhead.setText("");
 		txtFallendetruppen.setText("");
 		txtFallendetruppenbis.setText("");
 		txtFallendetruppengesammt.setText("");
@@ -1181,9 +1168,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 					break;
 			}
 			if (fight.getDefendingPlayer() != null) {
-				int overhead = Math.abs(fight.getCurrentAttackingStrength() - fight.getCurrentDefendingStrength());
 				int[] fallingTroops = fight.calculateFallingTroops();
-				txtOverhead.setText(Integer.toString(overhead));
 				txtFallendetruppen.setText(Integer.toString(fallingTroops[0]));
 				txtFallendetruppenbis.setText(Integer.toString(fallingTroops[1]));				
 			}

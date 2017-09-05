@@ -291,6 +291,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		selectedField = game.getBoard().getFieldAtMousePosition();
 		panel_execution.updateField();
 		panel_execution_2.updateField();
+		panel_execution.updateKosts();
+		panel_execution_2.updateKosts();
 	}
 	
 	@Override

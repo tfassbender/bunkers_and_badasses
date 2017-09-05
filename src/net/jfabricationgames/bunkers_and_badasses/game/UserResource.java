@@ -209,7 +209,7 @@ public class UserResource implements Serializable, Cloneable {
 		}
 	}
 	
-	public void payRecroutedTroops(int normal, int badass, int upgrades) throws ResourceException {
+	public int[] getRecroutedTroopCosts(int normal, int badass, int upgrades) {
 		int[] costs = new int[3];
 		costs[0] += (normal + upgrades) * Troop.getStorage().getTroopCosts()[TroopStorage.NORMAL_TROOP][TroopStorage.RECRUIT_COSTS_CREDITS];
 		costs[0] += badass * Troop.getStorage().getTroopCosts()[TroopStorage.BADASS_TROOP][TroopStorage.RECRUIT_COSTS_CREDITS];
@@ -217,6 +217,10 @@ public class UserResource implements Serializable, Cloneable {
 		costs[1] += badass * Troop.getStorage().getTroopCosts()[TroopStorage.BADASS_TROOP][TroopStorage.RECRUIT_COSTS_AMMO];
 		costs[2] += (normal + upgrades) * Troop.getStorage().getTroopCosts()[TroopStorage.NORMAL_TROOP][TroopStorage.RECRUIT_COSTS_ERIDIUM];
 		costs[2] += badass * Troop.getStorage().getTroopCosts()[TroopStorage.BADASS_TROOP][TroopStorage.RECRUIT_COSTS_ERIDIUM];
+		return costs;
+	}
+	public void payRecroutedTroops(int normal, int badass, int upgrades) throws ResourceException {
+		int[] costs = getRecroutedTroopCosts(normal, badass, upgrades);
 		pay(costs);
 	}
 	
