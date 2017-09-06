@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.jfabricationgames.bunkers_and_badasses.game.TroopTexture;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
@@ -43,16 +44,25 @@ public class Field implements Serializable {
 	
 	private Board board;
 	
-	private static transient BufferedImage normalTroopImage;
-	private static transient BufferedImage badassTroopImage;
-	private static transient BufferedImage neutralTroopImage;
+	private static transient BufferedImage[] normalTroopImages;
+	private static transient BufferedImage[] badassTroopImages;
+	private static transient BufferedImage[] neutralTroopImages;
 	
 	static {
 		//load the troop images
 		if (!BunkersAndBadassesServer.IS_SERVER_APPLICATION) {
-			normalTroopImage = GameFrame.getImageLoader().loadImage("troops/bandit_3_small.png");
-			badassTroopImage = GameFrame.getImageLoader().loadImage("troops/lance_4_small.png");
-			neutralTroopImage = GameFrame.getImageLoader().loadImage("troops/skag_1_small.png");
+			normalTroopImages = new BufferedImage[3];
+			badassTroopImages = new BufferedImage[3];
+			neutralTroopImages = new BufferedImage[3];
+			neutralTroopImages[0] = GameFrame.getImageLoader().loadImage("troops/skag_1_small.png");
+			neutralTroopImages[1] = GameFrame.getImageLoader().loadImage("troops/thresher_small.png");
+			neutralTroopImages[1] = GameFrame.getImageLoader().loadImage("troops/stalker_small.png");
+			normalTroopImages[TroopTexture.BANDITS.getId()] = GameFrame.getImageLoader().loadImage("troops/bandit_3_small.png");
+			badassTroopImages[TroopTexture.BANDITS.getId()] = GameFrame.getImageLoader().loadImage("troops/lance_4_small.png");
+			normalTroopImages[TroopTexture.HYPERION.getId()] = GameFrame.getImageLoader().loadImage("troops/loader_bot_small_2.png");
+			badassTroopImages[TroopTexture.HYPERION.getId()] = GameFrame.getImageLoader().loadImage("troops/hyperion_engineer_small_2.png");
+			normalTroopImages[TroopTexture.VAULT_GUARDS.getId()] = GameFrame.getImageLoader().loadImage("troops/vault_guard_small_2.png");
+			badassTroopImages[TroopTexture.VAULT_GUARDS.getId()] = GameFrame.getImageLoader().loadImage("troops/vault_guard_badass_small_2.png");
 		}
 	}
 	
@@ -106,6 +116,7 @@ public class Field implements Serializable {
 	 */
 	public void drawField(Graphics g) {
 		UserColor color;
+		TroopTexture textur = TroopTexture.BANDITS;//use bandits as default
 		int normalTroops = getNormalTroops();
 		int badassTroops = getBadassTroops();
 		boolean neutrals = false;
@@ -122,6 +133,7 @@ public class Field implements Serializable {
 		}
 		else {
 			color = board.getGame().getColorManager().getUserColors().get(affiliation);
+			textur = board.getGame().getColorManager().getUserTextures().get(affiliation);
 		}
 		//set font and color
 		//g.setFont(new Font("Arial", Font.PLAIN, normalTroopImage.getHeight()));
@@ -129,17 +141,17 @@ public class Field implements Serializable {
 		g.setColor(Color.BLACK);
 		//draw the troop images and numbers
 		if (neutrals && normalTroops > 0) {
-			g.drawImage(neutralTroopImage, (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
-			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+neutralTroopImage.getWidth(), (int) normalTroopsPosition.getY()+neutralTroopImage.getHeight()-15);
+			g.drawImage(neutralTroopImages[0], (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
+			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+neutralTroopImages[0].getWidth(), (int) normalTroopsPosition.getY()+neutralTroopImages[0].getHeight()-15);
 		}
 		else {
 			if (normalTroops > 0) {
-				g.drawImage(normalTroopImage, (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
-				g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+normalTroopImage.getWidth(), (int) normalTroopsPosition.getY()+normalTroopImage.getHeight()-15);				
+				g.drawImage(normalTroopImages[textur.getId()], (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
+				g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+normalTroopImages[textur.getId()].getWidth(), (int) normalTroopsPosition.getY()+normalTroopImages[textur.getId()].getHeight()-15);				
 			}
 			if (badassTroops > 0) {
-				g.drawImage(badassTroopImage, (int) badassTroopsPosition.getX(), (int) badassTroopsPosition.getY(), null);
-				g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImage.getWidth(), (int) badassTroopsPosition.getY()+badassTroopImage.getHeight()-15);
+				g.drawImage(badassTroopImages[textur.getId()], (int) badassTroopsPosition.getX(), (int) badassTroopsPosition.getY(), null);
+				g.drawString(Integer.toString(badassTroops), (int) badassTroopsPosition.getX()+badassTroopImages[textur.getId()].getWidth(), (int) badassTroopsPosition.getY()+badassTroopImages[textur.getId()].getHeight()-15);
 			}
 		}
 		//draw the building image
@@ -282,14 +294,14 @@ public class Field implements Serializable {
 		this.playerMarkerPosition = playerMarkerPosition;
 	}
 	
-	public static BufferedImage getNormalTroopImage() {
-		return normalTroopImage;
+	public static BufferedImage[] getNormalTroopImages() {
+		return normalTroopImages;
 	}
-	public static BufferedImage getBadassTroopImage() {
-		return badassTroopImage;
+	public static BufferedImage[] getBadassTroopImages() {
+		return badassTroopImages;
 	}
-	public static BufferedImage getNeutralTroopImage() {
-		return neutralTroopImage;
+	public static BufferedImage[] getNeutralTroopImages() {
+		return neutralTroopImages;
 	}
 	
 	public List<Field> getNeighbours() {

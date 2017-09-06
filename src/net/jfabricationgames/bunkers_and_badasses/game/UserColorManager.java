@@ -15,8 +15,22 @@ public class UserColorManager implements Serializable {
 	
 	private Map<User, UserColor> userColors;
 	
+	private Map<User, TroopTexture> userTextures;
+	
 	public UserColorManager() {
 		userColors = new HashMap<User, UserColor>();
+		userTextures = new HashMap<User, TroopTexture>();
+	}
+	
+	/**
+	 * Choose random colors and textures for all players.
+	 * 
+	 * @param users
+	 * 		A list of all users.
+	 */
+	public void chooseColors(List<User> users) {
+		chooseRandomColors(users);
+		chooseRandomTextures(users);
 	}
 	
 	/**
@@ -25,7 +39,7 @@ public class UserColorManager implements Serializable {
 	 * @param users
 	 * 		A list of all users.
 	 */
-	public void chooseRandomColors(List<User> users) {
+	private void chooseRandomColors(List<User> users) {
 		UserColor[] colors = UserColor.values();
 		UserColor swap;
 		int choosableColors = UserColor.getAvailableColors();
@@ -39,6 +53,23 @@ public class UserColorManager implements Serializable {
 		}
 	}
 	
+	/**
+	 * Choose random textures for all players and write them to the map.
+	 * 
+	 * @param users
+	 * 		A list of all users.
+	 */
+	private void chooseRandomTextures(List<User> users) {
+		TroopTexture[] textures = new TroopTexture[] {TroopTexture.BANDITS, TroopTexture.HYPERION, TroopTexture.VAULT_GUARDS};
+		int numUsers = users.size();
+		for (int i = 0; i < numUsers; i++) {
+			int userIndex = (int) (Math.random() * users.size());
+			User user = users.get(userIndex);
+			users.remove(userIndex);
+			userTextures.put(user, textures[i%3]);
+		}
+	}
+	
 	public void merge(UserColorManager manager) {
 		this.userColors = manager.getUserColors();
 	}
@@ -48,6 +79,10 @@ public class UserColorManager implements Serializable {
 	}
 	public void setUserColors(Map<User, UserColor> userColors) {
 		this.userColors = userColors;
+	}
+	
+	public Map<User, TroopTexture> getUserTextures() {
+		return userTextures;
 	}
 	
 	public UserColor getColor(User user) {

@@ -99,9 +99,9 @@ public class CommandExecutionPanel extends JPanel {
 		buildables[8] = new TorguesBadassDome();
 	}
 	
-	public CommandExecutionPanel(TurnExecutionFrame turnExecutionFrame, Game game) {
+	public CommandExecutionPanel(TurnExecutionFrame turnExecutionFrame, Game gameRef) {
 		this.turnExecutionFrame = turnExecutionFrame;
-		this.game = game;
+		this.game = gameRef;
 		
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBackground(Color.GRAY);

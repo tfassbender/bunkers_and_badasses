@@ -117,12 +117,11 @@ public class UserPlanManager implements Serializable {
 	 */
 	public void commit() {
 		//calculate the used resources and give out points (capitalism bonus)
-		UserResource usedResource = previouseResource.clone();//TODO check for correct calculation of used resources
+		UserResource usedResource = previouseResource.clone();//TODO previouseResources are wrong (for non starting player); check why
 		usedResource.setCredits(usedResource.getCredits()-currentResource.getCredits());
 		usedResource.setAmmo(usedResource.getAmmo()-currentResource.getAmmo());
 		usedResource.setEridium(usedResource.getEridium()-currentResource.getEridium());
 		game.getResourceManager().receiveUsedResources(game.getLocalUser(), game.getTurnManager().getTurn(), usedResource);
-		//TODO the planing points seem to be only added for the starting player
 		game.getGameTurnGoalManager().receivePointsPlaning(game.getLocalUser(), previouseResource.getAmmo()-currentResource.getAmmo());
 		//commands are added to the field in the merge method
 		/*for (Field field : fieldCommands.keySet()) {

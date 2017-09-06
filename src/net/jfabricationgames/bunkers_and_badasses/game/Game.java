@@ -58,7 +58,7 @@ public class Game implements Serializable {
 		heroCardManager = new HeroCardManager();
 		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
-		colorManager.chooseRandomColors(players);
+		colorManager.chooseColors(players);
 		fightManager = new FightManager(client, this, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
 		skillProfileManager = new SkillProfileManager();
 		//initialize the GameFrame when the board is added.

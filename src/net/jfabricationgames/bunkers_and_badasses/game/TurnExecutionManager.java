@@ -57,6 +57,11 @@ public class TurnExecutionManager implements Serializable {
 		game.getClient().resetOutput();
 		game.getClient().sendMessage(message);
 		game.getGameFrame().updateAllFrames();
+		//TODO just testing; delete if not working
+		//somehow the game state seems to be changed...
+		GameState state = game.getGameState();
+		game.getPlanManager().countCommands();//others count the commands because of the message; this client needs to count too
+		game.setState(state);
 	}
 	
 	public Board getBoard() {

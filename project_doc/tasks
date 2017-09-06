@@ -16,7 +16,6 @@ Bunkers and Badasses - Tasks
 	- create the statistics of a game and store them in the database when the game ends
 	- somehow board images are sent (overwritten to no image send; check why images were sent)
 	- implement the back to main menu button in the fight end frame 
-	- no need to choose a turn bonus in the last turn
 
 - New ideas:
 	- New neutral troops like Threshers (maybe moving each turn)
