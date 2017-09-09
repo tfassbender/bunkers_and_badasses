@@ -152,7 +152,7 @@ public class LoginSignUpPanel2 extends JPanel implements LoginPanel {
 					btnFinish.setEnabled(true);
 					signingUp = false;
 				}
-			});
+			}, "send_sign_up");
 			signUp.start();			
 		}
 	}

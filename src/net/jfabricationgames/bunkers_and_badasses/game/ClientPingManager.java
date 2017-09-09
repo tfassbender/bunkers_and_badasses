@@ -30,7 +30,7 @@ public class ClientPingManager {
 					ie.printStackTrace();
 				}
 			}
-		});
+		}, "ping_thread");
 	}
 	
 	/**

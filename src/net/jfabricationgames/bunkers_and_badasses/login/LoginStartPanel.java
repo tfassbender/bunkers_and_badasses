@@ -161,7 +161,7 @@ public class LoginStartPanel extends JPanel implements LoginPanel {
 					}
 					loggingIn = false;
 				}
-			});
+			}, "login");
 			login.start();
 		}
 	}

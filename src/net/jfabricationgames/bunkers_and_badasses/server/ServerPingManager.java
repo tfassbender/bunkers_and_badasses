@@ -43,7 +43,7 @@ public class ServerPingManager {
 					ie.printStackTrace();
 				}
 			}
-		});
+		}, "server_ping_manager");
 		pingThread.start();
 	}
 	

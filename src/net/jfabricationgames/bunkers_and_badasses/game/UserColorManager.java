@@ -1,6 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,18 +62,25 @@ public class UserColorManager implements Serializable {
 	 * 		A list of all users.
 	 */
 	private void chooseRandomTextures(List<User> users) {
-		TroopTexture[] textures = new TroopTexture[] {TroopTexture.BANDITS, TroopTexture.HYPERION, TroopTexture.VAULT_GUARDS};
-		int numUsers = users.size();
+		List<TroopTexture> textures = new ArrayList<TroopTexture>(3);
+		textures.add(TroopTexture.BANDITS);
+		textures.add(TroopTexture.HYPERION);
+		textures.add(TroopTexture.VAULT_GUARDS);
+		//make all textures possible also in two player games
+		Collections.shuffle(textures);
+		List<User> textureUsers = new ArrayList<User>(users);//don't change anything in users! use the clone!
+		int numUsers = textureUsers.size();
 		for (int i = 0; i < numUsers; i++) {
-			int userIndex = (int) (Math.random() * users.size());
-			User user = users.get(userIndex);
-			users.remove(userIndex);
-			userTextures.put(user, textures[i%3]);
+			int userIndex = (int) (Math.random() * textureUsers.size());
+			User user = textureUsers.get(userIndex);
+			textureUsers.remove(userIndex);
+			userTextures.put(user, textures.get(i%3));
 		}
 	}
 	
 	public void merge(UserColorManager manager) {
 		this.userColors = manager.getUserColors();
+		this.userTextures = manager.getUserTextures();
 	}
 	
 	public Map<User, UserColor> getUserColors() {

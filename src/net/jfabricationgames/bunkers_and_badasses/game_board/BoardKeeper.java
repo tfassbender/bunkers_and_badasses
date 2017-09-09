@@ -56,6 +56,6 @@ public class BoardKeeper {
 				server = null;
 				System.gc();
 			}
-		}).start();
+		}, "board_keeper").start();
 	}
 }

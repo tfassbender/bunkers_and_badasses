@@ -155,7 +155,7 @@ public class LoginSignUpPanel1 extends JPanel implements LoginPanel {
 					btnCheckUsername.setEnabled(true);
 					checkingUsername = false;
 				}
-			});
+			}, "check_username");
 			checkUsername.start();			
 		}
 	}

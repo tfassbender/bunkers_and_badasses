@@ -32,7 +32,7 @@ public class MainMenuDynamicLoader {
 					ie.printStackTrace();
 				}
 			}
-		});
+		}, "main_menu_dynamic_content");
 		dynamicComponentThread.start();
 	}
 	
