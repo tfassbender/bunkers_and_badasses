@@ -132,7 +132,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		sendUserUpdate();
 		//start the secure connection after the user update was sent
 		//startSecureConnection(connection, user);
-		//serverLogger.addLog("accepted login and maped connection (user: " + username + ");");
+		serverLogger.addLog("accepted login and maped connection (user: " + username + ");");
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		closeConnection(connection);
 		//send an update to the clients
 		sendUserUpdate();
-		//serverLogger.addLog("logged out user (user: " + user + ");");
+		serverLogger.addLog("logged out user (user: " + user + ");");
 	}
 
 	/**
@@ -182,14 +182,26 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void sendGameCreationRequest(MainMenuMessage message) {
 		List<JFGConnection> invitedConnections = new ArrayList<JFGConnection>();
+		StringBuilder invitedUsers = new StringBuilder(); 
 		for (User user : message.getInvitedPlayers()) {
 			invitedConnections.add(userMap.get(user));
+			invitedUsers.append(user.getUsername());
+			invitedUsers.append(", ");
 		}
+		invitedUsers.setLength(invitedUsers.length()-2);
 		for (JFGConnection con : invitedConnections) {
 			//con.resetOutput();
 			con.sendMessage(message);
 		}
-		//serverLogger.addLog("sending game creation request (from player: " + message.getPlayer() + "; );
+		String log;
+		if (message.getMessageType() == MainMenuMessage.MessageType.GAME_CREATION_REQUEST) {
+			log = "sending game creation request ";
+		}
+		else {
+			log = "sending game creation abort ";
+		}
+		log += "(from player: " + message.getPlayer() + "; invited players: [" + invitedUsers.toString() + "]);";
+		serverLogger.addLog(log);
 	}
 	/**
 	 * Send an answer to a game creating request to the player that invited this player.
@@ -201,6 +213,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		JFGConnection toPlayer = userMap.get(message.getToPlayer());
 		//toPlayer.resetOutput();
 		toPlayer.sendMessage(message);
+		serverLogger.addLog("sending game creation answer (from player: " + message.getPlayer() + "; to player: " + message.getToPlayer() + "; joining: " + message.isJoining() + ");");
 	}
 	/**
 	 * Inform the players about the abortion of the game creation.
@@ -246,6 +259,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		updateAnswer.setMessageType(MainMenuMessage.MessageType.PASSWORD_USERNAME_UPDATE_ANSWER);
 		updateAnswer.setUpdateSuccessfull(result);
 		conn.sendMessage(updateAnswer);
+		serverLogger.addLog("updated password (player: " + message.getLastUsername() + ");");
 	}
 	/**
 	 * Update a user's name and send an answer to the client that sent the request.
@@ -284,6 +298,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		if (result) {
 			updateUserList(conn, message.getUsername());			
 		}
+		serverLogger.addLog("updated username (name: " + message.getLastUsername() + "; to name: " + message.getUsername() + ");");
 	}
 	/**
 	 * Update a user's name or password and send an answer to the client that sent the request.
@@ -324,6 +339,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		if (result) {
 			updateUserList(conn, message.getUsername());			
 		}
+		serverLogger.addLog("updated password and username (name: " + message.getLastUsername() + "; to name: " + message.getUsername() + ");");
 	}
 	/**
 	 * Get a password hash from an encrypted password.
@@ -377,6 +393,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		userMap.put(newUser, connection);
 		connectionMap.put(connection, newUser);
 		sendUserUpdate();
+		serverLogger.addLog("updated user list (player added: " + username + ");");
 	}
 	/**
 	 * Send an updated user list to all users logged in.
@@ -389,6 +406,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				con.sendMessage(update);
 			}
 		}
+		serverLogger.addLog("sending user list update to all users;");
 	}
 	
 	/**
@@ -399,12 +417,17 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
 		Statement statement = null;
 		ResultSet result = null;
+		StringBuilder userList = new StringBuilder();
 		try {
 			statement = connection.createStatement();
 			result = statement.executeQuery("SELECT username FROM bunkers_and_badasses." + loginTable + "");
 			while (result.next()) {
-				allUsers.add(new User(result.getString(1)));
+				String username = result.getString(1);
+				allUsers.add(new User(username));
+				userList.append(username);
+				userList.append(", ");
 			}
+			userList.setLength(userList.length()-2);
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -431,6 +454,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				;
 			}
 		}
+		serverLogger.addLog("users loaded from database (users: [" + userList.toString() + "]);");
 	}
 	
 	/**
@@ -468,6 +492,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		//send the board to the client
 		BoardTransfereMessage message = new BoardTransfereMessage(board);
 		connection.sendMessage(message);
+		serverLogger.addLog("map loaded (map id: " + id + "; player: " + connectionMap.get(connection).getUsername() + "; players in game: " + players + ");");
 	}
 	/**
 	 * Load an overview of all maps (including the name, the image and the player number) and send it to the client.
@@ -525,6 +550,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		//send the board overviews to the client
 		message.setBoards(boards);
 		connection.sendMessage(message);
+		serverLogger.addLog("sending map overviews (player: " + connectionMap.get(connection).getUsername() + ");");
 	}
 	
 	public void completeBoards(BoardOverviewRequestMessage message, JFGConnection connection) {
@@ -596,6 +622,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			//create the statistics if the game has ended
 			saveSuccessful &= createGameStatistics(game);
 		}
+		serverLogger.addLog("saved game (game id: " + game.getId() + "; ended: " + gameEnded + "; save successful: " + saveSuccessful + ");");
 		return saveSuccessful;
 	}
 	/**
@@ -610,6 +637,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	private boolean createGameStatistics(Game game) {
 		boolean statisticsSuccessful = false;
 		//TODO create the game statistics and store them in the database
+		serverLogger.addLog("trying to create game statistics (not implemented yet);");
 		return statisticsSuccessful;
 	}
 	
@@ -659,6 +687,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		//add the overviews to the message and send it back to the client 
 		message.setGameOverviews(gameOverviews);
 		connection.sendMessage(message);
+		serverLogger.addLog("sending game overviews (player: " + connectionMap.get(connection).getUsername() + ");");
 	}
 	
 	/**
@@ -706,6 +735,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		message.setLoadedGame(loadedGame);
 		message.setLoadedSuccessful(loadedGame != null);
 		connection.sendMessage(message);
+		serverLogger.addLog("loaded game from database (player: " + connectionMap.get(connection).getUsername() + "; game id: " + message.getOverview().getId() + ");");
 	}
 	
 	/**
@@ -716,9 +746,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void sendGameStartMessage(GameStartMessage message) {
 		List<User> players = message.getPlayers();
+		StringBuilder playerList = new StringBuilder();
 		for (int i = 0; i < players.size(); i++) {
 			userMap.get(players.get(i)).sendMessage(message);
+			playerList.append(players.get(i).getUsername());
+			playerList.append(", ");
 		}
+		playerList.setLength(playerList.length()-2);
+		serverLogger.addLog("sending game start message (to players: [" + playerList.toString() + "]);");
 	}
 	
 	/**
@@ -729,15 +764,20 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 */
 	public void createGameGroup(GameStartMessage message) {
 		List<JFGConnection> connections = new ArrayList<JFGConnection>();
+		StringBuilder playerList = new StringBuilder();
 		for (User player : message.getPlayers()) {
 			connections.add(userMap.get(player));
+			playerList.append(player.getUsername());
+			playerList.append(", ");
 		}
+		playerList.setLength(playerList.length()-2);
 		BunkersAndBadassesConnectionGroup group = (BunkersAndBadassesConnectionGroup) createGroup(connections);
 		for (JFGConnection connection : connections) {
 			connection.setGroup(group);
 		}
 		group.setStartingPlayer(message.getStartingPlayer());
 		group.setStartingPlayerConnection(userMap.get(message.getStartingPlayer()));
+		serverLogger.addLog("created connection group (players: [" + playerList.toString() + "]; starting player: " + message.getStartingPlayer().getUsername() + ");");
 	}
 	
 	/**
@@ -824,12 +864,17 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		//send the game id to the clients to start the game
 		GameStartMessage startMessage = new GameStartMessage();
 		startMessage.setGameId(gameId);
+		StringBuilder players = new StringBuilder();
 		for (int i = 0; i < message.getPlayers().size(); i++) {
 			JFGConnection connection = userMap.get(message.getPlayers().get(i));
 			//System.out.println("sending game start to player: " + message.getPlayers().get(i).getUsername());
 			//System.out.println(System.currentTimeMillis());
 			connection.sendMessage(startMessage);
+			players.append(message.getPlayers().get(i));
+			players.append(", ");
 		}
+		players.setLength(players.length()-2);
+		serverLogger.addLog("started game (game id: " + gameId + "; players: [" + players.toString() + "]; board id: " + startMessage.getBoardId() + ");");
 	}
 	
 	/**
@@ -899,9 +944,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	 * 		The message containing the players.
 	 */
 	public void sendGameTransferMessage(GameTransferMessage message) {
+		StringBuilder players = new StringBuilder();
 		for (User user : message.getGame().getPlayers()) {
 			userMap.get(user).sendMessage(message);
+			players.append(user.getUsername());
+			players.append(", ");
 		}
+		players.setLength(players.length()-2);
+		serverLogger.addLog("sending game transfere message (transfere type: " + message.getType().toString() + "; game id: " + message.getGame().getId() + "; players: [" + players.toString() + "]);");
 	}
 	
 	/**
@@ -919,6 +969,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		//send the profiles back to the client
 		message.setProfiles(skillProfiles);
 		connection.sendMessage(message);
+		serverLogger.addLog("loaded skill profiles (player: " + connectionMap.get(connection).getUsername() + ");");
 	}
 	private SkillProfile[] loadSkillProfiles(String username) {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
@@ -995,6 +1046,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				sqle.printStackTrace();
 			}
 		}
+		serverLogger.addLog("updated skill profiles (skill id: " + message.getUpdate().getId() + ");");
 	}
 	/**
 	 * Generate the default skill profiles for a new user.
@@ -1029,6 +1081,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 				sqle.printStackTrace();
 			}
 		}
+		serverLogger.addLog("generated user skills (player: " + message.getUsername() + ");");
 	}
 	
 	/**
@@ -1292,6 +1345,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		message.setTurnBonusStorage(turnBonusStorage);
 		message.setHelpContents(helpContents);
 		connection.sendMessage(message);
+		serverLogger.addLog("dynamic variables loaded and sent to player (player: " + connectionMap.get(connection).getUsername() + ");");
 	}
 	
 	public Map<User, JFGConnection> getUserMap() {
