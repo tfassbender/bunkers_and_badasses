@@ -3,7 +3,6 @@ package net.jfabricationgames.bunkers_and_badasses.server;
 import java.io.IOException;
 
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
-import net.jfabricationgames.jfgserver.secured_message.JFGSecureMessageConnection;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 /**
@@ -39,7 +38,8 @@ public class ServerMain {
 		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter, server);
 		server.setInterpreterFactory(interpreter);
 		//set the connection factory to use secured messaging
-		server.setConnectionFactory(new JFGSecureMessageConnection());
+		server.setConnectionFactory(new BunkersAndBadassesConnection());
+		//server.setConnectionFactory(new JFGSecureMessageConnection());
 		
 		//set the JFGConnections to reset the output before every message sent
 		//JFGConnection.setResetBeforeSending(true);

@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.server;
 
 import java.awt.Dimension;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -42,6 +43,8 @@ import net.jfabricationgames.jfgdatabaselogin.message.Cryptographer;
 import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
+import net.jfabricationgames.logger.JFGLogger;
+import net.jfabricationgames.logger.JFGLoggerManager;
 
 public class BunkersAndBadassesServer extends JFGLoginServer {
 	
@@ -63,6 +66,8 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	
 	private ServerPingManager pingManager;
 	
+	private JFGLogger serverLogger;
+	
 	public BunkersAndBadassesServer(int port) {
 		super(port);
 		userMap = new HashMap<User, JFGConnection>();
@@ -77,6 +82,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		loadUsers();
 		pingManager = new ServerPingManager(this);
 		setGroupFactory(new BunkersAndBadassesConnectionGroup());
+		//create a logger for the server
+		try {
+			serverLogger = new JFGLogger("bunkers_and_badasses_server_log", 100);
+			JFGLoggerManager.addLogger(serverLogger);
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	/**
@@ -119,6 +132,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		sendUserUpdate();
 		//start the secure connection after the user update was sent
 		//startSecureConnection(connection, user);
+		//serverLogger.addLog("accepted login and maped connection (user: " + username + ");");
 	}
 	
 	/**
@@ -140,6 +154,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		closeConnection(connection);
 		//send an update to the clients
 		sendUserUpdate();
+		//serverLogger.addLog("logged out user (user: " + user + ");");
 	}
 
 	/**
@@ -174,6 +189,7 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 			//con.resetOutput();
 			con.sendMessage(message);
 		}
+		//serverLogger.addLog("sending game creation request (from player: " + message.getPlayer() + "; );
 	}
 	/**
 	 * Send an answer to a game creating request to the player that invited this player.
