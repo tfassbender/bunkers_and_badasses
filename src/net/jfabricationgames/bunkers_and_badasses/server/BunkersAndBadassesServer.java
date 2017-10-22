@@ -70,6 +70,14 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 	
 	public BunkersAndBadassesServer(int port) {
 		super(port);
+		//create a logger for the server
+		try {
+			serverLogger = new JFGLogger("bunkers_and_badasses_server_log", 100);
+			JFGLoggerManager.addLogger(serverLogger);
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 		userMap = new HashMap<User, JFGConnection>();
 		connectionMap = new HashMap<JFGConnection, User>();
 		loadedMaps = new HashMap<Integer, BoardKeeper>();
@@ -82,14 +90,6 @@ public class BunkersAndBadassesServer extends JFGLoginServer {
 		loadUsers();
 		pingManager = new ServerPingManager(this);
 		setGroupFactory(new BunkersAndBadassesConnectionGroup());
-		//create a logger for the server
-		try {
-			serverLogger = new JFGLogger("bunkers_and_badasses_server_log", 100);
-			JFGLoggerManager.addLogger(serverLogger);
-		}
-		catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
 	}
 	
 	/**

@@ -3,7 +3,7 @@
 
 	<property name="version.mayor">0</property>
 	<property name="version.minor">3</property>
-	<property name="version.patch">0</property>
+	<property name="version.patch">1</property>
 
 	<property name="version">V${version.mayor}.${version.minor}.${version.patch}</property>
 
@@ -21,7 +21,8 @@
 	<property name="path_elem_jfg_toolbox">jfabricationgames_toolbox_V1.0.7.jar</property>
 	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.2.1.jar</property>
 	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
-	<property name="path_elem_jfg_server">jfg_serverV1.2.1.jar</property>
+	<property name="path_elem_jfg_server">jfg_serverV1.2.2_test.jar</property>
+	<property name="path_elem_jfg_logger">jfg_loggerV1.0.1.jar</property>
 	<property name="path_elem_miglayout">miglayout15-swing.jar</property>
 	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin.jar</property>
 
@@ -37,6 +38,7 @@
 				<pathelement path="${path_elem_jfg_database_login}" />
 				<pathelement path="${path_elem_jfg_jdbc_connector}" />
 				<pathelement path="${path_elem_jfg_server}" />
+				<pathelement path="${path_elem_jfg_logger}" />
 				<pathelement path="${path_elem_miglayout}" />
 				<pathelement path="${path_elem_mysql_connector}" />
 			</classpath>

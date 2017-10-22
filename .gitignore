@@ -2,6 +2,7 @@
 .project
 .settings/
 .window_properties/
+.jfgLogData/
 bin/
 build/
 dist/

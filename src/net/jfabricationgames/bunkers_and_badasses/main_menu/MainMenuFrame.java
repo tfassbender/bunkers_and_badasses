@@ -105,6 +105,7 @@ public class MainMenuFrame extends JFrame {
 		
 		//change the client to a BunkersAndBadassesClient that logs the communication
 		this.client = new BunkersAndBadassesClient((JFGSecureMessageClient) clientOld);
+		//this.client = clientOld;
 		
 		//startSecureConnection(client);
 		
