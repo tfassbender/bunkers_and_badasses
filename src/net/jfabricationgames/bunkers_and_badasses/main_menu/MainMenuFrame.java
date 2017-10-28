@@ -30,7 +30,6 @@ import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatPanel;
-import net.jfabricationgames.bunkers_and_badasses.game.BunkersAndBadassesClient;
 import net.jfabricationgames.bunkers_and_badasses.game.ClientPingManager;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
@@ -52,7 +51,6 @@ import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
-import net.jfabricationgames.jfgserver.secured_message.JFGSecureMessageClient;
 import net.miginfocom.swing.MigLayout;
 
 public class MainMenuFrame extends JFrame {
@@ -104,8 +102,8 @@ public class MainMenuFrame extends JFrame {
 		});
 		
 		//change the client to a BunkersAndBadassesClient that logs the communication
-		this.client = new BunkersAndBadassesClient((JFGSecureMessageClient) clientOld);
-		//this.client = clientOld;
+		//this.client = new BunkersAndBadassesClient((JFGSecureMessageClient) clientOld);
+		this.client = clientOld;
 		
 		//startSecureConnection(client);
 		

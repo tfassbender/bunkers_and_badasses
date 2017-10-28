@@ -12,7 +12,11 @@ import net.jfabricationgames.logger.JFGLoggerManager;
 
 /**
  * A subclass of the JFGSecureMessageClient that logs all outgoing and incoming messages.
+ * 
+ * This client is not working because the construction of a JFGClient from another client seems not to work.
+ * It was only used for message logging so...
  */
+@Deprecated
 public class BunkersAndBadassesClient extends JFGSecureMessageClient {
 	
 	private static JFGLogger communicationLogger;
