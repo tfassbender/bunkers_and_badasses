@@ -112,6 +112,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		else if (message instanceof DynamicVariableRequestMessage) {
 			interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, connection);
 		}
+		else {
+			System.err.println("BunkersAndBadassesServerInterpreter: Received unknown message (" + message.getClass().getName() + ")");
+		}
 	}
 	
 	private void interpreteDatabaseLoginMessage(JFGDatabaseLoginMessage message, JFGConnection connection) {

@@ -37,6 +37,9 @@ public class LoginClientInterpreter implements JFGClientInterpreter {
 			//store the user name in the UserManager
 			UserManager.setUsername(loginMain.getUsername());
 		}
+		else {
+			System.err.println("LoginClientInterpreter: Received unknown message (" + message.getClass().getName() + ")");
+		}
 	}
 	
 	public LoginLoadingDialog getLoginLoadingDialog() {

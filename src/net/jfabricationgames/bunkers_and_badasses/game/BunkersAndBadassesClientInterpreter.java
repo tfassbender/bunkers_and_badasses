@@ -65,6 +65,9 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		else if (message instanceof FightTransfereMessage) {
 			interpreteFightTransfereMessage((FightTransfereMessage) message);
 		}
+		else {
+			System.err.println("BunkersAndBadassesClientInterpreter: Received unknown message (" + message.getClass().getName() + ")");
+		}
 	}
 	
 	private void interpreteChatMessage(ChatMessage message) {

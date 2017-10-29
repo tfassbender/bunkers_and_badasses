@@ -20,7 +20,7 @@ public class BunkersAndBadassesConnection extends JFGSecureMessageConnection {
 	protected BunkersAndBadassesConnection() {
 		if (communicationLogger == null) {
 			try {
-				communicationLogger = new JFGLogger("bunkers_and_badasses_server_communication_logs", 100);
+				communicationLogger = new JFGLogger("bunkers_and_badasses_server_communication_logs", 1000);
 				JFGLoggerManager.addLogger(communicationLogger);
 			}
 			catch (IOException ioe) {
@@ -54,7 +54,11 @@ public class BunkersAndBadassesConnection extends JFGSecureMessageConnection {
 				log += "unshared; ";
 			}
 		}
-		log += "type: " + message.getClass().getName() + ");";
+		log += "type: " + message.getClass().getName();
+		if (message instanceof JFGAcknowledgeMessage) {
+			log += "; ackId: " + ((JFGAcknowledgeMessage) message).getAcknoledgingMessageId();
+		}
+		log += ");";
 		communicationLogger.addLog(log);
 	}
 	private void createReceiveLog(JFGServerMessage message, boolean ack) {

@@ -23,9 +23,12 @@ public class BunkersAndBadassesClient extends JFGSecureMessageClient {
 	
 	public BunkersAndBadassesClient(JFGSecureMessageClient secureMessageClient) {
 		super(secureMessageClient);
+		/*connection.interrupt();
+		connection = null;
+		startClient();//start the client thread for the right references (not really working...)*/
 		if (communicationLogger == null) {
 			try {
-				communicationLogger = new JFGLogger("bunkers_and_badasses_client_communication_logs", 100);
+				communicationLogger = new JFGLogger("bunkers_and_badasses_client_communication_logs", 1000);
 				JFGLoggerManager.addLogger(communicationLogger);
 			}
 			catch (IOException ioe) {

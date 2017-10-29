@@ -64,6 +64,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 		else if (message instanceof DynamicVariableRequestMessage) {
 			interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, client);
 		}
+		else {
+			System.err.println("MainMenuClientInterpreter: Received unknown message (" + message.getClass().getName() + ")");
+		}
 	}
 	
 	private void interpreteMainMenuMessage(MainMenuMessage message, JFGClient client) {
