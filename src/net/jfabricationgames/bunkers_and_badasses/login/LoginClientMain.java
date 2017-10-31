@@ -93,7 +93,7 @@ public class LoginClientMain extends JFrame {
 		try (BufferedReader buildInfoReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/build_info")))) {
 			StringBuilder buildInfo = new StringBuilder();
 			String line;
-			buildInfo.append("Bunkers and Badasses - Client Started\n");
+			buildInfo.append("Bunkers and Badasses - Client Started\n\n");
 			while ((line = buildInfoReader.readLine()) != null) {
 				buildInfo.append(line);
 				buildInfo.append('\n');
