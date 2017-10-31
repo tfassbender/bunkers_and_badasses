@@ -2,6 +2,9 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
+	- sometimes two or more pre-game dialogs start
+	- check whether the board exists before starting the game (nullpointer otherwise)
+	- building costs are shown wrong in resource info frame
 	- some turn goals seem to be not added to the points (capitalism) (test implementation)
 	- used resources are sometimes calculated wrong (?)
 	- debug fights:
@@ -10,6 +13,8 @@ Bunkers and Badasses - Tasks
 		- heros seem to be not removed from the players hand sometimes (?)
 		
 - Next versions:
+	- some changes in turn execution gui (smaller view)
+	- add some functions to the gui (e.g. opening turn goal dialog via double clicking)
 	- fix the stream corrupted exception (almost)
 	- implement hero functions
 	- implement storing and loading of the game in the database

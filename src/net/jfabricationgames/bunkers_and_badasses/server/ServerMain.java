@@ -1,6 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
@@ -55,6 +57,21 @@ public class ServerMain {
 		
 		//set the server application value to true
 		BunkersAndBadassesServer.IS_SERVER_APPLICATION = true;
+		
+		//print the build information
+		try (BufferedReader buildInfoReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/build_info")))) {
+			StringBuilder buildInfo = new StringBuilder();
+			String line;
+			buildInfo.append('\n');
+			while ((line = buildInfoReader.readLine()) != null) {
+				buildInfo.append(line);
+				buildInfo.append('\n');
+			}
+			System.out.println(buildInfo.toString());
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	public JFGLoginServer getServer() {

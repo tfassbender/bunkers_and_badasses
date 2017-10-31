@@ -5,7 +5,8 @@
 	<property name="version.minor">3</property>
 	<property name="version.patch">1</property>
 
-	<property name="version">V${version.mayor}.${version.minor}.${version.patch}</property>
+	<property name="version_number">${version.mayor}.${version.minor}.${version.patch}</property>
+	<property name="version">V${version_number}</property>
 
 	<property name="project_name_client">Bunkers_And_Badasses</property>
 	<property name="project_name_server">Bunkers_And_Badasses_Server</property>
@@ -21,7 +22,7 @@
 	<property name="path_elem_jfg_toolbox">jfabricationgames_toolbox_V1.0.7.jar</property>
 	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.2.1.jar</property>
 	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
-	<property name="path_elem_jfg_server">jfg_serverV1.2.2.jar</property>
+	<property name="path_elem_jfg_server">jfg_serverV1.2.2_test.jar</property>
 	<property name="path_elem_jfg_logger">jfg_loggerV1.0.2.jar</property>
 	<property name="path_elem_miglayout">miglayout15-swing.jar</property>
 	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin.jar</property>
@@ -29,6 +30,17 @@
 	<target name="init">
 		<tstamp />
 		<mkdir dir="${build}" />
+	</target>
+
+	<target name="generate_timestamp" depends="init">
+		<sequential>
+			<local name="timestamp" />
+			<tstamp>
+				<format property="timestamp" pattern="yyyy_MM_dd HH:mm:ss" />
+			</tstamp>
+			<echo file="${build}/build_info">Bunkers and Badasses Version: ${version_number}
+Build on: ${timestamp}</echo>
+		</sequential>
 	</target>
 
 	<target name="compile_src" depends="init">
@@ -46,6 +58,7 @@
 	</target>
 
 	<target name="build_jars">
+		<antcall target="generate_timestamp" />
 		<antcall target="build_jar_client" />
 		<antcall target="build_jar_server" />
 	</target>
@@ -59,6 +72,7 @@
 			<fileset dir="${src}">
 				<include name="${images}" />
 			</fileset>
+			<fileset dir="." includes="${build}/build_timestamp" />
 			<zipgroupfileset dir="." includes="*.jar" />
 		</jar>
 	</target>
@@ -72,6 +86,38 @@
 			<!--<fileset dir="${src}">
 				<include name="${images}" />
 			</fileset>-->
+			<fileset dir="." includes="${build}/build_timestamp" />
+			<zipgroupfileset dir="." includes="*.jar" />
+		</jar>
+	</target>
+
+	<target name="build_test_jars">
+		<!--build the normal jars but mark them as test-->
+		<antcall target="build_test_jar_client" />
+		<antcall target="build_test_jar_server" />
+	</target>
+
+	<target name="build_test_jar_client" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_client}_${version}_test.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassClient}" />
+			</manifest>
+			<fileset dir="${src}">
+				<include name="${images}" />
+			</fileset>
+			<fileset dir="." includes="${build}/build_timestamp" />
+			<zipgroupfileset dir="." includes="*.jar" />
+		</jar>
+	</target>
+
+	<target name="build_test_jar_server" depends="compile_src">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${project_name_server}_${version}_test.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="${mainClassServer}" />
+			</manifest>
+			<fileset dir="." includes="${build}/build_timestamp" />
 			<zipgroupfileset dir="." includes="*.jar" />
 		</jar>
 	</target>

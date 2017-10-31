@@ -5,7 +5,9 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -86,6 +88,25 @@ public class LoginClientMain extends JFrame {
 		
 		//set the JFGClient to automatically reset the output before every message sent
 		//JFGClient.setResetBeforeSending(true);
+		
+		//print the build information
+		try (BufferedReader buildInfoReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/build_info")))) {
+			StringBuilder buildInfo = new StringBuilder();
+			String line;
+			buildInfo.append("Bunkers and Badasses - Client Started\n");
+			while ((line = buildInfoReader.readLine()) != null) {
+				buildInfo.append(line);
+				buildInfo.append('\n');
+			}
+			System.out.println(buildInfo.toString());
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		catch (NullPointerException npe) {
+			//the NullPointerException occurs when the client is started from eclipse and not from the built jar (can be ignored)
+			//npe.printStackTrace();
+		}
 		
 		//create a new ImageLoader for the login panels
 		imageLoader = new ImageLoader();
