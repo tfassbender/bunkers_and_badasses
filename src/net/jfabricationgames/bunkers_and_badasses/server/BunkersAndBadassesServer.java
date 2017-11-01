@@ -41,12 +41,12 @@ import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgdatabaselogin.message.Cryptographer;
 import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessage;
+import net.jfabricationgames.jfgserver.secured_message.JFGSecureLoginServer;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
-import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 import net.jfabricationgames.logger.JFGLogger;
 import net.jfabricationgames.logger.JFGLoggerManager;
 
-public class BunkersAndBadassesServer extends JFGLoginServer {
+public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 	
 	public static final String loginTable = "users";
 	

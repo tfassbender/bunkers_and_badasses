@@ -27,6 +27,7 @@ import net.jfabricationgames.jfgdatabaselogin.message.JFGDatabaseLoginMessageTyp
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
 import net.jfabricationgames.jfgserver.client.JFGServerMessage;
 import net.jfabricationgames.jfgserver.interpreter.JFGServerInterpreter;
+import net.jfabricationgames.jfgserver.secured_message.JFGReloginMessage;
 import net.jfabricationgames.jfgserver.server.JFGConnection;
 
 public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter {
@@ -51,6 +52,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		//login messages
 		if (message instanceof JFGDatabaseLoginMessage) {
 			interpreteDatabaseLoginMessage((JFGDatabaseLoginMessage) message, connection);
+		}
+		else if (message instanceof JFGReloginMessage) {
+			interpreteReloginMessage((JFGReloginMessage) message, connection);
 		}
 		else if (message instanceof ServerNameRequest) {
 			interpreteServerNameRequest((ServerNameRequest) message, connection);
@@ -128,6 +132,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			}
 			//server.generateUserSkills(message);
 		}
+	}
+	
+	private void interpreteReloginMessage(JFGReloginMessage message, JFGConnection connection) {
+		loginInterpreter.interpreteServerMessage(message, connection);
 	}
 	
 	private void interpreteServerNameRequest(ServerNameRequest message, JFGConnection connection) {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseLoginServerInterpreter;
+import net.jfabricationgames.jfgdatabaselogin.server.JFGDatabaseSecureLoginServerInterpreter;
 import net.jfabricationgames.jfgserver.server.JFGLoginServer;
 
 /**
@@ -36,7 +37,7 @@ public class ServerMain {
 		JFGDatabaseLoginServerInterpreter.SIGN_UP_SQL = "INSERT INTO bunkers_and_badasses." + BunkersAndBadassesServer.loginTable + " VALUES (0, '%user', '%pass');";
 		//create a new interpreter
 		server = new BunkersAndBadassesServer(SERVER_PORT);
-		JFGDatabaseLoginServerInterpreter loginInterpreter = new JFGDatabaseLoginServerInterpreter(server);
+		JFGDatabaseSecureLoginServerInterpreter loginInterpreter = new JFGDatabaseSecureLoginServerInterpreter(server);
 		BunkersAndBadassesServerInterpreter interpreter = new BunkersAndBadassesServerInterpreter(loginInterpreter, server);
 		server.setInterpreterFactory(interpreter);
 		//set the connection factory to use secured messaging
