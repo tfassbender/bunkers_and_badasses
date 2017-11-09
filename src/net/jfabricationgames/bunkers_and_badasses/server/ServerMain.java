@@ -73,6 +73,9 @@ public class ServerMain {
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+		catch (NullPointerException npe) {
+			System.err.println("No build information found");
+		}
 	}
 	
 	public JFGLoginServer getServer() {

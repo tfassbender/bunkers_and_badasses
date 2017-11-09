@@ -2,6 +2,7 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
+	- when messages are received in wrong order the game may not go on (fight messages)
 	- sometimes two or more pre-game dialogs start
 	- check whether the board exists before starting the game (nullpointer otherwise)
 	- building costs are shown wrong in resource info frame

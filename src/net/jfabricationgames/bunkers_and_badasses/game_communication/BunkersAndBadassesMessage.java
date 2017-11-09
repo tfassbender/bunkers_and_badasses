@@ -10,11 +10,22 @@ public class BunkersAndBadassesMessage implements JFGClientMessage, JFGServerMes
 	
 	protected int id;//a randomly generated id to identify the message
 	
+	private int sendCount;
+	
 	public BunkersAndBadassesMessage() {
 		id = (int) (Math.random() * Integer.MAX_VALUE);
 	}
 	
 	public int getMessageId() {
 		return id;
+	}
+	
+	@Override
+	public int getSendCount() {
+		return sendCount;
+	}
+	@Override
+	public void setSendCount(int count) {
+		this.sendCount = count;
 	}
 }

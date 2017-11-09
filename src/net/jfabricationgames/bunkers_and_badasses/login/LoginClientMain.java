@@ -105,7 +105,7 @@ public class LoginClientMain extends JFrame {
 		}
 		catch (NullPointerException npe) {
 			//the NullPointerException occurs when the client is started from eclipse and not from the built jar (can be ignored)
-			//npe.printStackTrace();
+			System.err.println("No build information found");
 		}
 		
 		//create a new ImageLoader for the login panels

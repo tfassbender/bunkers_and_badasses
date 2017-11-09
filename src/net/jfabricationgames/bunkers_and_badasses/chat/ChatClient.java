@@ -38,4 +38,9 @@ public class ChatClient {
 	public void addChatPanel(ChatPanel panel) {
 		panels.add(panel);
 	}
+	
+	//TODO remove after tests
+	public JFGClient getClient() {
+		return client;
+	}
 }

@@ -22,7 +22,7 @@ public class ClientPingManager {
 			public void run() {
 				try {
 					while (true) {
-						client.sendMessage(pingMessage);
+						client.sendMessageUnshared(pingMessage);
 						Thread.sleep(PING_TIME);
 					}
 				}

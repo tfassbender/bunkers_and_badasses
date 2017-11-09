@@ -55,6 +55,8 @@ public class ServerLogoutDialog extends JDialog {
 			}
 			{
 				JTextArea txtrServerMessage = new JTextArea(message.getMessage());
+				txtrServerMessage.setWrapStyleWord(true);
+				txtrServerMessage.setLineWrap(true);
 				txtrServerMessage.setEditable(false);
 				txtrServerMessage.setBackground(Color.LIGHT_GRAY);
 				panel.add(txtrServerMessage, "cell 1 4,grow");

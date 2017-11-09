@@ -42,11 +42,13 @@ public class BunkersAndBadassesConnection extends JFGSecureMessageConnection {
 		String log;
 		if (message instanceof JFGSecurableMessage) {
 			int messageId = ((JFGSecurableMessage) message).getMessageId();
+			int messageCount = ((JFGSecurableMessage) message).getSendCount();
 			log = "sending message (secured; ";
 			if (unshared) {
 				log += "unshared; ";
 			}
 			log += "id: " + messageId + "; ";
+			log += "count: " + messageCount + "; ";
 		}
 		else {
 			log = "sending message (unsecured; ";
@@ -75,7 +77,9 @@ public class BunkersAndBadassesConnection extends JFGSecureMessageConnection {
 			}
 			else {
 				int messageId = ((JFGSecurableMessage) message).getMessageId();
+				int messageCount = ((JFGSecurableMessage) message).getSendCount();
 				log += "id: " + messageId + "; ";
+				log += "count: " + messageCount + "; ";
 			}
 			log += "type: " + message.getClass().getName() + ");";
 		}
@@ -84,19 +88,19 @@ public class BunkersAndBadassesConnection extends JFGSecureMessageConnection {
 	
 	@Override
 	public void sendMessage(JFGClientMessage message) {
-		createSendLog(message, false);
 		super.sendMessage(message);
+		createSendLog(message, false);
 	}
 	
 	@Override
 	public void sendMessageUnshared(JFGClientMessage message) {
-		createSendLog(message, true);
 		super.sendMessageUnshared(message);
+		createSendLog(message, true);
 	}
 	
 	@Override
 	public void receiveMessage(JFGServerMessage message) {
-		createReceiveLog(message, message instanceof JFGAcknowledgeMessage);
 		super.receiveMessage(message);
+		createReceiveLog(message, message instanceof JFGAcknowledgeMessage);
 	}
 }

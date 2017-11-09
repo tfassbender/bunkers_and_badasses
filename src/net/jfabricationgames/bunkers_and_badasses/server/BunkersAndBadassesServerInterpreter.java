@@ -36,6 +36,10 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	private BunkersAndBadassesServer server;
 	
+	public BunkersAndBadassesServer getServer() {
+		return server;
+	}
+	
 	public BunkersAndBadassesServerInterpreter(JFGDatabaseLoginServerInterpreter loginInterpreter, BunkersAndBadassesServer server) {
 		this.loginInterpreter = loginInterpreter;
 		this.server = server;
@@ -49,75 +53,82 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	
 	@Override
 	public void interpreteServerMessage(JFGServerMessage message, JFGConnection connection) {
-		//login messages
-		if (message instanceof JFGDatabaseLoginMessage) {
-			interpreteDatabaseLoginMessage((JFGDatabaseLoginMessage) message, connection);
-		}
-		else if (message instanceof JFGReloginMessage) {
-			interpreteReloginMessage((JFGReloginMessage) message, connection);
-		}
-		else if (message instanceof ServerNameRequest) {
-			interpreteServerNameRequest((ServerNameRequest) message, connection);
-		}
-		else if (message instanceof MainMenuMessage) {
-			interpreteMainMenuMessage((MainMenuMessage) message, connection);
-		}
-		else if (message instanceof ChatMessage) {
-			interpreteChatMessage((ChatMessage) message, connection);
-		}
-		else if (message instanceof UserLogoutMessage) {
-			interpreteUserLogoutMessage((UserLogoutMessage) message, connection);
-		}
-		else if (message instanceof PingMessage) {
-			interpreteServerPingMessage((PingMessage) message, connection);
-		}
-		//board loading message
-		//don't use the board loaders; boards are stored locally
-		else if (message instanceof BoardRequestMessage) {
-			System.err.println("Received BoardRequestMessage");
-			//interpreteBoardRequestMessage((BoardRequestMessage) message, connection);
-		}
-		else if (message instanceof BoardOverviewRequestMessage) {
-			//now used to add content like player numbers to the boards
-			interpreteBoardOverviewRequestMessage((BoardOverviewRequestMessage) message, connection);
-		}
-		//game storing message
-		else if (message instanceof GameSaveMessage) {
-			interpreteGameSaveMessage((GameSaveMessage) message, connection);
-		}
-		//game loading messages
-		else if (message instanceof GameOverviewRequestMessage) {
-			interpreteGameOverviewRequestMessage((GameOverviewRequestMessage) message, connection);
-		}
-		else if (message instanceof GameLoadRequestMessage) {
-			interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, connection);
-		}
-		else if (message instanceof GameCreationMessage) {
-			interpreteGameCreationMessage((GameCreationMessage) message, connection);
-		}
-		else if (message instanceof GameStartMessage) {
-			interpreteGameStartMessage((GameStartMessage) message, connection);
-		}
-		//data transfer messages
-		else if (message instanceof GameTransferMessage) {
-			interpreteGameTransferMessage((GameTransferMessage) message, connection);
-		}
-		else if (message instanceof SkillProfileTransferMessage) {
-			interpreteSkillProfileTransferMessage((SkillProfileTransferMessage) message, connection);
-		}
-		else if (message instanceof FightTransfereMessage) {
-			interpreteFightTransfereMessage((FightTransfereMessage) message, connection);
-		}
-		//pre game message
-		else if (message instanceof PreGameDataMessage) {
-			interpretePreGameDataMessage((PreGameDataMessage) message, connection);
-		}
-		//dynamic variables request message
-		else if (message instanceof DynamicVariableRequestMessage) {
-			interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, connection);
+		if (server.isLoggedIn(connection)) {
+			if (message instanceof ServerNameRequest) {
+				interpreteServerNameRequest((ServerNameRequest) message, connection);
+			}
+			else if (message instanceof MainMenuMessage) {
+				interpreteMainMenuMessage((MainMenuMessage) message, connection);
+			}
+			else if (message instanceof ChatMessage) {
+				interpreteChatMessage((ChatMessage) message, connection);
+			}
+			else if (message instanceof UserLogoutMessage) {
+				interpreteUserLogoutMessage((UserLogoutMessage) message, connection);
+			}
+			else if (message instanceof PingMessage) {
+				interpreteServerPingMessage((PingMessage) message, connection);
+			}
+			//board loading message
+			//don't use the board loaders; boards are stored locally
+			else if (message instanceof BoardRequestMessage) {
+				System.err.println("Received BoardRequestMessage");
+				//interpreteBoardRequestMessage((BoardRequestMessage) message, connection);
+			}
+			else if (message instanceof BoardOverviewRequestMessage) {
+				//now used to add content like player numbers to the boards
+				interpreteBoardOverviewRequestMessage((BoardOverviewRequestMessage) message, connection);
+			}
+			//game storing message
+			else if (message instanceof GameSaveMessage) {
+				interpreteGameSaveMessage((GameSaveMessage) message, connection);
+			}
+			//game loading messages
+			else if (message instanceof GameOverviewRequestMessage) {
+				interpreteGameOverviewRequestMessage((GameOverviewRequestMessage) message, connection);
+			}
+			else if (message instanceof GameLoadRequestMessage) {
+				interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, connection);
+			}
+			else if (message instanceof GameCreationMessage) {
+				interpreteGameCreationMessage((GameCreationMessage) message, connection);
+			}
+			else if (message instanceof GameStartMessage) {
+				interpreteGameStartMessage((GameStartMessage) message, connection);
+			}
+			//data transfer messages
+			else if (message instanceof GameTransferMessage) {
+				interpreteGameTransferMessage((GameTransferMessage) message, connection);
+			}
+			else if (message instanceof SkillProfileTransferMessage) {
+				interpreteSkillProfileTransferMessage((SkillProfileTransferMessage) message, connection);
+			}
+			else if (message instanceof FightTransfereMessage) {
+				interpreteFightTransfereMessage((FightTransfereMessage) message, connection);
+			}
+			//pre game message
+			else if (message instanceof PreGameDataMessage) {
+				interpretePreGameDataMessage((PreGameDataMessage) message, connection);
+			}
+			//dynamic variables request message
+			else if (message instanceof DynamicVariableRequestMessage) {
+				interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, connection);
+			}
+			else {
+				System.err.println("BunkersAndBadassesServerInterpreter: Received unknown message (" + message.getClass().getName() + ")");
+			}
 		}
 		else {
-			System.err.println("BunkersAndBadassesServerInterpreter: Received unknown message (" + message.getClass().getName() + ")");
+			//login messages
+			if (message instanceof JFGDatabaseLoginMessage) {
+				interpreteDatabaseLoginMessage((JFGDatabaseLoginMessage) message, connection);
+			}
+			else if (message instanceof JFGReloginMessage) {
+				interpreteReloginMessage((JFGReloginMessage) message, connection);
+			}
+			else {
+				System.err.println("Received message that can't be interpreted, because the client is not logged in (" + message.getClass().getName() + ")");
+			}
 		}
 	}
 	

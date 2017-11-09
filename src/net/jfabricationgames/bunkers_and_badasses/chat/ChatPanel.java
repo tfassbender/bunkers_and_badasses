@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
+import net.jfabricationgames.jfgserver.secured_message.CorruptedMessage;
 import net.miginfocom.swing.MigLayout;
 
 public class ChatPanel extends JPanel {
@@ -62,12 +63,19 @@ public class ChatPanel extends JPanel {
 	}
 	
 	private void sendMessage() {
-		String message = UserManager.getUsername() + ": " + textField.getText();
-		if (textField.getText() != null && !textField.getText().equals("")) {
-			client.sendMessage(message);
-			//text is added by client
-			//txtrChatpanel.append(message + "\n");
-			textField.setText("");
+		//TODO remove connection test after tests
+		if (textField.getText().equals("connection_test")) {
+			//test the reconnect methods of the server
+			client.getClient().sendMessage(new CorruptedMessage());
+		}
+		else {
+			String message = UserManager.getUsername() + ": " + textField.getText();
+			if (textField.getText() != null && !textField.getText().equals("")) {
+				client.sendMessage(message);
+				//text is added by client
+				//txtrChatpanel.append(message + "\n");
+				textField.setText("");
+			}			
 		}
 	}
 	
