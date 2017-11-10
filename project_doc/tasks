@@ -16,7 +16,6 @@ Bunkers and Badasses - Tasks
 - Next versions:
 	- some changes in turn execution gui (smaller view)
 	- add some functions to the gui (e.g. opening turn goal dialog via double clicking)
-	- fix the stream corrupted exception (almost)
 	- implement hero functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends
