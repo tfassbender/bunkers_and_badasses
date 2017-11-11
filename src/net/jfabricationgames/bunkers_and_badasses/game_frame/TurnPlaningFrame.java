@@ -873,7 +873,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	public void receiveConfirmAnswer(boolean confirm, int type) {
 		if (confirm) {
 			game.getPlanManager().commit();
-			game.setState(GameState.WAIT);
+			//game.setState(GameState.ACT);//set by the plan manager
 			game.getGameFrame().update();
 			disableAll();
 		}

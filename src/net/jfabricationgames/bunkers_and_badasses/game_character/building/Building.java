@@ -35,6 +35,7 @@ public abstract class Building implements Serializable {
 	
 	protected int buildingId;
 	protected int extendedBuildingId;
+	protected int notExtendedBuildingId;
 	
 	protected String imagePath;
 	protected String expandedImagePath;
@@ -86,7 +87,7 @@ public abstract class Building implements Serializable {
 	
 	@Override
 	public String toString() {
-		return name;
+		return getName();
 	}
 	
 	public abstract Building newInstance();
@@ -105,6 +106,10 @@ public abstract class Building implements Serializable {
 		points = variables[buildingId][BuildingStorage.POINTS];
 		extensionPrice = buildingExtensionPrices[buildingId];
 		buildingPrice = buildingPricesStorage[buildingId];
+		if (extended) {
+			//load the costs for extending the to this building
+			extensionPrice = buildingExtensionPrices[notExtendedBuildingId];
+		}
 	}
 	
 	public void loadImage() {
@@ -134,6 +139,7 @@ public abstract class Building implements Serializable {
 	 * The default implementation does nothing because not all buildings can be extended.
 	 */
 	public void extend() {
+		notExtendedBuildingId = buildingId;//store the not extended building id
 		buildingId = extendedBuildingId;
 		extended = true;
 		loadVariables();

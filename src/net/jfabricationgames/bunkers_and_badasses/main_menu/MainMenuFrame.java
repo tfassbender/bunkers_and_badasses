@@ -434,6 +434,14 @@ public class MainMenuFrame extends JFrame {
 		gameLoadingDialog = null;
 	}
 	
+	public boolean isMapLoaded(String mapName) {
+		boolean boardLoaded = false;
+		for (Board board : playableBoards) {
+			boardLoaded |= board.getName().equals(mapName);
+		}
+		return boardLoaded;
+	}
+	
 	/**
 	 * Receive the dynamic variables from the server.
 	 * 

@@ -49,6 +49,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.RaidCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class CommandExecutionPanel extends JPanel {
 	
@@ -267,6 +269,11 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_3.add(lblTruppennormal_1, "cell 1 2");
 		
 		spinnerNormalTroops = new JSpinner();
+		spinnerNormalTroops.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateKosts();
+			}
+		});
 		spinnerNormalTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nNormale Truppen die bei diesem <br>\r\nMarsch bewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nNormale Truppen die neu Rekrutiert<br>\r\nwerden sollen.\r\n</html>");
 		spinnerNormalTroops.setEnabled(false);
 		spinnerNormalTroops.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -280,6 +287,11 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_3.add(lblTruppenbadass_1, "cell 1 3");
 		
 		spinnerBadassTroops = new JSpinner();
+		spinnerBadassTroops.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateKosts();
+			}
+		});
 		spinnerBadassTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nBadasses die bei diesem Marsch<br>\r\nbewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nTruppen die von normalen Truppen<br>\r\nzu Badasses aufger\u00FCstet werden sollen.\r\n</html>");
 		spinnerBadassTroops.setEnabled(false);
 		spinnerBadassTroops.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -291,6 +303,11 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_3.add(lblAufrstungen, "cell 1 4");
 		
 		spinnerAufrstungen = new JSpinner();
+		spinnerAufrstungen.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateKosts();
+			}
+		});
 		spinnerAufrstungen.setEnabled(false);
 		spinnerAufrstungen.setBackground(Color.LIGHT_GRAY);
 		panel_command_3.add(spinnerAufrstungen, "cell 2 4,growx");
@@ -496,7 +513,7 @@ public class CommandExecutionPanel extends JPanel {
 			Building building = list_building.getSelectedValue();
 			if (building != null) {
 				int[] price = building.getBuildingPrice();
-				txtKosten.setText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
+				txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
 			}
 			else {
 				txtKosten.setText("");
@@ -506,7 +523,7 @@ public class CommandExecutionPanel extends JPanel {
 			Building building = selectedField.getBuilding();
 			if (building != null) {
 				int[] price = building.getExtensionPrice();
-				txtKosten.setText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
+				txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
 			}
 			else {
 				txtKosten.setText("");
@@ -516,7 +533,7 @@ public class CommandExecutionPanel extends JPanel {
 			Building building = selectedField.getBuilding();
 			if (building != null) {
 				int[] price = Building.getStorage().getBuildingBreakOffPrices();
-				txtKosten.setText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
+				txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
 			}
 			else {
 				txtKosten.setText("");
@@ -527,7 +544,7 @@ public class CommandExecutionPanel extends JPanel {
 			int badassTroops = (Integer) spinnerBadassTroops.getValue();
 			int upgrades = (Integer) spinnerAufrstungen.getValue();
 			int[] costs = game.getResourceManager().getResources().get(game.getLocalUser()).getRecroutedTroopCosts(normalTroops, badassTroops, upgrades);
-			txtKosten.setText(costs[0] + " Credits, " + costs[1] + " Munition");
+			txtKosten.setText(costs[0] + " C, " + costs[1] + " M");
 		}
 	}
 	
@@ -561,6 +578,7 @@ public class CommandExecutionPanel extends JPanel {
 					//let the player select the type of building
 					if (field.getBuilding() instanceof EmptyBuilding) {
 						rdbtnAufbauen.setEnabled(true);
+						rdbtnAufbauen.setSelected(true);
 						for (Building building : buildables) {
 							buildingModel.addElement(building);
 						}
@@ -569,6 +587,10 @@ public class CommandExecutionPanel extends JPanel {
 						rdbtnAbreien.setEnabled(true);
 						if (field.getBuilding().isExtendable()) {
 							rdbtnAufrsten.setEnabled(true);
+							rdbtnAufrsten.setSelected(true);
+						}
+						else {
+							rdbtnAbreien.setSelected(true);
 						}
 					}
 				}
@@ -589,17 +611,21 @@ public class CommandExecutionPanel extends JPanel {
 				}
 				else if (command instanceof RaidCommand) {
 					//add all possible raid targets to the list
+					boolean raidCollect = false;
 					for (Field target : field.getNeighbours()) {
 						if (target.getAffiliation() != null && !target.getAffiliation().equals(game.getLocalUser())) {
 							if (target.getCommand() != null && target.getCommand().isRemovable()) {
 								fieldTargetModel.addElement(target);
+								raidCollect |= (target.getCommand() instanceof CollectCommand);
 							}
 						}
 					}
 					//enable the resource radio buttons for resource raids
-					rdbtnCredits.setEnabled(true);
-					rdbtnMunition.setEnabled(true);
-					rdbtnEridium.setEnabled(true);
+					if (raidCollect) {
+						rdbtnCredits.setEnabled(true);
+						rdbtnMunition.setEnabled(true);
+						rdbtnEridium.setEnabled(true);						
+					}
 				}
 				else if (command instanceof RecruitCommand) {
 					//enable the spinners
@@ -664,7 +690,7 @@ public class CommandExecutionPanel extends JPanel {
 	protected void executeCommand() {
 		Field selectedField = turnExecutionFrame.getSelectedField();
 		boolean commandExecuted = false;
-		if (selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && game.getFightManager().getCurrentFight() == null) {
+		if (game.getGameState() == GameState.ACT && selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && game.getFightManager().getCurrentFight() == null) {
 			Command command = selectedField.getCommand();
 			UserResourceManager resourceManager = game.getResourceManager();
 			if (command.isExecutable()) {
@@ -892,10 +918,13 @@ public class CommandExecutionPanel extends JPanel {
 			}
 		}
 		else if (!game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
-			new ErrorDialog("Du bist nicht an der reihe.").setVisible(true);
+			new ErrorDialog("Du bist nicht an der reihe.\n\nDie anderen wollen auch noch ihre Selbstmordkandidaten verheizen.").setVisible(true);
 		}
 		else if (game.getFightManager().getCurrentFight() != null) {
 			new ErrorDialog("Du solltest erst deine Kämpfe zu Ende führen bevor du neue anzettelst.\n\nEs bleibt schon noch genug Zeit sie alle umzubringen.\nNur keine Sorge.").setVisible(true);
+		}
+		else if (game.getGameState() != GameState.ACT) {
+			new ErrorDialog("Die Ausführungsphase hat noch nicht begonnen.\n\nNoch etwas gedult. Du willst doch nicht zu früh kommen.").setVisible(true);
 		}
 		if (commandExecuted) {
 			selectedField.setCommand(null);

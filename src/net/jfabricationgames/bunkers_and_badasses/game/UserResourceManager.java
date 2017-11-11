@@ -73,7 +73,7 @@ public class UserResourceManager implements Serializable{
 	 */
 	public void collectGameStartResources(User user) {
 		resources.get(user).collectGameStartResources();
-		resources.get(user).collectTurnStartResources(game);
+		resources.get(user).collectTurnStartResources(game, game.getLocalUser());
 		resources.get(user).collectTurnBonusResources(game.getGameTurnBonusManager().getUsersBonus(game.getLocalUser()));
 	}
 	/**
@@ -81,7 +81,7 @@ public class UserResourceManager implements Serializable{
 	 */
 	public void collectTurnStartResources() {
 		for (User user : game.getPlayers()) {
-			resources.get(user).collectTurnStartResources(game);
+			resources.get(user).collectTurnStartResources(game, user);
 			resources.get(user).collectTurnBonusResources(game.getGameTurnBonusManager().getUsersBonus(user));
 		}
 	}

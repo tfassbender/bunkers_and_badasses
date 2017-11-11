@@ -361,7 +361,7 @@ public class ResourceInfoFrame extends JFrame {
 	private void updateBuildingCosts() {
 		Building building = (Building) comboBox.getSelectedItem();
 		if (building != null) {
-			if (building.isExtended()) {
+			if (!building.isExtended()) {
 				if (building.getBuildingPrice()[0] >= 0) {
 					txtCostscredits.setText(Integer.toString(building.getBuildingPrice()[0]));
 					txtCostsammo.setText(Integer.toString(building.getBuildingPrice()[1]));

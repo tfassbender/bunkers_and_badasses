@@ -13,6 +13,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.PreGameSelectionFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerLogoutMessage;
+import net.jfabricationgames.bunkers_and_badasses.server.UserUpdateMessage;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.jfabricationgames.jfgserver.client.JFGClientMessage;
 import net.jfabricationgames.jfgserver.interpreter.JFGClientInterpreter;
@@ -64,6 +65,9 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		}
 		else if (message instanceof FightTransfereMessage) {
 			interpreteFightTransfereMessage((FightTransfereMessage) message);
+		}
+		else if (message instanceof UserUpdateMessage) {
+			//do nothing here; these messages are known but are not handled here.
 		}
 		else {
 			System.err.println("BunkersAndBadassesClientInterpreter: Received unknown message (" + message.getClass().getName() + ")");

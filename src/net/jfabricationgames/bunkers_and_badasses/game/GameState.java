@@ -6,9 +6,9 @@ public enum GameState implements Serializable {
 	
 	PLAN("Planungsphase"),
 	ACT("Ausführungsphase"),
-	FIGHT("Kampf"),
+	FIGHT("Kampf");
 	//SELECT_BONUS("Rundenbonus auswählen"),
-	WAIT("Warten auf andere Spieler");
+	//WAIT("Warten auf andere Spieler");
 	
 	private final String name;
 	

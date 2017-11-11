@@ -72,7 +72,11 @@ public class GameRequestDialog extends JFrame {
 			contentPanel.add(lblSpielEinladung, "cell 0 0 2 1,alignx center");
 		}
 		{
-			JLabel lblMessage = new JLabel(invitingUser.toString() + " hat dich zu einem Spiel eingeladen");
+			String message = invitingUser.toString() + " hat dich zu einem Spiel eingeladen";
+			if (!callingFrame.isMapLoaded(map)) {
+				message += ". FEHLER: Karte nicht gefunden!";
+			}
+			JLabel lblMessage = new JLabel(message);
 			lblMessage.setFont(new Font("Tahoma", Font.BOLD, 12));
 			contentPanel.add(lblMessage, "cell 0 2 2 1");
 		}
@@ -145,7 +149,7 @@ public class GameRequestDialog extends JFrame {
 			buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 			{
 				okButton = new JButton("Annehmen");
-				okButton.setEnabled(callingFrame.isDynamicVariablesLoaded());
+				okButton.setEnabled(callingFrame.isDynamicVariablesLoaded() && callingFrame.isMapLoaded(map));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						sendAnswer(true);

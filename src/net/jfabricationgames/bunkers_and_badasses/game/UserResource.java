@@ -11,6 +11,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.TroopStor
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class UserResource implements Serializable, Cloneable {
 	
@@ -91,21 +92,21 @@ public class UserResource implements Serializable, Cloneable {
 	/**
 	 * Collect all resources for the turn start (default, buildings, skill, turn bonus).
 	 */
-	public void collectTurnStartResources(Game game) {
-		int[] turnStartResources = calculateTurnStartResources(game);
+	public void collectTurnStartResources(Game game, User user) {
+		int[] turnStartResources = calculateTurnStartResources(game, user);
 		credits += turnStartResources[0];
 		ammo += turnStartResources[1];
 		eridium += turnStartResources[2];
 	}
 	
-	public int[] calculateTurnStartResources(Game game) {
+	public int[] calculateTurnStartResources(Game game, User user) {
 		int credits = Game.getGameVariableStorage().getTurnStartCredits();
 		int ammo = Game.getGameVariableStorage().getTurnStartAmmo();
 		int eridium = Game.getGameVariableStorage().getTurnStartEridium();
 		//buildings, skills
-		SkillProfile skill = game.getSkillProfileManager().getSelectedProfile(game.getLocalUser());
+		SkillProfile skill = game.getSkillProfileManager().getSelectedProfile(user);
 		for (Field field : game.getBoard().getFields()) {
-			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(user)) {
 				if (field.getBuilding().getCreditMining() > 0) {
 					credits += field.getBuilding().getCreditMining();
 					credits += SkillProfileManager.CREDITS_BUILDING_SKILL_LEVEL[skill.getCreditsBuilding()];
