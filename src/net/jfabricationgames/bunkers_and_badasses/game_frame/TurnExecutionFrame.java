@@ -104,7 +104,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		JPanel panel_reduced_info_set = new JPanel();
 		panel_game_type.add(panel_reduced_info_set, REDUCED_INFO_VIEW);
 		panel_reduced_info_set.setBackground(Color.GRAY);
-		panel_reduced_info_set.setLayout(new MigLayout("", "[700px,grow][:500px:600px,grow]", "[700px,grow][350px:n:375px,grow]"));
+		panel_reduced_info_set.setLayout(new MigLayout("", "[700px,grow][:500px:600px,grow]", "[700px,grow][250px:n:300px,grow]"));
 		
 		boardPanel_2 = new BoardPanel();
 		boardPanel_2.addBoardPanelListener(this);
@@ -163,9 +163,9 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		JPanel panel_low_bar_2 = new JPanel();
 		panel_low_bar_2.setBackground(Color.GRAY);
 		panel_reduced_info_set.add(panel_low_bar_2, "cell 0 1,grow");
-		panel_low_bar_2.setLayout(new MigLayout("", "[:600px:1000px,grow][grow]", "[50px,grow][150px,grow]"));
+		panel_low_bar_2.setLayout(new MigLayout("", "[:600px:1000px,grow][growprio 99,grow]", "[50px,grow][150px,grow]"));
 		
-		panel_execution_2 = new CommandExecutionPanel(this, game);
+		panel_execution_2 = new CommandExecutionReducedPanel(this, game);
 		panel_low_bar_2.add(panel_execution_2, "cell 0 0 1 2,grow");
 		
 		ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/mr_torgue_1.png"));
@@ -287,7 +287,7 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 	}
 	
 	@Override
-	public void receiveBoardMouseClick(MouseEvent event) {
+	public void receiveBoardMouseClick(MouseEvent event, boolean doubleClick) {
 		selectedField = game.getBoard().getFieldAtMousePosition();
 		panel_execution.updateField();
 		panel_execution_2.updateField();

@@ -82,14 +82,22 @@ public class BoardPanel extends JPanel {
 		
 		private Point origin;
 		
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			informListeners(e);
-		}
+		private double dx;
+		private double dy;
 		
 		@Override
 		public void mousePressed(MouseEvent e) {
 			origin = new Point(e.getPoint());
+		}
+		
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			if (Math.hypot(dx, dy) < 10) {
+				//probably clicking was meant
+				informListeners(e);
+			}
+			dx = 0;
+			dy = 0;
 		}
 		
 		@Override
@@ -102,6 +110,8 @@ public class BoardPanel extends JPanel {
 					Rectangle view = viewPort.getViewRect();
 					view.x += deltaX;
 					view.y += deltaY;
+					dx += deltaX;
+					dy += deltaY;
 					panel_scroll_board.scrollRectToVisible(view);
 				}
 			}
@@ -119,7 +129,7 @@ public class BoardPanel extends JPanel {
 	
 	private void informListeners(MouseEvent event) {
 		for (BoardPanelListener listener : boardPanelListeners) {
-			listener.receiveBoardMouseClick(event);
+			listener.receiveBoardMouseClick(event, event.getClickCount() == 2);
 		}
 	}
 	

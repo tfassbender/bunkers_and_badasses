@@ -24,8 +24,15 @@ public class TurnBonusCardPanel extends ImagePanel {
 	public TurnBonusCardPanel(TurnBonus turnBonus) {
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseReleased(MouseEvent e) {
 				requestFocus();
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					//double clicked
+					
+				}
 			}
 		});
 		addFocusListener(new FocusAdapter() {

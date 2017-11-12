@@ -32,7 +32,7 @@ public class PreGameDataMessage extends BunkersAndBadassesMessage {
 	private Field[] startingTroopPositions;
 	private int[] startingTroops;
 	
-	private Map<Field, Integer> neutralTroops;
+	private Map<Field, int[]> neutralTroops;
 	
 	public int getData() {
 		return data;
@@ -83,10 +83,10 @@ public class PreGameDataMessage extends BunkersAndBadassesMessage {
 		this.startingTroops = startingTroops;
 	}
 	
-	public Map<Field, Integer> getNeutralTroops() {
+	public Map<Field, int[]> getNeutralTroops() {
 		return neutralTroops;
 	}
-	public void setNeutralTroops(Map<Field, Integer> neutralTroops) {
+	public void setNeutralTroops(Map<Field, int[]> neutralTroops) {
 		this.neutralTroops = neutralTroops;
 	}
 	

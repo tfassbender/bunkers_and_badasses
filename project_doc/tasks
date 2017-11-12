@@ -2,6 +2,7 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
+	- player can't pass when he has no command placed in the planing phase
 	- eridium seems to be not (always) added in the new turn (test implementation)
 	- sometimes two or more pre-game dialogs start
 	- some turn goals seem to be not added to the points (capitalism) (test implementation)
@@ -13,8 +14,6 @@ Bunkers and Badasses - Tasks
 		
 - Next versions:
 	- add icon to compiled version
-	- some changes in turn execution gui (smaller view)
-	- add some functions to the gui (e.g. opening turn goal dialog via double clicking)
 	- implement hero functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends

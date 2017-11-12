@@ -864,7 +864,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	}
 
 	@Override
-	public void receiveBoardMouseClick(MouseEvent event) {
+	public void receiveBoardMouseClick(MouseEvent event, boolean doubleClick) {
 		selectedField = game.getBoard().getFieldAtMousePosition();
 		updateField();
 	}
@@ -1149,5 +1149,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 	private void updatePlayerOrder() {
 		orderPanel.updateTurnOrder(game);
 		orderPanel_2.updateTurnOrder(game);
+	}
+	
+	public void setSelectedField(Field field) {
+		this.selectedField = field;
+		updateField();
 	}
 }

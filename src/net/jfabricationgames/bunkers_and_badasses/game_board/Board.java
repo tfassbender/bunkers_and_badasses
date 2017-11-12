@@ -21,6 +21,9 @@ import net.jfabricationgames.bunkers_and_badasses.error.MovementException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.Building;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Stalker;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Thresher;
+import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Board implements Serializable {
@@ -93,7 +96,7 @@ public class Board implements Serializable {
 	 * 		An IllegalArgumentException is thrown if anything in the input is not correct.
 	 */
 	public void moveTroops(Field start, Field end, int normalTroops, int badassTroops) throws MovementException {
-		if (!start.getAffiliation().equals(end.getAffiliation()) && end.getTroopStrength() != 0) {
+		if (start.getAffiliation() != null && end.getAffiliation() != null && !start.getAffiliation().equals(end.getAffiliation()) && end.getTroopStrength() != 0) {
 			throw new MovementException("Can't move troops to a non empty enemy field (" + start.getName() + " -> " + end.getName() + ").");
 		}
 		else if (start.getNormalTroops() < normalTroops || start.getBadassTroops() < badassTroops) {
@@ -102,11 +105,19 @@ public class Board implements Serializable {
 		/*if (end.getAffiliation() != null || !end.getAffiliation().equals(start.getAffiliation())) {
 			end.setAffiliation(start.getAffiliation());
 		}*/
-		end.setAffiliation(start.getAffiliation());
-		start.removeNormalTroops(normalTroops);
-		start.removeBadassTroops(badassTroops);
-		end.addNormalTroops(normalTroops);
-		end.addBadassTroops(badassTroops);
+		if (start.getAffiliation() != null) {
+			//move player troops
+			end.setAffiliation(start.getAffiliation());
+			start.removeNormalTroops(normalTroops);
+			start.removeBadassTroops(badassTroops);
+			end.addNormalTroops(normalTroops);
+			end.addBadassTroops(badassTroops);			
+		}
+		else {
+			//move neutral troops
+			end.addNeutralTroops(normalTroops, Troop.getNeutralTroopType(start.getTroops().get(0)));
+			start.removeNormalTroops(normalTroops);
+		}
 	}
 	
 	/**
@@ -141,9 +152,9 @@ public class Board implements Serializable {
 	 * @return
 	 * 		A Map of the neutral troops that are added to the board.
 	 */
-	public Map<Field, Integer> addNeutralTroops() {
+	public Map<Field, int[]> addNeutralTroops() {
 		List<Field> neutralFields = new ArrayList<Field>();
-		Map<Field, Integer> neutralTroops = new HashMap<Field, Integer>();
+		Map<Field, int[]> neutralTroops = new HashMap<Field, int[]>();
 		for (Field field : fields) {
 			if (field.getAffiliation() == null) {
 				neutralFields.add(field);
@@ -155,13 +166,110 @@ public class Board implements Serializable {
 			int random = (int) (Math.random()*neutralFields.size());
 			neutralFields.remove(random);
 		}
-		//add 1 to 3 neutral troops to the selected fields
+		//add neutral troops to the selected fields
 		for (Field field : neutralFields) {
-			int random = (int) (Math.random()*3 + 1);
-			field.addNormalTroops(random);
-			neutralTroops.put(field, random);
+			int type = (int) (Math.random()*3 + 1);
+			int random = 1;
+			switch (type) {
+				case 0:
+					//Skags
+					random = (int) (Math.random()*3 + 1);
+					break;
+				case 1:
+				case 2:
+					//Threshers, Stalkers
+					random = (int) (Math.random() * 2 + 1);
+					break;
+			}
+			field.addNeutralTroops(random, type);
+			neutralTroops.put(field, new int[] {random, type});
 		}
 		return neutralTroops;
+	}
+	/**
+	 * Move the neutral troops. All the neutral troops may be moved to another empty, neutral field. All troops are moved individually.
+	 * 
+	 * Skags: don't move
+	 * 
+	 * Threshers: move single fields or increase their number by one
+	 * 		move chance: 1/3 (targets are equally distributed) (2/3 chance for each thresher to rely move)
+	 * 		increase chance: 1/3 (always by one on one field if there are less than 5 on this field)
+	 * 		stay chance: 1/3 
+	 * 
+	 * Stalkers: move any distance (also through player fields)
+	 * 		move chance: 2/3
+	 * 		stay chance: 1/3
+	 */
+	public void moveNeutralTroops() {
+		List<Field> thresherFields = new ArrayList<Field>();//all fields that contain threshers
+		List<Field> stalkerFields = new ArrayList<Field>();//all fields that contain stalkers
+		List<Field> neutralFields = new ArrayList<Field>();//all fields that contain stalkers or neutral fields
+		for (Field field : fields) {
+			if (field.getAffiliation() == null) {
+				if (field.getTroopStrength() > 0) {
+					if (field.getTroops().get(0) instanceof Thresher) {
+						thresherFields.add(field);
+					}
+					else if (field.getTroops().get(0) instanceof Stalker) {
+						stalkerFields.add(field);
+						neutralFields.add(field);
+					}
+				}
+				else {
+					neutralFields.add(field);
+				}
+			}
+		}
+		//move threshers first
+		double random;
+		for (Field field : thresherFields) {
+			random = Math.random();
+			if (random < 0.33) {
+				//move (each thresher individually)
+				List<Field> targetFields = new ArrayList<Field>();
+				for (Field neighbour : field.getNeighbours()) {
+					if (neighbour.getAffiliation() == null) {
+						if (neighbour.getTroopStrength() == 0) {
+							targetFields.add(neighbour);
+						}
+						else if (neighbour.getTroops().get(0) instanceof Thresher) {
+							targetFields.add(neighbour);
+						}
+					}
+				}
+				if (!targetFields.isEmpty()) {
+					for (int i = 0; i < field.getTroops().size(); i++) {
+						random = Math.random();
+						if (random < 0.66) {
+							//move in 2 of 3 cases
+							int toField = (int) (Math.random() * targetFields.size());
+							moveTroops(field, targetFields.get(toField), 1, 0);
+						}
+					}					
+				}
+			}
+			else if (random < 0.66) {
+				//increase if there are less than 5 threshers on this field
+				if (field.getTroops().size() < 5) {
+					field.addNeutralTroops(1, 1);					
+				}
+			}
+			//else do nothing
+		}
+		for (Field field : stalkerFields) {
+			random = Math.random();
+			if (random < 0.66) {
+				//move (each stalker individually with chance 2/3)
+				for (int i = 0; i < field.getTroops().size(); i++) {
+					random = Math.random();
+					if (random < 0.66) {
+						int toField = (int) (Math.random() * neutralFields.size());
+						moveTroops(field, neutralFields.get(toField), 1, 0);
+					}
+				}
+			}
+			//else do nothing
+		}
 	}
 	/**
 	 * Add the neutral troops by the info of another player.
@@ -169,9 +277,10 @@ public class Board implements Serializable {
 	 * @param neutralTroops
 	 * 		The neutral troops that are to be added to the board.
 	 */
-	public void addNeutralTroops(Map<Field, Integer> neutralTroops) {
+	public void addNeutralTroops(Map<Field, int[]> neutralTroops) {
 		for (Field field : neutralTroops.keySet()) {
-			getFieldByName(field.getName()).addNormalTroops(neutralTroops.get(field));
+			int[] troops = neutralTroops.get(field);
+			getFieldByName(field.getName()).addNeutralTroops(troops[0], troops[1]);
 		}
 	}
 	

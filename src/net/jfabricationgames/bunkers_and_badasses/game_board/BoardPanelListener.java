@@ -4,5 +4,5 @@ import java.awt.event.MouseEvent;
 
 public interface BoardPanelListener {
 	
-	public void receiveBoardMouseClick(MouseEvent event);
+	public void receiveBoardMouseClick(MouseEvent event, boolean doubleClick);
 }

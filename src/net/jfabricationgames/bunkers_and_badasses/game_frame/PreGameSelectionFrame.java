@@ -562,7 +562,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	}
 	
 	@Override
-	public void receiveBoardMouseClick(MouseEvent event) {
+	public void receiveBoardMouseClick(MouseEvent event, boolean doubleClick) {
 		selectField();
 	}
 	
@@ -876,7 +876,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			User[] order = game.getPlayerOrder().getOrder();
 			if (game.getLocalUser().equals(order[order.length-1])) {
 				//last user to choose the start troops -> add the neutral troops
-				Map<Field, Integer> neutralTroops = game.getBoard().addNeutralTroops();
+				Map<Field, int[]> neutralTroops = game.getBoard().addNeutralTroops();
 				message.setNeutralTroops(neutralTroops);
 			}
 			game.getClient().sendMessage(message);

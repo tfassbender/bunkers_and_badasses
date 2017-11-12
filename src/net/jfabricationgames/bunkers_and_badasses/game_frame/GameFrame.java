@@ -51,6 +51,7 @@ import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.MouseAdapter;
 
 public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener, ConfirmDialogListener {
 	
@@ -337,10 +338,30 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		panel_turn_goals_bonuses.add(lblRundenBonus, "cell 1 0,alignx center");
 		
 		panel_turn_goal = new TurnGoalCardPanel();
+		panel_turn_goal.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					turnGoalTurnBonusDialog.setVisible(true);
+					turnGoalTurnBonusDialog.requestFocus();
+					turnGoalTurnBonusDialog.showPanel(TurnGoalTurnBonusDialog.TURN_GOAL_PANEL);
+				}
+			}
+		});
 		panel_turn_goal.setBackground(Color.GRAY);
 		panel_turn_goals_bonuses.add(panel_turn_goal, "cell 0 1,grow");
 		
 		panel_turn_bonus = new TurnBonusCardPanel();
+		panel_turn_bonus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					turnGoalTurnBonusDialog.setVisible(true);
+					turnGoalTurnBonusDialog.requestFocus();
+					turnGoalTurnBonusDialog.showPanel(TurnGoalTurnBonusDialog.TURN_BONUS_PANEL);
+				}
+			}
+		});
 		panel_turn_bonus.setBackground(Color.GRAY);
 		panel_turn_goals_bonuses.add(panel_turn_bonus, "cell 1 1,grow");
 		
@@ -608,8 +629,23 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	}
 	
 	@Override
-	public void receiveBoardMouseClick(MouseEvent event) {
+	public void receiveBoardMouseClick(MouseEvent event, boolean doubleClick) {
 		selectCurrentField();
+		if (doubleClick && selectedField != null) {
+			//field double clicked -> open dialog
+			if (game.getGameState() == GameState.ACT) {
+				turnExecutionFrame.setSelectedField(selectedField);
+				turnExecutionFrame.update();
+				turnExecutionFrame.setVisible(true);
+				turnExecutionFrame.requestFocus();
+			}
+			else if (game.getGameState() == GameState.PLAN) {
+				turnPlaningFrame.setSelectedField(selectedField);
+				turnPlaningFrame.update();
+				turnPlaningFrame.setVisible(true);
+				turnPlaningFrame.requestFocus();
+			}
+		}
 	}
 	
 	@Override

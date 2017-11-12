@@ -24,6 +24,33 @@ public abstract class Troop implements Serializable {
 	protected int recruitCostsAmmo;
 	protected int recruitCostsEridium;
 	
+	public static int getNeutralTroopType(Troop troop) {
+		if (troop instanceof Skag) {
+			return 0;
+		}
+		else if (troop instanceof Thresher) {
+			return 1;
+		}
+		else if (troop instanceof Stalker) {
+			return 2;
+		}
+		else {
+			return 0;//skag as default
+		}
+	}
+	public static Troop getNeutralTroop(int type) {
+		switch (type) {
+			case 0:
+				return new Skag();
+			case 1:
+				return new Thresher();
+			case 2:
+				return new Stalker();
+			default:
+				return new Skag();
+		}
+	}
+	
 	protected void loadVariables() {
 		int[][] costs = storage.getTroopCosts();
 		baseCostsCredits = costs[troopId][TroopStorage.BASE_COSTS_CREDITS];

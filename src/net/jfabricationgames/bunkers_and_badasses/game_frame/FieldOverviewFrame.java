@@ -283,7 +283,7 @@ public class FieldOverviewFrame extends JFrame implements BoardPanelListener {
 	}
 	
 	@Override
-	public void receiveBoardMouseClick(MouseEvent event) {
+	public void receiveBoardMouseClick(MouseEvent event, boolean doubleClick) {
 		Field field = game.getBoard().getFieldAtMousePosition();
 		selectField(field);
 	}

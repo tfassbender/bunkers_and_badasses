@@ -56,7 +56,7 @@ public class Field implements Serializable {
 			neutralTroopImages = new BufferedImage[3];
 			neutralTroopImages[0] = GameFrame.getImageLoader().loadImage("troops/skag_1_small.png");
 			neutralTroopImages[1] = GameFrame.getImageLoader().loadImage("troops/thresher_small.png");
-			neutralTroopImages[1] = GameFrame.getImageLoader().loadImage("troops/stalker_small.png");
+			neutralTroopImages[2] = GameFrame.getImageLoader().loadImage("troops/stalker_small.png");
 			normalTroopImages[TroopTexture.BANDITS.getId()] = GameFrame.getImageLoader().loadImage("troops/bandit_3_small.png");
 			badassTroopImages[TroopTexture.BANDITS.getId()] = GameFrame.getImageLoader().loadImage("troops/lance_4_small.png");
 			normalTroopImages[TroopTexture.HYPERION.getId()] = GameFrame.getImageLoader().loadImage("troops/loader_bot_small_2.png");
@@ -141,8 +141,9 @@ public class Field implements Serializable {
 		g.setColor(Color.BLACK);
 		//draw the troop images and numbers
 		if (neutrals && normalTroops > 0) {
-			g.drawImage(neutralTroopImages[0], (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
-			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+neutralTroopImages[0].getWidth(), (int) normalTroopsPosition.getY()+neutralTroopImages[0].getHeight()-15);
+			int type = Troop.getNeutralTroopType(troops.get(0));
+			g.drawImage(neutralTroopImages[type], (int) normalTroopsPosition.getX(), (int) normalTroopsPosition.getY(), null);
+			g.drawString(Integer.toString(normalTroops), (int) normalTroopsPosition.getX()+neutralTroopImages[type].getWidth(), (int) normalTroopsPosition.getY()+neutralTroopImages[type].getHeight()-15);
 		}
 		else {
 			if (normalTroops > 0) {
@@ -199,6 +200,12 @@ public class Field implements Serializable {
 			badassTroops += (troops.get(i).getStrength() & 2);//if (strength % 2 == 0) {n += 2}
 		}
 		return badassTroops/2;
+	}
+	
+	public void addNeutralTroops(int num, int type) {
+		for (int i = 0; i < num; i++) {
+			troops.add(Troop.getNeutralTroop(type));
+		}
 	}
 	
 	public void addNormalTroops(int num) {

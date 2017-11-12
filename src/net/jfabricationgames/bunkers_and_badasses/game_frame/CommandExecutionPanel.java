@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -17,10 +19,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -49,44 +52,42 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.RaidCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class CommandExecutionPanel extends JPanel {
 	
 	private static final long serialVersionUID = 7084207898240001744L;
 	
-	private DefaultListModel<Field> fieldTargetModel = new DefaultListModel<Field>();
-	private DefaultListModel<Building> buildingModel = new DefaultListModel<Building>();
+	protected DefaultListModel<Field> fieldTargetModel = new DefaultListModel<Field>();
+	protected DefaultComboBoxModel<Building> buildingModel = new DefaultComboBoxModel<Building>();
 	
-	private JTextField txtFeld_1;
-	private JTextField txtBefehl;
-	private JTextField txtTruppenn;
-	private JTextField txtGebude;
-	private JTextField txtTruppenb;
-	private JButton btnBefehlAusfhren;
-	private JRadioButton rdbtnCredits;
-	private JRadioButton rdbtnMunition;
-	private JRadioButton rdbtnEridium;
-	private JRadioButton rdbtnAufbauen;
-	private JRadioButton rdbtnAufrsten;
-	private JRadioButton rdbtnAbreien;
-	private JSpinner spinnerNormalTroops;
-	private JSpinner spinnerBadassTroops;
+	protected JTextField txtFeld_1;
+	protected JTextField txtBefehl;
+	protected JTextField txtTruppenn;
+	protected JTextField txtGebude;
+	protected JTextField txtTruppenb;
+	protected JButton btnBefehlAusfhren;
+	protected JRadioButton rdbtnCredits;
+	protected JRadioButton rdbtnMunition;
+	protected JRadioButton rdbtnEridium;
+	protected JRadioButton rdbtnAufbauen;
+	protected JRadioButton rdbtnAufrsten;
+	protected JRadioButton rdbtnAbreien;
+	protected JSpinner spinnerNormalTroops;
+	protected JSpinner spinnerBadassTroops;
 	
-	private JList<Field> list_target_field;
-	private JList<Building> list_building;
-	private JSpinner spinnerAufrstungen;
+	protected JList<Field> list_target_field;
+	protected JComboBox<Building> list_building;
+	protected JSpinner spinnerAufrstungen;
 	
-	private JButton btnAusfhrungBeenden;
-	private JTextField txtKosten;
+	protected JButton btnAusfhrungBeenden;
+	protected JTextField txtKosten;
 	
-	private TurnExecutionFrame turnExecutionFrame;
-	private Game game;
+	protected TurnExecutionFrame turnExecutionFrame;
+	protected Game game;
 	
-	private boolean fieldSelectionSucessfull;
+	protected boolean fieldSelectionSucessfull;
 	
-	private static Building[] buildables;
+	protected static Building[] buildables;
 	
 	static {
 		buildables = new Building[9];
@@ -101,13 +102,16 @@ public class CommandExecutionPanel extends JPanel {
 		buildables[8] = new TorguesBadassDome();
 	}
 	
+	protected CommandExecutionPanel() {
+		
+	}
 	public CommandExecutionPanel(TurnExecutionFrame turnExecutionFrame, Game gameRef) {
 		this.turnExecutionFrame = turnExecutionFrame;
 		this.game = gameRef;
 		
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setBackground(Color.GRAY);
-		setLayout(new MigLayout("", "[300px,grow][300px,grow][300px,grow]", "[][5px,grow][100px:n,grow]"));
+		setLayout(new MigLayout("", "[350px,grow][300px,grow][200px,grow]", "[][5px,grow][100px:n,grow]"));
 		
 		JLabel lblBefehlAusfhren = new JLabel("Befehl Ausf\u00FChren:");
 		lblBefehlAusfhren.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -321,7 +325,7 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_command_row_3.add(panel_command_5, "cell 0 0,grow");
 		panel_command_5.setBackground(Color.GRAY);
-		panel_command_5.setLayout(new MigLayout("", "[grow][][grow][][][grow]", "[][5px][][][5px][][100px,grow][]"));
+		panel_command_5.setLayout(new MigLayout("", "[grow][][grow][][][grow]", "[][5px][][][5px][][][]"));
 		
 		JLabel lblAufbau = new JLabel("Aufbau:");
 		lblAufbau.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -370,19 +374,15 @@ public class CommandExecutionPanel extends JPanel {
 		lblGebude_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_5.add(lblGebude_2, "cell 0 5 3 1");
 		
-		JScrollPane scrollPane_building = new JScrollPane();
-		panel_command_5.add(scrollPane_building, "cell 0 6 6 1,grow");
-		
-		list_building = new JList<Building>(buildingModel);
-		list_building.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent arg0) {
+		list_building = new JComboBox<Building>(buildingModel);
+		list_building.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				updateKosts();
 			}
 		});
-		list_building.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_building.setBackground(Color.LIGHT_GRAY);
 		list_building.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		scrollPane_building.setViewportView(list_building);
+		panel_command_5.add(list_building, "cell 0 6 6 1,grow");
 		
 		JLabel lblKosten = new JLabel("Kosten:");
 		lblKosten.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -485,15 +485,21 @@ public class CommandExecutionPanel extends JPanel {
 		disableAll();
 		if (selectedField != null) {
 			txtFeld_1.setText(selectedField.getName());
+			txtFeld_1.setToolTipText(selectedField.getName());
 			if (selectedField.getCommand() != null) {
 				txtBefehl.setText(selectedField.getCommand().getName());
+				txtBefehl.setToolTipText(selectedField.getCommand().getName());
 			}
 			else {
 				txtBefehl.setText("-----");
+				txtBefehl.setToolTipText("-----");
 			}
 			txtTruppenn.setText(Integer.toString(selectedField.getNormalTroops()));
+			txtTruppenn.setToolTipText(Integer.toString(selectedField.getNormalTroops()));
 			txtTruppenb.setText(Integer.toString(selectedField.getBadassTroops()));
+			txtTruppenb.setToolTipText(Integer.toString(selectedField.getBadassTroops()));
 			txtGebude.setText(selectedField.getBuilding().getName());
+			txtGebude.setToolTipText(selectedField.getBuilding().getName());
 			enableComponents(selectedField);
 		}
 		else {
@@ -502,6 +508,11 @@ public class CommandExecutionPanel extends JPanel {
 			txtTruppenn.setText("");
 			txtTruppenb.setText("");
 			txtGebude.setText("");
+			txtFeld_1.setToolTipText("");
+			txtBefehl.setToolTipText("");
+			txtTruppenn.setToolTipText("");
+			txtTruppenb.setToolTipText("");
+			txtGebude.setToolTipText("");
 		}
 		repaint();
 	}
@@ -510,13 +521,15 @@ public class CommandExecutionPanel extends JPanel {
 	protected void updateKosts() {
 		Field selectedField = turnExecutionFrame.getSelectedField();
 		if (rdbtnAufbauen.isSelected()) {
-			Building building = list_building.getSelectedValue();
+			Building building = (Building) list_building.getSelectedItem();
 			if (building != null) {
 				int[] price = building.getBuildingPrice();
 				txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
+				txtKosten.setToolTipText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
 			}
 			else {
 				txtKosten.setText("");
+				txtKosten.setToolTipText("");
 			}
 		}
 		else if (rdbtnAufrsten.isSelected()) {
@@ -524,9 +537,11 @@ public class CommandExecutionPanel extends JPanel {
 			if (building != null) {
 				int[] price = building.getExtensionPrice();
 				txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
+				txtKosten.setToolTipText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
 			}
 			else {
 				txtKosten.setText("");
+				txtKosten.setToolTipText("");
 			}
 		}
 		else if (rdbtnAbreien.isSelected()) {
@@ -534,17 +549,20 @@ public class CommandExecutionPanel extends JPanel {
 			if (building != null) {
 				int[] price = Building.getStorage().getBuildingBreakOffPrices();
 				txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
+				txtKosten.setToolTipText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
 			}
 			else {
 				txtKosten.setText("");
+				txtKosten.setToolTipText("");
 			}
 		}
-		else if (selectedField.getCommand() instanceof RecruitCommand) {
+		if (selectedField != null && selectedField.getCommand() != null && selectedField.getCommand() instanceof RecruitCommand) {
 			int normalTroops = (Integer) spinnerNormalTroops.getValue();
 			int badassTroops = (Integer) spinnerBadassTroops.getValue();
 			int upgrades = (Integer) spinnerAufrstungen.getValue();
 			int[] costs = game.getResourceManager().getResources().get(game.getLocalUser()).getRecroutedTroopCosts(normalTroops, badassTroops, upgrades);
 			txtKosten.setText(costs[0] + " C, " + costs[1] + " M");
+			txtKosten.setToolTipText(costs[0] + " Credits, " + costs[1] + " Munition");
 		}
 	}
 	
@@ -697,7 +715,7 @@ public class CommandExecutionPanel extends JPanel {
 				if (command instanceof BuildCommand) {
 					if (rdbtnAufbauen.isSelected()) {
 						if (selectedField.getBuilding() instanceof EmptyBuilding) {
-							Building building = list_building.getSelectedValue();
+							Building building = (Building) list_building.getSelectedItem();
 							if (building != null) {
 								try {
 									resourceManager.payBuilding(building, game.getLocalUser());
