@@ -202,10 +202,11 @@ public class Fight implements Serializable {
 	}
 	public int calculateMaxFallingSupportTroops(int totalFallingTroops, Field field) {
 		int maximumFallingSupportTroops = totalFallingTroops/2;
-		maximumFallingSupportTroops = Math.min(maximumFallingSupportTroops, field.getTroopStrength()/2);
+		//maximumFallingSupportTroops = Math.min(maximumFallingSupportTroops, field.getTroopStrength()/2);
 		if (field.getTroops().size() == 1) {
 			maximumFallingSupportTroops = 0;
 		}
+		maximumFallingSupportTroops = Math.max(maximumFallingSupportTroops, 0);
 		return maximumFallingSupportTroops;
 	}
 	public int calculateFallingTroopsSkagFight() {
@@ -360,6 +361,29 @@ public class Fight implements Serializable {
 	public boolean isAllFallenTroopsChosen() {
 		//TODO check for multiple fields
 		return getFallenTroops().keySet().size() >= getFallingTroopsSupport().keySet().size() + 2;
+	}
+	
+	public Field getWinningField() {
+		if (winner == ATTACKERS) {
+			return attackingField;
+		}
+		else if (winner == DEFENDERS) {
+			return defendingField;
+		}
+		else {
+			return null;
+		}
+	}
+	public Field getLoosingField() {
+		if (winner == ATTACKERS) {
+			return defendingField;
+		}
+		else if (winner == DEFENDERS) {
+			return attackingField;
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public User getAttackingPlayer() {
