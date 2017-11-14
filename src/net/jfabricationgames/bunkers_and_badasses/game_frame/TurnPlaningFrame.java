@@ -904,7 +904,7 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 				updateCommandList();
 			}
 			catch (CommandException ce) {
-				ce.printStackTrace();
+				//ce.printStackTrace();
 				new ErrorDialog(ce.getErrorText()).setVisible(true);
 			}
 		}

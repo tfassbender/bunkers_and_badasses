@@ -2,18 +2,16 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- player can't pass when he has no command placed in the planing phase
-	- eridium seems to be not (always) added in the new turn (test implementation)
+	- resources in the next turn are calculated wrong (either "erhalt"-panel or collecting)
 	- sometimes two or more pre-game dialogs start
 	- some turn goals seem to be not added to the points (capitalism) (test implementation)
 	- used resources are sometimes calculated wrong (?)
 	- debug fights:
-		- fight end text fields need to be cleared (fight execution frame)
-		- some fallen troops are selected in fields that didn't even take part in the fight (only possible retreat) (?)
 		- heros seem to be not removed from the players hand sometimes (?)
 		
 - Next versions:
 	- add icon to compiled version
+	- add listing of gained resources (and lost standard resources for fields, ...) to the resource frame
 	- implement hero functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends

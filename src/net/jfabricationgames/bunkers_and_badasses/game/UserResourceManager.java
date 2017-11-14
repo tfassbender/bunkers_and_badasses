@@ -96,6 +96,12 @@ public class UserResourceManager implements Serializable{
 		}
 	}
 	/**
+	 * Calculate the fix costs to note them in the resource panel.
+	 */
+	public int calculateFixCosts(User user) {
+		return game.getBoard().getUsersFields(user).size() * Game.getGameVariableStorage().getFieldCosts();
+	}
+	/**
 	 * Collect the resources for a collect command.
 	 * 
 	 * @param user

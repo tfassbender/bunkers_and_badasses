@@ -670,9 +670,19 @@ public class CommandExecutionPanel extends JPanel {
 				}
 			}
 		}
-		if (game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+		if (game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) || countExecutableCommands() == 0) {
 			btnAusfhrungBeenden.setEnabled(true);
 		}
+	}
+	
+	private int countExecutableCommands() {
+		int commands = 0;
+		for (Field field : game.getBoard().getFields()) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser()) && field.getCommand() != null && field.getCommand().isExecutable()) {
+				commands++;
+			}
+		}
+		return commands;
 	}
 	
 	private List<Field> findPossibleMovingTargets(Field field) {

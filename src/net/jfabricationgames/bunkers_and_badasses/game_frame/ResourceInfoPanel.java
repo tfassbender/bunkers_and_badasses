@@ -110,6 +110,7 @@ public class ResourceInfoPanel extends JPanel {
 			lblLE.setText(Integer.toString(resource.getEridium()));
 			//update the resources the user gets through buildings
 			int[] resources = game.getResourceManager().getResources().get(game.getLocalUser()).calculateTurnStartResources(game, game.getLocalUser());
+			resources[0] -= game.getResourceManager().calculateFixCosts(game.getLocalUser());//subtract the fix costs from the resouces gained
 			lblGC.setText(Integer.toString(resources[0]));
 			lblGA.setText(Integer.toString(resources[1]));
 			lblGE.setText(Integer.toString(resources[2]));
