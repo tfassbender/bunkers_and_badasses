@@ -10,8 +10,9 @@ Bunkers and Badasses - Tasks
 		- heros seem to be not removed from the players hand sometimes (?)
 		
 - Next versions:
-	- add icon to compiled version
+	- database server keep alive
 	- add listing of gained resources (and lost standard resources for fields, ...) to the resource frame
+	- inform players when one player leaves the game (for any reason)
 	- implement hero functions
 	- implement storing and loading of the game in the database
 	- create the statistics of a game and store them in the database when the game ends
@@ -19,4 +20,3 @@ Bunkers and Badasses - Tasks
 	- implement the back to main menu button in the game end frame 
 
 - New ideas:
-	- New neutral troops like Threshers (maybe moving each turn)

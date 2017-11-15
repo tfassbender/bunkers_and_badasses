@@ -7,7 +7,7 @@ public class TorguesBadassDome extends Building {
 	public TorguesBadassDome() {
 		buildingId = 16;
 		badassTroopsRecruitable = true;
-		name = "Mr. Trogue's Badassdome of Badassitude";
+		name = "Mr. Trogue's Badassdome";// of Badassitude";
 		imagePath = "torgue_1_small.png";
 		loadVariables();
 		loadImage();
