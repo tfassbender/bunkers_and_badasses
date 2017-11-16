@@ -19,7 +19,7 @@ public class TurnBonusDefendFight extends TurnBonus {
 	
 	@Override
 	public void receivePointsFight(User user, Fight fight) {
-		if (fight.getWinningPlayer().equals(user)) {
+		if (fight.getWinningPlayer() != null && fight.getWinningPlayer().equals(user)) {
 			game.getPointManager().addPoints(user, 2);
 		}
 	}

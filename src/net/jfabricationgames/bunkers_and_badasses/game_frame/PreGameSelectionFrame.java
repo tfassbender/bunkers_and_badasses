@@ -848,41 +848,51 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	 */
 	private void confirmStartTroops() {
 		if (selectedStartFields[0] != null && startTroops[0] + startTroops[1] + startTroops[2] == startingTroops) {
-			//the user chose at least one field and the six starting troops
-			if (selectedStartFields[0] != null && startTroops[0] > 0) {
-				selectedStartFields[0].setAffiliation(game.getLocalUser());
-				for (int i = 0; i < startTroops[0]; i++) {
-					selectedStartFields[0].getTroops().add(new Bandit());
+			//check whether the chosen start fields are empty
+			boolean fieldsEmpty = true;
+			for (Field field : selectedStartFields) {
+				fieldsEmpty &= field != null && (field.getAffiliation() == null || field.getAffiliation().equals(game.getLocalUser()));
+			}
+			if (fieldsEmpty) {
+				//the user chose at least one field and the six starting troops
+				if (selectedStartFields[0] != null && startTroops[0] > 0) {
+					selectedStartFields[0].setAffiliation(game.getLocalUser());
+					for (int i = 0; i < startTroops[0]; i++) {
+						selectedStartFields[0].getTroops().add(new Bandit());
+					}
 				}
-			}
-			if (selectedStartFields[1] != null && startTroops[1] > 0) {
-				selectedStartFields[1].setAffiliation(game.getLocalUser());
-				for (int i = 0; i < startTroops[1]; i++) {
-					selectedStartFields[1].getTroops().add(new Bandit());
+				if (selectedStartFields[1] != null && startTroops[1] > 0) {
+					selectedStartFields[1].setAffiliation(game.getLocalUser());
+					for (int i = 0; i < startTroops[1]; i++) {
+						selectedStartFields[1].getTroops().add(new Bandit());
+					}
 				}
-			}
-			if (selectedStartFields[2] != null && startTroops[2] > 0) {
-				selectedStartFields[2].setAffiliation(game.getLocalUser());
-				for (int i = 0; i < startTroops[2]; i++) {
-					selectedStartFields[2].getTroops().add(new Bandit());
+				if (selectedStartFields[2] != null && startTroops[2] > 0) {
+					selectedStartFields[2].setAffiliation(game.getLocalUser());
+					for (int i = 0; i < startTroops[2]; i++) {
+						selectedStartFields[2].getTroops().add(new Bandit());
+					}
 				}
+				//send an update to all users
+				PreGameDataMessage message = new PreGameDataMessage();
+				message.setData(PreGameDataMessage.DATA_STARTING_POSITION);
+				message.setStartingTroopPositions(selectedStartFields);
+				message.setStartingTroops(startTroops);
+				message.setUser(game.getLocalUser());
+				User[] order = game.getPlayerOrder().getOrder();
+				if (game.getLocalUser().equals(order[order.length-1])) {
+					//last user to choose the start troops -> add the neutral troops
+					Map<Field, int[]> neutralTroops = game.getBoard().addNeutralTroops();
+					message.setNeutralTroops(neutralTroops);
+				}
+				game.getClient().sendMessage(message);
+				//update the frame functions
+				nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_STARTING_POSITION);
+				updateBoardImage();
 			}
-			//send an update to all users
-			PreGameDataMessage message = new PreGameDataMessage();
-			message.setData(PreGameDataMessage.DATA_STARTING_POSITION);
-			message.setStartingTroopPositions(selectedStartFields);
-			message.setStartingTroops(startTroops);
-			message.setUser(game.getLocalUser());
-			User[] order = game.getPlayerOrder().getOrder();
-			if (game.getLocalUser().equals(order[order.length-1])) {
-				//last user to choose the start troops -> add the neutral troops
-				Map<Field, int[]> neutralTroops = game.getBoard().addNeutralTroops();
-				message.setNeutralTroops(neutralTroops);
+			else {
+				new ErrorDialog("Du kannst kein Startfeld aussuchen, auf dem sich schon ein gegner Befindet.\n\nKaffeekränzchen sind hier unangebracht!").setVisible(true);
 			}
-			game.getClient().sendMessage(message);
-			//update the frame functions
-			nextPlayersTurn(game.getLocalUser(), PreGameDataMessage.DATA_STARTING_POSITION);
-			updateBoardImage();
 		}
 		else {
 			new ErrorDialog("Du musst alle deine Starttruppen auf dem Spielfeld verteilen.").setVisible(true);

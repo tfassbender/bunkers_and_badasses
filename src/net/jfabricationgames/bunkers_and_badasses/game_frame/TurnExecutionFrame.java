@@ -338,6 +338,8 @@ public class TurnExecutionFrame extends JFrame implements BoardPanelListener, Co
 		int passingOrder = game.getPlayers().size() - game.getPlayerOrder().getOrder().length + 1;
 		game.getGameTurnGoalManager().receivePointsPassing(game.getLocalUser(), passingOrder, game.getPlayers().size());
 		game.getPlayerOrder().userPassed(game.getLocalUser());
+		//remove the executable commands
+		game.getBoard().removeExecutableCommands(game.getLocalUser());
 		game.setState(GameState.ACT);
 		try {
 			game.getPlayerOrder().nextMove();

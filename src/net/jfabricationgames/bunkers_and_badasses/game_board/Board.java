@@ -436,6 +436,20 @@ public class Board implements Serializable {
 	}
 	
 	/**
+	 * Remove the executable commands of a user when he passes.
+	 * 
+	 * @param user
+	 * 		The user who's commands are removed. 
+	 */
+	public void removeExecutableCommands(User user) {
+		for (Field field : fields) {
+			if (field.getAffiliation() != null && field.getAffiliation().equals(user) && field.getCommand() != null && field.getCommand().isExecutable()) {
+				field.setCommand(null);
+			}
+		}
+	}
+	
+	/**
 	 * Write the object to a serialized file. The not-serializabel parts (the buffered image) is stored separately at the end of the file.
 	 * This method is somehow used by the Serializable interface.
 	 * 

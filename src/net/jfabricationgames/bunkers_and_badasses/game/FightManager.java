@@ -8,6 +8,8 @@ import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.TinyTinasMine;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.FightExecutionFrame;
@@ -177,6 +179,31 @@ public class FightManager implements Serializable {
 			fallenTroops = currentFight.getFallenTroops().get(attackingField);
 			int[] movingTroops = {currentFight.getAttackingNormalTroops() - fallenTroops[0], currentFight.getAttackingBadassTroops() - fallenTroops[1]};
 			game.getBoard().moveTroops(attackingField, defendingField, movingTroops[0], movingTroops[1]);
+			//make the mine explode if there is one on the field
+			if (defendingField.getBuilding() != null && defendingField.getBuilding() instanceof TinyTinasMine) {
+				//kill two invading troops
+				if (defendingField.getNormalTroops() >= 2) {
+					//two normal troops
+					defendingField.removeNormalTroops(2);
+				}
+				else if (defendingField.getNormalTroops() == 1) {
+					//one normal and one badass troops
+					defendingField.removeNormalTroops(1);
+					if (defendingField.getBadassTroops() > 0) {
+						defendingField.removeBadassTroops(1);
+					}
+				}
+				else {
+					//up to two badasses
+					for (int i = 0; i < 2; i++) {
+						if (defendingField.getBadassTroops() > 0) {
+							defendingField.removeBadassTroops(1);
+						}						
+					}
+				}
+				//remove the mine
+				defendingField.setBuilding(new EmptyBuilding());
+			}
 			//remove any command that could be on the conquered field
 			defendingField.setCommand(null);
 		}

@@ -7,5 +7,6 @@ public class Stalker extends Troop {
 	public Stalker() {
 		strength = 1;
 		type = Troop.NEUTRAL_TROOP;
+		name = "Stalker (Neutral)";
 	}
 }

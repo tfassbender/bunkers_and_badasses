@@ -845,31 +845,35 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	}
 	
 	private void selectHero() {
-		SelectHeroCardFrame frame = game.getGameFrame().getSelectHeroCardFrame();
-		frame.setVisible(true);
-		frame.requestFocus();
-		frame.setCardSelectionEnabled(true, this);
+		if (game.getFightManager().getCurrentFight() != null && !game.getFightManager().getCurrentFight().isRetreatAnnounced()) {
+			SelectHeroCardFrame frame = game.getGameFrame().getSelectHeroCardFrame();
+			frame.setVisible(true);
+			frame.requestFocus();
+			frame.setCardSelectionEnabled(true, this);			
+		}
 	}
 	private void selectEmptyHero() {
-		Fight fight = game.getFightManager().getCurrentFight();
-		if (fight.getAttackingPlayer().equals(game.getLocalUser())) {
-			fight.setAttackingHero(null);
-			fight.setAttackingHeroChosen(true);
-			fight.setUseAttackingHeroEffect(false);
-			btnHeldAuswhlen.setEnabled(false);
-			btnKeinenHeldenVerwenden.setEnabled(false);
+		if (game.getFightManager().getCurrentFight() != null && !game.getFightManager().getCurrentFight().isRetreatAnnounced()) {
+			Fight fight = game.getFightManager().getCurrentFight();
+			if (fight.getAttackingPlayer().equals(game.getLocalUser())) {
+				fight.setAttackingHero(null);
+				fight.setAttackingHeroChosen(true);
+				fight.setUseAttackingHeroEffect(false);
+				btnHeldAuswhlen.setEnabled(false);
+				btnKeinenHeldenVerwenden.setEnabled(false);
+			}
+			else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser())) {
+				fight.setDefendingHero(null);
+				fight.setDefendingHeroChosen(true);
+				fight.setUseDefendingHeroEffect(false);
+				btnHeldAuswhlen_1.setEnabled(false);
+				btnKeinenHeldenVerwenden_1.setEnabled(false);
+			}
+			else {
+				throw new IllegalArgumentException("Selecting player is neither attacker nor defender.");
+			}
+			game.getFightManager().update();
 		}
-		else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser())) {
-			fight.setDefendingHero(null);
-			fight.setDefendingHeroChosen(true);
-			fight.setUseDefendingHeroEffect(false);
-			btnHeldAuswhlen_1.setEnabled(false);
-			btnKeinenHeldenVerwenden_1.setEnabled(false);
-		}
-		else {
-			throw new IllegalArgumentException("Selecting player is neither attacker nor defender.");
-		}
-		game.getFightManager().update();
 	}
 	
 	private void selectRetreatField() {
@@ -1046,7 +1050,12 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				txtVerteidiger.setText(fight.getDefendingPlayer().getUsername());				
 			}
 			else {
-				txtVerteidiger.setText("Skags (Neutral)");
+				if (!fight.getDefendingField().getTroops().isEmpty()) {
+					txtVerteidiger.setText(fight.getDefendingField().getTroops().get(0).getName());
+				}
+				else {
+					txtVerteidiger.setText("Skags (Neutral)");
+				}
 			}
 			txtAngreifendesfeld.setText(fight.getAttackingField().getName());
 			txtVerteidigendesFeld.setText(fight.getDefendingField().getName());
@@ -1128,7 +1137,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				btnHeldAuswhlen.setEnabled(true);
 				btnKeinenHeldenVerwenden.setEnabled(true);				
 			}
-			else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser()) && !fight.isDefendingHeroChosen()) {
+			else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser()) && !fight.isDefendingHeroChosen() && !fight.isRetreatAnnounced()) {
 				btnHeldAuswhlen_1.setEnabled(true);
 				btnKeinenHeldenVerwenden_1.setEnabled(true);				
 			}
@@ -1163,7 +1172,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 						txtVerlierer.setText(fight.getDefendingPlayer().getUsername());						
 					}
 					else {
-						txtVerlierer.setText("Skags (Neutral)");
+						txtVerlierer.setText(fight.getDefendingField().getTroops().get(0).getName());
 					}
 					txtSieger.setText(fight.getAttackingPlayer().getUsername());
 					break;
@@ -1172,7 +1181,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 						txtSieger.setText(fight.getDefendingPlayer().getUsername());						
 					}
 					else {
-						txtSieger.setText("Skags (Neutral)");
+						txtSieger.setText(fight.getDefendingField().getTroops().get(0).getName());
 					}
 					txtVerlierer.setText(fight.getAttackingPlayer().getUsername());
 					break;

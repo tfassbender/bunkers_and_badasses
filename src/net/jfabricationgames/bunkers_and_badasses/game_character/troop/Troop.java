@@ -14,6 +14,8 @@ public abstract class Troop implements Serializable {
 	
 	private static TroopStorage storage;
 	
+	protected String name;
+	
 	protected int strength;
 	protected int type;
 	protected int troopId;
@@ -113,5 +115,9 @@ public abstract class Troop implements Serializable {
 	}
 	public static void setStorage(TroopStorage storage) {
 		Troop.storage = storage;
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

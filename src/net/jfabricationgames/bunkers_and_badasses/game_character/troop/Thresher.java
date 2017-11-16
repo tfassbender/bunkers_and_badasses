@@ -7,5 +7,6 @@ public class Thresher extends Troop {
 	public Thresher() {
 		strength = 1;
 		type = Troop.NEUTRAL_TROOP;
+		name = "Thresher (Neutral)";
 	}
 }

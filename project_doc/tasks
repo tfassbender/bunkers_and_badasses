@@ -2,7 +2,6 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
-	- resources in the next turn are calculated wrong (either "erhalt"-panel or collecting)
 	- sometimes two or more pre-game dialogs start
 	- some turn goals seem to be not added to the points (capitalism) (test implementation)
 	- used resources are sometimes calculated wrong (?)

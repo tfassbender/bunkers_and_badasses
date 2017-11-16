@@ -9,6 +9,7 @@ import java.util.Map;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_command.DefendCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class Fight implements Serializable {
@@ -384,6 +385,10 @@ public class Fight implements Serializable {
 		else {
 			return null;
 		}
+	}
+	
+	public boolean isRetreatAnnounced() {
+		return defendingField != null && defendingField.getCommand() != null && defendingField.getCommand() instanceof RetreatCommand;
 	}
 	
 	public User getAttackingPlayer() {
