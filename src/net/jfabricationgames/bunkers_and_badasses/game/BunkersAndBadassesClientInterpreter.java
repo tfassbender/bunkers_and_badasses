@@ -112,7 +112,8 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 				break;
 			case GAME_ENDED:
 				game.getGameFrame().disposeAll();
-				new GameEndFrame(message.getGame()).setVisible(true);
+				game.merge(message.getGame());
+				new GameEndFrame(game, game.getClient()).setVisible(true);
 				break;
 		}
 	}

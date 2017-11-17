@@ -29,7 +29,7 @@ public class GameTurnManager implements Serializable {
 		this.resourceManager = game.getResourceManager();
 		//this.pointManager = game.getPointManager();
 		numTurns = Game.getGameVariableStorage().getGameTurns();
-		turn = 0;
+		turn = 0;//set turn = 9 for debugging game end
 	}
 	
 	public void merge(GameTurnManager manager) {
@@ -60,7 +60,7 @@ public class GameTurnManager implements Serializable {
 			game.getClient().sendMessage(message);
 			//dispose all frames and open the game end frame
 			game.getGameFrame().disposeAll();
-			new GameEndFrame(game).setVisible(true);
+			new GameEndFrame(game, game.getClient()).setVisible(true);
 		}
 	}
 	public static int getNumTurns() {

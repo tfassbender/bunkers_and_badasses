@@ -168,7 +168,7 @@ public class Board implements Serializable {
 		}
 		//add neutral troops to the selected fields
 		for (Field field : neutralFields) {
-			int type = (int) (Math.random()*3 + 1);
+			int type = (int) (Math.random()*3);
 			int random = 1;
 			switch (type) {
 				case 0:
