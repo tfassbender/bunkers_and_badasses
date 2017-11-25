@@ -52,6 +52,9 @@ import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.MouseAdapter;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 
 public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener, ConfirmDialogListener {
 	
@@ -158,6 +161,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		menuBar.add(mnSpiel);
 		
 		JMenuItem mntmStatistik = new JMenuItem("Statistik");
+		mntmStatistik.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmStatistik.setEnabled(false);
 		mnSpiel.add(mntmStatistik);
 		
@@ -169,6 +173,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		menuBar.add(mnDialog);
 		
 		JMenuItem mntmPlanungsDialogffnen = new JMenuItem("Zug Planung");
+		mntmPlanungsDialogffnen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmPlanungsDialogffnen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				turnPlaningFrame.setVisible(true);
@@ -178,6 +183,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		mnDialog.add(mntmPlanungsDialogffnen);
 		
 		JMenuItem mntmZugAusfhren = new JMenuItem("Zug Ausf\u00FChren");
+		mntmZugAusfhren.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmZugAusfhren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				turnExecutionFrame.setVisible(true);
@@ -195,6 +201,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		});
 		
 		JMenuItem mntmRundenZiele = new JMenuItem("Runden Ziele");
+		mntmRundenZiele.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmRundenZiele.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				turnGoalTurnBonusDialog.setVisible(true);
@@ -204,6 +211,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		});
 		
 		JMenuItem mntmkamfAusfhrung = new JMenuItem("Kamf Ausf\u00FChrung");
+		mntmkamfAusfhrung.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmkamfAusfhrung.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fightExecutionFrame.setVisible(true);
@@ -214,6 +222,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		mnDialog.add(mntmRundenZiele);
 		
 		JMenuItem mntmRundenBoni = new JMenuItem("Runden Boni");
+		mntmRundenBoni.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmRundenBoni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				turnGoalTurnBonusDialog.setVisible(true);
@@ -262,14 +271,15 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		mnDialog.add(mntmHeldenInfoDialog);
 		
 		JMenuItem mntmChatDialog = new JMenuItem("Chat Dialog");
+		mntmChatDialog.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmChatDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				chatDialog.setVisible(true);
-				chatDialog.requestFocus();
+				showChatDialog();
 			}
 		});
 		
 		JMenuItem mntmSpielfeldbersicht = new JMenuItem("Spielfeld Übersicht");
+		mntmSpielfeldbersicht.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmSpielfeldbersicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boardOverviewFrame.setVisible(true);
@@ -283,6 +293,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		menuBar.add(mnHilfe);
 		
 		JMenuItem mntmHilfeMenu = new JMenuItem("Hilfe Menü");
+		mntmHilfeMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmHilfeMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				helpMenuFrame.setVisible(true);
@@ -707,6 +718,11 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private void showExtendedInfo() {
 		CardLayout layout = (CardLayout) panel_game_type.getLayout();
 		layout.show(panel_game_type, COMPLETE_INFO_VIEW);
+	}
+	
+	public void showChatDialog() {
+		chatDialog.setVisible(true);
+		chatDialog.requestFocus();
 	}
 	
 	private void selectCurrentField() {

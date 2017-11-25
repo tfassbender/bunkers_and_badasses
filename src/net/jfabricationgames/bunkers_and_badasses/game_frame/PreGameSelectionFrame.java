@@ -52,6 +52,12 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardS
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 
 public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelectionListener, BoardPanelListener, ConfirmDialogListener {
 	
@@ -139,6 +145,34 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		setLocationRelativeTo(null);
 		
 		propsFile.alignWindow();
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnDialog = new JMenu("Dialog");
+		menuBar.add(mnDialog);
+		
+		JMenuItem mntmChatDialog = new JMenuItem("Chat Dialog");
+		mntmChatDialog.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mntmChatDialog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				game.getGameFrame().showChatDialog();
+			}
+		});
+		mnDialog.add(mntmChatDialog);
+		
+		JMenu mnHilfe = new JMenu("Hilfe");
+		menuBar.add(mnHilfe);
+		
+		JMenuItem mntmHilfe = new JMenuItem("Hilfe Menü");
+		mntmHilfe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mntmHilfe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				game.getGameFrame().getHelpMenuFrame().setVisible(true);
+				game.getGameFrame().getHelpMenuFrame().requestFocus();
+			}
+		});
+		mnHilfe.add(mntmHilfe);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
