@@ -214,8 +214,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		JList<FieldCommand> list_fields_command_2 = new JList<FieldCommand>(fieldCommandListModel);
 		list_fields_command_2.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				selectedField = list_fields_command_2.getSelectedValue().getField();
-				updateField();
+				if (list_fields_command_2.getSelectedIndex() != -1) {
+					selectedField = list_fields_command_2.getSelectedValue().getField();
+					updateField();					
+				}
 			}
 		});
 		list_fields_command_2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -526,8 +528,10 @@ public class TurnPlaningFrame extends JFrame implements BoardPanelListener, Conf
 		JList<FieldCommand> list_fields_command = new JList<FieldCommand>(fieldCommandListModel);
 		list_fields_command.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				selectedField = list_fields_command.getSelectedValue().getField();
-				updateField();
+				if (list_fields_command.getSelectedIndex() != -1) {
+					selectedField = list_fields_command.getSelectedValue().getField();
+					updateField();
+				}
 			}
 		});
 		list_fields_command.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
