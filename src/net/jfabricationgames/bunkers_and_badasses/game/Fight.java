@@ -203,7 +203,12 @@ public class Fight implements Serializable {
 	}
 	public int calculateMaxFallingSupportTroops(int totalFallingTroops, Field field) {
 		int maximumFallingSupportTroops = totalFallingTroops/2;
-		//maximumFallingSupportTroops = Math.min(maximumFallingSupportTroops, field.getTroopStrength()/2);
+		if (field.getNormalTroops() > 0) {
+			maximumFallingSupportTroops = Math.min(maximumFallingSupportTroops, field.getTroopStrength()-1);			
+		}
+		else {
+			maximumFallingSupportTroops = Math.min(maximumFallingSupportTroops, field.getTroopStrength()-2);
+		}
 		if (field.getTroops().size() == 1) {
 			maximumFallingSupportTroops = 0;
 		}

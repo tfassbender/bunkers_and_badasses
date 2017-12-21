@@ -210,7 +210,7 @@ public class UserResource implements Serializable, Cloneable {
 		}
 	}
 	
-	public int[] getRecroutedTroopCosts(int normal, int badass, int upgrades) {
+	public static int[] getRecroutedTroopCosts(int normal, int badass, int upgrades) {
 		int[] costs = new int[3];
 		costs[0] += (normal + upgrades) * Troop.getStorage().getTroopCosts()[TroopStorage.NORMAL_TROOP][TroopStorage.RECRUIT_COSTS_CREDITS];
 		costs[0] += badass * Troop.getStorage().getTroopCosts()[TroopStorage.BADASS_TROOP][TroopStorage.RECRUIT_COSTS_CREDITS];

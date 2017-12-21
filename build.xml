@@ -15,8 +15,10 @@
 	<property name="mainClassClient">net.jfabricationgames.bunkers_and_badasses.login.LoginClientMain</property>
 
 	<property name="src">src/</property>
+	<property name="build_all">build</property>
 	<property name="build">build/main</property>
 	<property name="dist">dist/</property>
+	<property name="images_path">net/jfabricationgames/bunkers_and_badasses/images</property>
 	<property name="images">net/jfabricationgames/bunkers_and_badasses/images/**/*.*</property>
 	
 	<property name="src_test">test/</property>
@@ -34,6 +36,16 @@
 		<pathelement location="lib/junit-4.12.jar"/>
 		<pathelement location="lib/hamcrest-core-1.3.jar"/>
 		<pathelement location="${build}"/>
+	</path>
+	
+	<path id="classpath">
+		<pathelement path="${path_elem_jfg_toolbox}" />
+		<pathelement path="${path_elem_jfg_database_login}" />
+		<pathelement path="${path_elem_jfg_jdbc_connector}" />
+		<pathelement path="${path_elem_jfg_server}" />
+		<pathelement path="${path_elem_jfg_logger}" />
+		<pathelement path="${path_elem_miglayout}" />
+		<pathelement path="${path_elem_mysql_connector}" />
 	</path>
 
 	<target name="init">
@@ -55,28 +67,25 @@ Build on: ${timestamp}</echo>
 
 	<target name="compile_src" depends="init">
 		<javac srcdir="${src}" destdir="${build}" encoding="UTF-8" includeantruntime="false">
-			<classpath>
-				<pathelement path="${path_elem_jfg_toolbox}" />
-				<pathelement path="${path_elem_jfg_database_login}" />
-				<pathelement path="${path_elem_jfg_jdbc_connector}" />
-				<pathelement path="${path_elem_jfg_server}" />
-				<pathelement path="${path_elem_jfg_logger}" />
-				<pathelement path="${path_elem_miglayout}" />
-				<pathelement path="${path_elem_mysql_connector}" />
-			</classpath>
+			<classpath refid="classpath" />
 		</javac>
 	</target>
 	
 	<target name="compile_test" depends="compile_src">
 		<javac srcdir="${src_test}" destdir="${build_test}" includeantruntime="false">
+			<classpath refid="classpath" />
 			<classpath refid="classpath_test" />
 		</javac>
+		<copy todir="${build_test}/${images_path}">
+			<fileset dir="src/${images_path}" />
+		</copy>
 	</target>
 	
 	<target name="test" depends="compile_test">
-		<junit printsummary="true" haltonfailure="false" haltonerror="false" fork="true">
+		<junit printsummary="true" haltonfailure="true" haltonerror="true" fork="true">
 			<classpath>
 				<path refid="classpath_test" />
+				<path refid="classpath" />
 				<pathelement location="${build_test}" />
 			</classpath>
 			<formatter type="brief" usefile="false" />
@@ -86,13 +95,13 @@ Build on: ${timestamp}</echo>
 		</junit>
 	</target>
 
-	<target name="build_jars">
+	<target name="build_jars" depends="test">
 		<antcall target="generate_timestamp" />
 		<antcall target="build_jar_client" />
 		<antcall target="build_jar_server" />
 	</target>
 
-	<target name="build_jar_client" depends="compile_src,test">
+	<target name="build_jar_client" depends="compile_src">
 		<mkdir dir="${dist}/lib" />
 		<jar jarfile="${dist}/lib/${project_name_client}_${version}.jar" basedir="${build}">
 			<manifest>
@@ -106,7 +115,7 @@ Build on: ${timestamp}</echo>
 		</jar>
 	</target>
 
-	<target name="build_jar_server" depends="compile_src,test">
+	<target name="build_jar_server" depends="compile_src">
 		<mkdir dir="${dist}/lib" />
 		<jar jarfile="${dist}/lib/${project_name_server}_${version}.jar" basedir="${build}">
 			<manifest>
@@ -153,7 +162,7 @@ Build on: ${timestamp}</echo>
 	</target>
 
 	<target name="clean">
-		<delete dir="${build}" />
+		<delete dir="${build_all}" />
 		<delete dir="${dist}" />
 	</target>
 

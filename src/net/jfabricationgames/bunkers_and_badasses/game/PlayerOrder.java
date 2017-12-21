@@ -62,7 +62,6 @@ public class PlayerOrder implements Serializable {
 	 * 		The next player.
 	 */
 	public User getNext() {
-		User next = null;
 		int nextMove = move+1;
 		while (order.get(nextMove % players) == null) {
 			nextMove++;
@@ -70,7 +69,7 @@ public class PlayerOrder implements Serializable {
 				throw new TurnOrderException("No next Player available. All players have passed.");
 			}
 		}
-		return next;
+		return order.get(nextMove % players);
 	}
 	
 	/**
@@ -96,7 +95,7 @@ public class PlayerOrder implements Serializable {
 	 * 		The player order as an array.
 	 */
 	public User[] getNextTurnOrder() {
-		User[] users = new User[order.size()];
+		User[] users = new User[players];
 		for (int i : nextOrder.keySet()) {
 			users[i] = nextOrder.get(i);
 		}

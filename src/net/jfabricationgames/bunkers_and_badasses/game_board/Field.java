@@ -17,6 +17,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Bandit;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.CrimsonRaider;
 import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
+import net.jfabricationgames.bunkers_and_badasses.game_command.DefendCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.server.BunkersAndBadassesServer;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -269,7 +270,7 @@ public class Field implements Serializable {
 	 * 		The total defense strength of this field.
 	 */
 	public int getDefenceStrength() {
-		return getTroopStrength() + building.getAdditionalDefence();
+		return getTroopStrength() + building.getAdditionalDefence() + (command != null && command instanceof DefendCommand ? 1 : 0);
 	}
 	
 	/**

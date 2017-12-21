@@ -30,6 +30,7 @@ import javax.swing.event.ListSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
+import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResourceManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
@@ -560,7 +561,7 @@ public class CommandExecutionPanel extends JPanel {
 			int normalTroops = (Integer) spinnerNormalTroops.getValue();
 			int badassTroops = (Integer) spinnerBadassTroops.getValue();
 			int upgrades = (Integer) spinnerAufrstungen.getValue();
-			int[] costs = game.getResourceManager().getResources().get(game.getLocalUser()).getRecroutedTroopCosts(normalTroops, badassTroops, upgrades);
+			int[] costs = UserResource.getRecroutedTroopCosts(normalTroops, badassTroops, upgrades);
 			txtKosten.setText(costs[0] + " C, " + costs[1] + " M");
 			txtKosten.setToolTipText(costs[0] + " Credits, " + costs[1] + " Munition");
 		}

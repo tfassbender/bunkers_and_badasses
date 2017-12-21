@@ -178,7 +178,7 @@ public class HeroCardManager implements Serializable {
 	 * @param cards
 	 * 		The number of cards the player takes.
 	 */
-	public void takeCards(User user, int cards) {
+	public void takeCards(User user, int cards) throws BunkersAndBadassesException {
 		List<Hero> playersCards = heroCards.get(user);
 		if (playersCards.size() + cards > maxCardsPerPlayer) {
 			throw new BunkersAndBadassesException("The player want's to take more cards than allowed.", "So viele Helden kannst du nicht Rekrutieren. Das Maximum sind 5 Helden.");
@@ -203,15 +203,19 @@ public class HeroCardManager implements Serializable {
 	}
 	
 	public void heroCardUsed(Hero heroCard, User user) {
-		heroCards.get(user).remove(heroCard);
-		putBackCards(heroCard);
+		if (heroCards.get(user).remove(heroCard)) {
+			putBackCards(heroCard);			
+		}
+		else {
+			throw new BunkersAndBadassesException("This card can't be played because the user doesn't hold it.");
+		}
 	}
 	
 	public List<Hero> getHeroCards(User user) {
 		return heroCards.get(user);
 	}
 	
-	private List<Hero> getHeroCardStack() {
+	protected List<Hero> getHeroCardStack() {
 		return heroCardStack;
 	}
 	
