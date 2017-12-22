@@ -18,6 +18,8 @@
 	<property name="build_all">build</property>
 	<property name="build">build/main</property>
 	<property name="dist">dist/</property>
+	<property name="release_dir">${dist}/release</property>
+	<property name="release">${release_dir}/${project_name_client}_${version}</property>
 	<property name="images_path">net/jfabricationgames/bunkers_and_badasses/images</property>
 	<property name="images">net/jfabricationgames/bunkers_and_badasses/images/**/*.*</property>
 	
@@ -99,6 +101,25 @@ Build on: ${timestamp}</echo>
 		<antcall target="generate_timestamp" />
 		<antcall target="build_jar_client" />
 		<antcall target="build_jar_server" />
+	</target>
+	
+	<target name="build_release" depends="build_jars">
+		<mkdir dir="${release_dir}"/>
+		<mkdir dir="${release}"/>
+		<mkdir dir="${release}/data"/>
+		<mkdir dir="${release}/boards"/>
+		<copy todir="${release}">
+			<fileset dir="project_doc" includes="bunkers_and_badasses_*.pdf" />
+			<fileset dir="project_doc" includes="run_bunkers_and_badasses.*" />
+			<fileset dir="project_doc" includes="bab.ico" />
+		</copy>
+		<copy todir="${release}/data">
+			<fileset dir="${dist}/lib" includes="${project_name_client}_${version}.jar" />
+		</copy>
+		<copy todir="${release}/boards">
+			<fileset dir="boards" includes="*.babbm" />
+		</copy>
+		<zip destfile="${release_dir}/${project_name_client}_${version}.zip" basedir="${release_dir}" />
 	</target>
 
 	<target name="build_jar_client" depends="compile_src">
