@@ -143,7 +143,7 @@ public class GameLoadingAnswerDialog extends JFrame {
 				}
 			}
 			{
-				ImagePanel panel = new ImagePanel("main_menu/angel_1.png");
+				ImagePanel panel = new ImagePanel(MainMenuFrame.getImageLoader().loadImage("main_menu/angel_1.png"));
 				panel.setBackground(Color.GRAY);
 				contentPanel.add(panel, "cell 1 1 1 4,grow");
 			}

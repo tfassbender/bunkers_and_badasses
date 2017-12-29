@@ -42,6 +42,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.troop.Troop;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
@@ -71,6 +72,7 @@ public class MainMenuFrame extends JFrame {
 	private SkillProfileManager skillProfileManager;
 	
 	private List<Board> playableBoards;//no complete boards; only name and image
+	private List<GameOverview> gameOverviews;
 	
 	private boolean dynamicVariablesLoaded;
 	
@@ -284,6 +286,7 @@ public class MainMenuFrame extends JFrame {
 		loadBoards();
 		requireSkillProfiles();
 		requireDynamicVariables();
+		requireGameOverviews();
 	}
 	
 	@Override
@@ -377,6 +380,11 @@ public class MainMenuFrame extends JFrame {
 		client.sendMessage(dynamicVariableRequestMessage);
 	}
 	
+	private void requireGameOverviews() {
+		GameOverviewRequestMessage message = new GameOverviewRequestMessage();
+		client.sendMessage(message);
+	}
+	
 	private void startGameCreationDialog() {
 		if (gameCreationDialog == null) {
 			gameCreationDialog = new GameCreationDialog(client, playableBoards, this);
@@ -388,7 +396,7 @@ public class MainMenuFrame extends JFrame {
 	}
 	private void startGameLoadingDialog() {
 		if (gameLoadingDialog == null) {
-			gameLoadingDialog = new GameLoadingDialog(client, this, playableBoards);
+			gameLoadingDialog = new GameLoadingDialog(client, this, playableBoards, gameOverviews);
 			gameLoadingDialog.setVisible(true);
 		}
 		else {
@@ -506,6 +514,7 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	public void receiveGameOverviews(List<GameOverview> gameOverviews) {
+		this.gameOverviews = gameOverviews;
 		if (gameLoadingDialog != null) {
 			gameLoadingDialog.receiveGameOverviews(gameOverviews);
 		}

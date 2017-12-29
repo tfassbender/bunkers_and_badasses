@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_storage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
@@ -18,6 +19,7 @@ public class GameStore {
 	
 	public GameStore(JFGClient client) {
 		this.client = client;
+		serverAnswers = new ArrayList<Boolean>();
 	}
 	
 	/**
@@ -79,7 +81,9 @@ public class GameStore {
 	 * 		A GameStorageException is thrown when the game couldn't be stored.
 	 */
 	public void storeGame(Game game, boolean gameEnded) {
-		game.getBoard().setStoreImage(false);//don't send the image to the server
+		if (game.getBoard() != null) {
+			game.getBoard().setStoreImage(false);//don't send the image to the server			
+		}
 		GameSaveMessage save = new GameSaveMessage(game, gameEnded);
 		client.sendMessage(save);//send the game to the server
 		//game.getBoard().setStoreImage(true);//enable the image sending again after sending the game 

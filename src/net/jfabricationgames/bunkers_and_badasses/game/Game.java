@@ -63,7 +63,7 @@ public class Game implements Serializable {
 		colorManager.chooseColors(players);
 		fightManager = new FightManager(client, this, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
 		skillProfileManager = new SkillProfileManager();
-		gameStore = new GameStore(client);
+		gameStore = ((BunkersAndBadassesClientInterpreter) client.getClientInterpreter()).getGameStore();
 		//initialize the GameFrame when the board is added.
 		//gameFrame = new GameFrame(this);
 	}
@@ -101,7 +101,7 @@ public class Game implements Serializable {
 			gameFrame.updateAllFrames();
 		}
 		//store the game if the local player is the starting player
-		if (getStartingPlayer().equals(localUser)) {
+		if (getStartingPlayer().equals(localUser) && board != null) {
 			gameStore.storeGame(this, false);
 		}
 	}

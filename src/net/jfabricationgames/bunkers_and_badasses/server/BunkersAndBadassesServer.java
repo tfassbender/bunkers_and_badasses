@@ -1,7 +1,9 @@
 package net.jfabricationgames.bunkers_and_badasses.server;
 
 import java.awt.Dimension;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -603,7 +605,7 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 	 * 		Indicates whether the game has ended to know if the statistics need to be created
 	 */
 	public boolean saveGame(Game game, boolean gameEnded) {
-		boolean saveSuccessful = false;
+		boolean saveSuccessful = true;
 		GameOverview overview = new GameOverview(game);
 		Connection connection = JFGDatabaseConnection.getJFGDefaultConnection();
 		PreparedStatement statement;
@@ -613,10 +615,11 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 			statement.setObject(2, overview);//add the overview object to the prepared statement
 			statement.setObject(3, game);//add the game object to the prepared statement
 			statement.setInt(4, game.getId());
-			saveSuccessful = statement.execute();
+			statement.execute();
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
+			saveSuccessful = false;
 		}
 		if (gameEnded) {
 			//create the statistics if the game has ended
@@ -652,21 +655,31 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		List<GameOverview> gameOverviews = new ArrayList<GameOverview>();
 		ResultSet result = null;
-		String query = "SELECT id, game_overview FROM bunkers_and_badasses.games WHERE active = true";
+		String query = "SELECT id, game_overview FROM bunkers_and_badasses.games WHERE active = true && game_overview IS NOT NULL";
 		GameOverview overview;
 		int id;
+		
 		try (Statement statement = con.createStatement()) {
 			//get the overviews from the database and store them in a list
 			result = statement.executeQuery(query);
 			while (result.next()) {
 				id = result.getInt(1);
-				overview = result.getObject(2, GameOverview.class);
+				byte[] in = (byte[]) result.getObject(2);
+				ByteArrayInputStream baip = new ByteArrayInputStream(in);
+				ObjectInputStream ois = new ObjectInputStream(baip);
+				overview = (GameOverview) ois.readObject();
 				overview.setId(id);//add the id to the overview to identify the game save
 				gameOverviews.add(overview);
 			}
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		catch (ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
 		}
 		finally {
 			if (result != null) {
@@ -708,11 +721,20 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 		try (Statement statement = con.createStatement()) {
 			result = statement.executeQuery(query);//load the game from the database
 			if (result.next()) {
-				loadedGame = result.getObject(1, Game.class);
+				byte[] in = (byte[]) result.getObject(1);
+				ByteArrayInputStream baip = new ByteArrayInputStream(in);
+				ObjectInputStream ois = new ObjectInputStream(baip);
+				loadedGame = (Game) ois.readObject();
 			}
 		}
 		catch (SQLException sqle) {
 			sqle.printStackTrace();
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		catch (ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
 		}
 		finally {
 			if (result != null) {

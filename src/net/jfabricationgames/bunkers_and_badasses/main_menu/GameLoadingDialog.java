@@ -26,7 +26,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -60,7 +59,7 @@ public class GameLoadingDialog extends JFrame {
 	private MainMenuFrame mainMenu;
 	private List<Board> playableBoards;
 	
-	public GameLoadingDialog(JFGClient client, MainMenuFrame callingFrame, List<Board> playableBoards) {
+	public GameLoadingDialog(JFGClient client, MainMenuFrame callingFrame, List<Board> playableBoards, List<GameOverview> gameOverviews) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameLoadingDialog.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -205,13 +204,17 @@ public class GameLoadingDialog extends JFrame {
 			contentPanel.add(btnAbbrechen, "cell 1 8");
 		}
 		
-		GameOverviewRequestMessage message = new GameOverviewRequestMessage();
-		client.sendMessage(message);
+		//receive the game overviews after the frame was build
+		if (gameOverviews != null) {
+			receiveGameOverviews(gameOverviews);
+		}
 	}
 	
 	@Override
 	public void dispose() {
-		answerDialog.dispose();
+		if (answerDialog != null) {
+			answerDialog.dispose();			
+		}
 		super.dispose();
 	}
 	
