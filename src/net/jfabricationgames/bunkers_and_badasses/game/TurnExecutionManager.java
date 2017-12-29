@@ -60,6 +60,10 @@ public class TurnExecutionManager implements Serializable {
 		GameState state = game.getGameState();
 		game.getPlanManager().countCommands();//others count the commands because of the message; this client needs to count too
 		game.setState(state);
+		//store the game if this player is the starting player
+		if (game.getStartingPlayer().equals(game.getLocalUser())) {
+			Game.getGameStore().storeGame(game, false);
+		}
 	}
 	
 	public Board getBoard() {

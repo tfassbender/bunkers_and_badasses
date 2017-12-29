@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
+import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -33,6 +34,7 @@ public class Game implements Serializable {
 	private SkillProfileManager skillProfileManager;
 	private FightManager fightManager;
 	private transient GameFrame gameFrame;
+	private transient static GameStore gameStore;
 	private static transient GameVariableStorage gameVariableStorage;
 	
 	private int id;//the game id in the database
@@ -61,6 +63,7 @@ public class Game implements Serializable {
 		colorManager.chooseColors(players);
 		fightManager = new FightManager(client, this, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
 		skillProfileManager = new SkillProfileManager();
+		gameStore = new GameStore(client);
 		//initialize the GameFrame when the board is added.
 		//gameFrame = new GameFrame(this);
 	}
@@ -96,6 +99,10 @@ public class Game implements Serializable {
 		//update the frames
 		if (gameFrame != null) {
 			gameFrame.updateAllFrames();
+		}
+		//store the game if the local player is the starting player
+		if (getStartingPlayer().equals(localUser)) {
+			gameStore.storeGame(this, false);
 		}
 	}
 	
@@ -244,6 +251,10 @@ public class Game implements Serializable {
 	public void setSkillProfileManager(SkillProfileManager skillProfileManager) {
 		this.skillProfileManager = skillProfileManager;
 		skillProfileManager.setUserResourceManager(resourceManager);
+	}
+	
+	public static GameStore getGameStore() {
+		return gameStore;
 	}
 	
 	public static GameVariableStorage getGameVariableStorage() {

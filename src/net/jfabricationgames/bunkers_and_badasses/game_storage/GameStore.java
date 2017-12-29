@@ -9,7 +9,7 @@ import net.jfabricationgames.jfgserver.client.JFGClient;
 
 public class GameStore {
 	
-	public static final int SERVER_TIMEOUT = 30;//time till server timeout in seconds
+	public static final int SERVER_TIMEOUT = 15;//time till server timeout in seconds
 	
 	private JFGClient client;
 	
@@ -44,7 +44,7 @@ public class GameStore {
 		try {
 			//wait for the servers answer or abort after 30 seconds
 			while (serverAnswers.isEmpty() && (System.currentTimeMillis()-timestamp) < SERVER_TIMEOUT * 1000) {
-				Thread.sleep(250);
+				Thread.sleep(100);
 			}
 			if (serverAnswers.isEmpty()) {
 				//server timed out
@@ -57,12 +57,17 @@ public class GameStore {
 		catch (InterruptedException ie) {
 			throw new GameStorageException("Storing interrupted: no server answer received", ie);
 		}
+		finally {
+			//delete the last server answer (if there is any)
+			if (!serverAnswers.isEmpty()) {
+				serverAnswers.remove(0);
+			}
+		}
 		return loadedGame;
 	}
 	
 	/**
 	 * Try to store the game in the database.
-	 * This method waits for the servers answer and should therefore be called in a thread separated from the frame functions.
 	 * 
 	 * @param game
 	 * 		The game that is stored.
@@ -73,29 +78,41 @@ public class GameStore {
 	 * @throws GameStorageException
 	 * 		A GameStorageException is thrown when the game couldn't be stored.
 	 */
-	public void storeGame(Game game, boolean gameEnded) throws GameStorageException {
+	public void storeGame(Game game, boolean gameEnded) {
 		game.getBoard().setStoreImage(false);//don't send the image to the server
 		GameSaveMessage save = new GameSaveMessage(game, gameEnded);
 		client.sendMessage(save);//send the game to the server
-		game.getBoard().setStoreImage(true);//enable the image sending again after sending the game 
-		long timestamp = System.currentTimeMillis();
-		try {
-			//wait for the servers answer or abort after 30 seconds
-			while (serverAnswers.isEmpty() && (System.currentTimeMillis()-timestamp) < SERVER_TIMEOUT * 1000) {
-				Thread.sleep(250);
+		//game.getBoard().setStoreImage(true);//enable the image sending again after sending the game 
+		Thread storingThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				long timestamp = System.currentTimeMillis();
+				try {
+					//wait for the servers answer or abort after 30 seconds
+					while (serverAnswers.isEmpty() && (System.currentTimeMillis()-timestamp) < SERVER_TIMEOUT * 1000) {
+						Thread.sleep(100);
+					}
+					if (serverAnswers.isEmpty()) {
+						//server timed out
+						throw new GameStorageException("The server timed out after " + SERVER_TIMEOUT + " seconds");
+					}
+					else if (!serverAnswers.get(0)) {
+						throw new GameStorageException("The server send a negative answer to the game storage request");
+					}
+					//else: everything went fine
+				}
+				catch (InterruptedException ie) {
+					throw new GameStorageException("Storing interrupted: no server answer received", ie);
+				}
+				finally {
+					//delete the last server answer (if there is any)
+					if (!serverAnswers.isEmpty()) {
+						serverAnswers.remove(0);
+					}
+				}
 			}
-			if (serverAnswers.isEmpty()) {
-				//server timed out
-				throw new GameStorageException("The server timed out after " + SERVER_TIMEOUT + " seconds");
-			}
-			else if (!serverAnswers.get(0)) {
-				throw new GameStorageException("The server send a negative answer to the game storage request");
-			}
-			//else: everything went fine
-		}
-		catch (InterruptedException ie) {
-			throw new GameStorageException("Storing interrupted: no server answer received", ie);
-		}
+		}, "GameStoringThread");
+		storingThread.start();
 	}
 	
 	/**

@@ -174,6 +174,8 @@ public class UserPlanManager implements Serializable {
 			this.game.getClient().resetOutput();
 			this.game.getClient().sendMessage(message);
 			this.game.getGameFrame().updateAllFrames();
+			//all players have committed -> store the current game state
+			Game.getGameStore().storeGame(this.game, false);
 		}
 	}
 	

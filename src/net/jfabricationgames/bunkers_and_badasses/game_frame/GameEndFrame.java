@@ -59,6 +59,9 @@ public class GameEndFrame extends JFrame implements ConfirmDialogListener {
 		this.client = client;
 		this.userPoints = game.getPointManager().getSortedPointList();
 		
+		//store the final game in the database if the local player is the starting player
+		Game.getGameStore().storeGame(game, true);
+		
 		setTitle("Spiel Ende - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameEndFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
