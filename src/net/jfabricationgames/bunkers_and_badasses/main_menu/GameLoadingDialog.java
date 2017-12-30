@@ -283,7 +283,7 @@ public class GameLoadingDialog extends JFrame {
 		//add general info
 		txtBoard.setText(overview.getBoardName());
 		txtStoringDate.setText(overview.getDateStored());
-		txtTurn.setText(Integer.toString(overview.getTurn()));
+		txtTurn.setText(Integer.toString(overview.getTurn()+1));
 		//add the players
 		playersListModel.clear();
 		for (User user : overview.getPlayers()) {
@@ -295,6 +295,7 @@ public class GameLoadingDialog extends JFrame {
 		lblLade.setText("");
 		//sort the game overviews by date
 		Collections.sort(gameOverviews);
+		Collections.reverse(gameOverviews);
 		//add the game overviews to the list
 		gamesListModel.clear();
 		for (GameOverview overview : gameOverviews) {

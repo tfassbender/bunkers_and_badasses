@@ -527,6 +527,7 @@ public class MainMenuFrame extends JFrame {
 	
 	public void receiveGameOverviews(List<GameOverview> gameOverviews) {
 		this.gameOverviews = gameOverviews;
+		this.gameOverviews.removeIf(overview -> !overview.getPlayers().contains(UserManager.getLocalUser()));
 		if (gameLoadingDialog != null) {
 			gameLoadingDialog.receiveGameOverviews(gameOverviews);
 		}

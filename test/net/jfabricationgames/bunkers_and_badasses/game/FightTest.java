@@ -115,7 +115,7 @@ public class FightTest {
 	public void testGetDefendingStrength() {
 		fight.setBattleState(Fight.STATE_FIGHT_ENDED);
 		fight.calculateCurrentStrength();
-		assertEquals(13, fight.getDefendingStrength());
+		assertEquals(12, fight.getDefendingStrength());
 	}
 	
 	@Test

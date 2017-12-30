@@ -2,8 +2,8 @@
 <project name="BunkersAndBadasses" default="build_jars" basedir=".">
 
 	<property name="version.mayor">0</property>
-	<property name="version.minor">3</property>
-	<property name="version.patch">3</property>
+	<property name="version.minor">4</property>
+	<property name="version.patch">0</property>
 
 	<property name="version_number">${version.mayor}.${version.minor}.${version.patch}</property>
 	<property name="version">V${version_number}</property>
@@ -29,7 +29,7 @@
 	<property name="path_elem_jfg_toolbox">jfabricationgames_toolbox_V1.0.7.jar</property>
 	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.3.0.jar</property>
 	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
-	<property name="path_elem_jfg_server">jfg_serverV1.3.0.jar</property>
+	<property name="path_elem_jfg_server">jfg_serverV1.3.1.jar</property>
 	<property name="path_elem_jfg_logger">jfg_loggerV1.0.2.jar</property>
 	<property name="path_elem_miglayout">miglayout15-swing.jar</property>
 	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin.jar</property>

@@ -47,7 +47,7 @@ public class GameOverview implements Serializable, Comparable<GameOverview> {
 	
 	@Override
 	public String toString() {
-		return dateStored + " " + boardName + " " + players + "";
+		return dateStored + " " + boardName + " " + players;
 	}
 	
 	/**

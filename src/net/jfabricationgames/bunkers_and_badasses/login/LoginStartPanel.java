@@ -165,4 +165,8 @@ public class LoginStartPanel extends JPanel implements LoginPanel {
 			login.start();
 		}
 	}
+	
+	public void setErrorMessage(String message) {
+		lblError.setText(message);
+	}
 }

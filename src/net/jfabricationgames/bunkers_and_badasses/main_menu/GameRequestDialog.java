@@ -126,7 +126,7 @@ public class GameRequestDialog extends JFrame {
 			String lastPlayed = null;
 			if (overview != null) {
 				lastPlayed = overview.getDateStored();
-				lastPlayed += " (Runde " + overview.getTurn() + ")"; 
+				lastPlayed += " (Runde " + (overview.getTurn()+1) + ")"; 
 			}
 			else {
 				lastPlayed = "-----";

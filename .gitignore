@@ -6,3 +6,4 @@
 bin/
 build/
 dist/
+junit*.properties

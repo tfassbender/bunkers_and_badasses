@@ -136,7 +136,7 @@ public class LoginSignUpPanel1 extends JPanel implements LoginPanel {
 				@Override
 				public void run() {
 					if (textField.getText() != null) {
-						if (textField.getText().length() > 5) {
+						if (textField.getText().length() >= 3) {
 							if (client.isNameAvailable(textField.getText())) {
 								btnNext.setEnabled(true);
 								lblMessage.setText("Username is valid");

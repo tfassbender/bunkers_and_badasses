@@ -23,6 +23,8 @@ import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClientInterpreter;
+import net.jfabricationgames.jfgserver.client.JFGClient;
+import net.jfabricationgames.jfgserver.client.JFGConnectException;
 
 public class LoginClientMain extends JFrame {
 	
@@ -80,11 +82,17 @@ public class LoginClientMain extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginClientMain.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
 		
 		//create a new client to login and change the interpreter to a bunkers and badasses login interpreter
-		//TODO maybe catch ConnectException ?
-		client = new JFGDatabaseLoginClient(ServerMain.SERVER_URL, ServerMain.SERVER_PORT, true);//use the secured messaging client
-		JFGDatabaseLoginClientInterpreter loginInterpreter = (JFGDatabaseLoginClientInterpreter) client.getClient().getClientInterpreter();
-		LoginClientInterpreter interpreter = new LoginClientInterpreter(loginInterpreter, this);
-		client.getClient().setClientInterpreter(interpreter);
+		boolean connectionError = false;
+		JFGClient.setExceptionOnConnectionRefuse(true);
+		try {
+			client = new JFGDatabaseLoginClient(ServerMain.SERVER_URL, ServerMain.SERVER_PORT, true);//use the secured messaging client
+			JFGDatabaseLoginClientInterpreter loginInterpreter = (JFGDatabaseLoginClientInterpreter) client.getClient().getClientInterpreter();
+			LoginClientInterpreter interpreter = new LoginClientInterpreter(loginInterpreter, this);
+			client.getClient().setClientInterpreter(interpreter);			
+		}
+		catch (JFGConnectException ce) {
+			connectionError = true;
+		}
 		
 		//set the JFGClient to automatically reset the output before every message sent
 		//JFGClient.setResetBeforeSending(true);
@@ -115,6 +123,10 @@ public class LoginClientMain extends JFrame {
 		//create the panels for logging in and signing up
 		String lastUser = propsFile.getProperty(LAST_USER);
 		panels = new LoginPanel[] {new LoginStartPanel(this, client, lastUser), new LoginSignUpPanel1(this, client), new LoginSignUpPanel2(this, client)};
+		
+		if (connectionError) {
+			((LoginStartPanel) panels[0]).setErrorMessage("<html>Error: Verbindung zum Server<br>kann nicht aufgebaut werden.</html>");
+		}
 		
 		//build the frame
 		contentPane = new JPanel();
