@@ -102,7 +102,7 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 				mainMenu.receiveGameLoadingAnswer(message.getPlayer(), message.isJoining());
 				break;
 			case GAME_LOADING_REQUEST:
-				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getMap(), message.getOverview());
+				mainMenu.showGameRequest(message.getPlayer(), message.getInvitedPlayers(), message.getOverview().getBoardName(), message.getOverview());
 				break;
 		}
 	}

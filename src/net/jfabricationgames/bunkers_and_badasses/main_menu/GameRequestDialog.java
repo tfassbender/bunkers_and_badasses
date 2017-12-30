@@ -197,7 +197,12 @@ public class GameRequestDialog extends JFrame {
 		cancelButton.setEnabled(false);
 		//send the message
 		MainMenuMessage gameCreationAnswer = new MainMenuMessage();
-		gameCreationAnswer.setMessageType(MainMenuMessage.MessageType.GAME_CREATION_ANSWER);
+		if (overview != null) {
+			gameCreationAnswer.setMessageType(MainMenuMessage.MessageType.GAME_LOADING_ANSWER);			
+		}
+		else {
+			gameCreationAnswer.setMessageType(MainMenuMessage.MessageType.GAME_CREATION_ANSWER);	
+		}
 		gameCreationAnswer.setJoining(joining);
 		gameCreationAnswer.setPlayer(new User(UserManager.getUsername()));
 		gameCreationAnswer.setToPlayer(invitingUser);

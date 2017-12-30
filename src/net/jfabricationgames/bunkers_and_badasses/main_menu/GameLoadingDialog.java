@@ -225,49 +225,57 @@ public class GameLoadingDialog extends JFrame {
 		GameOverview overview = list_games.getSelectedValue();
 		List<User> players = overview.getPlayers();
 		List<User> allUsers = UserManager.getUsers();
+		User localUser = UserManager.getLocalUser();
 		boolean playersOnline = true;
-		for (User p : players) {
-			//find the user p in the user list of the UserManager class
-			//the users from the overview may not contain the right online state
-			int userPos = allUsers.indexOf(p);
-			User user;
-			if (userPos != -1) {
-				user = allUsers.get(userPos);
-				playersOnline &= user.isOnline() && !user.isInGame();
-			}
-			else {
-				playersOnline = false;
-			}
-		}
-		if (playersOnline) {
-			//all players that play in the game are online
-			//send the game requests
-			MainMenuMessage gameRequest = new MainMenuMessage();
-			gameRequest.setMessageType(MainMenuMessage.MessageType.GAME_LOADING_REQUEST);
-			gameRequest.setInvitedPlayers(players);
-			gameRequest.setPlayer(new User(UserManager.getUsername()));
-			gameRequest.setOverview(overview);
-			answers = new ArrayList<User>();
-			invitedUsers = players;
-			abort = false;
-			//send the request message
-			//client.resetOutput();
-			client.sendMessage(gameRequest);
-			//select the board from the list of playable boards
-			Board board = null;
-			for (Board b : playableBoards) {
-				if (b.getName().equals(overview.getBoardName())) {
-					board = b;
+		if (players.contains(localUser)) {
+			for (User p : players) {
+				//find the user p in the user list of the UserManager class
+				//the users from the overview may not contain the right online state
+				int userPos = allUsers.indexOf(p);
+				User user;
+				if (userPos != -1) {
+					user = allUsers.get(userPos);
+					playersOnline &= user.isOnline() && !user.isInGame();
+				}
+				else {
+					playersOnline = false;
 				}
 			}
-			//start the answer dialog
-			answerDialog = new GameLoadingAnswerDialog(this, client, invitedUsers, mainMenu, board, overview);
-			answerDialog.setVisible(true);
-			//hide this frame
-			setVisible(false);
+			if (playersOnline) {
+				//all players that play in the game are online
+				//remove the local player from the invitation list
+				players.remove(localUser);
+				//send the game requests
+				MainMenuMessage gameRequest = new MainMenuMessage();
+				gameRequest.setMessageType(MainMenuMessage.MessageType.GAME_LOADING_REQUEST);
+				gameRequest.setInvitedPlayers(players);
+				gameRequest.setPlayer(new User(UserManager.getUsername()));
+				gameRequest.setOverview(overview);
+				answers = new ArrayList<User>();
+				invitedUsers = players;
+				abort = false;
+				//send the request message
+				//client.resetOutput();
+				client.sendMessage(gameRequest);
+				//select the board from the list of playable boards
+				Board board = null;
+				for (Board b : playableBoards) {
+					if (b.getName().equals(overview.getBoardName())) {
+						board = b;
+					}
+				}
+				//start the answer dialog
+				answerDialog = new GameLoadingAnswerDialog(this, client, invitedUsers, mainMenu, board, overview);
+				answerDialog.setVisible(true);
+				//hide this frame
+				setVisible(false);
+			}
+			else {
+				lblError.setText("Nicht alle Spieler Online");
+			}
 		}
 		else {
-			lblError.setText("Nicht alle Spieler Online");
+			lblError.setText("Du hast an diesem Spiel nicht teilgenommen");
 		}
 	}
 	

@@ -770,7 +770,9 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 		List<User> players = message.getPlayers();
 		StringBuilder playerList = new StringBuilder();
 		for (int i = 0; i < players.size(); i++) {
-			userMap.get(players.get(i)).sendMessage(message);
+			JFGConnection connection = userMap.get(players.get(i));
+			connection.resetOutput();
+			connection.sendMessage(message);
 			playerList.append(players.get(i).getUsername());
 			playerList.append(", ");
 		}

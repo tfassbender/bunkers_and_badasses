@@ -94,6 +94,7 @@ public class MainMenuFrame extends JFrame {
 	private JButton btnSpielErstellen;
 	private JMenuItem mntmSkillProfil;
 	private JMenuItem mntmHilfeMenu;
+	private JButton btnSpielLaden;
 	
 	public MainMenuFrame(JFGClient clientOld) {
 		addWindowListener(new WindowAdapter() {
@@ -269,7 +270,7 @@ public class MainMenuFrame extends JFrame {
 		panel_buttons = new JPanel();
 		panel_buttons.setBackground(Color.GRAY);
 		panel_content.add(panel_buttons, "cell 3 4,grow");
-		panel_buttons.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		panel_buttons.setLayout(new MigLayout("", "[grow][][grow]", "[grow][]"));
 		
 		btnSpielErstellen = new JButton("Spiel Erstellen");
 		btnSpielErstellen.setEnabled(false);
@@ -279,7 +280,17 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		btnSpielErstellen.setBackground(Color.GRAY);
-		panel_buttons.add(btnSpielErstellen, "cell 0 0,alignx center,aligny center");
+		panel_buttons.add(btnSpielErstellen, "cell 1 0,alignx center,aligny center");
+		
+		btnSpielLaden = new JButton("Spiel Laden");
+		btnSpielLaden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				startGameLoadingDialog();
+			}
+		});
+		btnSpielLaden.setEnabled(false);
+		btnSpielLaden.setBackground(Color.GRAY);
+		panel_buttons.add(btnSpielLaden, "cell 1 1,growx");
 		
 		updateUserList();
 		//requireBoards();
@@ -470,6 +481,7 @@ public class MainMenuFrame extends JFrame {
 		dynamicVariablesLoaded = true;
 		//enable the game start buttons
 		btnSpielErstellen.setEnabled(true);
+		btnSpielLaden.setEnabled(true);
 		mntmSpielErstellen.setEnabled(true);
 		mntmSpielLaden.setEnabled(true);
 		mntmHilfeMenu.setEnabled(true);

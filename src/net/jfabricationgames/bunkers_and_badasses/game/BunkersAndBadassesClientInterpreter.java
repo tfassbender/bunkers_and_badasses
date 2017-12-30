@@ -4,6 +4,7 @@ import net.jfabricationgames.bunkers_and_badasses.chat.ChatClient;
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
@@ -66,6 +67,9 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 		else if (message instanceof FightTransfereMessage) {
 			interpreteFightTransfereMessage((FightTransfereMessage) message);
 		}
+		else if (message instanceof GameLoadRequestMessage) {
+			interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, client);
+		}
 		else if (message instanceof UserUpdateMessage) {
 			//do nothing here; these messages are known but are not handled here.
 		}
@@ -124,6 +128,11 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	
 	private void interpreteFightTransfereMessage(FightTransfereMessage message) {
 		game.getFightManager().receiveFight(message.getFight());
+	}
+	
+	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGClient client) {
+		gameStore.receiveLoadedGame(message.getLoadedGame());
+		gameStore.addServerAnswer(message.isLoadedSuccessful());
 	}
 	
 	public PreGameSelectionFrame getPreGameSelectionFrame() {

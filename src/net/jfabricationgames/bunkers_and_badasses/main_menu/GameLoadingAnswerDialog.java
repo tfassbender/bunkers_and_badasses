@@ -28,6 +28,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameStartDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 import net.miginfocom.swing.MigLayout;
 
@@ -93,7 +94,7 @@ public class GameLoadingAnswerDialog extends JFrame {
 					lblSpielfeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				}
 				{
-					txtBoard = new JTextField();
+					txtBoard = new JTextField(overview.getBoardName());
 					panel_1.add(txtBoard, "cell 1 0,growx");
 					txtBoard.setFont(new Font("Tahoma", Font.PLAIN, 12));
 					txtBoard.setBackground(Color.LIGHT_GRAY);
@@ -106,7 +107,7 @@ public class GameLoadingAnswerDialog extends JFrame {
 					lblSpeicherDatum.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				}
 				{
-					txtStoringDate = new JTextField();
+					txtStoringDate = new JTextField(overview.getDateStored());
 					panel_1.add(txtStoringDate, "cell 1 1,growx");
 					txtStoringDate.setBackground(Color.LIGHT_GRAY);
 					txtStoringDate.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -118,7 +119,7 @@ public class GameLoadingAnswerDialog extends JFrame {
 					lblSpielRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				}
 				{
-					txtTurn = new JTextField();
+					txtTurn = new JTextField(overview.getTurn());
 					txtTurn.setFont(new Font("Tahoma", Font.PLAIN, 12));
 					panel_1.add(txtTurn, "cell 1 2,growx");
 					txtTurn.setBackground(Color.LIGHT_GRAY);
@@ -134,6 +135,10 @@ public class GameLoadingAnswerDialog extends JFrame {
 					JScrollPane scrollPane = new JScrollPane();
 					panel_1.add(scrollPane, "cell 0 4 3 1,grow");
 					{
+						for (User p : players) {
+							playersListModel.addElement(p);
+						}
+						playersListModel.addElement(UserManager.getLocalUser());
 						JList<User> list_players = new JList<User>(playersListModel);
 						list_players.setFont(new Font("Tahoma", Font.PLAIN, 12));
 						list_players.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -144,6 +149,8 @@ public class GameLoadingAnswerDialog extends JFrame {
 			}
 			{
 				ImagePanel panel = new ImagePanel(MainMenuFrame.getImageLoader().loadImage("main_menu/angel_1.png"));
+				panel.setCentered(true);
+				panel.setAdaptSizeKeepProportion(true);
 				panel.setBackground(Color.GRAY);
 				contentPanel.add(panel, "cell 1 1 1 4,grow");
 			}

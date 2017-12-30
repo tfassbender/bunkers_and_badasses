@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
+import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -131,6 +132,28 @@ public class Game implements Serializable {
 		//prepare the turn start
 		planManager.countCommands();
 		gameFrame.getBoardOverviewFrame().setBoard(board);
+	}
+	
+	/**
+	 * Start the game when it was loaded from the database.
+	 * Therefore the game frame is created and some resources are loaded.
+	 */
+	public void startLoadedGame() {
+		//load all images that were not stored in the database
+		board.getFields().forEach(field -> field.getBuilding().loadImage());
+		heroCardManager.getHeroCardStack().forEach(hero -> hero.loadImage());
+		for (Field field : board.getFields()) {
+			if (field.getCommand() != null) {
+				field.getCommand().loadImage();
+			}
+		}
+		planManager.countCommands();
+		((BunkersAndBadassesClientInterpreter) client.getClientInterpreter()).setGame(this);
+		if (gameFrame == null) {
+			//not sure if it's created by the addBoard method
+			gameFrame = new GameFrame(this);			
+		}
+		gameFrame.setVisible(true);
 	}
 	
 	public JFGClient getClient() {

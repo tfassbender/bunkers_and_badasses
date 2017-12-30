@@ -24,7 +24,6 @@ import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
-import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreationMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
@@ -176,20 +175,29 @@ public class GameStartDialog extends JDialog implements ConfirmDialogListener {
 		if (board != null && game != null && gameId != -1) {
 			if (!isLoaded) {
 				game.addBoard(board);
-				game.setId(gameId);				
+				game.setId(gameId);
+				if (game.getStartingPlayer() == null) {
+					game.setStartingPlayer(startingPlayer);
+				}
+				board.setGame(game);
+				//add the skill profile manager from the main menu
+				game.setSkillProfileManager(skillProfileManager);
+				new PreGameSelectionFrame(game).setVisible(true);
+				dispose();
 			}
 			else {
+				game.setId(gameId);
 				//set only the image because it's not included in the loaded board
 				game.getBoard().setBaseImage(board.getBaseImage());
+				if (game.getStartingPlayer() == null) {
+					game.setStartingPlayer(startingPlayer);
+				}
+				board.setGame(game);
+				//add the skill profile manager from the main menu
+				//game.setSkillProfileManager(skillProfileManager);
+				game.startLoadedGame();
+				dispose();
 			}
-			if (game.getStartingPlayer() == null) {
-				game.setStartingPlayer(startingPlayer);
-			}
-			board.setGame(game);
-			//add the skill profile manager from the main menu
-			game.setSkillProfileManager(skillProfileManager);
-			new PreGameSelectionFrame(game).setVisible(true);
-			dispose();
 		}
 	}
 	
@@ -273,23 +281,29 @@ public class GameStartDialog extends JDialog implements ConfirmDialogListener {
 		//this message is received by the MainMenuClientInterpreter and starts the GameStartDialog that adds the BunkersAndBadassesClientInterpreter
 		GameStartMessage message = new GameStartMessage();
 		message.setBoardId(board.getBoardId());
+		//set the local player to the first position of the player list
+		User localPlayer = UserManager.getLocalUser();
+		players.remove(localPlayer);
+		players.add(0, localPlayer);
 		message.setPlayers(players);
 		message.setLoaded(true);
 		message.setStartingPlayer(UserManager.getLocalUser());
+		client.resetOutput();
 		client.sendMessage(message);
 		//load the board (image) from the server
-		BoardRequestMessage boardRequest = new BoardRequestMessage();
+		/*BoardRequestMessage boardRequest = new BoardRequestMessage();
 		boardRequest.setId(board.getBoardId());
 		boardRequest.setPlayers(players.size());
-		client.sendMessage(boardRequest);
+		client.sendMessage(boardRequest);*/
 		//load the game from the server using the GameStore
 		Thread gameLoadingThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					game = gameStore.loadGame(overview);
-					gameId = game.getId();
+					gameId = overview.getId();
 					GameStartDialog.this.board = game.getBoard();
+					GameStartDialog.this.board.setBaseImage(board.getBaseImage());//the image is not stored in the database
 					//the loaded game already contains the board and the id so the game can be started
 					startGameFrame();
 				}
@@ -336,8 +350,9 @@ public class GameStartDialog extends JDialog implements ConfirmDialogListener {
 				public void run() {
 					try {
 						game = gameStore.loadGame(overview);
-						gameId = game.getId();
+						gameId = overview.getId();
 						GameStartDialog.this.board = game.getBoard();
+						GameStartDialog.this.board.setBaseImage(board.getBaseImage());//the image is not stored in the database
 						//the loaded game already contains the board and the id so the game can be started
 						startGameFrame();
 					}
