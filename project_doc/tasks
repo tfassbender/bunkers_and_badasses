@@ -4,20 +4,21 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- hero images are not updated after the heros are used
 	- sometimes two or more pre-game dialogs start
-	- some turn goals seem to be not added to the points (capitalism) (test implementation)
+	- some turn goals seem to be not added to the points (capitalism: only for one player...)
 	- used resources are sometimes calculated wrong (?)
 	- debug fights:
 		- heros seem to be not removed from the players hand sometimes (?)
 		
 - Next versions:
+	- passing order turn goals seem to have a bug...
 	- implement default selection of fields for tavern recruiting (select catch-a-ride fields first)
+	- ended games seem to have problems with updating them in the database
 	- add a summary of a move in a confirm dialog before executing a move (and the option to turn the confirm dialog off)
 	- database server keep alive
 	- add listing of gained resources (and lost standard resources for fields, ...) to the resource frame
 	- inform players when one player leaves the game (for any reason)
 	- implement hero functions
 	- create the statistics of a game and store them in the database when the game ends
-	- implement the back to main menu button in the game end frame 
 
 - New ideas:
 	- maybe soundtrack
