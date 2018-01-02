@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
@@ -12,6 +13,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_command.CommandStorage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.logger.JFGLogger;
+import net.jfabricationgames.logger.JFGLoggerManager;
 
 public class UserResource implements Serializable, Cloneable {
 	
@@ -22,14 +25,32 @@ public class UserResource implements Serializable, Cloneable {
 	private int ammo;
 	private int eridium;
 	
+	private static JFGLogger resourceLogger;
+	
+	static {
+		try {
+			resourceLogger = new JFGLogger("bunkers_and_badasses_resource_log", 1000);
+			JFGLoggerManager.addLogger(resourceLogger);
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+	
+	private User user;
+	
 	//the amounts of resources added to every buildings collections from the skill profiles
 	//building skill variables are selected from the skill profile manager
 	/*private int eridiumBuilding;
 	private int ammoBuilding;
 	private int creditsBuilding;*/
 	
+	public UserResource(User user) {
+		this.user = user;
+	}
+	
 	public UserResource clone() {
-		UserResource clone = new UserResource();
+		UserResource clone = new UserResource(user);
 		clone.credits = credits;
 		clone.ammo = ammo;
 		clone.eridium = eridium;
@@ -75,6 +96,9 @@ public class UserResource implements Serializable, Cloneable {
 		credits += UserResourceManager.getStartingCredits();
 		ammo += UserResourceManager.getStartingAmmo();
 		eridium += UserResourceManager.getStartingEridium();
+		resourceLogger.addLog("user [" + user + "]: game start resources collected [" + UserResourceManager.getStartingCredits() + " credits" + 
+				UserResourceManager.getStartingAmmo() + " ammo" + UserResourceManager.getStartingEridium() + "eririum]. Current resources [" + 
+				credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	/**
@@ -87,6 +111,9 @@ public class UserResource implements Serializable, Cloneable {
 		credits += SkillProfileManager.CREDITS_SKILL_LEVEL[skill.getCredits()];
 		ammo += SkillProfileManager.AMMO_SKILL_LEVEL[skill.getAmmo()];
 		eridium += SkillProfileManager.ERIDIUM_SKILL_LEVEL[skill.getEridium()];
+		resourceLogger.addLog("user [" + user + "]: skill resources collected [" + SkillProfileManager.CREDITS_SKILL_LEVEL[skill.getCredits()] + 
+				" credits" + SkillProfileManager.AMMO_SKILL_LEVEL[skill.getAmmo()] + " ammo" + SkillProfileManager.ERIDIUM_SKILL_LEVEL[skill.getEridium()] + 
+				"eririum]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	/**
@@ -97,6 +124,8 @@ public class UserResource implements Serializable, Cloneable {
 		credits += turnStartResources[0];
 		ammo += turnStartResources[1];
 		eridium += turnStartResources[2];
+		resourceLogger.addLog("user [" + user + "]: turn start resources collected [" + turnStartResources[0] + " credits" + turnStartResources[1] + 
+				" ammo" + turnStartResources[2] + "eririum]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	public int[] calculateTurnStartResources(Game game, User user) {
@@ -135,19 +164,27 @@ public class UserResource implements Serializable, Cloneable {
 		credits += turnBonus.getCredits();
 		ammo += turnBonus.getAmmo();
 		eridium += turnBonus.getEridium();
+		resourceLogger.addLog("user [" + user + "]: turn bonus resources collected [" + turnBonus.getCredits() + " credits" + turnBonus.getAmmo() + 
+				" ammo" + turnBonus.getEridium() + "eririum]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	public void collectCommandResources(int type) {
 		int[] resources = Command.getStorage().getResourceReception();
 		switch (type) {
 			case 1:
-				credits += resources[CommandStorage.CREDITS];				
+				credits += resources[CommandStorage.CREDITS];
+				resourceLogger.addLog("user [" + user + "]: command resources collected [" + resources[CommandStorage.CREDITS] + " credits]. Current resources [" + 
+						credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 				break;
 			case 2:
 				ammo += resources[CommandStorage.AMMO];
+				resourceLogger.addLog("user [" + user + "]: command resources collected [" + resources[CommandStorage.AMMO] + " ammo" + "]. Current resources [" + 
+						credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 				break;
 			case 3:
-				eridium += resources[CommandStorage.ERIDIUM];				
+				eridium += resources[CommandStorage.ERIDIUM];
+				resourceLogger.addLog("user [" + user + "]: command resources collected [" + resources[CommandStorage.ERIDIUM] + "eririum]. Current resources [" + 
+						credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 				break;
 		}
 	}
@@ -173,6 +210,8 @@ public class UserResource implements Serializable, Cloneable {
 		}
 		credits -= commandCredits;
 		ammo -= commandAmmo;
+		resourceLogger.addLog("user [" + user + "]: command costs payed [" + commandCredits + " credits" + commandAmmo + " ammo" + 
+				"]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	/**
 	 * Get back the resources for  a command that was removed from the field in the turn planing phase.
@@ -189,6 +228,8 @@ public class UserResource implements Serializable, Cloneable {
 		int commandAmmo = getAmmoForCommand(command, field);
 		credits += commandCredits;
 		ammo += commandAmmo;
+		resourceLogger.addLog("user [" + user + "]: command payback collected [" + commandCredits + " credits" + commandAmmo + " ammo" + 
+				"]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	public void payBuilding(Building building) throws ResourceException {
@@ -207,6 +248,9 @@ public class UserResource implements Serializable, Cloneable {
 			credits -= costs[BuildingStorage.PRICE_CREDITS];
 			ammo -= costs[BuildingStorage.PRICE_AMMO];
 			eridium -= costs[BuildingStorage.PRICE_ERIDIUM];
+			resourceLogger.addLog("user [" + user + "]: building costs payed [" + costs[BuildingStorage.PRICE_CREDITS] + " credits" + 
+					costs[BuildingStorage.PRICE_AMMO] + " ammo" + costs[BuildingStorage.PRICE_ERIDIUM] + "eririum]. Current resources [" + 
+					credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 		}
 	}
 	
@@ -223,14 +267,20 @@ public class UserResource implements Serializable, Cloneable {
 	public void payRecroutedTroops(int normal, int badass, int upgrades) throws ResourceException {
 		int[] costs = getRecroutedTroopCosts(normal, badass, upgrades);
 		pay(costs);
+		resourceLogger.addLog("user [" + user + "]: troop recruiting costs payed [" + costs[0] + " credits" + costs[1] + " ammo" + costs[2] + 
+				"eririum]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	public void payHeroCards(int cards) throws ResourceException {
 		pay(new int[] {0, 0, Game.getGameVariableStorage().getHeroCardCosts()*cards});
+		resourceLogger.addLog("user [" + user + "]: hero card costs payed [" + Game.getGameVariableStorage().getHeroCardCosts()*cards + 
+				"eririum]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	public void payAdditionalCommand() throws ResourceException {
 		pay(new int[] {0, 0, Game.getGameVariableStorage().getAdditionalCommandCosts()});
+		resourceLogger.addLog("user [" + user + "]: additional command costs payed [" + Game.getGameVariableStorage().getAdditionalCommandCosts() + 
+				"eririum]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 
 	private void pay(int[] costs) {
@@ -251,12 +301,14 @@ public class UserResource implements Serializable, Cloneable {
 	public void payFields(int fields) {
 		credits -= fields * Game.getGameVariableStorage().getFieldCosts();
 		credits = Math.max(credits, 0);
+		resourceLogger.addLog("user [" + user + "]: field costs payed [" + fields * Game.getGameVariableStorage().getFieldCosts() + 
+				"credits]. Current resources [" + credits + " credits" + ammo + " ammo" + eridium + "eririum]");
 	}
 	
 	public int getCredits() {
 		return credits;
 	}
-	public void setCredits(int credits) {
+	protected void setCredits(int credits) {
 		this.credits = credits;
 	}
 	/*public void addCredits(int credits) {
@@ -266,7 +318,7 @@ public class UserResource implements Serializable, Cloneable {
 	public int getAmmo() {
 		return ammo;
 	}
-	public void setAmmo(int ammo) {
+	protected void setAmmo(int ammo) {
 		this.ammo = ammo;
 	}
 	/*public void addAmmo(int ammo) {
@@ -276,7 +328,7 @@ public class UserResource implements Serializable, Cloneable {
 	public int getEridium() {
 		return eridium;
 	}
-	public void setEridium(int eridium) {
+	protected void setEridium(int eridium) {
 		this.eridium = eridium;
 	}
 	/*public void addEridium(int eridium) {

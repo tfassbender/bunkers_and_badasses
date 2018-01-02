@@ -224,9 +224,9 @@ public class FightManager implements Serializable {
 	
 	public void giveOutPoints() {
 		//points for attacker and winner
-		pointManager.addPoints(currentFight.getAttackingPlayer(), Game.getGameVariableStorage().getFightAttackerPoints());
+		pointManager.addPoints(currentFight.getAttackingPlayer(), Game.getGameVariableStorage().getFightAttackerPoints(), getClass(), "attacking player");
 		if (currentFight.getWinningPlayer() != null) {//skags could win
-			pointManager.addPoints(currentFight.getWinningPlayer(), Game.getGameVariableStorage().getFightWinnerPoints());			
+			pointManager.addPoints(currentFight.getWinningPlayer(), Game.getGameVariableStorage().getFightWinnerPoints(), getClass(), "fight winning player");
 		}
 		//points for supporters
 		List<User> supporters = new ArrayList<User>();
@@ -246,7 +246,7 @@ public class FightManager implements Serializable {
 			}
 		}
 		for (User user : supporters) {
-			pointManager.addPoints(user, Game.getGameVariableStorage().getFightSupporterPoints());
+			pointManager.addPoints(user, Game.getGameVariableStorage().getFightSupporterPoints(), getClass(), "fight supporting player");
 		}
 		//points for turn goals and turn bonuses
 		TurnBonus bonus;

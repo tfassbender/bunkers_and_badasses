@@ -17,6 +17,6 @@ public class TurnGoalBlitzkrieg extends TurnGoal {
 	
 	@Override
 	public void receivePointsPassing(User user, int passingOrder, int players) {
-		game.getPointManager().addPoints(user, 2*(players-passingOrder));
+		game.getPointManager().addPoints(user, 2*(players-passingOrder), getClass(), "passing early");
 	}
 }

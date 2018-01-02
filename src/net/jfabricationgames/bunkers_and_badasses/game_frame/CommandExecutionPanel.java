@@ -464,7 +464,8 @@ public class CommandExecutionPanel extends JPanel {
 					spinnerBadassTroops.setEnabled(true);
 					spinnerAufrstungen.setEnabled(true);
 					spinnerBadassTroops.setModel(new SpinnerNumberModel(badassTroops, 0, selectedField.getBuilding().getRecruitableTroops()/2, 1));
-					spinnerAufrstungen.setModel(new SpinnerNumberModel(upgradedTroops, 0, Math.min(selectedTarget.getNormalTroops(), selectedField.getBuilding().getRecruitableTroops()), 1));
+					int maxUpgrades = Math.min(selectedTarget.getNormalTroops(), selectedField.getBuilding().getRecruitableTroops());
+					spinnerAufrstungen.setModel(new SpinnerNumberModel(Math.min(upgradedTroops, maxUpgrades), 0, maxUpgrades, 1));
 				}
 				else {
 					spinnerBadassTroops.setModel(new SpinnerNumberModel(0, 0, 0, 1));
@@ -838,7 +839,7 @@ public class CommandExecutionPanel extends JPanel {
 							else if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
 								//give out points for movement and conquering (empty) fields
 								if (targetField.getAffiliation() == null || !targetField.getAffiliation().equals(game.getLocalUser())) {
-									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints());
+									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints(), getClass(), "field conquered");
 								}
 								game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), selectedField, targetField.getAffiliation() == null);
 								game.getBoard().moveTroops(selectedField, targetField, normalTroops, badassTroops);

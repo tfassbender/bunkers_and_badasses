@@ -17,6 +17,6 @@ public class TurnGoalStrategy extends TurnGoal {
 	
 	@Override
 	public void receivePointsPassing(User user, int passingOrder, int players) {
-		game.getPointManager().addPoints(user, 2*(passingOrder-1));
+		game.getPointManager().addPoints(user, 2*(passingOrder-1), getClass(), "passing late");
 	}
 }

@@ -18,7 +18,7 @@ public class TurnGoalConquer extends TurnGoal {
 	@Override
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
 		if (fieldConquered) {
-			game.getPointManager().addPoints(user, 2);
+			game.getPointManager().addPoints(user, 2, getClass(), "fields conquered");
 		}
 	}
 }

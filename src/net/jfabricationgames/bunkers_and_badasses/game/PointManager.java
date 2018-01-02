@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,12 +9,26 @@ import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
+import net.jfabricationgames.logger.JFGLogger;
+import net.jfabricationgames.logger.JFGLoggerManager;
 
 public class PointManager implements Serializable {
 	
 	private static final long serialVersionUID = -7680983446141485184L;
 	
 	private Map<User, Integer> points;
+	
+	private static JFGLogger pointLogger;
+	
+	static {
+		try {
+			pointLogger = new JFGLogger("bunkers_and_badasses_point_logs", 1000);
+			JFGLoggerManager.addLogger(pointLogger);
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 	
 	public class UserPoints implements Comparable<UserPoints> {
 		
@@ -74,12 +89,13 @@ public class PointManager implements Serializable {
 		return position;
 	}
 	
-	public void addPoints(User player, int points) {
+	public void addPoints(User player, int points, Class<?> clazz, String cause) {
+		pointLogger.addLog(points + " Points added to user [" + player + "] by class [" + clazz.getName() + "]: " + cause);
+		addPoints(player, points);
+	}
+	private void addPoints(User player, int points) {
 		int current = this.points.get(player);
 		this.points.put(player, current + points);
-	}
-	public void setPoints(User player, int points) {
-		this.points.put(player, points);
 	}
 	public int getPoints(User player) {
 		return points.get(player);

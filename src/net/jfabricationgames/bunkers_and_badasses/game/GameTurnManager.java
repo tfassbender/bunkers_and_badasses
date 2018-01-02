@@ -73,10 +73,10 @@ public class GameTurnManager implements Serializable {
 			int fields = game.getBoard().getUsersFields(player).size();
 			int points = fields/Game.getGameVariableStorage().getFieldPointCount();
 			points *= Game.getGameVariableStorage().getFieldPoints();
-			game.getPointManager().addPoints(player, points);
+			game.getPointManager().addPoints(player, points, getClass(), "fields holt by the player");
 			//points for regions
 			for (Region region : game.getBoard().getUsersRegions(player)) {
-				game.getPointManager().addPoints(player, region.getPoints());
+				game.getPointManager().addPoints(player, region.getPoints(), getClass(), "regions holt by the player");
 			}
 			//points for turn goals
 			game.getGameTurnGoalManager().receivePointsTurnEnd(player, game);

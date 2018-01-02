@@ -35,6 +35,6 @@ public class TurnGoalBuilding extends TurnGoal {
 				}
 			}
 		}
-		game.getPointManager().addPoints(user, points);
+		game.getPointManager().addPoints(user, points, getClass(), "buildings on field");
 	}
 }

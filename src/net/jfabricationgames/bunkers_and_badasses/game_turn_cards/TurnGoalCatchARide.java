@@ -20,10 +20,10 @@ public class TurnGoalCatchARide extends TurnGoal {
 	@Override
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
 		if (startField.getBuilding() instanceof ScootersCatchARide) {
-			game.getPointManager().addPoints(user, 3);
+			game.getPointManager().addPoints(user, 3, getClass(), "troop movement (with catch-a-ride)");
 		}
 		else {
-			game.getPointManager().addPoints(user, 2);
+			game.getPointManager().addPoints(user, 2, getClass(), "troop movement (normal)");
 		}
 	}
 }

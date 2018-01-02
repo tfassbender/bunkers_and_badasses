@@ -26,6 +26,6 @@ public class TurnGoalTroopUnion extends TurnGoal {
 				troops = Math.max(troops, field.getTroops().size());
 			}
 		}
-		game.getPointManager().addPoints(user, 2*troops);
+		game.getPointManager().addPoints(user, 2*troops, getClass(), "troop union");
 	}
 }

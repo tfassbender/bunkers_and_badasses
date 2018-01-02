@@ -26,7 +26,7 @@ public class TurnGoalArmAGeddon extends TurnGoal {
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getAttackingPlayer().equals(user)) {
 			int fallenTroops = 0;
-			Map<Field, int[]> troops = fight.getFallenTroops();//TODO check for same field twice here
+			Map<Field, int[]> troops = fight.getFallenTroops();//check for same field twice here
 			List<String> countedFields = new ArrayList<String>(troops.size());//the names of all fields that were already counted
 			for (Field field : troops.keySet()) {
 				if (field != null && !countedFields.contains(field.getName())) {
@@ -35,7 +35,7 @@ public class TurnGoalArmAGeddon extends TurnGoal {
 					fallenTroops += troops.get(field)[1];					
 				}
 			}
-			game.getPointManager().addPoints(user, fallenTroops);
+			game.getPointManager().addPoints(user, fallenTroops, getClass(), "fallen troops (starting fight)");
 		}
 	}
 }

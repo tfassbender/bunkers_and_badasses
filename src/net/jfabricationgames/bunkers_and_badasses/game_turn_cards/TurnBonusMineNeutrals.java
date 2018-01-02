@@ -20,7 +20,7 @@ public class TurnBonusMineNeutrals extends TurnBonus {
 	@Override
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getAttackingPlayer().equals(user) && fight.getDefendingField().getAffiliation() == null && fight.getWinner() == Fight.ATTACKERS) {
-			game.getPointManager().addPoints(user, fight.getDefendingStrength());
+			game.getPointManager().addPoints(user, fight.getDefendingStrength(), getClass(), "killed neutral troops");
 		}
 	}
 }

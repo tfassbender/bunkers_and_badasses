@@ -1,6 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,6 +12,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_command.MarchCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.SupportCommand;
 import net.jfabricationgames.bunkers_and_badasses.login.SimpleLoginClientInterpreter;
+import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class UserResourceTest {
 	
@@ -51,7 +54,7 @@ public class UserResourceTest {
 	@Test
 	public void testCollectSkillResources() {
 		SkillProfile skill = new SkillProfile();
-		UserResource resource = new UserResource();
+		UserResource resource = new UserResource(new User("test"));
 		
 		//__global_user_skill__ (default profile)
 		skill.setPoints(1);
@@ -77,7 +80,7 @@ public class UserResourceTest {
 		skill.setAmmoBuilding(1);
 		skill.setCreditsBuilding(1);
 		skill.setHero(2);
-		resource = new UserResource();
+		resource = new UserResource(new User("test"));
 		resource.collectSkillResources(skill);
 		
 		assertEquals(50, resource.getCredits());
@@ -87,7 +90,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testCollectCommandResources() {
-		UserResource resource = new UserResource();
+		UserResource resource = new UserResource(new User("test"));
 		
 		resource.collectCommandResources(1);//credits
 		assertEquals(50, resource.getCredits());
@@ -101,7 +104,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testPayCommand() {
-		UserResource resource = new UserResource();
+		UserResource resource = new UserResource(new User("test"));
 		
 		//add some resources
 		resource.setCredits(100);
@@ -137,7 +140,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testPayBackCommand() {
-		UserResource resource = new UserResource();
+		UserResource resource = new UserResource(new User("test"));
 		
 		//add some resources
 		resource.setCredits(100);
@@ -176,7 +179,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testPayFields() {
-		UserResource resource = new UserResource();
+		UserResource resource = new UserResource(new User("test"));
 		resource.setCredits(50);
 		resource.payFields(9);
 		

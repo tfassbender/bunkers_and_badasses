@@ -41,11 +41,11 @@ public class PointManagerTest {
 	
 	@Test
 	public void testGetSortedPointList() {
-		manager.addPoints(user1, 17);
-		manager.addPoints(user2, 42);
-		manager.addPoints(user3, 1);
-		manager.addPoints(user4, 2);
-		manager.addPoints(user5, 3);
+		manager.addPoints(user1, 17, getClass(), "test");
+		manager.addPoints(user2, 42, getClass(), "test");
+		manager.addPoints(user3, 1, getClass(), "test");
+		manager.addPoints(user4, 2, getClass(), "test");
+		manager.addPoints(user5, 3, getClass(), "test");
 		
 		List<PointManager.UserPoints> points = manager.getSortedPointList();
 		
@@ -64,11 +64,11 @@ public class PointManagerTest {
 	
 	@Test
 	public void testGetPosition() {
-		manager.addPoints(user1, 17);
-		manager.addPoints(user2, 42);
-		manager.addPoints(user3, 1);
-		manager.addPoints(user4, 2);
-		manager.addPoints(user5, 3);
+		manager.addPoints(user1, 17, getClass(), "test");
+		manager.addPoints(user2, 42, getClass(), "test");
+		manager.addPoints(user3, 1, getClass(), "test");
+		manager.addPoints(user4, 2, getClass(), "test");
+		manager.addPoints(user5, 3, getClass(), "test");
 		
 		assertEquals(0, manager.getPosition(user2));
 		assertEquals(1, manager.getPosition(user1));
@@ -79,13 +79,13 @@ public class PointManagerTest {
 	
 	@Test
 	public void testAddPoints() {
-		manager.addPoints(user1, 12);
+		manager.addPoints(user1, 12, getClass(), "test");
 		assertEquals(12, manager.getPoints(user1));
 		
-		manager.addPoints(user1, 5);
+		manager.addPoints(user1, 5, getClass(), "test");
 		assertEquals(17, manager.getPoints(user1));
 		
-		manager.addPoints(user2, 42);
+		manager.addPoints(user2, 42, getClass(), "test");
 		assertEquals(42, manager.getPoints(user2));
 	}
 }
