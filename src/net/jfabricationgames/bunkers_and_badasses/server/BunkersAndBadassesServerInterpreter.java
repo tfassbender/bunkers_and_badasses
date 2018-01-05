@@ -195,12 +195,12 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 		message.setMessageType(MainMenuMessage.MessageType.DYNAMIC_CONTENT_ANSWER);
 		try {
 			statement = connection.createStatement();
-			result = statement.executeQuery("SELECT content, priority FROM bunkers_and_badasses.main_menu_dynamic_content WHERE display = true ORDER BY priority");
+			result = statement.executeQuery("SELECT content, priority FROM bunkers_and_badasses.main_menu_dynamic_content WHERE display = true ORDER BY priority DESC");
 			StringBuilder sb = new StringBuilder();
 			//sb.append("<html>");
 			while (result.next()) {
 				sb.append(result.getString(1));
-				sb.append("\n");
+				sb.append("\n\n\n\n");
 				//sb.append("<br><br><br>");
 			}
 			//sb.append("</html>");
@@ -268,6 +268,7 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	private void interpreteGameSaveMessage(GameSaveMessage message, JFGConnection connection) {
 		boolean saveSuccesful = server.saveGame(message.getGame(), message.isGameEnded());
 		GameSaveMessage answer = new GameSaveMessage(saveSuccesful);
+		connection.resetOutput();
 		connection.sendMessage(answer);
 	}
 	

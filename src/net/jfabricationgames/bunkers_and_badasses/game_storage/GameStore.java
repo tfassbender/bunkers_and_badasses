@@ -85,6 +85,7 @@ public class GameStore {
 			game.getBoard().setStoreImage(false);//don't send the image to the server			
 		}
 		GameSaveMessage save = new GameSaveMessage(game, gameEnded);
+		client.resetOutput();
 		client.sendMessage(save);//send the game to the server
 		//game.getBoard().setStoreImage(true);//enable the image sending again after sending the game 
 		Thread storingThread = new Thread(new Runnable() {

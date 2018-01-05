@@ -66,6 +66,17 @@
 Build on: ${timestamp}</echo>
 		</sequential>
 	</target>
+	
+	<target name="generate_version_info" depends="init">
+		<sequential>
+			<local name="timestamp" />
+			<tstamp>
+				<format property="timestamp" pattern="yyyy_MM_dd HH:mm:ss" />
+			</tstamp>
+			<echo file="${build}/bab_info.properties">version=${version_number}
+build_date=${timestamp}</echo>
+		</sequential>
+	</target>
 
 	<target name="compile_src" depends="init">
 		<javac srcdir="${src}" destdir="${build}" encoding="UTF-8" includeantruntime="false">
@@ -99,6 +110,7 @@ Build on: ${timestamp}</echo>
 
 	<target name="build_jars" depends="test">
 		<antcall target="generate_timestamp" />
+		<antcall target="generate_version_info"/>
 		<antcall target="build_jar_client" />
 		<antcall target="build_jar_server" />
 	</target>

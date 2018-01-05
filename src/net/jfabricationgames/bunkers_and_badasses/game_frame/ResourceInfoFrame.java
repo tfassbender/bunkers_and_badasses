@@ -45,6 +45,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.building.Tannis
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.TinyTinasMine;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.TorguesBadassDome;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextArea;
 
 public class ResourceInfoFrame extends JFrame {
 	
@@ -78,6 +79,7 @@ public class ResourceInfoFrame extends JFrame {
 	private JComboBox<Building> comboBox;
 	
 	private PropertiesFile propsFile = new PropertiesFile(this);
+	private JTextArea textArea_skills;
 	
 	public ResourceInfoFrame(Game game) {
 		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
@@ -91,8 +93,8 @@ public class ResourceInfoFrame extends JFrame {
 		
 		setTitle("Resourcen Info - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ResourceInfoFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setBounds(100, 100, 1050, 650);
-		setMinimumSize(new Dimension(1050, 650));
+		setBounds(100, 100, 1100, 650);
+		setMinimumSize(new Dimension(1100, 650));
 		
 		propsFile.alignWindow();
 		
@@ -105,7 +107,7 @@ public class ResourceInfoFrame extends JFrame {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.GRAY);
 			contentPanel.add(panel, "cell 0 0,grow");
-			panel.setLayout(new MigLayout("", "[200px,grow][100px,grow][150px,grow][100px,grow][150px,grow]", "[150px,grow][200px,grow][300px,grow]"));
+			panel.setLayout(new MigLayout("", "[150px,grow][200px,grow 101][:50px:100px,grow][:100px:300px,grow][175px:n:175px,grow]", "[150px,grow][200px,grow][300px,grow]"));
 			
 			JPanel panel_kost_overview = new JPanel();
 			panel_kost_overview.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -203,9 +205,24 @@ public class ResourceInfoFrame extends JFrame {
 			txtEridium_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			panel_resource_buildings.add(txtEridium_1, "cell 6 3,growx");
 			txtEridium_1.setColumns(10);
-
-			resourcePanel = new ResourceInfoPanel();
-			panel.add(resourcePanel, "cell 3 0 2 2,grow");
+			
+			JPanel panel_skills = new JPanel();
+			panel_skills.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+			panel_skills.setBackground(Color.GRAY);
+			panel.add(panel_skills, "cell 3 0 2 2,grow");
+			panel_skills.setLayout(new MigLayout("", "[grow][][grow]", "[][5px][grow]"));
+			
+			JLabel lblSkillProfil = new JLabel("Skill Profil:");
+			lblSkillProfil.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			panel_skills.add(lblSkillProfil, "cell 1 0");
+			
+			JScrollPane scrollPane_1 = new JScrollPane();
+			panel_skills.add(scrollPane_1, "cell 0 2 3 1,grow");
+			
+			textArea_skills = new JTextArea();
+			textArea_skills.setEditable(false);
+			textArea_skills.setBackground(Color.LIGHT_GRAY);
+			scrollPane_1.setViewportView(textArea_skills);
 			
 			JPanel panel_building_costs = new JPanel();
 			panel_building_costs.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -306,7 +323,7 @@ public class ResourceInfoFrame extends JFrame {
 			JPanel panel_fields = new JPanel();
 			panel_fields.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_fields.setBackground(Color.GRAY);
-			panel.add(panel_fields, "cell 0 2 2 1,grow");
+			panel.add(panel_fields, "cell 0 2,grow");
 			panel_fields.setLayout(new MigLayout("", "[grow]", "[][5px][grow]"));
 			
 			JLabel lblGebiete = new JLabel("Gebiete:");
@@ -328,7 +345,10 @@ public class ResourceInfoFrame extends JFrame {
 			scrollPane_fields_all.setViewportView(list_fields_all);
 			
 			fieldPanel = new FieldDescriptionPanel("Feld Übersicht", true);
-			panel.add(fieldPanel, "cell 2 2 2 1,grow");
+			panel.add(fieldPanel, "cell 1 2,grow");
+			
+						resourcePanel = new ResourceInfoPanel();
+						panel.add(resourcePanel, "cell 2 2 2 1,grow");
 			
 			ImagePanel panel_image = new ImagePanel(GameFrame.getImageLoader().loadImage("game_frame/marcus_1.png"));
 			panel_image.setAdaptSizeKeepProportion(true);
@@ -345,6 +365,7 @@ public class ResourceInfoFrame extends JFrame {
 		updateCosts();
 		updateBuildings();
 		updateBuildingCosts();
+		updateSkillProfile();
 	}
 	
 	private void updateCosts() {
@@ -397,6 +418,11 @@ public class ResourceInfoFrame extends JFrame {
 		for (Field field : game.getBoard().getFields()) {
 			fieldAllListModel.addElement(field);
 		}
+	}
+	
+	private void updateSkillProfile() {
+		textArea_skills.setText(game.getSkillProfileManager().getSelectedProfile(game.getLocalUser()).describe());
+		textArea_skills.setCaretPosition(0);
 	}
 	
 	private Building[] createBuildings() {

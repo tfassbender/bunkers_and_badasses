@@ -6,6 +6,7 @@ import java.util.List;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
+import net.jfabricationgames.bunkers_and_badasses.game_frame.InfoDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
@@ -35,8 +36,9 @@ public class Game implements Serializable {
 	private SkillProfileManager skillProfileManager;
 	private FightManager fightManager;
 	private transient GameFrame gameFrame;
-	private transient static GameStore gameStore;
+	private static transient GameStore gameStore;
 	private static transient GameVariableStorage gameVariableStorage;
+	private static String version;
 	
 	private int id;//the game id in the database
 	
@@ -154,6 +156,29 @@ public class Game implements Serializable {
 			gameFrame = new GameFrame(this);			
 		}
 		gameFrame.setVisible(true);
+	}
+	
+	/**
+	 * Receive an updated user list from the server and inform the players if one player leaves the game.
+	 * 
+	 * @param userListUpdate
+	 * 		The new user list.
+	 */
+	public void receiveUserListUpdate(List<User> userListUpdate) {
+		//remove all users from the list that don't take part in this game
+		userListUpdate.removeIf(user -> !players.contains(user));
+		User missing = null;
+		for (User player : userListUpdate) {
+			if (!player.isOnline()) {
+				missing = player;
+			}
+		}
+		if (missing != null) {
+			//inform this player about the missing user
+			new InfoDialog("Spieler ausgeloggt", "Die Verbindung zum Spieler [" + missing + "] wurde unterbrochen.\n\n"
+					+ "Entweder hat der Spieler sich ausgeloggt, oder es gibt schwierigkeiten mit der Server-Verbindung.\n\n"
+					+ "Das aktuelle Spiel wurde gespeichert und kann nach einem erneuten Login fortgesetzt werden.").setVisible(true);
+		}
 	}
 	
 	public JFGClient getClient() {
@@ -307,5 +332,12 @@ public class Game implements Serializable {
 	}
 	public void setFightManager(FightManager fightManager) {
 		this.fightManager = fightManager;
+	}
+	
+	public static String getVersion() {
+		return version;
+	}
+	public static void setVersion(String version) {
+		Game.version = version;
 	}
 }

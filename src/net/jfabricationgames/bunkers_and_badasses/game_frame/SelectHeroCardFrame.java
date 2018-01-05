@@ -360,6 +360,7 @@ public class SelectHeroCardFrame extends JFrame {
 			Hero hero = list_heroes.getSelectedValue();
 			//game.getHeroCardManager().putBackCards(hero);
 			selectionListener.receiveSelectedHero(hero);
+			panel_hero_image.setImage(null);
 			setVisible(false);
 		}
 	}

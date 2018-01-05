@@ -7,7 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -20,6 +22,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerMain;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClient;
 import net.jfabricationgames.jfgdatabaselogin.client.JFGDatabaseLoginClientInterpreter;
@@ -114,6 +117,19 @@ public class LoginClientMain extends JFrame {
 		catch (NullPointerException npe) {
 			//the NullPointerException occurs when the client is started from eclipse and not from the built jar (can be ignored)
 			System.err.println("No build information found");
+		}
+		
+		//load the version information from the properties file
+		Properties properties = new Properties();
+		try (InputStream propertiesIn = getClass().getResourceAsStream("/bab_info.properties")) {
+			properties.load(propertiesIn);
+			Game.setVersion(properties.getProperty("version"));
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		catch (NullPointerException npe) {
+			//the NullPointerException occurs when the client is started from eclipse and not from the built jar (can be ignored)
 		}
 		
 		//create a new ImageLoader for the login panels

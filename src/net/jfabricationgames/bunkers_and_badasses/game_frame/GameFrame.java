@@ -49,6 +49,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoalCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuFrame;
+import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.MouseAdapter;
@@ -667,7 +668,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	@Override
 	public void receiveConfirmAnswer(boolean confirm, int type) {
 		if (confirm) {
-			//TODO save the game, inform the other players and logout the player
+			game.getClient().sendMessage(new UserLogoutMessage());
 			System.exit(0);
 		}
 	}

@@ -20,12 +20,14 @@ public class GameOverview implements Serializable, Comparable<GameOverview> {
 	private String boardName;
 	private List<User> players;
 	private int turn;
+	private String version;
 	private int id;//is set when the game overview is loaded from the database to identify the game
 	
 	public GameOverview(Game game) {
 		this.players = game.getPlayers();
 		this.turn = game.getTurnManager().getTurn();
 		this.boardName = game.getBoard().getName();
+		this.version = Game.getVersion();
 		setCurrentDateTime();
 	}
 	
@@ -94,6 +96,13 @@ public class GameOverview implements Serializable, Comparable<GameOverview> {
 	}
 	public void setTurn(int turn) {
 		this.turn = turn;
+	}
+	
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
 	}
 	
 	public int getId() {

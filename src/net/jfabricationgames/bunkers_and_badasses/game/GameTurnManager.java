@@ -51,7 +51,7 @@ public class GameTurnManager implements Serializable {
 		game.getHeroCardManager().resetHeroCardsTaken();
 		turn++;
 		if (turn >= numTurns) {
-			//TODO save the game in the database and create the statistics
+			//TODO create the statistics
 			//send a game end message
 			GameTransferMessage message = new GameTransferMessage();
 			message.setType(GameTransferMessage.TransferType.GAME_ENDED);
@@ -61,6 +61,10 @@ public class GameTurnManager implements Serializable {
 			//dispose all frames and open the game end frame
 			game.getGameFrame().disposeAll();
 			new GameEndFrame(game, game.getClient()).setVisible(true);
+		}
+		else if (game.getStartingPlayer().equals(game.getLocalUser())) {
+			//store the game if this player is the starting player
+			Game.getGameStore().storeGame(game, false);
 		}
 	}
 	public static int getNumTurns() {

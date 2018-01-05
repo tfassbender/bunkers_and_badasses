@@ -535,15 +535,17 @@ public class CommandExecutionPanel extends JPanel {
 			}
 		}
 		else if (rdbtnAufrsten.isSelected()) {
-			Building building = selectedField.getBuilding();
-			if (building != null) {
-				int[] price = building.getExtensionPrice();
-				txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
-				txtKosten.setToolTipText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
-			}
-			else {
-				txtKosten.setText("");
-				txtKosten.setToolTipText("");
+			if (selectedField != null) {
+				Building building = selectedField.getBuilding();
+				if (building != null) {
+					int[] price = building.getExtensionPrice();
+					txtKosten.setText(price[0] + " C, " + price[1] + " M, " + price[2] + " E");
+					txtKosten.setToolTipText(price[0] + " Credits, " + price[1] + " Munition, " + price[2] + " Eridium");
+				}
+				else {
+					txtKosten.setText("");
+					txtKosten.setToolTipText("");
+				}
 			}
 		}
 		else if (rdbtnAbreien.isSelected()) {
@@ -663,10 +665,17 @@ public class CommandExecutionPanel extends JPanel {
 					}
 					if (field.getBuilding() instanceof MoxxisTavern) {
 						//the player may recruit to neighbor fields
+						int defaultSelect = -1;
 						for (Field target : findPossibleMovingTargets(field)) {
 							if (target.getAffiliation() != null && target.getAffiliation().equals(game.getLocalUser())) {
-								fieldTargetModel.addElement(target);								
+								fieldTargetModel.addElement(target);
+								if (target.getBuilding() instanceof ScootersCatchARide) {
+									defaultSelect = fieldTargetModel.indexOf(target);
+								}
 							}
+						}
+						if (defaultSelect != -1) {
+							list_target_field.setSelectedIndex(defaultSelect);
 						}
 					}
 				}

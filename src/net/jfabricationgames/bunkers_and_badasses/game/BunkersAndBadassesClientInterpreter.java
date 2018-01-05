@@ -71,7 +71,7 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 			interpreteGameLoadRequestMessage((GameLoadRequestMessage) message, client);
 		}
 		else if (message instanceof UserUpdateMessage) {
-			//do nothing here; these messages are known but are not handled here.
+			interpreteUserUpdateMessage((UserUpdateMessage) message, client);
 		}
 		else {
 			System.err.println("BunkersAndBadassesClientInterpreter: Received unknown message (" + message.getClass().getName() + ")");
@@ -133,6 +133,10 @@ public class BunkersAndBadassesClientInterpreter implements JFGClientInterpreter
 	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGClient client) {
 		gameStore.receiveLoadedGame(message.getLoadedGame());
 		gameStore.addServerAnswer(message.isLoadedSuccessful());
+	}
+	
+	private void interpreteUserUpdateMessage(UserUpdateMessage message, JFGClient client) {
+		game.receiveUserListUpdate(message.getUsers());
 	}
 	
 	public PreGameSelectionFrame getPreGameSelectionFrame() {
