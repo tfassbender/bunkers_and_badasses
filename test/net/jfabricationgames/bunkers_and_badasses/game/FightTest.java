@@ -133,19 +133,81 @@ public class FightTest {
 		fight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
 		fight.calculateCurrentStrength();
 		fight.calculateWinner();
-		assertArrayEquals(new int[] {2, 4}, fight.calculateFallingTroops());
+		assertArrayEquals(new int[] {3, 7}, fight.calculateFallingTroops());
 		
 		//some more tests
 		fight.setAttackingNormalTroops(5);
 		fight.getDefendingField().addBadassTroops(1);
 		fight.calculateCurrentStrength();
 		fight.calculateWinner();
-		assertArrayEquals(new int[] {3, 6}, fight.calculateFallingTroops());
+		assertArrayEquals(new int[] {4, 9}, fight.calculateFallingTroops());
 		
 		fight.setAttackingNormalTroops(6);
 		fight.calculateCurrentStrength();
 		fight.calculateWinner();
-		assertArrayEquals(new int[] {3, 7}, fight.calculateFallingTroops());
+		assertArrayEquals(new int[] {4, 9}, fight.calculateFallingTroops());
+		
+		
+		//create another fight
+		fight = new Fight();
+		
+		//fields of the fight
+		Field attackingField = new Field();
+		Field defendingField = new Field();
+		attackingField.addNormalTroops(2);
+		defendingField.addNormalTroops(1);
+		fight.setAttackingField(attackingField);
+		fight.setDefendingField(defendingField);
+		
+		//direct attacking troops
+		fight.setAttackingNormalTroops(1);
+		
+		//attacking support fields
+		Field field = new Field();
+		field.addNormalTroops(2);
+		fight.setAttackSupporters(Arrays.asList(field));
+		
+		//defending support fields
+		Field field2 = new Field();
+		field2.addNormalTroops(1);
+		fight.setDefenceSupporters(Arrays.asList(field2));
+		
+		fight.calculateCurrentStrength();
+		fight.calculateWinner();
+		assertArrayEquals(new int[] {0, 1}, fight.calculateFallingTroops());
+		
+		
+
+		//create another fight with only one troop on the winning field and much supporters
+		fight = new Fight();
+		
+		//fields of the fight
+		attackingField = new Field();
+		defendingField = new Field();
+		attackingField.addNormalTroops(7);
+		defendingField.addNormalTroops(1);
+		fight.setAttackingField(attackingField);
+		fight.setDefendingField(defendingField);
+		
+		//direct attacking troops
+		fight.setAttackingNormalTroops(6);
+		
+		//attacking support fields
+		field = new Field();
+		field.addNormalTroops(3);
+		fight.setAttackSupporters(Arrays.asList(field));
+		
+		//defending support fields
+		field2 = new Field();
+		field2.addNormalTroops(5);
+		Field field3 = new Field();
+		field3.addNormalTroops(5);
+		fight.setDefenceSupporters(Arrays.asList(field2, field3));
+		
+		//defender wins because of the support that also can fall
+		fight.calculateCurrentStrength();
+		fight.calculateWinner();
+		assertArrayEquals(new int[] {4, 8}, fight.calculateFallingTroops());
 	}
 	
 	@Test
@@ -159,8 +221,8 @@ public class FightTest {
 		fight.getDefendingField().addBadassTroops(1);
 		fight.calculateCurrentStrength();
 		fight.calculateWinner();
-		assertArrayEquals(new int[] {3, 6}, fight.calculateFallingTroops());
-		assertEquals(2, fight.calculateMaxFallingSupportTroops(6, fight.getDefenceSupporters().get(0)));
+		assertArrayEquals(new int[] {4, 9}, fight.calculateFallingTroops());
+		assertEquals(2, fight.calculateMaxFallingSupportTroops(9, fight.getDefenceSupporters().get(0)));
 	}
 	
 	@Test

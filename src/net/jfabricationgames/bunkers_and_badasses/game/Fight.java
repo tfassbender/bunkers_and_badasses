@@ -52,6 +52,7 @@ public class Fight implements Serializable {
 	
 	private int fallingTroopsTotal;
 	private int fallingTroopsLooser;
+	private int fallingTroopsWinner;
 	private Map<Field, Integer> fallingTroopsSupport;
 	private boolean fallingTroopsChosen;
 	
@@ -138,7 +139,7 @@ public class Fight implements Serializable {
 	}
 	
 	public int[] calculateFallingTroops() {
-		int[] fallingTroops = new int[2];
+		/*int[] fallingTroops = new int[2];
 		//int overhead;
 		int minTroops;//use the minimum of troops instead of the overhead
 		Field winningField;
@@ -160,14 +161,14 @@ public class Fight implements Serializable {
 			winnerHasBandits = defendingField.getNormalTroops() > 0;
 		}
 		minTroops = Math.min(getAttackingTroopStrength(), loosingField.getTroopStrength());
-		/*fallingTroops[0] = overhead/2;
-		fallingTroops[1] = overhead;*/
+		//fallingTroops[0] = overhead/2;
+		//fallingTroops[1] = overhead;
 		fallingTroops[0] = minTroops/2;
 		fallingTroops[1] = minTroops;
-		/*if (fallingTroops[0] == 0 && minTroops != 0) {
+		//if (fallingTroops[0] == 0 && minTroops != 0) {
 			//only zero troops if overhead is 0
-			fallingTroops[0] = 1;
-		}*/
+			//fallingTroops[0] = 1;
+		//}
 		if (winningField.getTroops().size() == 1) {
 			//attacker must remain one troop
 			fallingTroops[0] = 0;
@@ -198,10 +199,72 @@ public class Fight implements Serializable {
 		fallingTroops[1] = Math.max(0, fallingTroops[1]);
 		//max greater or equal min
 		fallingTroops[0] = Math.min(fallingTroops[0], fallingTroops[1]);
+		return fallingTroops;*/
+		
+		
+		//new implementation based on the new rules (version 0.4.1; january 2018)
+		//see project_doc/fight/falling_troops_calculation_activity.png for details
+		int[] fallingTroops = new int[2];//[0]: min; [1]: max
+		
+		//calculate maximum falling troops
+		int attackingTroops = getAttackingTroopStrength();
+		for (Field field : attackSupporters) {
+			attackingTroops += field.getTroopStrength();
+		}
+		int defendingTroops = defendingField.getTroopStrength();
+		for (Field field : defenceSupporters) {
+			defendingTroops += field.getTroopStrength();
+		}
+		fallingTroops[1] = Math.min(attackingTroops, defendingTroops);
+		
+		//winner keeps at least one troop
+		boolean banditsLeft;
+		if (winner == ATTACKERS) {
+			banditsLeft = attackingNormalTroops > 0;
+		}
+		else {
+			banditsLeft = defendingField.getNormalTroops() > 0;
+		}
+		if (winner == ATTACKERS && attackingTroops <= defendingTroops || winner == DEFENDERS && attackingTroops >= defendingTroops) {
+			if (banditsLeft) {
+				fallingTroops[1] -= 1;
+			}
+			else {
+				fallingTroops[1] -= 2;
+			}
+		}
+		
+		//support troops keep at least one troop (also loosing supporters)
+		List<Field> supportFields;
+		if (attackingTroops > defendingTroops) {
+			supportFields = defenceSupporters;
+		}
+		else {
+			supportFields = attackSupporters;
+		}
+		for (Field field : supportFields) {
+			if (field.getNormalTroops() > 0) {
+				fallingTroops[1] -= 1;
+			}
+			else {
+				fallingTroops[1] -= 2;
+			}
+		}			
+		
+		
+		//minimum is half maximum
+		fallingTroops[0] = fallingTroops[1]/2;//floored by integer division
+		
+		//check for negative values
+		fallingTroops[0] = Math.max(0, fallingTroops[0]);
+		fallingTroops[1] = Math.max(0, fallingTroops[1]);
+		//check for max greater or equal min
+		fallingTroops[0] = Math.min(fallingTroops[0], fallingTroops[1]);
+		
 		return fallingTroops;
 	}
 	public int calculateMaxFallingSupportTroops(int totalFallingTroops, Field field) {
-		int maximumFallingSupportTroops = totalFallingTroops/2;
+		/*int maximumFallingSupportTroops = totalFallingTroops/2;
 		if (field.getNormalTroops() > 0) {
 			maximumFallingSupportTroops = Math.min(maximumFallingSupportTroops, field.getTroopStrength()-1);			
 		}
@@ -212,8 +275,29 @@ public class Fight implements Serializable {
 			maximumFallingSupportTroops = 0;
 		}
 		maximumFallingSupportTroops = Math.max(maximumFallingSupportTroops, 0);
-		return maximumFallingSupportTroops;
+		return maximumFallingSupportTroops;*/
+		
+		
+		//new implementation based on the new rules (version 0.4.1; january 2018)
+		int maxFallingTroops = 0;
+		if (field.getNormalTroops() > 0) {
+			maxFallingTroops = Math.min(totalFallingTroops, field.getTroopStrength() - 1);
+		}
+		else {
+			maxFallingTroops = Math.min(totalFallingTroops, field.getTroopStrength() -2);
+		}
+		return maxFallingTroops;
 	}
+	public int calculateFallingTroopsWinner(int totalFallingTroops) {
+		Field winner = getWinningField();
+		if (winner.getNormalTroops() > 0) {
+			return Math.min(totalFallingTroops, winner.getTroopStrength()-1);
+		}
+		else {
+			return Math.min(totalFallingTroops, winner.getTroopStrength()-2);
+		}
+	}
+	
 	public int calculateFallingTroopsSkagFight() {
 		int fallingTroops = getDefendingStrength();//as much troops as there are skags
 		fallingTroops = Math.min(fallingTroops, attackingNormalTroops + 2*attackingBadassTroops - 1);//one attacker survives
@@ -313,6 +397,17 @@ public class Fight implements Serializable {
 		}
 	}
 	
+	public List<Field> getWinningSupporters() {
+		if (winner == ATTACKERS) {
+			return attackSupporters;
+		}
+		else if (winner == DEFENDERS) {
+			return defenceSupporters;
+		}
+		else {
+			return null;
+		}
+	}
 	public List<Field> getLoosingSupporters() {
 		if (winner == ATTACKERS) {
 			return defenceSupporters;
@@ -575,6 +670,13 @@ public class Fight implements Serializable {
 	}
 	public void setFallingTroopsLooser(int fallingTroopsLooser) {
 		this.fallingTroopsLooser = fallingTroopsLooser;
+	}
+	
+	public int getFallingTroopsWinner() {
+		return fallingTroopsWinner;
+	}
+	public void setFallingTroopsWinner(int fallingTroopsWinner) {
+		this.fallingTroopsWinner = fallingTroopsWinner;
 	}
 	
 	public Map<Field, Integer> getFallingTroopsSupport() {

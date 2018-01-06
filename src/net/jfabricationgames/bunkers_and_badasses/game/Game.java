@@ -150,6 +150,7 @@ public class Game implements Serializable {
 			}
 		}
 		planManager.countCommands();
+		fightManager.setCurrentFight(null);//fights can't be stored right and need to be restarted
 		((BunkersAndBadassesClientInterpreter) client.getClientInterpreter()).setGame(this);
 		if (gameFrame == null) {
 			//not sure if it's created by the addBoard method

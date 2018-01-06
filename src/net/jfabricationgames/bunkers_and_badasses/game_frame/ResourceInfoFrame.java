@@ -421,8 +421,10 @@ public class ResourceInfoFrame extends JFrame {
 	}
 	
 	private void updateSkillProfile() {
-		textArea_skills.setText(game.getSkillProfileManager().getSelectedProfile(game.getLocalUser()).describe());
-		textArea_skills.setCaretPosition(0);
+		if (game.getSkillProfileManager().getSelectedProfile(game.getLocalUser()) != null) {
+			textArea_skills.setText(game.getSkillProfileManager().getSelectedProfile(game.getLocalUser()).describe());
+			textArea_skills.setCaretPosition(0);			
+		}
 	}
 	
 	private Building[] createBuildings() {
