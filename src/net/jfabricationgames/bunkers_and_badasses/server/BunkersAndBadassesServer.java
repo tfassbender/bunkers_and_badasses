@@ -712,7 +712,7 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 	 * @param connection
 	 * 		The connection that sent the request.
 	 */
-	public void loadGame(GameLoadRequestMessage message, JFGConnection connection) {
+	public Game loadGame(GameLoadRequestMessage message, JFGConnection connection) {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		ResultSet result = null;
 		int id = message.getOverview().getId();
@@ -758,6 +758,7 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 		message.setLoadedSuccessful(loadedGame != null);
 		connection.sendMessage(message);
 		serverLogger.addLog("loaded game from database (player: " + connectionMap.get(connection).getUsername() + "; game id: " + message.getOverview().getId() + ");");
+		return loadedGame;
 	}
 	
 	/**
@@ -800,7 +801,7 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 			connection.setGroup(group);
 		}
 		group.setStartingPlayer(message.getStartingPlayer());
-		group.setStartingPlayerConnection(userMap.get(message.getStartingPlayer()));
+		group.setStartingPlayerConnection(userMap.get(message.getStartingPlayer()));			
 		serverLogger.addLog("created connection group (players: [" + playerList.toString() + "]; starting player: " + message.getStartingPlayer().getUsername() + ");");
 	}
 	

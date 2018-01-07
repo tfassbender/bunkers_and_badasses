@@ -289,12 +289,23 @@ public class Fight implements Serializable {
 		return maxFallingTroops;
 	}
 	public int calculateFallingTroopsWinner(int totalFallingTroops) {
-		Field winner = getWinningField();
-		if (winner.getNormalTroops() > 0) {
-			return Math.min(totalFallingTroops, winner.getTroopStrength()-1);
+		if (winner == DEFENDERS) {
+			Field winningField = getWinningField();
+			if (winningField.getNormalTroops() > 0) {
+				return Math.min(totalFallingTroops, winningField.getTroopStrength()-1);
+			}
+			else {
+				return Math.min(totalFallingTroops, winningField.getTroopStrength()-2);
+			}			
 		}
 		else {
-			return Math.min(totalFallingTroops, winner.getTroopStrength()-2);
+			//use just the attacking troops
+			if (getAttackingNormalTroops() > 0) {
+				return getAttackingTroopStrength()-1;
+			}
+			else {
+				return getAttackingTroopStrength()-2;
+			}
 		}
 	}
 	

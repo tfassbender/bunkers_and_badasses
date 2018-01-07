@@ -271,9 +271,11 @@ public class SupportRequestFrame extends JFrame {
 		rdbtnVerteidiger.setEnabled(true);
 		if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(localPlayer)) {
 			rdbtnAngreifer.setEnabled(false);
+			rdbtnVerteidiger.setSelected(true);
 		}
 		else if (fight.getAttackingPlayer().equals(localPlayer) || fight.getDefendingPlayer() == null) {
 			rdbtnVerteidiger.setEnabled(false);
+			rdbtnAngreifer.setSelected(true);
 		}
 	}
 	

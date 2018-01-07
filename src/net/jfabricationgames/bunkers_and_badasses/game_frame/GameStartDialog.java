@@ -287,7 +287,7 @@ public class GameStartDialog extends JDialog implements ConfirmDialogListener {
 		players.add(0, localPlayer);
 		message.setPlayers(players);
 		message.setLoaded(true);
-		message.setStartingPlayer(UserManager.getLocalUser());
+		message.setStartingPlayer(UserManager.getLocalUser());//this starting player is temporary (changed by the loaded game in server)
 		client.resetOutput();
 		client.sendMessage(message);
 		//load the board (image) from the server

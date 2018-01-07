@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.chat.ChatMessage;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
@@ -277,7 +278,11 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 	}
 	
 	private void interpreteGameLoadRequestMessage(GameLoadRequestMessage message, JFGConnection connection) {
-		server.loadGame(message, connection);
+		Game loaded = server.loadGame(message, connection);//the loaded game is sent by the load message
+		//get the starting player from the game and add it to the connection group
+		BunkersAndBadassesConnectionGroup group = ((BunkersAndBadassesConnectionGroup) connection.getGroup()); 
+		group.setStartingPlayer(loaded.getStartingPlayer());
+		group.setStartingPlayerConnection(server.getUserMap().get(loaded.getStartingPlayer()));
 	}
 	
 	private void interpreteGameCreationMessage(GameCreationMessage message, JFGConnection connection) {

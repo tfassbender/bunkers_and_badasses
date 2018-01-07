@@ -57,6 +57,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private int fallingTroopsLeft;
 	
 	private boolean chooseFallingTroopsWinnerSupporters;
+	private int fallingTroopsWinnerSupporters;
 	private int fallingTroopsWinnerSupportersLeft;
 	
 	private Field selectedFallenTroopsField;
@@ -621,7 +622,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			public void stateChanged(ChangeEvent arg0) {
 				fallingTroops = (Integer) spinner_fallende_truppen_gesammt.getValue();
 				updateFallingTroopsLeft();
-				updateFallingTroopSpinnerModels();
+				updateFallingTroopsSpinnerModels();
 			}
 		});
 		spinner_fallende_truppen_gesammt.setToolTipText("<html>\r\nDie gesammte Anzahl an fallenden Truppen (auf <br>\r\nbeiden Seiten). Die maximal m\u00F6gliche Anzahl entspricht<br>\r\ndem Overhead, die minimal m\u00F6gliche Anzahl dem <br>\r\nhalben abgerundeten Overhead (genauere Beschreibung <br>\r\nin der Regel Hilfe)\r\n</html>");
@@ -902,10 +903,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private void confirmFallingTroopSelection() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		boolean fallingTroopsChosen = false;
-		if (fallingTroopsLeft > 0) {
+		if (fallingTroopsLeft > 0 || fallingTroopsWinnerSupportersLeft > 0) {
 			new ErrorDialog("Du kannst die Fallenden Truppen nicht bestätigen wenn noch Truppen übrig sind.\n\nGnade ist hier unangebracht (und nicht erlaubt).").setVisible(true);
 		}
-		else if (fallingTroopsLeft < 0) {
+		else if (fallingTroopsLeft < 0 || fallingTroopsWinnerSupportersLeft < 0) {
 			new ErrorDialog("Du kannst nicht mehr Truppen töten als du insgesammt ausgewählt hast.\n\nWenn alle auf einmal draufgehn wird Dein nächster Zug doch total langweilig.").setVisible(true);
 		}
 		else if (chooseFallingTroopsWinnerSupporters) {
@@ -929,14 +930,17 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				else {
 					//more supporters that need to take the falling troops -> let the user choose
 					fallingTroopsChosen = false;
-					fallingTroopsWinnerSupportersLeft = fallingTroops - fallingTroopsWinner;
+					fallingTroopsWinnerSupporters = fallingTroops - fallingTroopsWinner;
+					fallingTroopsWinnerSupportersLeft = fallingTroopsWinnerSupporters;
 					chooseFallingTroopsWinnerSupporters = true;
 					fallingTroopsLooser = fallingTroopsWinnerSupportersLeft;//set to this value for the spinners
+					updateFallingTroops();
 				}
 			}
 		}
 		if (fallingTroopsChosen) {
 			chooseFallingTroopsWinnerSupporters = false;
+			fallingTroopsWinnerSupportersLeft = 0;
 			fight.setFallingTroopsChosen(true);
 			game.getFightManager().update();
 			//disable the components
@@ -1252,10 +1256,17 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				//choose the falling troops for the loosing player
 				int[] fallingTroops = fight.calculateFallingTroops();
 				//int maxFallingSupport = fight.calculateMaxFallingSupportTroops();
+				int maxFallingLoosers;
+				if (fight.getWinner() == Fight.ATTACKERS) {
+					maxFallingLoosers = fight.getLoosingField().getTroopStrength();
+				}
+				else {
+					maxFallingLoosers = fight.getAttackingTroopStrength();
+				}
 				spinner_fallende_truppen_gesammt.setEnabled(true);
 				spinner_fallende_truppen_gesammt.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], fallingTroops[1], 1));
 				spinner_fallende_truppen_verlierer.setEnabled(true);
-				spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], Math.min(fallingTroops[1], fight.getLoosingField().getTroopStrength()), 1));
+				spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], Math.min(fallingTroops[1], maxFallingLoosers), 1));
 				spinner_fallende_truppen_unterstuetzer.setEnabled(true);
 				//spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(0, 0, maxFallingSupport, 1));
 				supporters = fight.getLoosingSupporters();
@@ -1266,30 +1277,49 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				}
 				list_support_field.setSelectedIndex(selectedField);
 			}
-			updateFallingTroopSpinnerModels();
+			updateFallingTroopsSpinnerModels();
 			updateFallingTroopsLeft();
 			btnBesttigen_1.setEnabled(true);
 			btnAuswahlZurcksetzen.setEnabled(true);
 		}
 	}
-	private void updateFallingTroopSpinnerModels() {
+	private void updateFallingTroopsSpinnerModels() {
 		Fight fight = game.getFightManager().getCurrentFight();
 		if (fight != null && fight.getBattleState() >= Fight.STATE_FALLEN_TROOP_SELECTION) {
-			int[] fallingTroops = fight.calculateFallingTroops();
-			int fallingTroopsTotal = (Integer) spinner_fallende_truppen_gesammt.getValue();
-			int current = (Integer) spinner_fallende_truppen_verlierer.getValue();
-			spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(current, fallingTroopsTotal/2, Math.min(fallingTroops[1], fight.getLoosingField().getTroopStrength()), 1));
-			current = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
-			if (selectedFallenSupportTroopsField != null) {
-				int maxFallingSupport = fight.calculateMaxFallingSupportTroops(fallingTroopsTotal, selectedFallenSupportTroopsField);
-				current = Math.max(current, 0);
-				current = Math.min(current, maxFallingSupport);
-				spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(current, 0, maxFallingSupport, 1));
+			if (chooseFallingTroopsWinnerSupporters) {
+				int fallingTroopsTotal = fight.getFallingTroopsTotal();
+				int current = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
+				if (selectedFallenSupportTroopsField != null) {
+					int maxFallingSupport = fight.calculateMaxFallingSupportTroops(fallingTroopsTotal, selectedFallenSupportTroopsField);
+					current = Math.max(current, 0);
+					current = Math.min(current, maxFallingSupport);
+					spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(current, 0, maxFallingSupport, 1));
+				}
+			}
+			else {
+				int[] fallingTroops = fight.calculateFallingTroops();
+				int fallingTroopsTotal = (Integer) spinner_fallende_truppen_gesammt.getValue();
+				int current = (Integer) spinner_fallende_truppen_verlierer.getValue();
+				int maxFallingLoosers;
+				if (fight.getWinner() == Fight.ATTACKERS) {
+					maxFallingLoosers = fight.getLoosingField().getTroopStrength();
+				}
+				else {
+					maxFallingLoosers = fight.getAttackingTroopStrength();
+				}
+				spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(current, fallingTroopsTotal/2, Math.min(fallingTroops[1], maxFallingLoosers), 1));
+				current = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
+				if (selectedFallenSupportTroopsField != null) {
+					int maxFallingSupport = fight.calculateMaxFallingSupportTroops(fallingTroopsTotal, selectedFallenSupportTroopsField);
+					current = Math.max(current, 0);
+					current = Math.min(current, maxFallingSupport);
+					spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(current, 0, maxFallingSupport, 1));
+				}
 			}
 		}
 	}
 	private void updateFallingTroopSupportSelection(Field field) {
-		updateFallingTroopSpinnerModels();
+		updateFallingTroopsSpinnerModels();
 		Integer troops = fallingSupportTroops.get(field);
 		if (troops != null) {
 			spinner_fallende_truppen_unterstuetzer.setValue(fallingSupportTroops.get(field));
@@ -1299,13 +1329,25 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		}
 	}
 	private void updateFallingTroopsLeft() {
-		fallingTroops = (Integer) spinner_fallende_truppen_gesammt.getValue();
-		fallingTroopsLooser = (Integer) spinner_fallende_truppen_verlierer.getValue(); 
-		fallingTroopsLeft = fallingTroops - fallingTroopsLooser;
-		for (Field field : fallingSupportTroops.keySet()) {
-			fallingTroopsLeft -= fallingSupportTroops.get(field);
+		Fight fight = game.getFightManager().getCurrentFight();
+		if (chooseFallingTroopsWinnerSupporters && fight != null) {
+			fallingTroopsWinnerSupportersLeft = fallingTroopsWinnerSupporters;
+			for (Field field : fallingSupportTroops.keySet()) {
+				if (field.getAffiliation() != null && field.getAffiliation().equals(fight.getWinningPlayer())) {
+					fallingTroopsWinnerSupportersLeft -= fallingSupportTroops.get(field);					
+				}
+			}
+			txtbrig.setText(Integer.toString(fallingTroopsWinnerSupportersLeft));
 		}
-		txtbrig.setText(Integer.toString(fallingTroopsLeft));
+		else {
+			fallingTroops = (Integer) spinner_fallende_truppen_gesammt.getValue();
+			fallingTroopsLooser = (Integer) spinner_fallende_truppen_verlierer.getValue(); 
+			fallingTroopsLeft = fallingTroops - fallingTroopsLooser;
+			for (Field field : fallingSupportTroops.keySet()) {
+				fallingTroopsLeft -= fallingSupportTroops.get(field);
+			}
+			txtbrig.setText(Integer.toString(fallingTroopsLeft));
+		}
 	}
 	private void clearFallingSupportTroops() {
 		fallingSupportTroops = new HashMap<Field, Integer>();
@@ -1325,7 +1367,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 					//attacking field is mine and is in the field list
 					fallenTroopsChosen |= fight.getAttackingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getAttackingField().getName());
 					//defending field is mine and is in the field list
-					fallenTroopsChosen |= fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getDefendingField().getName());//TODO nullpointer here (?!)						
+					fallenTroopsChosen |= fight.getDefendingField().getAffiliation() != null && fight.getDefendingField().getAffiliation().equals(game.getLocalUser()) && field.getName().equals(fight.getDefendingField().getName());						
 					//a support field that is mine is in the field list
 					for (Field supportField : fight.getFallingTroopsSupport().keySet()) {
 						fallenTroopsChosen |= field.getName().equals(supportField.getName()) && supportField.getAffiliation() != null && supportField.getAffiliation().equals(game.getLocalUser());

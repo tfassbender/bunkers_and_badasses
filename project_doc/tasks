@@ -5,7 +5,7 @@ Bunkers and Badasses - Tasks
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
 	- falling support troop rules have been changed; test implementation
-		
+
 - Next versions:
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving)
 	- ended games seem to have problems with updating them in the database
