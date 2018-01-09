@@ -920,7 +920,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			fight.setFallingTroopsLooser(fallingTroopsLooser);
 			fight.setFallingTroopsSupport(fallingSupportTroops);
 			fight.setFallingTroopsWinner(fallingTroopsWinner);
-			if (fallingTroopsWinner != fallingTroops) {
+			if (fallingTroopsWinner < fallingTroops) {
 				//winning field can't take the falling troops alone
 				List<Field> supporters = fight.getWinningSupporters();
 				if (supporters.size() == 1) {
@@ -1266,7 +1266,8 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				spinner_fallende_truppen_gesammt.setEnabled(true);
 				spinner_fallende_truppen_gesammt.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], fallingTroops[1], 1));
 				spinner_fallende_truppen_verlierer.setEnabled(true);
-				spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(fallingTroops[0], fallingTroops[0], Math.min(fallingTroops[1], maxFallingLoosers), 1));
+				spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(Math.min(fallingTroops[0], maxFallingLoosers), 
+						Math.min(fallingTroops[0], maxFallingLoosers), Math.min(fallingTroops[1], maxFallingLoosers), 1));
 				spinner_fallende_truppen_unterstuetzer.setEnabled(true);
 				//spinner_fallende_truppen_unterstuetzer.setModel(new SpinnerNumberModel(0, 0, maxFallingSupport, 1));
 				supporters = fight.getLoosingSupporters();
@@ -1307,7 +1308,8 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				else {
 					maxFallingLoosers = fight.getAttackingTroopStrength();
 				}
-				spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(current, fallingTroopsTotal/2, Math.min(fallingTroops[1], maxFallingLoosers), 1));
+				spinner_fallende_truppen_verlierer.setModel(new SpinnerNumberModel(Math.min(current, maxFallingLoosers), 
+						Math.min(fallingTroopsTotal/2, maxFallingLoosers), Math.min(fallingTroops[1], maxFallingLoosers), 1));
 				current = (Integer) spinner_fallende_truppen_unterstuetzer.getValue();
 				if (selectedFallenSupportTroopsField != null) {
 					int maxFallingSupport = fight.calculateMaxFallingSupportTroops(fallingTroopsTotal, selectedFallenSupportTroopsField);

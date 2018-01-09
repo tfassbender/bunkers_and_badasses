@@ -181,21 +181,23 @@ public class FightManager implements Serializable {
 			game.getBoard().moveTroops(attackingField, defendingField, movingTroops[0], movingTroops[1]);
 			//make the mine explode if there is one on the field
 			if (defendingField.getBuilding() != null && defendingField.getBuilding() instanceof TinyTinasMine) {
+				int mineVictims = defendingField.getBuilding().getLandMineVictims();
 				//kill two invading troops
-				if (defendingField.getNormalTroops() >= 2) {
+				if (defendingField.getNormalTroops() >= mineVictims) {
 					//two normal troops
-					defendingField.removeNormalTroops(2);
+					defendingField.removeNormalTroops(mineVictims);
 				}
-				else if (defendingField.getNormalTroops() == 1) {
+				else if (defendingField.getNormalTroops() > 0) {
 					//one normal and one badass troops
-					defendingField.removeNormalTroops(1);
+					int normalTroops = defendingField.getNormalTroops();
+					defendingField.removeNormalTroops(normalTroops);
 					if (defendingField.getBadassTroops() > 0) {
-						defendingField.removeBadassTroops(1);
+						defendingField.removeBadassTroops(mineVictims - normalTroops);
 					}
 				}
 				else {
 					//up to two badasses
-					for (int i = 0; i < 2; i++) {
+					for (int i = 0; i < mineVictims; i++) {
 						if (defendingField.getBadassTroops() > 0) {
 							defendingField.removeBadassTroops(1);
 						}						
