@@ -61,7 +61,7 @@ public class TurnExecutionManager implements Serializable {
 		game.getPlanManager().countCommands();//others count the commands because of the message; this client needs to count too
 		game.setState(state);
 		//store the game if this player is the starting player
-		if (game.getStartingPlayer().equals(game.getLocalUser())) {
+		if (game.getStartingPlayer().equals(game.getLocalUser()) && !game.getTurnManager().isGameEnded()) {
 			Game.getGameStore().storeGame(game, false);
 		}
 	}

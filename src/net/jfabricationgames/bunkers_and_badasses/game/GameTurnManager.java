@@ -71,6 +71,10 @@ public class GameTurnManager implements Serializable {
 		return numTurns;
 	}
 	
+	public boolean isGameEnded() {
+		return turn >= numTurns;
+	}
+	
 	public void giveOutPoints() {
 		for (User player : game.getPlayers()) {
 			//points for fields

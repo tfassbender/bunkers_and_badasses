@@ -4,12 +4,10 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
-	- falling support troop rules have been changed; test implementation
-	- support request answers are not all received if they are clicked to fast...
+	- support request answers are not all received if they are clicked to fast... (?)
 
 - Next versions:
-	- some games can't be loaded for unknown reasons (exception says server timeout when saving)
-	- ended games seem to have problems with updating them in the database
+	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)
 	- add a summary of a move in a confirm dialog before executing a move (and the option to turn the confirm dialog off)
 	- database server keep alive
 	- add listing of gained resources (and lost standard resources for fields, ...) to the resource frame
