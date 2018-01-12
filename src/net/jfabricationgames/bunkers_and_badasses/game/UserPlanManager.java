@@ -7,7 +7,15 @@ import java.util.Map;
 import net.jfabricationgames.bunkers_and_badasses.error.CommandException;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_command.BuildCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.CollectCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
+import net.jfabricationgames.bunkers_and_badasses.game_command.DefendCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.MarchCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RaidCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
+import net.jfabricationgames.bunkers_and_badasses.game_command.SupportCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -123,6 +131,39 @@ public class UserPlanManager implements Serializable {
 		usedResource.setEridium(usedResource.getEridium()-currentResource.getEridium());
 		game.getResourceManager().receiveUsedResources(game.getLocalUser(), game.getTurnManager().getTurn(), usedResource);
 		game.getGameTurnGoalManager().receivePointsPlaning(game.getLocalUser(), previouseResource.getAmmo()-currentResource.getAmmo());
+		//add statistics
+		GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+		stats.setUsed_credits(stats.getUsed_credits() + usedResource.getCredits());
+		stats.setUsed_ammo(stats.getUsed_ammo() + usedResource.getAmmo());
+		stats.setUsed_eridium(stats.getUsed_eridium() + usedResource.getEridium());
+		for (Field field : game.getBoard().getUsersFields(game.getLocalUser())) {
+			if (field.getCommand() != null) {
+				if (field.getCommand() instanceof RaidCommand) {
+					stats.setCommands_raid(stats.getCommands_raid() + 1);
+				}
+				else if (field.getCommand() instanceof RetreatCommand) {
+					stats.setCommands_retreat(stats.getCommands_retreat() + 1);
+				}
+				else if (field.getCommand() instanceof MarchCommand) {
+					stats.setCommands_march(stats.getCommands_march() + 1);
+				}
+				else if (field.getCommand() instanceof BuildCommand) {
+					stats.setCommands_build(stats.getCommands_build() + 1);
+				}
+				else if (field.getCommand() instanceof RecruitCommand) {
+					stats.setCommands_recruit(stats.getCommands_recruit() + 1);
+				}
+				else if (field.getCommand() instanceof CollectCommand) {
+					stats.setCommands_resources(stats.getCommands_resources() + 1);
+				}
+				else if (field.getCommand() instanceof SupportCommand) {
+					stats.setCommands_support(stats.getCommands_support() + 1);
+				}
+				else if (field.getCommand() instanceof DefendCommand) {
+					stats.setCommands_defense(stats.getCommands_defense() + 1);
+				}
+			}
+		}
 		//commands are added to the field in the merge method
 		/*for (Field field : fieldCommands.keySet()) {
 			field.setCommand(fieldCommands.get(field));

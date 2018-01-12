@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalBlitzkrieg extends TurnGoal {
@@ -17,6 +18,6 @@ public class TurnGoalBlitzkrieg extends TurnGoal {
 	
 	@Override
 	public void receivePointsPassing(User user, int passingOrder, int players) {
-		game.getPointManager().addPoints(user, 2*(players-passingOrder), getClass(), "passing early");
+		game.getPointManager().addPoints(user, 2*(players-passingOrder), getClass(), "passing early", PointManager.PointType.GOAL);
 	}
 }

@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class TinyTina extends Hero {
 	
 	private static final long serialVersionUID = -7358701771719372456L;
@@ -15,7 +17,7 @@ public class TinyTina extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Kabummabumms: Ein beliebiges Geb�ude (au�er Arschgauls Palast) in einem angrenzenden Feld wird zerst�rt
 	}

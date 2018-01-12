@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class Angel extends Hero {
 	
 	private static final long serialVersionUID = -7693149616225773067L;
@@ -15,7 +17,7 @@ public class Angel extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Perfekte Aufkl�hrung: In der gesammten Runde d�rfen im Kampf keine Karten gegen dich ausgespielt werden
 	}

@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 
 public class Claptrap extends Hero {
 	
@@ -22,7 +23,7 @@ public class Claptrap extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Downgrade: Alle (begrenzt ?) gegnerischen (aufger�steten) Truppen werden sofort gedowngraded
 	}

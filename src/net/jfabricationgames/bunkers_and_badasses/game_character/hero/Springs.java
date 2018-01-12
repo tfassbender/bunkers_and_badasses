@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class Springs extends Hero {
 	
 	private static final long serialVersionUID = -5937437808209595383L;
@@ -15,7 +17,7 @@ public class Springs extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Raketentechnickerin: Beliebig viele Einheiten aus einem Gebiet k�nnen in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)
 	}

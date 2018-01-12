@@ -79,7 +79,7 @@ public class SkillProfileManager implements Serializable {
 		//add the starting resources
 		resource.collectSkillResources(skill);
 		//add heros and points
-		pointManager.addPoints(user, skill.getPoints(), getClass(), "skill profile points");
+		pointManager.addPoints(user, skill.getPoints(), getClass(), "skill profile points", PointManager.PointType.SKILL);
 		heroCardManager.takeCards(user, skill.getHero());
 	}
 	

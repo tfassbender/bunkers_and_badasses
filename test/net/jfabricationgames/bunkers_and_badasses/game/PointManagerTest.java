@@ -21,7 +21,7 @@ public class PointManagerTest {
 	
 	@Before
 	public void initPointManager() {
-		manager = new PointManager();
+		manager = new PointManager(null);
 		user1 = new User("user1");
 		user2 = new User("user2");
 		user3 = new User("user3");
@@ -41,11 +41,11 @@ public class PointManagerTest {
 	
 	@Test
 	public void testGetSortedPointList() {
-		manager.addPoints(user1, 17, getClass(), "test");
-		manager.addPoints(user2, 42, getClass(), "test");
-		manager.addPoints(user3, 1, getClass(), "test");
-		manager.addPoints(user4, 2, getClass(), "test");
-		manager.addPoints(user5, 3, getClass(), "test");
+		manager.addPoints(user1, 17, getClass(), "test", null);
+		manager.addPoints(user2, 42, getClass(), "test", null);
+		manager.addPoints(user3, 1, getClass(), "test", null);
+		manager.addPoints(user4, 2, getClass(), "test", null);
+		manager.addPoints(user5, 3, getClass(), "test", null);
 		
 		List<PointManager.UserPoints> points = manager.getSortedPointList();
 		
@@ -64,11 +64,11 @@ public class PointManagerTest {
 	
 	@Test
 	public void testGetPosition() {
-		manager.addPoints(user1, 17, getClass(), "test");
-		manager.addPoints(user2, 42, getClass(), "test");
-		manager.addPoints(user3, 1, getClass(), "test");
-		manager.addPoints(user4, 2, getClass(), "test");
-		manager.addPoints(user5, 3, getClass(), "test");
+		manager.addPoints(user1, 17, getClass(), "test", null);
+		manager.addPoints(user2, 42, getClass(), "test", null);
+		manager.addPoints(user3, 1, getClass(), "test", null);
+		manager.addPoints(user4, 2, getClass(), "test", null);
+		manager.addPoints(user5, 3, getClass(), "test", null);
 		
 		assertEquals(0, manager.getPosition(user2));
 		assertEquals(1, manager.getPosition(user1));
@@ -79,13 +79,13 @@ public class PointManagerTest {
 	
 	@Test
 	public void testAddPoints() {
-		manager.addPoints(user1, 12, getClass(), "test");
+		manager.addPoints(user1, 12, getClass(), "test", null);
 		assertEquals(12, manager.getPoints(user1));
 		
-		manager.addPoints(user1, 5, getClass(), "test");
+		manager.addPoints(user1, 5, getClass(), "test", null);
 		assertEquals(17, manager.getPoints(user1));
 		
-		manager.addPoints(user2, 42, getClass(), "test");
+		manager.addPoints(user2, 42, getClass(), "test", null);
 		assertEquals(42, manager.getPoints(user2));
 	}
 }

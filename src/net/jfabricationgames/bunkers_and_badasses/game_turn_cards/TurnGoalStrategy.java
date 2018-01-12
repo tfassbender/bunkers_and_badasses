@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalStrategy extends TurnGoal {
@@ -17,6 +18,6 @@ public class TurnGoalStrategy extends TurnGoal {
 	
 	@Override
 	public void receivePointsPassing(User user, int passingOrder, int players) {
-		game.getPointManager().addPoints(user, 2*(passingOrder-1), getClass(), "passing late");
+		game.getPointManager().addPoints(user, 2*(passingOrder-1), getClass(), "passing late", PointManager.PointType.GOAL);
 	}
 }

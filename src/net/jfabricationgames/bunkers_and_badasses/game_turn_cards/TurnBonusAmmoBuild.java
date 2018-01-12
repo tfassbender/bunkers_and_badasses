@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusAmmoBuild extends TurnBonus {
@@ -17,6 +18,6 @@ public class TurnBonusAmmoBuild extends TurnBonus {
 	
 	@Override
 	public void receivePointsBuild(User user) {
-		game.getPointManager().addPoints(user, 2, getClass(), "building");
+		game.getPointManager().addPoints(user, 2, getClass(), "building", PointManager.PointType.BONUS);
 	}
 }

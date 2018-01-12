@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class Maya extends Hero {
 	
 	private static final long serialVersionUID = -8029606369601412517L;
@@ -15,7 +17,7 @@ public class Maya extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Phaselock: Gegner ist (in einem Ausgew�hlten Feld) Bewegungsunf�hig (Marker kann nicht eingesetzt werden; Gegner kann sich aber verteidigen)
 	}

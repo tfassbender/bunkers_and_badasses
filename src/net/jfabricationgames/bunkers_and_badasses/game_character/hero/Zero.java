@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class Zero extends Hero {
 	
 	private static final long serialVersionUID = 8601494966049836609L;
@@ -15,7 +17,7 @@ public class Zero extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Doppelg�nger: Ein beliebiger Befehlsmarker kann nachtr�glich ver�ndert werden
 	}

@@ -16,9 +16,20 @@ public class PointManager implements Serializable {
 	
 	private static final long serialVersionUID = -7680983446141485184L;
 	
+	public enum PointType {
+		FIGHT,
+		FIELD,
+		REGION,
+		GOAL,
+		BONUS,
+		SKILL;
+	}
+	
 	private Map<User, Integer> points;
 	
 	private static JFGLogger pointLogger;
+	
+	private Game game;
 	
 	static {
 		try {
@@ -58,6 +69,10 @@ public class PointManager implements Serializable {
 		}
 	}
 	
+	public PointManager(Game game) {
+		this.game = game;
+	}
+	
 	public void initialize(List<User> players) {
 		points = new HashMap<User, Integer>();
 		for (User user : players) {
@@ -89,8 +104,34 @@ public class PointManager implements Serializable {
 		return position;
 	}
 	
-	public void addPoints(User player, int points, Class<?> clazz, String cause) {
+	public void addPoints(User player, int points, Class<?> clazz, String cause, PointType type) {
 		pointLogger.addLog(points + " Points added to user [" + player + "] by class [" + clazz.getName() + "]: " + cause);
+		if (game != null) {
+			//game is null in unit tests
+			GameStatistic stats = game.getStatisticManager().getStatistics(player);
+			switch (type) {
+				case BONUS:
+					stats.setPoints_bonuses(stats.getPoints_bonuses() + points);
+					break;
+				case FIELD:
+					stats.setPoints_fields(stats.getPoints_fields() + points);
+					break;
+				case FIGHT:
+					stats.setPoints_fight(stats.getPoints_fight() + points);
+					break;
+				case GOAL:
+					stats.setPoints_goals(stats.getPoints_goals() + points);
+					break;
+				case REGION:
+					stats.setPoints_regions(stats.getPoints_regions() + points);
+					break;
+				case SKILL:
+					stats.setPoints_skills(stats.getPoints_skills() + points);
+					break;
+				default:
+					throw new IllegalArgumentException("Unknown point type");
+			}
+		}
 		addPoints(player, points);
 	}
 	private void addPoints(User player, int points) {

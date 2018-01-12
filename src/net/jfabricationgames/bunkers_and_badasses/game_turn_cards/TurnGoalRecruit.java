@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalRecruit extends TurnGoal {
@@ -17,6 +18,6 @@ public class TurnGoalRecruit extends TurnGoal {
 	
 	@Override
 	public void receivePointsRecruitment(User user, int recruitedTroops) {
-		game.getPointManager().addPoints(user, recruitedTroops, getClass(), "recruited troops");
+		game.getPointManager().addPoints(user, recruitedTroops, getClass(), "recruited troops", PointManager.PointType.GOAL);
 	}
 }

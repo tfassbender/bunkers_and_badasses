@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -26,6 +27,6 @@ public class TurnGoalTroopUnion extends TurnGoal {
 				troops = Math.max(troops, field.getTroops().size());
 			}
 		}
-		game.getPointManager().addPoints(user, 2*troops, getClass(), "troop union");
+		game.getPointManager().addPoints(user, 2*troops, getClass(), "troop union", PointManager.PointType.GOAL);
 	}
 }

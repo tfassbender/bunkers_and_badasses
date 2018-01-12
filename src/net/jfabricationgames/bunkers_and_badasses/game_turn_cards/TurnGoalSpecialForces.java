@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalSpecialForces extends TurnGoal {
@@ -18,7 +19,7 @@ public class TurnGoalSpecialForces extends TurnGoal {
 	public void receivePointsFight(User user, Fight fight) {
 		if ((user.equals(fight.getAttackingPlayer()) && fight.getAttackingHero() != null) || 
 				(fight.getDefendingPlayer() != null && user.equals(fight.getDefendingPlayer()) && fight.getDefendingHero() != null)) {
-			game.getPointManager().addPoints(user, 3, getClass(), "heros used");
+			game.getPointManager().addPoints(user, 3, getClass(), "heros used", PointManager.PointType.GOAL);
 		}
 	}
 }

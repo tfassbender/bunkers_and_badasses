@@ -9,6 +9,7 @@ import java.io.Serializable;
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 
 public abstract class Hero implements Serializable {
 	
@@ -77,10 +78,10 @@ public abstract class Hero implements Serializable {
 	
 	/**
 	 * Execute the hero's special effect as a game turn.
-	 * The default implementation is empty because not all hero's special effects can be used as turn.
+	 * The default implementation only updates the statistics because not all hero's special effects can be used as turn.
 	 */
-	public void executeTurn() {
-		
+	public void executeTurn(Game game) {
+		//TODO add to the statistics
 	}
 	
 	/**

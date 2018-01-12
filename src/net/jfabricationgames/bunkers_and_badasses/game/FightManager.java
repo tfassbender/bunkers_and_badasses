@@ -134,6 +134,8 @@ public class FightManager implements Serializable {
 		//remove the fallen troops
 		int[] fallenTroops;
 		Field localField;
+		int[] totalKilledTroops = new int[2];
+		int neutralTroopsKilled = 0;
 		//the fields are sometimes added twice; fix it by remembering the names...
 		List<String> troopsRemoved = new ArrayList<String>();//the names of all fields where troops were removed
 		for (Field field : currentFight.getFallenTroops().keySet()) {
@@ -144,6 +146,13 @@ public class FightManager implements Serializable {
 				try {
 					localField.removeNormalTroops(fallenTroops[0]);//TODO not enough troops to remove exception here (trying to remove troops in retreat field?)
 					localField.removeBadassTroops(fallenTroops[1]);
+					if (localField.getAffiliation() != null && !localField.getAffiliation().equals(currentFight.getAttackingPlayer())) {
+						totalKilledTroops[0] += fallenTroops[0];
+						totalKilledTroops[1] += fallenTroops[1];
+					}
+					else if (localField.getAffiliation() == null) {
+						neutralTroopsKilled += fallenTroops[0];
+					}
 				}
 				catch (IllegalArgumentException iae) {
 					iae.printStackTrace();
@@ -151,12 +160,70 @@ public class FightManager implements Serializable {
 				troopsRemoved.add(field.getName());
 			}
 		}
+		//add statistics
+		GameStatistic stats = game.getStatisticManager().getStatistics(currentFight.getAttackingPlayer());
+		GameStatistic statsDefender = game.getStatisticManager().getStatistics(currentFight.getDefendingPlayer());
+		stats.setTroops_killed_normal(stats.getTroops_killed_normal() + totalKilledTroops[0]);
+		stats.setTroops_killed_badass(stats.getTroops_killed_badass() + totalKilledTroops[1]);
+		stats.setTroops_killed_neutral(stats.getTroops_killed_neutral() + neutralTroopsKilled);
+		if (currentFight.getWinner() == Fight.ATTACKERS) {
+			stats.setBattles_won(stats.getBattles_won() + 1);
+			if (statsDefender != null) {
+				statsDefender.setBattles_lost(statsDefender.getBattles_lost() + 1);
+			}
+		}
+		else {
+			stats.setBattles_lost(stats.getBattles_lost() + 1);
+			if (statsDefender != null) {
+				statsDefender.setBattles_won(statsDefender.getBattles_won() + 1);
+			}
+		}
+		for (Field field : currentFight.getAttackSupporters()) {
+			GameStatistic statsSupporter = game.getStatisticManager().getStatistics(field.getAffiliation());
+			if (field.getAffiliation().equals(currentFight.getAttackingPlayer())) {
+				statsSupporter.setSupport_given_self(statsSupporter.getSupport_given_self() + 1);
+				stats.setSupport_received_self(stats.getSupport_received_self() + 1);
+			}
+			else {
+				statsSupporter.setSupport_given_other(statsSupporter.getSupport_given_other() + 1);
+				stats.setSupport_received_other(stats.getSupport_received_other() + 1);
+			}
+		}
+		for (Field field : currentFight.getDefenceSupporters()) {
+			GameStatistic statsSupporter = game.getStatisticManager().getStatistics(field.getAffiliation());
+			if (field.getAffiliation().equals(currentFight.getDefendingPlayer())) {
+				statsSupporter.setSupport_given_self(statsSupporter.getSupport_given_self() + 1);
+				statsDefender.setSupport_received_self(statsDefender.getSupport_received_self() + 1);
+			}
+			else {
+				statsSupporter.setSupport_given_other(statsSupporter.getSupport_given_other() + 1);
+				statsDefender.setSupport_received_self(statsDefender.getSupport_received_other() + 1);
+			}
+		}
+		for (Field field : currentFight.getSupportRejections()) {
+			GameStatistic statsRejection = game.getStatisticManager().getStatistics(field.getAffiliation());
+			statsRejection.setSupport_rejected(statsRejection.getSupport_rejected() + 1);
+		}
 		//remove the used heros from the players hands
 		if (currentFight.getAttackingHero() != null) {
 			game.getHeroCardManager().heroCardUsed(currentFight.getAttackingHero(), currentFight.getAttackingPlayer());
+			if (currentFight.isUseAttackingHeroEffect()) {
+				stats.setHeros_used_effect(stats.getHeros_used_effect() + 1);
+			}
+			else {
+				stats.setHeros_used_battle(stats.getHeros_used_battle() + 1);
+			}
 		}
 		if (currentFight.getDefendingHero() != null) {
 			game.getHeroCardManager().heroCardUsed(currentFight.getDefendingHero(), currentFight.getDefendingPlayer());
+			if (statsDefender != null) {
+				if (currentFight.isUseDefendingHeroEffect()) {
+					statsDefender.setHeros_used_effect(statsDefender.getHeros_used_effect() + 1);
+				}
+				else {
+					statsDefender.setHeros_used_battle(statsDefender.getHeros_used_battle() + 1);
+				}
+			}
 		}
 		//move the attacking troops to the new field and the loosing troops to the retreat field 
 		if (currentFight.getWinner() == Fight.ATTACKERS) {
@@ -226,9 +293,9 @@ public class FightManager implements Serializable {
 	
 	public void giveOutPoints() {
 		//points for attacker and winner
-		pointManager.addPoints(currentFight.getAttackingPlayer(), Game.getGameVariableStorage().getFightAttackerPoints(), getClass(), "attacking player");
+		pointManager.addPoints(currentFight.getAttackingPlayer(), Game.getGameVariableStorage().getFightAttackerPoints(), getClass(), "attacking player", PointManager.PointType.FIGHT);
 		if (currentFight.getWinningPlayer() != null) {//skags could win
-			pointManager.addPoints(currentFight.getWinningPlayer(), Game.getGameVariableStorage().getFightWinnerPoints(), getClass(), "fight winning player");
+			pointManager.addPoints(currentFight.getWinningPlayer(), Game.getGameVariableStorage().getFightWinnerPoints(), getClass(), "fight winning player", PointManager.PointType.FIGHT);
 		}
 		//points for supporters
 		List<User> supporters = new ArrayList<User>();
@@ -248,7 +315,7 @@ public class FightManager implements Serializable {
 			}
 		}
 		for (User user : supporters) {
-			pointManager.addPoints(user, Game.getGameVariableStorage().getFightSupporterPoints(), getClass(), "fight supporting player");
+			pointManager.addPoints(user, Game.getGameVariableStorage().getFightSupporterPoints(), getClass(), "fight supporting player", PointManager.PointType.FIGHT);
 		}
 		//points for turn goals and turn bonuses
 		TurnBonus bonus;

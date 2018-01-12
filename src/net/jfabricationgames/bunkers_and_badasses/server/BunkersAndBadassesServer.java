@@ -860,12 +860,14 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 			System.err.println("Select user id's failed");
 		}
 		//create the tables
-		String[] sql = new String[message.getPlayers().size()+2];
+		//String[] sql = new String[message.getPlayers().size()+2];
+		String[] sql = new String[2];
 		sql[0] = "INSERT INTO bunkers_and_badasses.games (id, active) VALUES (" + gameId + ", true)";//create the game
 		sql[1] = "INSERT INTO bunkers_and_badasses.game_maps (game_id, map_id) VALUES (" + gameId + ", " + message.getBoardId() + ")";//create a game - map
-		for (int i = 0; i < message.getPlayers().size(); i++) {
+		//statistics are created when the game ends
+		/*for (int i = 0; i < message.getPlayers().size(); i++) {
 			sql[2+i] = "INSERT INTO bunkers_and_badasses.statistics (user_id, game_id) VALUES (" + userIds[i] + ", " + gameId + ")";
-		}
+		}*/
 		try (Statement statement = con.createStatement()) {
 			for (String s : sql) {
 				statement.execute(s);

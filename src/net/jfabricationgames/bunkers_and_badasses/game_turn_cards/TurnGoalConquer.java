@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -18,7 +19,7 @@ public class TurnGoalConquer extends TurnGoal {
 	@Override
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
 		if (fieldConquered) {
-			game.getPointManager().addPoints(user, 2, getClass(), "fields conquered");
+			game.getPointManager().addPoints(user, 2, getClass(), "fields conquered", PointManager.PointType.GOAL);
 		}
 	}
 }

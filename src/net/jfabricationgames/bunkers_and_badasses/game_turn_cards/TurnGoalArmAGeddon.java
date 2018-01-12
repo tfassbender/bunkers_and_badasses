@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -35,7 +36,7 @@ public class TurnGoalArmAGeddon extends TurnGoal {
 					fallenTroops += troops.get(field)[1];					
 				}
 			}
-			game.getPointManager().addPoints(user, fallenTroops, getClass(), "fallen troops (starting fight)");
+			game.getPointManager().addPoints(user, fallenTroops, getClass(), "fallen troops (starting fight)", PointManager.PointType.GOAL);
 		}
 	}
 }

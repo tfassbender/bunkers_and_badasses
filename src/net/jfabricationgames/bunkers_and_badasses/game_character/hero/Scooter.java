@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class Scooter extends Hero {
 	
 	private static final long serialVersionUID = -6292099839196271278L;
@@ -15,7 +17,7 @@ public class Scooter extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Catch-A-Ride: Beliebige Truppen (aus einem Feld) d�rfen bis zu 2 Felder weit vorr�cken und die Feindliche Linie durchbrechen wenn sie dadurch ein von ihnen kontrolliertes oder leeres Gebiet erreichen
 	}

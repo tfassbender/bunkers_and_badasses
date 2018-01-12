@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -30,10 +31,10 @@ public class TurnGoalSupport extends TurnGoal {
 			}
 		}
 		if (user.equals(fight.getAttackingPlayer()) || fight.getDefendingPlayer() != null && user.equals(fight.getDefendingPlayer())) {
-			game.getPointManager().addPoints(user, support*2, getClass(), "supported own troops");			
+			game.getPointManager().addPoints(user, support*2, getClass(), "supported own troops", PointManager.PointType.GOAL);			
 		}
 		else {
-			game.getPointManager().addPoints(user, support*3, getClass(), "supported enemy troops");
+			game.getPointManager().addPoints(user, support*3, getClass(), "supported enemy troops", PointManager.PointType.GOAL);
 		}
 	}
 }

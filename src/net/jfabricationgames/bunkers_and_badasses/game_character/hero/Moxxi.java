@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class Moxxi extends Hero {
 	
 	private static final long serialVersionUID = -4123023043047504302L;
@@ -15,7 +17,7 @@ public class Moxxi extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Anwerbung: 3 normale Truppen beliebig auf dem Feld verteilen
 	}

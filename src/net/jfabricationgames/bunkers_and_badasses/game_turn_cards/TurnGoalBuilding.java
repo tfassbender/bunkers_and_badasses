@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
@@ -35,6 +36,6 @@ public class TurnGoalBuilding extends TurnGoal {
 				}
 			}
 		}
-		game.getPointManager().addPoints(user, points, getClass(), "buildings on field");
+		game.getPointManager().addPoints(user, points, getClass(), "buildings on field", PointManager.PointType.GOAL);
 	}
 }

@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 
 public class Modecai extends Hero {
 	
@@ -22,7 +23,7 @@ public class Modecai extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Sniper: Zwei beliebige (normale) Einheiten d�rfen irgentwo vom Feld genommen werden (auch mehrere Felder; die Felder d�rfen dannach nicht leer sein)
 	}

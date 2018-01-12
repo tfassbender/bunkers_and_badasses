@@ -20,6 +20,8 @@ public class UserResource implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 425801597894620740L;
 	
+	private Game game;
+	
 	//the current amounts of credits, ammo and eridium
 	private int credits;
 	private int ammo;
@@ -45,12 +47,13 @@ public class UserResource implements Serializable, Cloneable {
 	private int ammoBuilding;
 	private int creditsBuilding;*/
 	
-	public UserResource(User user) {
+	public UserResource(User user, Game game) {
 		this.user = user;
+		this.game = game;
 	}
 	
 	public UserResource clone() {
-		UserResource clone = new UserResource(user);
+		UserResource clone = new UserResource(user, game);
 		clone.credits = credits;
 		clone.ammo = ammo;
 		clone.eridium = eridium;
@@ -248,6 +251,11 @@ public class UserResource implements Serializable, Cloneable {
 			credits -= costs[BuildingStorage.PRICE_CREDITS];
 			ammo -= costs[BuildingStorage.PRICE_AMMO];
 			eridium -= costs[BuildingStorage.PRICE_ERIDIUM];
+			//add statistics
+			GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+			stats.setUsed_credits(stats.getUsed_credits() + costs[BuildingStorage.PRICE_CREDITS]);
+			stats.setUsed_ammo(stats.getUsed_ammo() + costs[BuildingStorage.PRICE_AMMO]);
+			stats.setUsed_eridium(stats.getUsed_eridium() + costs[BuildingStorage.PRICE_ERIDIUM]);
 			resourceLogger.addLog("user [" + user + "]: building costs payed [" + costs[BuildingStorage.PRICE_CREDITS] + " credits " + 
 					costs[BuildingStorage.PRICE_AMMO] + " ammo " + costs[BuildingStorage.PRICE_ERIDIUM] + " eririum]. Current resources [" + 
 					credits + " credits " + ammo + " ammo " + eridium + " eririum]");
@@ -291,6 +299,11 @@ public class UserResource implements Serializable, Cloneable {
 			credits -= costs[0];
 			ammo -= costs[1];
 			eridium -= costs[2];
+			//add statistics
+			GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+			stats.setUsed_credits(stats.getUsed_credits() + costs[0]);
+			stats.setUsed_ammo(stats.getUsed_ammo() + costs[1]);
+			stats.setUsed_eridium(stats.getUsed_eridium() + costs[2]);
 		}
 	}
 	

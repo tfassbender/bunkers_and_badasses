@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalBolwerk extends TurnGoal {
@@ -18,7 +19,7 @@ public class TurnGoalBolwerk extends TurnGoal {
 	@Override
 	public void receivePointsFight(User user, Fight fight) {
 		if (user.equals(fight.getDefendingPlayer()) && fight.getWinner() == Fight.DEFENDERS) {
-			game.getPointManager().addPoints(user, 3, getClass(), "fight won (defender)");
+			game.getPointManager().addPoints(user, 3, getClass(), "fight won (defender)", PointManager.PointType.GOAL);
 		}
 	}
 }

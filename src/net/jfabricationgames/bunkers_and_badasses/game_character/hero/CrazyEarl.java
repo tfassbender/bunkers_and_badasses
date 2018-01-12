@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
+
 public class CrazyEarl extends Hero {
 	
 	private static final long serialVersionUID = -1504504671280272179L;
@@ -15,7 +17,7 @@ public class CrazyEarl extends Hero {
 	}
 	
 	@Override
-	public void executeTurn() {
+	public void executeTurn(Game game) {
 		//TODO
 		//Schwarzmarkt: Gratis Eridium erhalten
 	}

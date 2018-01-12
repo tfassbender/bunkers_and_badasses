@@ -54,7 +54,7 @@ public class UserResourceTest {
 	@Test
 	public void testCollectSkillResources() {
 		SkillProfile skill = new SkillProfile();
-		UserResource resource = new UserResource(new User("test"));
+		UserResource resource = new UserResource(new User("test"), null);
 		
 		//__global_user_skill__ (default profile)
 		skill.setPoints(1);
@@ -80,7 +80,7 @@ public class UserResourceTest {
 		skill.setAmmoBuilding(1);
 		skill.setCreditsBuilding(1);
 		skill.setHero(2);
-		resource = new UserResource(new User("test"));
+		resource = new UserResource(new User("test"), null);
 		resource.collectSkillResources(skill);
 		
 		assertEquals(50, resource.getCredits());
@@ -90,7 +90,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testCollectCommandResources() {
-		UserResource resource = new UserResource(new User("test"));
+		UserResource resource = new UserResource(new User("test"), null);
 		
 		resource.collectCommandResources(1);//credits
 		assertEquals(50, resource.getCredits());
@@ -104,7 +104,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testPayCommand() {
-		UserResource resource = new UserResource(new User("test"));
+		UserResource resource = new UserResource(new User("test"), null);
 		
 		//add some resources
 		resource.setCredits(100);
@@ -140,7 +140,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testPayBackCommand() {
-		UserResource resource = new UserResource(new User("test"));
+		UserResource resource = new UserResource(new User("test"), null);
 		
 		//add some resources
 		resource.setCredits(100);
@@ -179,7 +179,7 @@ public class UserResourceTest {
 	
 	@Test
 	public void testPayFields() {
-		UserResource resource = new UserResource(new User("test"));
+		UserResource resource = new UserResource(new User("test"), null);
 		resource.setCredits(50);
 		resource.payFields(9);
 		

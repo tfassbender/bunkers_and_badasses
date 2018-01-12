@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnBonusDefendFight extends TurnBonus {
@@ -20,7 +21,7 @@ public class TurnBonusDefendFight extends TurnBonus {
 	@Override
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getWinningPlayer() != null && fight.getWinningPlayer().equals(user)) {
-			game.getPointManager().addPoints(user, 2, getClass(), "fight won");
+			game.getPointManager().addPoints(user, 2, getClass(), "fight won", PointManager.PointType.BONUS);
 		}
 	}
 }

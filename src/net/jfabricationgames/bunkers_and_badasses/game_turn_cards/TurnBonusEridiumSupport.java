@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -30,6 +31,6 @@ public class TurnBonusEridiumSupport extends TurnBonus {
 				support++;
 			}
 		}
-		game.getPointManager().addPoints(user, support, getClass(), "support");
+		game.getPointManager().addPoints(user, support, getClass(), "support", PointManager.PointType.BONUS);
 	}
 }

@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalWildHunt extends TurnGoal {
@@ -18,7 +19,7 @@ public class TurnGoalWildHunt extends TurnGoal {
 	
 	public void receivePointsFight(User user, Fight fight) {
 		if (fight.getAttackingPlayer().equals(user) && fight.getDefendingField().getAffiliation() == null && fight.getWinner() == Fight.ATTACKERS) {
-			game.getPointManager().addPoints(user, 2*fight.getDefendingStrength(), getClass(), "killing neutral troops");
+			game.getPointManager().addPoints(user, 2*fight.getDefendingStrength(), getClass(), "killing neutral troops", PointManager.PointType.GOAL);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class TurnGoalCapitalism extends TurnGoal {
@@ -17,6 +18,6 @@ public class TurnGoalCapitalism extends TurnGoal {
 	
 	@Override
 	public void receivePointsPlaning(User user, int ammoConsumption) {
-		game.getPointManager().addPoints(user, (ammoConsumption/100)*3, getClass(), "ammo used"); 
+		game.getPointManager().addPoints(user, (ammoConsumption/100)*3, getClass(), "ammo used", PointManager.PointType.GOAL); 
 	}
 }

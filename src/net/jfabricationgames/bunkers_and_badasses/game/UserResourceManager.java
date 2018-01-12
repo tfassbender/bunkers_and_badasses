@@ -31,7 +31,7 @@ public class UserResourceManager implements Serializable{
 		resources = new HashMap<User, UserResource>();
 		resourceUse = new HashMap<User, Map<Integer, UserResource>>();
 		for (User u : players) {
-			resources.put(u, new UserResource(u));
+			resources.put(u, new UserResource(u, game));
 			resourceUse.put(u, new HashMap<Integer, UserResource>());
 		}
 	}

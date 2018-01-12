@@ -30,6 +30,8 @@ import javax.swing.event.ListSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
+import net.jfabricationgames.bunkers_and_badasses.game.GameStatistic;
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResourceManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
@@ -741,6 +743,8 @@ public class CommandExecutionPanel extends JPanel {
 								try {
 									resourceManager.payBuilding(building, game.getLocalUser());
 									selectedField.setBuilding(building.newInstance());
+									GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+									stats.setBuildings_created(stats.getBuildings_created() + 1);
 									commandExecuted = true;
 								}
 								catch (ResourceException re) {
@@ -761,6 +765,8 @@ public class CommandExecutionPanel extends JPanel {
 							try {
 								resourceManager.payBuildingUpgrade(building, game.getLocalUser());
 								building.extend();
+								GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+								stats.setBuildings_upgraded(stats.getBuildings_upgraded() + 1);
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
@@ -781,6 +787,8 @@ public class CommandExecutionPanel extends JPanel {
 						}
 						else {
 							selectedField.setBuilding(new EmptyBuilding());
+							GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+							stats.setBuildings_destroyed(stats.getBuildings_destroyed() + 1);
 							commandExecuted = true;
 						}
 					}
@@ -848,7 +856,7 @@ public class CommandExecutionPanel extends JPanel {
 							else if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
 								//give out points for movement and conquering (empty) fields
 								if (targetField.getAffiliation() == null || !targetField.getAffiliation().equals(game.getLocalUser())) {
-									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints(), getClass(), "field conquered");
+									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints(), getClass(), "field conquered", PointManager.PointType.FIGHT);
 								}
 								game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), selectedField, targetField.getAffiliation() == null);
 								game.getBoard().moveTroops(selectedField, targetField, normalTroops, badassTroops);

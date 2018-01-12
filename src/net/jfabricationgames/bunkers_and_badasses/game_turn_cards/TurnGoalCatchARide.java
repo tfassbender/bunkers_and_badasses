@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_turn_cards;
 
+import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ScootersCatchARide;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
@@ -20,10 +21,10 @@ public class TurnGoalCatchARide extends TurnGoal {
 	@Override
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
 		if (startField.getBuilding() instanceof ScootersCatchARide) {
-			game.getPointManager().addPoints(user, 3, getClass(), "troop movement (with catch-a-ride)");
+			game.getPointManager().addPoints(user, 3, getClass(), "troop movement (with catch-a-ride)", PointManager.PointType.GOAL);
 		}
 		else {
-			game.getPointManager().addPoints(user, 2, getClass(), "troop movement (normal)");
+			game.getPointManager().addPoints(user, 2, getClass(), "troop movement (normal)", PointManager.PointType.GOAL);
 		}
 	}
 }
