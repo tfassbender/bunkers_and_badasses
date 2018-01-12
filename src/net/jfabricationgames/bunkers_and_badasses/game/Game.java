@@ -174,7 +174,7 @@ public class Game implements Serializable {
 				missing = player;
 			}
 		}
-		if (missing != null) {
+		if (missing != null && !turnManager.isGameEnded()) {
 			//inform this player about the missing user
 			new InfoDialog("Spieler ausgeloggt", "Die Verbindung zum Spieler [" + missing + "] wurde unterbrochen.\n\n"
 					+ "Entweder hat der Spieler sich ausgeloggt, oder es gibt schwierigkeiten mit der Server-Verbindung.\n\n"

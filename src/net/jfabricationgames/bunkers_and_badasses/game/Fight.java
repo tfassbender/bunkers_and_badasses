@@ -301,10 +301,10 @@ public class Fight implements Serializable {
 		else {
 			//use just the attacking troops
 			if (getAttackingNormalTroops() > 0) {
-				return getAttackingTroopStrength()-1;
+				return Math.min(totalFallingTroops, getAttackingTroopStrength()-1);
 			}
 			else {
-				return getAttackingTroopStrength()-2;
+				return Math.min(totalFallingTroops, getAttackingTroopStrength()-2);
 			}
 		}
 	}
