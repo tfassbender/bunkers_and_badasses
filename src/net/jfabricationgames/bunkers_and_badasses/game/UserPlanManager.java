@@ -18,6 +18,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.SupportCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatistic;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class UserPlanManager implements Serializable {

@@ -59,6 +59,8 @@ public class GameEndFrame extends JFrame implements ConfirmDialogListener {
 		this.client = client;
 		this.userPoints = game.getPointManager().getSortedPointList();
 		
+		//add the final statistic values
+		game.getStatisticManager().addEndValues(game);
 		//store the final game in the database if the local player is the starting player
 		Game.getGameStore().storeGame(game, true);
 		

@@ -16,6 +16,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_frame.FightExecutionFrame
 import net.jfabricationgames.bunkers_and_badasses.game_frame.SupportRequestFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatistic;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jfgserver.client.JFGClient;
 
@@ -284,6 +285,8 @@ public class FightManager implements Serializable {
 			game.getBoard().moveTroops(currentFight.getAttackingField(), currentFight.getRetreatField(), normalTroopsRetreat, badassTroopsRetreat);
 		}
 		game.setState(GameState.ACT);
+		//update the statistics
+		game.getStatisticManager().updateValues(game);
 		//end the players turn
 		game.getPlayerOrder().nextMove();
 		game.getGameFrame().updateAllFrames();

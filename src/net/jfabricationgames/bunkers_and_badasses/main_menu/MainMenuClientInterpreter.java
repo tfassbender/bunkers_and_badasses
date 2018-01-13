@@ -8,6 +8,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVari
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStatisticsRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.server.ServerLogoutMessage;
@@ -63,6 +64,9 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 		}
 		else if (message instanceof DynamicVariableRequestMessage) {
 			interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, client);
+		}
+		else if (message instanceof GameStatisticsRequestMessage) {
+			interpreteGameStatisticsRequestMessage((GameStatisticsRequestMessage) message, client);
 		}
 		else {
 			System.err.println("MainMenuClientInterpreter: Received unknown message (" + message.getClass().getName() + ")");
@@ -143,6 +147,10 @@ public class MainMenuClientInterpreter implements JFGClientInterpreter {
 	
 	private void interpreteDynamicVariableRequestMessage(DynamicVariableRequestMessage message, JFGClient client) {
 		mainMenu.receiveDynamicVariables(message);
+	}
+	
+	private void interpreteGameStatisticsRequestMessage(GameStatisticsRequestMessage message, JFGClient client) {
+		mainMenu.receiveGameStatistics(message);
 	}
 	
 	public ChatClient getChatClient() {

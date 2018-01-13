@@ -17,6 +17,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadReq
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameSaveMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStatisticsRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.PreGameDataMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
@@ -114,6 +115,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			//dynamic variables request message
 			else if (message instanceof DynamicVariableRequestMessage) {
 				interpreteDynamicVariableRequestMessage((DynamicVariableRequestMessage) message, connection);
+			}
+			else if (message instanceof GameStatisticsRequestMessage) {
+				interpreteGameStatisticsRequestMessage((GameStatisticsRequestMessage) message, connection);
 			}
 			else {
 				System.err.println("BunkersAndBadassesServerInterpreter: Received unknown message (" + message.getClass().getName() + ")");
@@ -350,5 +354,9 @@ public class BunkersAndBadassesServerInterpreter implements JFGServerInterpreter
 			startingPlayer.resetOutput();
 			startingPlayer.sendMessage(message);
 		}
+	}
+	
+	private void interpreteGameStatisticsRequestMessage(GameStatisticsRequestMessage message, JFGConnection connection) {
+		server.loadStatistics(message, connection);
 	}
 }

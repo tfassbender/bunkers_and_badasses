@@ -1,10 +1,11 @@
-package net.jfabricationgames.bunkers_and_badasses.game;
+package net.jfabricationgames.bunkers_and_badasses.statistic;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.PointManager.UserPoints;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Region;
@@ -16,14 +17,33 @@ public class GameStatisticManager implements Serializable {
 	
 	private Map<User, GameStatistic> statistics;
 	
+	public static final int MERGE_PLANING_COMMIT = 1;
+	public static final int MERGE_TURN_OVER = 2;
+	
 	/**
 	 * Merge the statistics of a single player (the player that sent the update) to this statistics.
 	 * 
 	 * @param stat
 	 * 		The statistics of the player that sent the update.
 	 */
-	public void merge() {
-		//TODO
+	public void merge(Map<User, GameStatistic> stats, int mergeType, User user) {
+		switch (mergeType) {
+			case MERGE_PLANING_COMMIT:
+				//add only the players new statistics
+				if (statistics.get(user) != null) {
+					statistics.put(user, stats.get(user));					
+				}
+				else {
+					throw new IllegalArgumentException("Unknown user: " + user);
+				}
+				break;
+			case MERGE_TURN_OVER:
+				//just set the statistics to the updated once from the other player
+				statistics = stats;
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown mergeType (" + mergeType + ")");
+		}
 	}
 	
 	/**
@@ -91,6 +111,9 @@ public class GameStatisticManager implements Serializable {
 		}
 	}
 	
+	public Map<User, GameStatistic> getStatistics() {
+		return statistics;
+	}
 	public GameStatistic getStatistics(User user) {
 		return statistics.get(user);
 	}

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatistic;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.logger.JFGLogger;
 import net.jfabricationgames.logger.JFGLoggerManager;

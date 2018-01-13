@@ -1,6 +1,9 @@
-package net.jfabricationgames.bunkers_and_badasses.game;
+package net.jfabricationgames.bunkers_and_badasses.statistic;
 
 import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -12,8 +15,63 @@ public class GameStatistic implements Serializable {
 		this.user = user;
 	}
 	
+	public GameStatistic(ResultSet result) throws SQLException {
+		user_id = result.getInt(1);
+		game_id = result.getInt(2);
+		position = result.getInt(3);
+		players = result.getInt(4);
+		points = result.getInt(5);
+		points_fight = result.getInt(6);
+		points_fields = result.getInt(7);
+		points_regions = result.getInt(8);
+		points_goals = result.getInt(9);
+		points_bonuses = result.getInt(10);
+		points_skills = result.getInt(11);
+		troops_killed_normal = result.getInt(12);
+		troops_killed_badass = result.getInt(13);
+		troops_killed_neutral = result.getInt(14);
+		troops_controlled_end = result.getInt(15);
+		troops_controlled_max = result.getInt(16);
+		fields_end = result.getInt(17);
+		fields_max = result.getInt(18);
+		regions_end = result.getInt(19);
+		regions_value_end = result.getInt(20);
+		regions_max = result.getInt(21);
+		regions_value_max = result.getInt(22);
+		battles_won = result.getInt(23);
+		battles_lost = result.getInt(24);
+		heros_used_battle = result.getInt(25);
+		heros_used_effect = result.getInt(26);
+		used_credits = result.getInt(27);
+		used_ammo = result.getInt(28);
+		used_eridium = result.getInt(29);
+		buildings_created = result.getInt(30);
+		buildings_upgraded = result.getInt(31);
+		buildings_destroyed = result.getInt(32);
+		support_given_self = result.getInt(33);
+		support_received_self = result.getInt(34);
+		support_given_other = result.getInt(35);
+		support_received_other = result.getInt(36);
+		support_rejected = result.getInt(37);
+		commands_raid = result.getInt(38);
+		commands_retreat = result.getInt(39);
+		commands_march = result.getInt(40);
+		commands_build = result.getInt(41);
+		commands_recruit = result.getInt(42);
+		commands_resources = result.getInt(43);
+		commands_support = result.getInt(44);
+		commands_defense = result.getInt(45);
+		user = new User(result.getString(46));
+		map_id = result.getInt(47);
+		map_name = result.getString(48);
+	}
+	
 	private User user;
-	//user id and game id are checked by the server
+	//user id and game id are checked and added by the server
+	private int user_id;
+	private int game_id;
+	private int map_id;
+	private String map_name;
 	
 	private int position;//the players position at the end of the game
 	private int players;//the number of players in the game
@@ -78,6 +136,82 @@ public class GameStatistic implements Serializable {
 	private int commands_resources;
 	private int commands_support;
 	private int commands_defense;
+	
+	public void prepareStatement(PreparedStatement statement) throws SQLException {
+		statement.setInt(1, user_id);
+		statement.setInt(2, game_id);
+		statement.setInt(3, position);
+		statement.setInt(4, players);
+		statement.setInt(5, points);
+		statement.setInt(6, points_fight);
+		statement.setInt(7, points_fields);
+		statement.setInt(8, points_regions);
+		statement.setInt(9, points_goals);
+		statement.setInt(10, points_bonuses);
+		statement.setInt(11, points_skills);
+		statement.setInt(12, troops_killed_normal);
+		statement.setInt(13, troops_killed_badass);
+		statement.setInt(14, troops_killed_neutral);
+		statement.setInt(15, troops_controlled_end);
+		statement.setInt(16, troops_controlled_max);
+		statement.setInt(17, fields_end);
+		statement.setInt(18, fields_max);
+		statement.setInt(19, regions_end);
+		statement.setInt(20, regions_value_end);
+		statement.setInt(21, regions_max);
+		statement.setInt(22, regions_value_max);
+		statement.setInt(23, battles_won);
+		statement.setInt(24, battles_lost);
+		statement.setInt(25, heros_used_battle);
+		statement.setInt(26, heros_used_effect);
+		statement.setInt(27, used_credits);
+		statement.setInt(28, used_ammo);
+		statement.setInt(29, used_eridium);
+		statement.setInt(30, buildings_created);
+		statement.setInt(31, buildings_upgraded);
+		statement.setInt(32, buildings_destroyed);
+		statement.setInt(33, support_given_self);
+		statement.setInt(34, support_received_self);
+		statement.setInt(35, support_given_other);
+		statement.setInt(36, support_received_other);
+		statement.setInt(37, support_rejected);
+		statement.setInt(38, commands_raid);
+		statement.setInt(39, commands_retreat);
+		statement.setInt(40, commands_march);
+		statement.setInt(41, commands_build);
+		statement.setInt(42, commands_recruit);
+		statement.setInt(43, commands_resources);
+		statement.setInt(44, commands_support);
+		statement.setInt(45, commands_defense);
+	}
+	
+	public int getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+	
+	public int getGame_id() {
+		return game_id;
+	}
+	public void setGame_id(int game_id) {
+		this.game_id = game_id;
+	}
+	
+	public int getMap_id() {
+		return map_id;
+	}
+	public void setMap_id(int map_id) {
+		this.map_id = map_id;
+	}
+	
+	public String getMap_name() {
+		return map_name;
+	}
+	public void setMap_name(String map_name) {
+		this.map_name = map_name;
+	}
 	
 	public User getUser() {
 		return user;

@@ -8,6 +8,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.InfoDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatisticManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;

@@ -33,12 +33,15 @@ import net.jfabricationgames.bunkers_and_badasses.game_communication.GameCreatio
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameLoadRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStartMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStatisticsRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusStorage;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpContent;
 import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuMessage;
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatistic;
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatisticManager;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.jdbc.JFGDatabaseConnection;
 import net.jfabricationgames.jfgdatabaselogin.message.Cryptographer;
@@ -638,10 +641,119 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 	 * 		true if the statistics can be created and send to the database. false otherwise. 
 	 */
 	private boolean createGameStatistics(Game game) {
-		boolean statisticsSuccessful = false;
-		//TODO create the game statistics and store them in the database
-		serverLogger.addLog("trying to create game statistics (not implemented yet);");
+		boolean statisticsSuccessful = true;
+		String cause = null;//the cause when the statistics are not created successfully
+		//add the game id to the statistics
+		GameStatisticManager statistics = game.getStatisticManager();
+		statistics.getStatistics().forEach((user, stats) -> stats.setGame_id(game.getId()));
+		//to add the user id's a database connection is needed
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		try (Statement statement = con.createStatement()) {
+			for (User user : statistics.getStatistics().keySet()) {
+				//load the user ids from the database
+				result = statement.executeQuery("SELECT id from bunkers_and_badasses.users WHERE username = " + user);
+				if (result.next()) {
+					statistics.getStatistics(user).setUser_id(result.getInt(1));
+				}
+				else {
+					System.err.println("ERROR: user id of user [" + user + "] not found");
+					statisticsSuccessful = false;
+					cause = "user id not found";
+				}
+			}
+		} 
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+			statisticsSuccessful = false;
+			cause = "exception in statement 1";
+		}
+		finally {
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException sqle) {
+					sqle.printStackTrace();
+					statisticsSuccessful = false;
+					cause = "result can't be closed";
+				}
+			}
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+				sqle.printStackTrace();
+				statisticsSuccessful = false;
+				cause = "connection can't be closed";
+			}
+		}
+		//add the statistics to the database
+		String query = "INSERT INTO bunkers_and_badasses.statistics(`user_id`, `game_id`, `position`, `players`, `points`, `points_fight`, "
+				+ "`points_fields`, `points_regions`, `points_goals`, `points_bonuses`, `points_skills`, `troops_killed_normal`, "
+				+ "`troops_killed_badass`, `troops_killed_neutral`, `troops_controlled_end`, `troops_controlled_max`, `fields_end`, "
+				+ "`fields_max`, `regions_end`, `region_value_end`, `regions_max`, `region_value_max`, `battles_won`, `battles_lost`, "
+				+ "`heros_used_battle`, `heros_used_effect`, `used_credits`, `used_ammo`, `used_eridium`, `buildings_created`, "
+				+ "`buildings_upgraded`, `buildings_destroyed`, `support_given_self`, `support_received_self`, `support_given_other`, "
+				+ "`support_received_other`, `support_rejected`, `commands_raid`, `commands_retreat`, `commands_march`, `commands_build`, "
+				+ "`commands_recruit`, `commands_resources`, `commands_support`, `commands_defense`) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement statement = con.prepareStatement(query)) {
+			for (User user : statistics.getStatistics().keySet()) {
+				statistics.getStatistics(user).prepareStatement(statement);
+				statement.execute();
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+			statisticsSuccessful = false;
+			cause = "exception in statement 2";
+		}
+		serverLogger.addLog("added statistics to the database (" + (statisticsSuccessful ? "successful" : "NOT successful: " + cause) + ")");
 		return statisticsSuccessful;
+	}
+	
+	/**
+	 * Load all statistics from the database and send them back to the user that asked for them.
+	 */
+	public void loadStatistics(GameStatisticsRequestMessage message, JFGConnection connection) {
+		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
+		ResultSet result = null;
+		String query = "SELECT s.*, u.username, m.map_id, map.name FROM statistics s JOIN users u ON s.user_id = u.id "
+				+ "JOIN game_maps m ON m.game_id = s.game_id JOIN maps map ON m.map_id = map.id";
+		List<GameStatistic> statistics = new ArrayList<GameStatistic>();
+		try (Statement statement = con.createStatement()) {
+			result = statement.executeQuery(query);
+			while (result.next()) {
+				GameStatistic stats = new GameStatistic(result);
+				statistics.add(stats);
+			}
+		}
+		catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		finally {
+			if (result != null) {
+				try {
+					result.close();
+				}
+				catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		message.setStatistics(statistics);
+		connection.resetOutput();
+		connection.sendMessage(message);
+		serverLogger.addLog("sending game statistics (player: " + connectionMap.get(connection).getUsername() + ");");
 	}
 	
 	/**

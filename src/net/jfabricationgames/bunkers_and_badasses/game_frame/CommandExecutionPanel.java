@@ -30,7 +30,6 @@ import javax.swing.event.ListSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
-import net.jfabricationgames.bunkers_and_badasses.game.GameStatistic;
 import net.jfabricationgames.bunkers_and_badasses.game.PointManager;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResourceManager;
@@ -53,6 +52,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_command.MarchCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RaidCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RecruitCommand;
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatistic;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.miginfocom.swing.MigLayout;
 

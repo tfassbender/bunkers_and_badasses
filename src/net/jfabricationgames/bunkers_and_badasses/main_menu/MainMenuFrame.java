@@ -43,12 +43,14 @@ import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.BoardOverviewRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.DynamicVariableRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.GameOverviewRequestMessage;
+import net.jfabricationgames.bunkers_and_badasses.game_communication.GameStatisticsRequestMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.SkillProfileTransferMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameOverview;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
+import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatistic;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -73,6 +75,7 @@ public class MainMenuFrame extends JFrame {
 	
 	private List<Board> playableBoards;//no complete boards; only name and image
 	private List<GameOverview> gameOverviews;
+	private List<GameStatistic> gameStatistics;
 	
 	private boolean dynamicVariablesLoaded;
 	
@@ -95,6 +98,7 @@ public class MainMenuFrame extends JFrame {
 	private JMenuItem mntmSkillProfil;
 	private JMenuItem mntmHilfeMenu;
 	private JButton btnSpielLaden;
+	private JMenuItem mntmStatistiken;
 	
 	public MainMenuFrame(JFGClient clientOld) {
 		addWindowListener(new WindowAdapter() {
@@ -161,12 +165,13 @@ public class MainMenuFrame extends JFrame {
 		});
 		mnProfil.add(mntmSkillProfil);
 		
-		JMenuItem mntmStatistiken = new JMenuItem("Statistiken");
+		mntmStatistiken = new JMenuItem("Statistiken");
 		mntmStatistiken.setEnabled(false);
 		mnProfil.add(mntmStatistiken);
 		
 		JMenu mnSpiel = new JMenu("Spiel");
 		menuBar.add(mnSpiel);
+		
 		
 		mntmSpielErstellen = new JMenuItem("Spiel Erstellen");
 		mntmSpielErstellen.setEnabled(false);
@@ -548,6 +553,11 @@ public class MainMenuFrame extends JFrame {
 		skillProfileManager.setSkillProfiles(profiles);
 		//enable the skill menu
 		mntmSkillProfil.setEnabled(true);
+	}
+	
+	public void receiveGameStatistics(GameStatisticsRequestMessage message) {
+		this.gameStatistics = message.getStatistics();
+		mntmStatistiken.setEnabled(true);
 	}
 	
 	public static ImageLoader getImageLoader() {
