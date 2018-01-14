@@ -50,7 +50,8 @@ import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.server.UserLogoutMessage;
-import net.jfabricationgames.bunkers_and_badasses.statistic.GameStatistic;
+import net.jfabricationgames.bunkers_and_badasses.statistic.StatisticsAnalyzer;
+import net.jfabricationgames.bunkers_and_badasses.statistic.StatisticsFrame;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 import net.jfabricationgames.bunkers_and_badasses.user.UserManager;
 import net.jfabricationgames.jfgserver.client.JFGClient;
@@ -61,6 +62,7 @@ public class MainMenuFrame extends JFrame {
 	private static final long serialVersionUID = 8543413745165916921L;
 	
 	private static HelpMenuFrame helpMenu;
+	private StatisticsFrame statisticsFrame;
 	
 	private MainMenuDynamicLoader dynamicLoader;
 	private JFGClient client;
@@ -75,7 +77,6 @@ public class MainMenuFrame extends JFrame {
 	
 	private List<Board> playableBoards;//no complete boards; only name and image
 	private List<GameOverview> gameOverviews;
-	private List<GameStatistic> gameStatistics;
 	
 	private boolean dynamicVariablesLoaded;
 	
@@ -166,6 +167,12 @@ public class MainMenuFrame extends JFrame {
 		mnProfil.add(mntmSkillProfil);
 		
 		mntmStatistiken = new JMenuItem("Statistiken");
+		mntmStatistiken.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				statisticsFrame.setVisible(true);
+				statisticsFrame.requestFocus();
+			}
+		});
 		mntmStatistiken.setEnabled(false);
 		mnProfil.add(mntmStatistiken);
 		
@@ -556,7 +563,8 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	public void receiveGameStatistics(GameStatisticsRequestMessage message) {
-		this.gameStatistics = message.getStatistics();
+		StatisticsAnalyzer analyzer = new StatisticsAnalyzer(message.getStatistics());
+		statisticsFrame = new StatisticsFrame(analyzer);
 		mntmStatistiken.setEnabled(true);
 	}
 	
