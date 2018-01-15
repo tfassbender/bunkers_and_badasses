@@ -185,6 +185,57 @@ public class GameStatistic implements Serializable {
 		statement.setInt(45, commands_defense);
 	}
 	
+	public int[] asArray() {
+		int[] data = new int[46];
+		data[0] = map_id;
+		data[1] = user_id;
+		data[2] = game_id;
+		data[3] = position;
+		data[4] = players;
+		data[5] = points;
+		data[6] = points_fight;
+		data[7] = points_fields;
+		data[8] = points_regions;
+		data[9] = points_goals;
+		data[10] = points_bonuses;
+		data[11] = points_skills;
+		data[12] = troops_killed_normal;
+		data[13] = troops_killed_badass;
+		data[14] = troops_killed_neutral;
+		data[15] = troops_controlled_end;
+		data[16] = troops_controlled_max;
+		data[17] = fields_end;
+		data[18] = fields_max;
+		data[19] = regions_end;
+		data[20] = regions_value_end;
+		data[21] = regions_max;
+		data[22] = regions_value_max;
+		data[23] = battles_won;
+		data[24] = battles_lost;
+		data[25] = heros_used_battle;
+		data[26] = heros_used_effect;
+		data[27] = used_credits;
+		data[28] = used_ammo;
+		data[29] = used_eridium;
+		data[30] = buildings_created;
+		data[31] = buildings_upgraded;
+		data[32] = buildings_destroyed;
+		data[33] = support_given_self;
+		data[34] = support_received_self;
+		data[35] = support_given_other;
+		data[36] = support_received_other;
+		data[37] = support_rejected;
+		data[38] = commands_raid;
+		data[39] = commands_retreat;
+		data[40] = commands_march;
+		data[41] = commands_build;
+		data[42] = commands_recruit;
+		data[43] = commands_resources;
+		data[44] = commands_support;
+		data[45] = commands_defense;
+		return data;
+	}
+	
 	public int getUser_id() {
 		return user_id;
 	}

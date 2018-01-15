@@ -563,7 +563,7 @@ public class MainMenuFrame extends JFrame {
 	}
 	
 	public void receiveGameStatistics(GameStatisticsRequestMessage message) {
-		StatisticsAnalyzer analyzer = new StatisticsAnalyzer(message.getStatistics());
+		StatisticsAnalyzer analyzer = new StatisticsAnalyzer(message.getStatistics(), UserManager.getLocalUser());
 		statisticsFrame = new StatisticsFrame(analyzer);
 		mntmStatistiken.setEnabled(true);
 	}

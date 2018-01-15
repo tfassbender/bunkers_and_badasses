@@ -1,11 +1,14 @@
 package net.jfabricationgames.bunkers_and_badasses.statistic;
 
+import java.util.Vector;
+
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 public class UserStatistic implements Comparable<UserStatistic> {
 	
 	private int userId;
 	private User user;
+	private int gameId;
 	
 	private static int[] sortKeys = new int[3];
 	private static boolean[] desc = new boolean[3];
@@ -55,11 +58,17 @@ public class UserStatistic implements Comparable<UserStatistic> {
 		public int getIndex() {
 			return index;
 		}
+		
+		@Override
+		public String toString() {
+			return name();
+		}
 	}
 	
-	public UserStatistic(int userId, User user) {
+	public UserStatistic(int userId, User user, int gameId) {
 		this.userId = userId;
 		this.user = user;
+		this.gameId = gameId;
 	}
 	
 	@Override
@@ -177,5 +186,45 @@ public class UserStatistic implements Comparable<UserStatistic> {
 	
 	public int[] getValues() {
 		return values;
+	}
+	public Vector<String> getColumnVector() {
+		Vector<String> cols = new Vector<String>(values.length+1);
+		cols.add("Username");
+		cols.add("Game-ID");
+		for (Value value : Value.values()) {
+			cols.addElement(value.name());
+		}
+		return cols;
+	}
+	public static Vector<Value> getValueSelections() {
+		Vector<Value> cols = new Vector<Value>();
+		for (Value value : Value.values()) {
+			cols.addElement(value);
+		}
+		return cols;
+	}
+	public Vector<Object> getDataVector() {
+		Vector<Object> vec = new Vector<Object>(values.length+1);
+		vec.add(user.getUsername());
+		vec.add(gameId);
+		for (int i : values) {
+			vec.add(i);
+		}
+		return vec;
+	}
+	
+	public static void setSortKey(int key, int order, boolean desc) {
+		sortKeys[order-1] = key;
+		UserStatistic.desc[order-1] = desc;
+	}
+	
+	public int getUserId() {
+		return userId;
+	}
+	public User getUser() {
+		return user;
+	}
+	public int getGameId() {
+		return gameId;
 	}
 }
