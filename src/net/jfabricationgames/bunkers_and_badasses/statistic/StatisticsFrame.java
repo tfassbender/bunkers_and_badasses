@@ -3,6 +3,7 @@ package net.jfabricationgames.bunkers_and_badasses.statistic;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -36,7 +38,6 @@ import net.jfabricationgames.bunkers_and_badasses.main_menu.MainMenuFrame;
 import net.jfabricationgames.bunkers_and_badasses.statistic.GameDetail.Display;
 import net.jfabricationgames.bunkers_and_badasses.statistic.UserStatistic.Value;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.ListSelectionModel;
 
 public class StatisticsFrame extends JFrame {
 	
@@ -91,8 +92,11 @@ public class StatisticsFrame extends JFrame {
 		
 		setTitle("Statistiken - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(StatisticsFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1100, 700);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 1200, 750);
+		setMinimumSize(new Dimension(1200, 750));
+		setLocationRelativeTo(null);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -125,9 +129,11 @@ public class StatisticsFrame extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[grow]", "[60px:n:60px][grow]"));
+		panel.setLayout(new MigLayout("", "[grow]", "[70px:n:70px][grow]"));
 		
 		ImagePanel panel_headline = new ImagePanel(MainMenuFrame.getImageLoader().loadImage("jfg/headline.png"));
+		panel_headline.setCentered(true);
+		panel_headline.setAdaptSizeKeepProportion(true);
 		panel_headline.setBackground(Color.GRAY);
 		panel.add(panel_headline, "cell 0 0,grow");
 		
@@ -174,7 +180,7 @@ public class StatisticsFrame extends JFrame {
 		comboBox_sort_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Value value = (Value) comboBox_sort_1.getSelectedItem();
-				if (value != null) {
+				if (value != null && chckbxAbsteigend != null) {
 					UserStatistic.setSortKey(value.getIndex(), 1, chckbxAbsteigend.isSelected());
 				}
 				MapSelection map = (MapSelection) comboBox_map.getSelectedItem();
@@ -194,8 +200,8 @@ public class StatisticsFrame extends JFrame {
 		comboBox_sort_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Value value = (Value) comboBox_sort_2.getSelectedItem();
-				if (value != null) {
-					UserStatistic.setSortKey(value.getIndex(), 2, chckbxAbsteigend.isSelected());
+				if (value != null && chckbxAbsteigend_1 != null) {
+					UserStatistic.setSortKey(value.getIndex(), 2, chckbxAbsteigend_1.isSelected());
 				}
 				MapSelection map = (MapSelection) comboBox_map.getSelectedItem();
 				if (map != null) {
@@ -214,8 +220,8 @@ public class StatisticsFrame extends JFrame {
 		comboBox_sort_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Value value = (Value) comboBox_sort_3.getSelectedItem();
-				if (value != null) {
-					UserStatistic.setSortKey(value.getIndex(), 3, chckbxAbsteigend.isSelected());
+				if (value != null && chckbxAbsteigend_2 != null) {
+					UserStatistic.setSortKey(value.getIndex(), 3, chckbxAbsteigend_2.isSelected());
 				}
 				MapSelection map = (MapSelection) comboBox_map.getSelectedItem();
 				if (map != null) {
@@ -223,7 +229,7 @@ public class StatisticsFrame extends JFrame {
 				}
 			}
 		});
-		UserStatistic.getValueSelections().forEach(header -> comboBox_sort_2.addItem(header));
+		UserStatistic.getValueSelections().forEach(header -> comboBox_sort_3.addItem(header));
 		panel_highscores.add(comboBox_sort_3, "cell 15 1,growx");
 		
 		btnSpielDetails = new JButton("Spiel Details");
@@ -340,14 +346,16 @@ public class StatisticsFrame extends JFrame {
 	}
 	
 	private void addTableData(DefaultTableModel model, int map) {
-		model.setRowCount(0);//clear the table
-		if (map == -1) {
-			List<UserStatistic> userStatistics = analyzer.getSortedUserStatistics();
-			userStatistics.forEach(stats -> model.addRow(stats.getDataVector()));
-		}
-		else {
-			List<UserStatistic> mapStatistics = analyzer.getSortedMapStatistics(map);
-			mapStatistics.forEach(stats -> model.addRow(stats.getDataVector()));
+		if (model != null) {
+			model.setRowCount(0);//clear the table
+			if (map == -1) {
+				List<UserStatistic> userStatistics = analyzer.getSortedUserStatistics();
+				userStatistics.forEach(stats -> model.addRow(stats.getDataVector()));
+			}
+			else {
+				List<UserStatistic> mapStatistics = analyzer.getSortedMapStatistics(map);
+				mapStatistics.forEach(stats -> model.addRow(stats.getDataVector()));
+			}			
 		}
 	}
 }

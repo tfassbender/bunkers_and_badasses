@@ -2,6 +2,10 @@ Bunkers and Badasses - Tasks
 
 
 - Current Bugs:
+	- only one winner when there two have the same points
+	- both players want to add the final game and the statistics (causes sql error)
+	- fight system bug: all supporting troops can fall (attack supporters)
+	- fights against neutral troops seem to be buggy (falling troops)
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
 	- support request answers are not all received if they are clicked to fast... (?)

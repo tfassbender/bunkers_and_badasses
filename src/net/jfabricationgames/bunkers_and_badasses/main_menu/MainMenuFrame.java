@@ -310,6 +310,7 @@ public class MainMenuFrame extends JFrame {
 		requireSkillProfiles();
 		requireDynamicVariables();
 		requireGameOverviews();
+		requireGameStatistics();
 	}
 	
 	@Override
@@ -405,6 +406,11 @@ public class MainMenuFrame extends JFrame {
 	
 	private void requireGameOverviews() {
 		GameOverviewRequestMessage message = new GameOverviewRequestMessage();
+		client.sendMessage(message);
+	}
+	
+	private void requireGameStatistics() {
+		GameStatisticsRequestMessage message = new GameStatisticsRequestMessage();
 		client.sendMessage(message);
 	}
 	

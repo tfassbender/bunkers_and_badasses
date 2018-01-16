@@ -301,10 +301,15 @@ public class UserResource implements Serializable, Cloneable {
 			ammo -= costs[1];
 			eridium -= costs[2];
 			//add statistics
-			GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
-			stats.setUsed_credits(stats.getUsed_credits() + costs[0]);
-			stats.setUsed_ammo(stats.getUsed_ammo() + costs[1]);
-			stats.setUsed_eridium(stats.getUsed_eridium() + costs[2]);
+			if (game.getStatisticManager() != null) {
+				GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+				stats.setUsed_credits(stats.getUsed_credits() + costs[0]);
+				stats.setUsed_ammo(stats.getUsed_ammo() + costs[1]);
+				stats.setUsed_eridium(stats.getUsed_eridium() + costs[2]);				
+			}
+			else {
+				System.err.println("UserResource: gameStatisticManager is null!");
+			}
 		}
 	}
 	

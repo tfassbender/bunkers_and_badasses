@@ -652,7 +652,7 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 		try (Statement statement = con.createStatement()) {
 			for (User user : statistics.getStatistics().keySet()) {
 				//load the user ids from the database
-				result = statement.executeQuery("SELECT id from bunkers_and_badasses.users WHERE username = " + user);
+				result = statement.executeQuery("SELECT id from bunkers_and_badasses.users WHERE username = '" + user + "'");
 				if (result.next()) {
 					statistics.getStatistics(user).setUser_id(result.getInt(1));
 				}
@@ -679,15 +679,6 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 					cause = "result can't be closed";
 				}
 			}
-			try {
-				con.close();
-			}
-			catch (SQLException sqle) {
-				sqle.printStackTrace();
-				sqle.printStackTrace();
-				statisticsSuccessful = false;
-				cause = "connection can't be closed";
-			}
 		}
 		//add the statistics to the database
 		String query = "INSERT INTO bunkers_and_badasses.statistics(`user_id`, `game_id`, `position`, `players`, `points`, `points_fight`, "
@@ -711,6 +702,17 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 			statisticsSuccessful = false;
 			cause = "exception in statement 2";
 		}
+		finally {
+			try {
+				con.close();
+			}
+			catch (SQLException sqle) {
+				sqle.printStackTrace();
+				sqle.printStackTrace();
+				statisticsSuccessful = false;
+				cause = "connection can't be closed";
+			}
+		}
 		serverLogger.addLog("added statistics to the database (" + (statisticsSuccessful ? "successful" : "NOT successful: " + cause) + ")");
 		return statisticsSuccessful;
 	}
@@ -721,8 +723,10 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 	public void loadStatistics(GameStatisticsRequestMessage message, JFGConnection connection) {
 		Connection con = JFGDatabaseConnection.getJFGDefaultConnection();
 		ResultSet result = null;
-		String query = "SELECT s.*, u.username, m.map_id, map.name FROM statistics s JOIN users u ON s.user_id = u.id "
-				+ "JOIN game_maps m ON m.game_id = s.game_id JOIN maps map ON m.map_id = map.id";
+		String query = "SELECT s.*, u.username, m.map_id, map.name FROM bunkers_and_badasses.statistics s "
+				+ "JOIN bunkers_and_badasses.users u ON s.user_id = u.id "
+				+ "JOIN bunkers_and_badasses.game_maps m ON m.game_id = s.game_id "
+				+ "JOIN bunkers_and_badasses.maps map ON m.map_id = map.id";
 		List<GameStatistic> statistics = new ArrayList<GameStatistic>();
 		try (Statement statement = con.createStatement()) {
 			result = statement.executeQuery(query);
