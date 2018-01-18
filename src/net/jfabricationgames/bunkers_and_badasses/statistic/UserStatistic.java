@@ -8,12 +8,12 @@ public class UserStatistic implements Comparable<UserStatistic> {
 	
 	private int userId;
 	private User user;
-	private int gameId;
+	//private int gameId;
 	
 	private static int[] sortKeys = new int[3];
 	private static boolean[] desc = new boolean[3];
 	
-	private int[] values = new int[32];
+	private float[] values = new float[32];
 	
 	public enum Value {
 		POSITION_AVG(0),
@@ -65,10 +65,10 @@ public class UserStatistic implements Comparable<UserStatistic> {
 		}
 	}
 	
-	public UserStatistic(int userId, User user, int gameId) {
+	public UserStatistic(int userId, User user/*, int gameId*/) {
 		this.userId = userId;
 		this.user = user;
-		this.gameId = gameId;
+		//this.gameId = gameId;
 	}
 	
 	@Override
@@ -184,13 +184,13 @@ public class UserStatistic implements Comparable<UserStatistic> {
 		values[Value.COMMANDS_USED_DEFEND_AVG.getIndex()] /= values[Value.GAMES_PLAYED.getIndex()];
 	}
 	
-	public int[] getValues() {
+	public float[] getValues() {
 		return values;
 	}
-	public Vector<String> getColumnVector() {
-		Vector<String> cols = new Vector<String>(values.length+1);
+	public static Vector<String> getColumnVector() {
+		Vector<String> cols = new Vector<String>();
 		cols.add("Username");
-		cols.add("Game-ID");
+		//cols.add("Game-ID");
 		for (Value value : Value.values()) {
 			cols.addElement(value.name());
 		}
@@ -206,9 +206,9 @@ public class UserStatistic implements Comparable<UserStatistic> {
 	public Vector<Object> getDataVector() {
 		Vector<Object> vec = new Vector<Object>(values.length+1);
 		vec.add(user.getUsername());
-		vec.add(gameId);
-		for (int i : values) {
-			vec.add(i);
+		//vec.add(gameId);
+		for (float f : values) {
+			vec.add(f);
 		}
 		return vec;
 	}
@@ -224,7 +224,7 @@ public class UserStatistic implements Comparable<UserStatistic> {
 	public User getUser() {
 		return user;
 	}
-	public int getGameId() {
+	/*public int getGameId() {
 		return gameId;
-	}
+	}*/
 }

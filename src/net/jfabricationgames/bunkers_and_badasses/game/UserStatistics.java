@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
 
+@Deprecated
 public class UserStatistics implements Serializable {
 	
 	private static final long serialVersionUID = 549893613891342818L;

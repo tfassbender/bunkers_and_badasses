@@ -22,6 +22,7 @@ public class StatisticsAnalyzer {
 	public StatisticsAnalyzer(List<GameStatistic> statistics, User localUser) {
 		this.statistics = statistics;
 		createUserStatistics(statistics);
+		Collections.sort(statistics);
 		localUserId = -1;
 		for (GameStatistic stats : statistics) {
 			if (stats.getUser().equals(localUser)) {
@@ -39,7 +40,7 @@ public class StatisticsAnalyzer {
 			//create the global user statistics
 			UserStatistic userStats = userStatistics.get(stats.getUser_id());
 			if (userStats == null) {
-				userStats = new UserStatistic(stats.getUser_id(), stats.getUser(), stats.getGame_id());
+				userStats = new UserStatistic(stats.getUser_id(), stats.getUser());
 				userStatistics.put(stats.getUser_id(), userStats);
 			}
 			userStats.addStatistic(stats);
@@ -51,7 +52,7 @@ public class StatisticsAnalyzer {
 			}
 			userStats = mapStats.get(stats.getUser_id());
 			if (userStats == null) {
-				userStats = new UserStatistic(stats.getUser_id(), stats.getUser(), stats.getGame_id());
+				userStats = new UserStatistic(stats.getUser_id(), stats.getUser());
 				mapStats.put(stats.getUser_id(), userStats);
 			}
 			userStats.addStatistic(stats);

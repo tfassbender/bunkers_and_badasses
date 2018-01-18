@@ -17,9 +17,11 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
+import net.jfabricationgames.bunkers_and_badasses.user.User;
+
 public class GameDetail {
 	
-	private Map<Integer, GameStatistic> gameStatistics;
+	private Map<Integer, GameStatistic> gameStatistics;//map the user id's to the game statistics of the users
 	
 	public enum Display {
 		POSITION(false, false, 0, "Position"),
@@ -93,6 +95,17 @@ public class GameDetail {
 		}
 	}
 	
+	public Map<Integer, User> userIdMap() {
+		Map<Integer, User> idMap = new HashMap<Integer, User>();
+		gameStatistics.forEach((id, stats) -> idMap.put(id, stats.getUser()));
+		return idMap;
+	}
+	public Map<User, Integer> userNameMap() {
+		Map<User, Integer> userNameMap = new HashMap<User, Integer>();
+		gameStatistics.forEach((id, stats) -> userNameMap.put(stats.getUser(), id));
+		return userNameMap;
+	}
+	
 	public GameDetail() {
 		gameStatistics = new HashMap<Integer, GameStatistic>();
 	}
@@ -158,7 +171,7 @@ public class GameDetail {
 			}
 			JFreeChart chart = ChartFactory.createPieChart3D(display.getText(), dataset, true, true, false);
 			PiePlot plot = (PiePlot) chart.getPlot();
-			PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0} = {2}", new DecimalFormat("0"), new DecimalFormat("0.0%"));
+			PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0}: {1} ({2})", new DecimalFormat("0"), new DecimalFormat("0.0%"));
 			plot.setLabelGenerator(generator);
 			chartPanel.add(new ChartPanel(chart), BorderLayout.CENTER);
 		}
@@ -174,10 +187,10 @@ public class GameDetail {
 	public String generateText(Display display, int userId) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(display.getText());
-		sb.append('\n');
+		sb.append(":\n\n");
 		if (display.chart) {
 			if (display.defaultChart) {
-				gameStatistics.forEach((id, stats) -> sb.append(stats.getUser().getUsername() + ":" + stats.asArray()[display.getIndex()] + "\n"));
+				gameStatistics.forEach((id, stats) -> sb.append(stats.getUser().getUsername() + ": " + stats.asArray()[display.getIndex()] + "\n"));
 			}
 			else {
 				GameStatistic stats = gameStatistics.get(userId);
@@ -203,72 +216,72 @@ public class GameDetail {
 						sb.append('\n');
 						break;
 					case BATTLES_PLAYER:
-						sb.append("Kämpfe Gewonnen");
+						sb.append("Kämpfe Gewonnen: ");
 						sb.append(stats.getBattles_won());
 						sb.append('\n');
-						sb.append("Kämpfe Verloren");
+						sb.append("Kämpfe Verloren: ");
 						sb.append(stats.getBattles_lost());
 						sb.append('\n');
 						break;
 					case TROOPS_KILLED_TOTAL:
-						sb.append("Normale Truppen");
+						sb.append("Normale Truppen: ");
 						sb.append(stats.getTroops_killed_normal());
 						sb.append('\n');
-						sb.append("Badass Truppen");
+						sb.append("Badass Truppen: ");
 						sb.append(stats.getTroops_killed_badass());
 						sb.append('\n');
-						sb.append("Neutrale Truppen");
+						sb.append("Neutrale Truppen: ");
 						sb.append(stats.getTroops_killed_neutral());
 						sb.append('\n');
 						break;
 					case RESOURCES_PLAYER:
-						sb.append("Credits Verbraucht");
+						sb.append("Credits Verbraucht: ");
 						sb.append(stats.getUsed_credits());
 						sb.append('\n');
-						sb.append("Munition Verbraucht");
+						sb.append("Munition Verbraucht: ");
 						sb.append(stats.getUsed_ammo());
 						sb.append('\n');
-						sb.append("Eridium Verbraucht");
+						sb.append("Eridium Verbraucht: ");
 						sb.append(stats.getUsed_eridium());
 						sb.append('\n');
 						break;
 					case SUPPORT_PLAYER:
-						sb.append("Unterstützung Erhalten (Selbst)");
+						sb.append("Unterstützung Erhalten (Selbst): ");
 						sb.append(stats.getSupport_received_self());
 						sb.append('\n');
-						sb.append("Unterstützung Erhalten (Andere)");
+						sb.append("Unterstützung Erhalten (Andere): ");
 						sb.append(stats.getSupport_received_other());
 						sb.append('\n');
-						sb.append("Unterstützung Gegeben (Andere)");
+						sb.append("Unterstützung Gegeben (Andere): ");
 						sb.append(stats.getSupport_given_other());
 						sb.append('\n');
-						sb.append("Unterstützung Verweigert");
+						sb.append("Unterstützung Verweigert: ");
 						sb.append(stats.getSupport_rejected());
 						sb.append('\n');
 						break;
 					case COMMANDS_PLAYER:
-						sb.append("Befehle - Überfall");
+						sb.append("Befehle - Überfall: ");
 						sb.append(stats.getCommands_raid());
 						sb.append('\n');
-						sb.append("Befehle - Rückzug");
+						sb.append("Befehle - Rückzug: ");
 						sb.append(stats.getCommands_retreat());
 						sb.append('\n');
-						sb.append("Befehle - Bewegung");
+						sb.append("Befehle - Bewegung: ");
 						sb.append(stats.getCommands_march());
 						sb.append('\n');
-						sb.append("Befehle - Aufbau");
+						sb.append("Befehle - Aufbau: ");
 						sb.append(stats.getCommands_build());
 						sb.append('\n');
-						sb.append("Befehle - Rekrutierung");
+						sb.append("Befehle - Rekrutierung: ");
 						sb.append(stats.getCommands_recruit());
 						sb.append('\n');
-						sb.append("Befehle - Resourcen");
+						sb.append("Befehle - Resourcen: ");
 						sb.append(stats.getCommands_resources());
 						sb.append('\n');
-						sb.append("Befehle - Unterstützung");
+						sb.append("Befehle - Unterstützung: ");
 						sb.append(stats.getCommands_support());
 						sb.append('\n');
-						sb.append("Befehle - Verteidigung");
+						sb.append("Befehle - Verteidigung: ");
 						sb.append(stats.getCommands_defense());
 						sb.append('\n');
 						break;
@@ -278,7 +291,7 @@ public class GameDetail {
 			}
 		}
 		else {
-			//only position
+			//only positions have no charts
 			sb.append(gameStatistics.get(userId).getPosition());
 		}
 		return sb.toString();

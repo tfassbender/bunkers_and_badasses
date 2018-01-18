@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
-public class GameStatistic implements Serializable {
+public class GameStatistic implements Serializable, Comparable<GameStatistic> {
 	
 	private static final long serialVersionUID = 758529797268373840L;
 
@@ -136,6 +137,117 @@ public class GameStatistic implements Serializable {
 	private int commands_resources;
 	private int commands_support;
 	private int commands_defense;
+
+	@Override
+	public int compareTo(GameStatistic stats) {
+		if (game_id != stats.getGame_id()) {
+			return game_id - stats.getGame_id();
+		}
+		else {
+			return position - stats.getPosition();
+		}
+	}
+	
+	public static Vector<String> getColumnVector() {
+		Vector<String> cols = new Vector<String>();
+		cols.add("Game-ID");
+		cols.add("User");
+		cols.add("Map");
+		cols.add("Position");
+		cols.add("Players");
+		cols.add("Points");
+		cols.add("Points_fight");
+		cols.add("Points_fields");
+		cols.add("Points_regions");
+		cols.add("Points_goals");
+		cols.add("Points_bonuses");
+		cols.add("Points_skills");
+		cols.add("Troops_killed_normal");
+		cols.add("Troops_killed_badass");
+		cols.add("Troops_killed_neutral");
+		cols.add("Troops_controlled_end");
+		cols.add("Troops_controlled_max");
+		cols.add("Fields_end");
+		cols.add("Fields_max");
+		cols.add("Regions_end");
+		cols.add("Regions_value_end");
+		cols.add("Regions_max");
+		cols.add("Regions_value_max");
+		cols.add("Battles_won");
+		cols.add("Battles_lost");
+		cols.add("Heros_used_battle");
+		cols.add("Heros_used_effect");
+		cols.add("Used_credits");
+		cols.add("Used_ammo");
+		cols.add("Used_eridium");
+		cols.add("Buildings_created");
+		cols.add("Buildings_upgraded");
+		cols.add("Buildings_destroyed");
+		cols.add("Support_given_self");
+		cols.add("Support_received_self");
+		cols.add("Support_given_other");
+		cols.add("Support_received_other");
+		cols.add("Support_rejected");
+		cols.add("Commands_raid");
+		cols.add("Commands_retreat");
+		cols.add("Commands_march");
+		cols.add("Commands_build");
+		cols.add("Commands_recruit");
+		cols.add("Commands_resources");
+		cols.add("Commands_support");
+		cols.add("Commands_defense");
+		return cols;
+	}
+	public Vector<Object> getDataVector() {
+		Vector<Object> data = new Vector<Object>();
+		data.add(game_id);
+		data.add(user.getUsername());
+		data.add(map_name);
+		data.add(position);
+		data.add(players);
+		data.add(points);
+		data.add(points_fight);
+		data.add(points_fields);
+		data.add(points_regions);
+		data.add(points_goals);
+		data.add(points_bonuses);
+		data.add(points_skills);
+		data.add(troops_killed_normal);
+		data.add(troops_killed_badass);
+		data.add(troops_killed_neutral);
+		data.add(troops_controlled_end);
+		data.add(troops_controlled_max);
+		data.add(fields_end);
+		data.add(fields_max);
+		data.add(regions_end);
+		data.add(regions_value_end);
+		data.add(regions_max);
+		data.add(regions_value_max);
+		data.add(battles_won);
+		data.add(battles_lost);
+		data.add(heros_used_battle);
+		data.add(heros_used_effect);
+		data.add(used_credits);
+		data.add(used_ammo);
+		data.add(used_eridium);
+		data.add(buildings_created);
+		data.add(buildings_upgraded);
+		data.add(buildings_destroyed);
+		data.add(support_given_self);
+		data.add(support_received_self);
+		data.add(support_given_other);
+		data.add(support_received_other);
+		data.add(support_rejected);
+		data.add(commands_raid);
+		data.add(commands_retreat);
+		data.add(commands_march);
+		data.add(commands_build);
+		data.add(commands_recruit);
+		data.add(commands_resources);
+		data.add(commands_support);
+		data.add(commands_defense);
+		return data;
+	}
 	
 	public void prepareStatement(PreparedStatement statement) throws SQLException {
 		statement.setInt(1, user_id);
