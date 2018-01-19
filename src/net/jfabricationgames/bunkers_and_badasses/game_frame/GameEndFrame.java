@@ -59,10 +59,12 @@ public class GameEndFrame extends JFrame implements ConfirmDialogListener {
 		this.client = client;
 		this.userPoints = game.getPointManager().getSortedPointList();
 		
-		//add the final statistic values
-		game.getStatisticManager().addEndValues(game);
-		//store the final game in the database if the local player is the starting player
-		Game.getGameStore().storeGame(game, true);
+		if (game.getStartingPlayer().equals(game.getLocalUser())) {
+			//add the final statistic values
+			game.getStatisticManager().addEndValues(game);
+			//store the final game in the database if the local player is the starting player
+			Game.getGameStore().storeGame(game, true);
+		}
 		
 		setTitle("Spiel Ende - Bunkers and Badasses");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameEndFrame.class.getResource("/net/jfabricationgames/bunkers_and_badasses/images/jfg/icon.png")));
@@ -117,7 +119,16 @@ public class GameEndFrame extends JFrame implements ConfirmDialogListener {
 		lblUltimativenSuperbadassAller.setFont(new Font("Tahoma", Font.BOLD, 22));
 		panel_winner.add(lblUltimativenSuperbadassAller, "cell 0 1 3 1,alignx center");
 		
-		txtWinner = new JTextField(userPoints.get(0).getUser().getUsername());
+		StringBuilder winner = new StringBuilder();
+		winner.append(userPoints.get(0).getUser().getUsername());
+		for (int i = 1; i < userPoints.size(); i++) {
+			if (userPoints.get(i).getPoints() == userPoints.get(0).getPoints()) {
+				//two or more players have the same score
+				winner.append(", ");
+				winner.append(userPoints.get(i).getUser().getUsername());
+			}
+		}
+		txtWinner = new JTextField(winner.toString());
 		txtWinner.setForeground(Color.BLACK);
 		txtWinner.setHorizontalAlignment(SwingConstants.CENTER);
 		txtWinner.setBackground(Color.LIGHT_GRAY);

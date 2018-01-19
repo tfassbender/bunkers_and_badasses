@@ -253,13 +253,16 @@ public class UserResource implements Serializable, Cloneable {
 			ammo -= costs[BuildingStorage.PRICE_AMMO];
 			eridium -= costs[BuildingStorage.PRICE_ERIDIUM];
 			//add statistics
-			GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
-			stats.setUsed_credits(stats.getUsed_credits() + costs[BuildingStorage.PRICE_CREDITS]);
-			stats.setUsed_ammo(stats.getUsed_ammo() + costs[BuildingStorage.PRICE_AMMO]);
-			stats.setUsed_eridium(stats.getUsed_eridium() + costs[BuildingStorage.PRICE_ERIDIUM]);
-			resourceLogger.addLog("user [" + user + "]: building costs payed [" + costs[BuildingStorage.PRICE_CREDITS] + " credits " + 
-					costs[BuildingStorage.PRICE_AMMO] + " ammo " + costs[BuildingStorage.PRICE_ERIDIUM] + " eririum]. Current resources [" + 
-					credits + " credits " + ammo + " ammo " + eridium + " eririum]");
+			if (game != null) {
+				//game can be null in older game versions (before 0.5.0)
+				GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+				stats.setUsed_credits(stats.getUsed_credits() + costs[BuildingStorage.PRICE_CREDITS]);
+				stats.setUsed_ammo(stats.getUsed_ammo() + costs[BuildingStorage.PRICE_AMMO]);
+				stats.setUsed_eridium(stats.getUsed_eridium() + costs[BuildingStorage.PRICE_ERIDIUM]);
+				resourceLogger.addLog("user [" + user + "]: building costs payed [" + costs[BuildingStorage.PRICE_CREDITS] + " credits " + 
+						costs[BuildingStorage.PRICE_AMMO] + " ammo " + costs[BuildingStorage.PRICE_ERIDIUM] + " eririum]. Current resources [" + 
+						credits + " credits " + ammo + " ammo " + eridium + " eririum]");				
+			}
 		}
 	}
 	
@@ -301,14 +304,12 @@ public class UserResource implements Serializable, Cloneable {
 			ammo -= costs[1];
 			eridium -= costs[2];
 			//add statistics
-			if (game.getStatisticManager() != null) {
+			if (game != null) {
+				//game can be null in older game versions (before 0.5.0)
 				GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
 				stats.setUsed_credits(stats.getUsed_credits() + costs[0]);
 				stats.setUsed_ammo(stats.getUsed_ammo() + costs[1]);
 				stats.setUsed_eridium(stats.getUsed_eridium() + costs[2]);				
-			}
-			else {
-				System.err.println("UserResource: gameStatisticManager is null!");
 			}
 		}
 	}

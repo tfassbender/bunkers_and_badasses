@@ -349,8 +349,10 @@ public class FightManager implements Serializable {
 				if (currentFight.getDefendingPlayer() == null) {
 					if (currentFight.getWinner() == Fight.ATTACKERS) {
 						//attacking player wins
+						int fallingTroopsWinner = currentFight.calculateFallingTroopsSkagFight();
 						currentFight.setRetreatField(null);//no retreat for skags
-						currentFight.setFallingTroopsTotal(currentFight.calculateFallingTroopsSkagFight());
+						currentFight.setFallingTroopsTotal(fallingTroopsWinner);
+						currentFight.setFallingTroopsWinner(fallingTroopsWinner);
 						currentFight.setFallingTroopsLooser(currentFight.getDefendingStrength());
 						Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
 						fallenTroops.put(currentFight.getDefendingField(), new int[2]);//no retreat -> all skags fall
@@ -458,8 +460,10 @@ public class FightManager implements Serializable {
 				if (currentFight.getDefendingPlayer() == null) {
 					//fight against neutral troops (only occurs here if there is support against them) 
 					if (currentFight.getWinner() == Fight.ATTACKERS) {
+						int fallingTroopsWinner = currentFight.calculateFallingTroopsSkagFight();
 						currentFight.setRetreatFieldChosen(true);//skags can't retreat
-						currentFight.setFallingTroopsTotal(currentFight.calculateFallingTroopsSkagFight());
+						currentFight.setFallingTroopsTotal(fallingTroopsWinner);
+						currentFight.setFallingTroopsWinner(fallingTroopsWinner);
 						currentFight.setFallingTroopsLooser(currentFight.getDefendingStrength());
 						Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
 						fallenTroops.put(currentFight.getDefendingField(), new int[2]);//no retreat -> all skags fall

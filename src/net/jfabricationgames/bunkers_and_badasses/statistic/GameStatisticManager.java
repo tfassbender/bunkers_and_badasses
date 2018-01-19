@@ -55,9 +55,13 @@ public class GameStatisticManager implements Serializable {
 	public void addEndValues(Game game) {
 		//the player's positions
 		List<UserPoints> sortedPoints = game.getPointManager().getSortedPointList();
+		int position = 1;
 		for (int i = 0; i < sortedPoints.size(); i++) {
 			GameStatistic stats = statistics.get(sortedPoints.get(i).getUser());
-			stats.setPosition(i+1);
+			if (i > 0 && sortedPoints.get(i).getPoints() < sortedPoints.get(i-1).getPoints()) {
+				position = i+1;
+			}
+			stats.setPosition(position);
 			stats.setPoints(sortedPoints.get(i).getPoints());
 		}
 		//controlled troops, fields, regions

@@ -205,6 +205,8 @@ public class Fight implements Serializable {
 		//new implementation based on the new rules (version 0.4.1; january 2018)
 		//see project_doc/fight/falling_troops_calculation_activity.png for details
 		int[] fallingTroops = new int[2];//[0]: min; [1]: max
+		int maxFallingTroopsAttacker;
+		int maxFallingTroopsDefender;
 		
 		//calculate maximum falling troops
 		int attackingTroops = getAttackingTroopStrength();
@@ -216,6 +218,8 @@ public class Fight implements Serializable {
 			defendingTroops += field.getTroopStrength();
 		}
 		fallingTroops[1] = Math.min(attackingTroops, defendingTroops);
+		maxFallingTroopsAttacker = attackingTroops;
+		maxFallingTroopsDefender = defendingTroops;
 		
 		//winner keeps at least one troop
 		boolean banditsLeft;
@@ -225,17 +229,33 @@ public class Fight implements Serializable {
 		else {
 			banditsLeft = defendingField.getNormalTroops() > 0;
 		}
-		if (winner == ATTACKERS && attackingTroops <= defendingTroops || winner == DEFENDERS && attackingTroops >= defendingTroops) {
+		if (winner == ATTACKERS) {
+			if (banditsLeft) {
+				maxFallingTroopsAttacker -= 1;
+			}
+			else {
+				maxFallingTroopsAttacker -= 2;
+			}
+		}
+		else {
+			if (banditsLeft) {
+				maxFallingTroopsDefender -= 1;
+			}
+			else {
+				maxFallingTroopsDefender -= 2;
+			}
+		}
+		/*if (winner == ATTACKERS && attackingTroops <= defendingTroops || winner == DEFENDERS && attackingTroops >= defendingTroops) {
 			if (banditsLeft) {
 				fallingTroops[1] -= 1;
 			}
 			else {
 				fallingTroops[1] -= 2;
 			}
-		}
+		}*/
 		
 		//support troops keep at least one troop (also loosing supporters)
-		List<Field> supportFields;
+		/*List<Field> supportFields;
 		if (attackingTroops > defendingTroops) {
 			supportFields = defenceSupporters;
 		}
@@ -249,8 +269,25 @@ public class Fight implements Serializable {
 			else {
 				fallingTroops[1] -= 2;
 			}
-		}			
-		
+		}*/
+		for (Field field : attackSupporters) {
+			if (field.getNormalTroops() > 0) {
+				maxFallingTroopsAttacker -= 1;
+			}
+			else {
+				maxFallingTroopsAttacker -= 2;
+			}
+		}
+		for (Field field : defenceSupporters) {
+			if (field.getNormalTroops() > 0) {
+				maxFallingTroopsDefender -= 1;
+			}
+			else {
+				maxFallingTroopsDefender -= 2;
+			}
+		}
+		//choose the minimum of the falling troops
+		fallingTroops[1] = Math.min(maxFallingTroopsAttacker, maxFallingTroopsDefender);
 		
 		//minimum is half maximum
 		fallingTroops[0] = fallingTroops[1]/2;//floored by integer division
