@@ -38,6 +38,7 @@ public class PointManager implements Serializable {
 			JFGLoggerManager.addLogger(pointLogger);
 		}
 		catch (IOException ioe) {
+			pointLogger = new JFGLogger();
 			ioe.printStackTrace();
 		}
 	}

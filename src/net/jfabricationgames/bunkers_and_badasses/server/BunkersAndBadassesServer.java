@@ -81,6 +81,7 @@ public class BunkersAndBadassesServer extends JFGSecureLoginServer {
 			JFGLoggerManager.addLogger(serverLogger);
 		}
 		catch (IOException ioe) {
+			serverLogger = new JFGLogger();
 			ioe.printStackTrace();
 		}
 		userMap = new HashMap<User, JFGConnection>();

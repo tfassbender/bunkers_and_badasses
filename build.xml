@@ -30,7 +30,7 @@
 	<property name="path_elem_jfg_database_login">jfg_database_login_lib_V1.3.0.jar</property>
 	<property name="path_elem_jfg_jdbc_connector">jfg_jdbc_connectorV1.0.1.jar</property>
 	<property name="path_elem_jfg_server">jfg_serverV1.3.1.jar</property>
-	<property name="path_elem_jfg_logger">jfg_loggerV1.0.2.jar</property>
+	<property name="path_elem_jfg_logger">jfg_loggerV1.0.3.jar</property>
 	<property name="path_elem_miglayout">miglayout15-swing.jar</property>
 	<property name="path_elem_mysql_connector">mysql-connector-java-5.1.39-bin.jar</property>
 	<property name="path_elem_jfreechart">lib/jfreechart-1.0.19.jar</property>

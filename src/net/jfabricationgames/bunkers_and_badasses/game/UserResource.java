@@ -36,6 +36,7 @@ public class UserResource implements Serializable, Cloneable {
 			JFGLoggerManager.addLogger(resourceLogger);
 		}
 		catch (IOException ioe) {
+			resourceLogger = new JFGLogger();
 			ioe.printStackTrace();
 		}
 	}

@@ -24,6 +24,7 @@ public class BunkersAndBadassesConnection extends JFGSecureMessageConnection {
 				JFGLoggerManager.addLogger(communicationLogger);
 			}
 			catch (IOException ioe) {
+				communicationLogger = new JFGLogger();
 				ioe.printStackTrace();
 			}
 		}

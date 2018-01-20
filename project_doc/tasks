@@ -12,7 +12,6 @@ Bunkers and Badasses - Tasks
 	- database server keep alive
 	- add listing of gained resources (and lost standard resources for fields, ...) to the resource frame
 	- implement hero functions
-	- create the statistics of a game and store them in the database when the game ends
 
 - New ideas:
 	- maybe soundtrack

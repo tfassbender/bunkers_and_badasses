@@ -304,7 +304,7 @@ public class StatisticsFrame extends JFrame {
 		panel_chart.setLayout(new BorderLayout(0, 0));
 		
 		ImagePanel panel_image = new ImagePanel(MainMenuFrame.getImageLoader().loadImage("game_frame/claptrap_4.png"));
-		panel_image.setToolTipText("CL4P-TP. Aber seine Freunde nennen ihn Claptrap (also das w\u00FCrden Sie, wenn sie nicht tot w\u00E4hren, ... oder je existiert h\u00E4tten...)");
+		panel_image.setToolTipText("<html>CL4P-TP. Aber seine Freunde nennen ihn Claptrap <br>\r\n(also das w\u00FCrden Sie, wenn sie nicht tot w\u00E4hren, ... oder je existiert h\u00E4tten...)</html>");
 		panel_image.setCentered(true);
 		panel_image.setAdaptSizeKeepProportion(true);
 		panel_image.setBackground(Color.GRAY);
