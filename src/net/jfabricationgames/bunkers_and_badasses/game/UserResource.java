@@ -245,6 +245,10 @@ public class UserResource implements Serializable, Cloneable {
 		int[] costs = building.getExtensionPrice();
 		payBuildingCosts(costs);
 	}
+	public void payBuildingDestruction() throws ResourceException {
+		int[] costs = Building.getStorage().getBuildingBreakOffPrices();
+		payBuildingCosts(costs);
+	}
 	private void payBuildingCosts(int[] costs) throws ResourceException {
 		if (costs[BuildingStorage.PRICE_CREDITS] > credits || costs[BuildingStorage.PRICE_AMMO] > ammo || costs[BuildingStorage.PRICE_ERIDIUM] > eridium) {
 			throw new ResourceException("Not enough resources to pay this building.");

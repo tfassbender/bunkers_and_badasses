@@ -786,10 +786,16 @@ public class CommandExecutionPanel extends JPanel {
 							new ErrorDialog("Du kannst doch nicht Arschgauls Palast abreißen!!!\nWas soll der Scheiß?!");
 						}
 						else {
-							selectedField.setBuilding(new EmptyBuilding());
-							GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
-							stats.setBuildings_destroyed(stats.getBuildings_destroyed() + 1);
-							commandExecuted = true;
+							try {
+								resourceManager.payBuildingDestruction(game.getLocalUser());
+								selectedField.setBuilding(new EmptyBuilding());
+								GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
+								stats.setBuildings_destroyed(stats.getBuildings_destroyed() + 1);
+								commandExecuted = true;								
+							}
+							catch (ResourceException re) {
+								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+							}
 						}
 					}
 				}

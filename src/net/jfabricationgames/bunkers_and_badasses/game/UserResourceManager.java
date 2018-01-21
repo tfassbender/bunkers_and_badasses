@@ -127,6 +127,9 @@ public class UserResourceManager implements Serializable{
 	public void payBuildingUpgrade(Building building, User user) throws ResourceException {
 		resources.get(user).payBuildingUpgrade(building);
 	}
+	public void payBuildingDestruction(User user) throws ResourceException {
+		resources.get(user).payBuildingDestruction();
+	}
 	
 	public void payRecroutedTroops(int normal, int badass, int upgrades, User user) throws ResourceException {
 		resources.get(user).payRecroutedTroops(normal, badass, upgrades);

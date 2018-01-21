@@ -29,7 +29,7 @@ public class GameTurnManager implements Serializable {
 		this.resourceManager = game.getResourceManager();
 		//this.pointManager = game.getPointManager();
 		numTurns = Game.getGameVariableStorage().getGameTurns();
-		turn = 8;//set turn = 9 for debugging game end
+		turn = 0;//set turn = 9 for debugging game end
 	}
 	
 	public void merge(GameTurnManager manager) {
