@@ -141,10 +141,10 @@ public class GameStatistic implements Serializable, Comparable<GameStatistic> {
 	@Override
 	public int compareTo(GameStatistic stats) {
 		if (game_id != stats.getGame_id()) {
-			return game_id - stats.getGame_id();
+			return stats.getGame_id() - game_id;
 		}
 		else {
-			return position - stats.getPosition();
+			return stats.getPosition() - position;
 		}
 	}
 	

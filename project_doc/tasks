@@ -7,6 +7,8 @@ Bunkers and Badasses - Tasks
 	- support request answers are not all received if they are clicked to fast... (?)
 
 - Next versions:
+	- highlight current turn in turn goal dialog
+	- resource info: list resources per building and add skill resources in the summary
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)
 	- add a summary of a move in a confirm dialog before executing a move (and the option to turn the confirm dialog off)
 	- database server keep alive

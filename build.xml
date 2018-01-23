@@ -81,6 +81,11 @@ Build on: ${timestamp}</echo>
 build_date=${timestamp}</echo>
 		</sequential>
 	</target>
+	
+	<target name="generate_run_scripts" depends="init">
+		<echo file="${build}/run_bunkers_and_badasses.bat">java -jar -Xms2048m data/${project_name_client}_${version}.jar</echo>
+		<echo file="${build}/run_bunkers_and_badasses.sh">java -jar -Xms2048m data/${project_name_client}_${version}.jar</echo>
+	</target>
 
 	<target name="compile_src" depends="init">
 		<javac srcdir="${src}" destdir="${build}" encoding="UTF-8" includeantruntime="false">
@@ -119,15 +124,15 @@ build_date=${timestamp}</echo>
 		<antcall target="build_jar_server" />
 	</target>
 	
-	<target name="build_release" depends="build_jars">
+	<target name="build_release" depends="build_jars, generate_run_scripts">
 		<mkdir dir="${release_dir}"/>
 		<mkdir dir="${release}"/>
 		<mkdir dir="${release}/data"/>
 		<mkdir dir="${release}/boards"/>
 		<copy todir="${release}">
 			<fileset dir="project_doc" includes="bunkers_and_badasses_*.pdf" />
-			<fileset dir="project_doc" includes="run_bunkers_and_badasses.*" />
 			<fileset dir="project_doc" includes="bab.ico" />
+			<fileset dir="${build}" includes="run_bunkers_and_badasses.*" />
 		</copy>
 		<copy todir="${release}/data">
 			<fileset dir="${dist}/lib" includes="${project_name_client}_${version}.jar" />
@@ -149,6 +154,7 @@ build_date=${timestamp}</echo>
 			</fileset>
 			<fileset dir="." includes="${build}/build_timestamp" />
 			<zipgroupfileset dir="." includes="*.jar" />
+			<zipgroupfileset dir="." includes="lib/*.jar" />
 		</jar>
 	</target>
 
@@ -163,6 +169,7 @@ build_date=${timestamp}</echo>
 			</fileset>-->
 			<fileset dir="." includes="${build}/build_timestamp" />
 			<zipgroupfileset dir="." includes="*.jar" />
+			<zipgroupfileset dir="." includes="lib/*.jar" />
 		</jar>
 	</target>
 
