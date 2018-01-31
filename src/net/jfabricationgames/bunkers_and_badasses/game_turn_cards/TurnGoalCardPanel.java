@@ -36,4 +36,13 @@ public class TurnGoalCardPanel extends ImagePanel {
 	public TurnGoal getTurnGoal() {
 		return turnGoal;
 	}
+	
+	public void setMarked(boolean marked) {
+		if (marked) {
+			setBackground(Color.LIGHT_GRAY);
+		}
+		else {
+			setBackground(Color.GRAY);
+		}
+	}
 }

@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -18,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -31,6 +35,8 @@ import com.jfabricationgames.toolbox.properties.dataView.PropertiesFile;
 import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfile;
+import net.jfabricationgames.bunkers_and_badasses.game.SkillProfileManager;
 import net.jfabricationgames.bunkers_and_badasses.game.UserResource;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
@@ -45,7 +51,6 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.building.Tannis
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.TinyTinasMine;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.TorguesBadassDome;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextArea;
 
 public class ResourceInfoFrame extends JFrame {
 	
@@ -459,14 +464,27 @@ public class ResourceInfoFrame extends JFrame {
 		int ammo = 0;
 		int eridium = 0;
 		buildingsPlayerListModel.removeAllElements();
+		SkillProfile skillProfile = game.getSkillProfileManager().getSelectedProfile(game.getLocalUser());
+		List<FieldBuilding> fieldBuildings = new ArrayList<FieldBuilding>(game.getBoard().getFields().size());
 		for (Field field : game.getBoard().getFields()) {
 			if (field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser())) {
 				credits += field.getBuilding().getCreditMining();
 				ammo += field.getBuilding().getAmmoMining();
 				eridium += field.getBuilding().getEridiumMining();
-				buildingsPlayerListModel.addElement(new FieldBuilding(field, field.getBuilding()));
+				if (field.getBuilding().getCreditMining() > 0) {
+					credits += SkillProfileManager.CREDITS_BUILDING_SKILL_LEVEL[skillProfile.getCreditsBuilding()];
+				}
+				if (field.getBuilding().getAmmoMining() > 0) {
+					ammo += SkillProfileManager.AMMO_BUILDING_SKILL_LEVEL[skillProfile.getAmmoBuilding()];
+				}
+				if (field.getBuilding().getEridiumMining() > 0) {
+					eridium += SkillProfileManager.ERIDIUM_BUILDING_SKILL_LEVEL[skillProfile.getEridiumBuilding()];
+				}
+				fieldBuildings.add(new FieldBuilding(field, field.getBuilding(), game.getSkillProfileManager().getSelectedProfile(game.getLocalUser())));
 			}
 		}
+		Collections.sort(fieldBuildings);
+		fieldBuildings.forEach(fb -> buildingsPlayerListModel.addElement(fb));
 		txtCredits_1.setText(Integer.toString(credits));
 		txtAmmo_1.setText(Integer.toString(ammo));
 		txtEridium_1.setText(Integer.toString(eridium));

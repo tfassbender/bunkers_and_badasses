@@ -231,6 +231,9 @@ public class TurnGoalTurnBonusDialog extends JDialog implements TurnBonusCardSel
 			TurnGoalCardPanel imagePanel = new TurnGoalCardPanel();
 			if (game.getTurnManager().getGameTurnGoalManager().turnGoalsAvialable()) {
 				imagePanel.setTurnGoal(game.getTurnManager().getGameTurnGoalManager().getTurnGoal(i));
+				if (game.getTurnManager().getTurn() == i) {
+					imagePanel.setMarked(true);
+				}
 			}
 			panel_turn_goal_list.add(imagePanel, "cell " + i + " 1,grow");
 		}

@@ -676,6 +676,8 @@ public class CommandExecutionPanel extends JPanel {
 								}
 							}
 						}
+						//add the field itselves to the list
+						fieldTargetModel.addElement(field);
 						if (defaultSelect != -1) {
 							list_target_field.setSelectedIndex(defaultSelect);
 						}

@@ -227,4 +227,8 @@ public abstract class Building implements Serializable {
 	public boolean isCommandExecutable() {
 		return commandExecutable;
 	}
+	
+	public int getBuildingId() {
+		return buildingId;
+	}
 }
