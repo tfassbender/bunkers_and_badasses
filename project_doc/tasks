@@ -4,12 +4,11 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
-	- retreat commands don't work
-	- the fight manager can't merge fights if the messages come not in order (merge before fight start...)
 
 - Next versions:
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)
 	- add a summary of a move in a confirm dialog before executing a move (and the option to turn the confirm dialog off)
+	- after long games the server seems to not be able to hold the game communication...
 	- database server keep alive
 	- add listing of gained resources (and lost standard resources for fields, ...) to the resource frame
 	- implement hero functions

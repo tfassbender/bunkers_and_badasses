@@ -104,6 +104,10 @@ public class FightManager implements Serializable {
 			fallenTroops.put(targetField, new int[2]);
 			currentFight.setFallenTroops(fallenTroops);
 			currentFight.setFallenTroopsChosen(true);
+			fightExecutionFrame.clearAll();//resets stored fields
+			fightExecutionFrame.setVisible(true);
+			fightExecutionFrame.requestFocus();
+			fightExecutionFrame.update();
 		}
 		else {
 			if (targetField.getAffiliation() == null) {
@@ -431,78 +435,80 @@ public class FightManager implements Serializable {
 	 */
 	private void mergeFight(Fight fight) {
 		boolean fightEnded = false;
-		//merge the supports and add the strength
-		if (fight.getBattleState() == Fight.STATE_SUPPORT) {
-			if (fight.getAttackSupporters().size() > currentFight.getAttackSupporters().size()) {
-				currentFight.setAttackSupporters(fight.getAttackSupporters());
-				currentFight.calculateCurrentStrength();
+		if (currentFight != null) {
+			//merge the supports and add the strength
+			if (fight.getBattleState() == Fight.STATE_SUPPORT) {
+				if (fight.getAttackSupporters().size() > currentFight.getAttackSupporters().size()) {
+					currentFight.setAttackSupporters(fight.getAttackSupporters());
+					currentFight.calculateCurrentStrength();
+				}
+				if (fight.getDefenceSupporters().size() > currentFight.getDefenceSupporters().size()) {
+					currentFight.setDefenceSupporters(fight.getDefenceSupporters());
+					currentFight.calculateCurrentStrength();
+				}
+				if (fight.getSupportRejections().size() > currentFight.getSupportRejections().size()) {
+					currentFight.setSupportRejections(fight.getSupportRejections());
+				}
+				if (fight.allSupportersAnswered()) {
+					//all supporters answered -> set battle state
+					currentFight.setBattleState(Fight.STATE_HEROS);
+				}
 			}
-			if (fight.getDefenceSupporters().size() > currentFight.getDefenceSupporters().size()) {
-				currentFight.setDefenceSupporters(fight.getDefenceSupporters());
-				currentFight.calculateCurrentStrength();
-			}
-			if (fight.getSupportRejections().size() > currentFight.getSupportRejections().size()) {
-				currentFight.setSupportRejections(fight.getSupportRejections());
-			}
-			if (fight.allSupportersAnswered()) {
-				//all supporters answered -> set battle state
-				currentFight.setBattleState(Fight.STATE_HEROS);
-			}
-		}
-		//merge the defenders hero card (if one)
-		if (fight.isDefendingHeroChosen() && fight.getBattleState() < Fight.STATE_RETREAT_FIELD) {
-			currentFight.setDefendingHeroChosen(true);
-			currentFight.setDefendingHero(fight.getDefendingHero());
-			currentFight.setUseDefendingHeroEffect(fight.isUseDefendingHeroEffect());
-			if (currentFight.isAttackingHeroChosen()) {
-				currentFight.calculateWinner();
-				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
-				if (currentFight.getDefendingPlayer() == null) {
-					//fight against neutral troops (only occurs here if there is support against them) 
-					if (currentFight.getWinner() == Fight.ATTACKERS) {
-						int fallingTroopsWinner = currentFight.calculateFallingTroopsSkagFight();
-						currentFight.setRetreatFieldChosen(true);//skags can't retreat
-						currentFight.setFallingTroopsTotal(fallingTroopsWinner);
-						currentFight.setFallingTroopsWinner(fallingTroopsWinner);
-						currentFight.setFallingTroopsLooser(currentFight.getDefendingStrength());
-						Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
-						fallenTroops.put(currentFight.getDefendingField(), new int[2]);//no retreat -> all skags fall
-						currentFight.addFallenTroops(fallenTroops);
-						currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);	
+			//merge the defenders hero card (if one)
+			if (fight.isDefendingHeroChosen() && fight.getBattleState() < Fight.STATE_RETREAT_FIELD) {
+				currentFight.setDefendingHeroChosen(true);
+				currentFight.setDefendingHero(fight.getDefendingHero());
+				currentFight.setUseDefendingHeroEffect(fight.isUseDefendingHeroEffect());
+				if (currentFight.isAttackingHeroChosen()) {
+					currentFight.calculateWinner();
+					currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
+					if (currentFight.getDefendingPlayer() == null) {
+						//fight against neutral troops (only occurs here if there is support against them) 
+						if (currentFight.getWinner() == Fight.ATTACKERS) {
+							int fallingTroopsWinner = currentFight.calculateFallingTroopsSkagFight();
+							currentFight.setRetreatFieldChosen(true);//skags can't retreat
+							currentFight.setFallingTroopsTotal(fallingTroopsWinner);
+							currentFight.setFallingTroopsWinner(fallingTroopsWinner);
+							currentFight.setFallingTroopsLooser(currentFight.getDefendingStrength());
+							Map<Field, int[]> fallenTroops = new HashMap<Field, int[]>();
+							fallenTroops.put(currentFight.getDefendingField(), new int[2]);//no retreat -> all skags fall
+							currentFight.addFallenTroops(fallenTroops);
+							currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);	
+						}
 					}
 				}
 			}
-		}
-		//merge the retreat field
-		if (fight.isRetreatFieldChosen() && fight.getBattleState() < Fight.STATE_FALLEN_TROOP_SELECTION) {
-			currentFight.setRetreatFieldChosen(true);
-			currentFight.setRetreatField(fight.getRetreatField());
-			currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
-		}
-		//merge the falling troops (chosen by the winner)
-		if (fight.isFallingTroopsChosen() && fight.getBattleState() < Fight.STATE_FALLEN_TROOP_REMOVING) {
-			currentFight.setFallingTroopsChosen(true);
-			currentFight.setFallingTroopsTotal(fight.getFallingTroopsTotal());
-			currentFight.setFallingTroopsLooser(fight.getFallingTroopsLooser());
-			currentFight.setFallingTroopsSupport(fight.getFallingTroopsSupport());
-			currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);
-		}
-		//merge the fallen troops (as selected by all losing players)
-		if (fight.isFallenTroopsChosen() && fight.getBattleState() < Fight.STATE_FIGHT_ENDED) {
-			Map<Field, int[]> fallenTroops = currentFight.getFallenTroops();
-			for (Field field : fight.getFallenTroops().keySet()) {
-				fallenTroops.put(field, fight.getFallenTroops().get(field));
+			//merge the retreat field
+			if (fight.isRetreatFieldChosen() && fight.getBattleState() < Fight.STATE_FALLEN_TROOP_SELECTION) {
+				currentFight.setRetreatFieldChosen(true);
+				currentFight.setRetreatField(fight.getRetreatField());
+				currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_SELECTION);
 			}
-			if (currentFight.isAllFallenTroopsChosen()) {
-				//all support fields, attacking and defending field have chosen their falling troops
-				currentFight.setBattleState(Fight.STATE_FIGHT_ENDED);
-				fightEnded = true;
+			//merge the falling troops (chosen by the winner)
+			if (fight.isFallingTroopsChosen() && fight.getBattleState() < Fight.STATE_FALLEN_TROOP_REMOVING) {
+				currentFight.setFallingTroopsChosen(true);
+				currentFight.setFallingTroopsTotal(fight.getFallingTroopsTotal());
+				currentFight.setFallingTroopsLooser(fight.getFallingTroopsLooser());
+				currentFight.setFallingTroopsSupport(fight.getFallingTroopsSupport());
+				currentFight.setBattleState(Fight.STATE_FALLEN_TROOP_REMOVING);
 			}
-		}
-		sendUpdate();
-		if (fightEnded) {
-			//execute the fight end after the update was sent
-			endFight();
+			//merge the fallen troops (as selected by all losing players)
+			if (fight.isFallenTroopsChosen() && fight.getBattleState() < Fight.STATE_FIGHT_ENDED) {
+				Map<Field, int[]> fallenTroops = currentFight.getFallenTroops();
+				for (Field field : fight.getFallenTroops().keySet()) {
+					fallenTroops.put(field, fight.getFallenTroops().get(field));
+				}
+				if (currentFight.isAllFallenTroopsChosen()) {
+					//all support fields, attacking and defending field have chosen their falling troops
+					currentFight.setBattleState(Fight.STATE_FIGHT_ENDED);
+					fightEnded = true;
+				}
+			}
+			sendUpdate();
+			if (fightEnded) {
+				//execute the fight end after the update was sent
+				endFight();
+			}
 		}
 		//fightExecutionFrame.update(); //done in receive method
 	}
@@ -519,6 +525,7 @@ public class FightManager implements Serializable {
 			fightExecutionFrame.setVisible(true);
 			fightExecutionFrame.requestFocus();
 			fightExecutionFrame.clearAll();//resets all saved fields
+			fightExecutionFrame.update();
 			showSupportRequests();
 		}
 		else {
