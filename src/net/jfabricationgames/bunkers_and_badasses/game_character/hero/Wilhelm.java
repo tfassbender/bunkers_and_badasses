@@ -13,12 +13,11 @@ public class Wilhelm extends Hero {
 		imagePath = "heros/wilhelm_1.png";
 		cardImagePath = "hero_cards/card_wilhelm.png";
 		loadImage();
-		effectDescription = "Krieg:\n\nBei erfolgreichem Kampf darf der Marschbefehl mitgenommen werden";
+		effectDescription = "Krieg (Kampf):\n\nBeim Sieg dürfen nur die Hälfte der Truppen (aufgerundet) weiterziehen, aber der Marschbefehl darf mitgenommen werden";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
+	public void execute(Fight fight) {
 		//TODO
-		//Krieg: Bei erfolgreichem Kampf darf der Marschbefehl mitgenommen werden
 	}
 }

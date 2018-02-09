@@ -13,12 +13,11 @@ public class Springs extends Hero {
 		imagePath = "heros/springs_1.png";
 		cardImagePath = "hero_cards/card_springs.png";
 		loadImage();
-		effectDescription = "Raketentechnickerin:\n\nBeliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)";
+		effectDescription = "Raketentechnickerin (Zug):\n\nBeliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte gebiete verschoben werden";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//Raketentechnickerin: Beliebig viele Einheiten aus einem Gebiet k�nnen in andere schon kontrollierte gebiete verschoben werden (nicht im Kampf einsetzbar)
 	}
 }

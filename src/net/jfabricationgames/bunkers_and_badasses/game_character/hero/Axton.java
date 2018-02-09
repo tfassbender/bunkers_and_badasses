@@ -13,12 +13,11 @@ public class Axton extends Hero {
 		imagePath = "heros/axton_1.png";
 		cardImagePath = "hero_cards/card_axton.png";
 		loadImage();
-		effectDescription = "Stratege:\n\nDie gegnerische Karte kann nicht mehr gespielt werden (falls sie noch nicht gespielt wurde; Der Gegner erhällt Sie zurück)";
+		effectDescription = "Stratege (Kampf):\n\nDie gegnerische Karte kann nicht eingesetzt werden";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
+	public void execute(Fight fight) {
 		//TODO
-		//Stratege: Die gegnerische Karte kann nicht mehr gespielt werden (falls sie noch nicht gespielt wurde)
 	}
 }

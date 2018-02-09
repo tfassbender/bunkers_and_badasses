@@ -1235,6 +1235,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			for (Field field : fight.calculateRetreatFields()) {
 				fieldRetreadModel.addElement(field);
 			}
+			disableAll();
 			btnAuswhlen.setEnabled(true);
 		}
 	}

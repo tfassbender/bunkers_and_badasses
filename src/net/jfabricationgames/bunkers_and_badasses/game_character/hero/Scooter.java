@@ -13,12 +13,11 @@ public class Scooter extends Hero {
 		imagePath = "heros/scooter_3.png";
 		cardImagePath = "hero_cards/card_scooter.png";
 		loadImage();
-		effectDescription = "Catch-A-Ride:\n\nBeliebige Truppen (aus einem Feld) dürfen bis zu 2 Felder weit vorrücken und die Feindliche Linie durchbrechen wenn sie dadurch ein von ihnen kontrolliertes oder leeres Gebiet erreichen";
+		effectDescription = "Catch-A-Ride (Zug):\n\nBeliebig viele Truppen (aus einem Feld) dürfen bis zu 3 Felder weit vorrücken (und die Feindliche Linie durchbrechen, wenn sie ein eigenes Feld erreichen)";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//Catch-A-Ride: Beliebige Truppen (aus einem Feld) d�rfen bis zu 2 Felder weit vorr�cken und die Feindliche Linie durchbrechen wenn sie dadurch ein von ihnen kontrolliertes oder leeres Gebiet erreichen
 	}
 }

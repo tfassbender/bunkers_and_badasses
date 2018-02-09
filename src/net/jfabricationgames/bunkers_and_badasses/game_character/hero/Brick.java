@@ -13,12 +13,11 @@ public class Brick extends Hero {
 		imagePath = "heros/brick_1.png";
 		cardImagePath = "hero_cards/card_brick.png";
 		loadImage();
-		effectDescription = "Klopp Sie:\n\nBeim Sieg sterben beim Verlierer 3 Einheiten mehr als beim Sieger";
+		effectDescription = "Klopp Sie (Kampf):\n\nBeim Sieg sterben beim Verlierer 3 Einheiten mehr als beim Sieger";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
+	public void execute(Fight fight) {
 		//TODO
-		//Klopp Sie: Beim Sieg sterben beim Verlierer 3 Einheiten mehr als beim Sieger
 	}
 }

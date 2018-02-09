@@ -13,12 +13,11 @@ public class Roland extends Hero {
 		imagePath = "heros/roland_1.png";
 		cardImagePath = "hero_cards/card_roland.png";
 		loadImage();
-		effectDescription = "Anführer:\n\nBeim Sieg werden bis zu 3 kämpfende Einheiten aufgerüstet (nicht die unterstützenden Einheiten)";
+		effectDescription = "Anführer (Kampf):\n\nBeim Sieg werden bis zu 3 der kämpfenden Einheiten aufgerüstet (nicht die unterstützenden Einheiten)";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
+	public void execute(Fight fight) {
 		//TODO
-		//Anf�hrer: Beim Sieg werden bis zu 3 k�mpfenden Einheiten aufger�stet (nicht die unterst�tzenden Einheiten)
 	}
 }

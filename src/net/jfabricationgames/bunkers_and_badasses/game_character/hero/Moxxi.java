@@ -13,12 +13,11 @@ public class Moxxi extends Hero {
 		imagePath = "heros/moxxi_1.png";
 		cardImagePath = "hero_cards/card_mad_moxxi.png";
 		loadImage();
-		effectDescription = "Anwerbung:\n\n3 neu rekrutierte Truppen können beliebig auf dem Feld verteilt werden";
+		effectDescription = "Anwerbung (Zug):\n\n3 normale Truppen beliebig auf deine Felder verteilen";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//Anwerbung: 3 normale Truppen beliebig auf dem Feld verteilen
 	}
 }

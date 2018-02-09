@@ -13,12 +13,11 @@ public class MrTorgue extends Hero {
 		imagePath = "heros/mr_torgue_1.png";
 		cardImagePath = "hero_cards/card_mr_torgue.png";
 		loadImage();
-		effectDescription = "EXPLOSIONSGERÄUSCH:\n\n3 normale Truppen (irgentwo auf dem Feld) werden zu Badasses aufgerüstet";
+		effectDescription = "EXPLOSIONSGERÄUSCH (Zug):\n\nBis zu 3 beliebige normale Truppen werden zu BADASSES aufgerüstet";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//EXPLOSIONSGER�USCH: 3 normale Truppen werden zu Badasses aufger�stet
 	}
 }

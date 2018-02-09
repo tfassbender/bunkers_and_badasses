@@ -13,12 +13,11 @@ public class Zero extends Hero {
 		imagePath = "heros/zero_1.png";
 		cardImagePath = "hero_cards/card_zero.png";
 		loadImage();
-		effectDescription = "Doppelgänger:\n\nEin beliebiger Befehlsmarker kann nachträglich verändert werden";
+		effectDescription = "Doppelgänger (Zug):\n\nEin beliebiger Befehlsmarker kann nachträglich (kostenlos, beliebig) verändert werden";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//Doppelg�nger: Ein beliebiger Befehlsmarker kann nachtr�glich ver�ndert werden
 	}
 }

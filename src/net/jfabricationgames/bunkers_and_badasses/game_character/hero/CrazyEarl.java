@@ -13,7 +13,7 @@ public class CrazyEarl extends Hero {
 		imagePath = "heros/earl_1.png";
 		cardImagePath = "hero_cards/card_crazy_earl.png";
 		loadImage();
-		effectDescription = "Schwarzmarkt:\n\nDu erhälltst gratis Eridium";
+		effectDescription = "Schwarzmarkt (Zug):\n\nDu erhällst gratis Eridium (15) und Credits (50)";
 	}
 	
 	@Override

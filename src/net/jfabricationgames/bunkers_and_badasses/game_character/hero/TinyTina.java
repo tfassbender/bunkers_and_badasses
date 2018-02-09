@@ -13,12 +13,11 @@ public class TinyTina extends Hero {
 		imagePath = "heros/tina_1.png";
 		cardImagePath = "hero_cards/card_tiny_tina.png";
 		loadImage();
-		effectDescription = "Kabummabumms:\n\nEin beliebiges Gebäude (außer Arschgauls Palast) in einem angrenzenden Feld wird zerstört";
+		effectDescription = "Kabummabumms (Zug):\n\nEin beliebiges Gebäude (außer Arschgauls Palast) in einem angrenzenden Feld wird zerstört";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//Kabummabumms: Ein beliebiges Geb�ude (au�er Arschgauls Palast) in einem angrenzenden Feld wird zerst�rt
 	}
 }

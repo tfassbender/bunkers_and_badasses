@@ -13,7 +13,7 @@ public class Ellie extends Hero {
 		imagePath = "heros/ellie_1.png";
 		cardImagePath = "hero_cards/card_ellie.png";
 		loadImage();
-		effectDescription = "Klanfede:\n\nIn 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten (nur Banditen)";
+		effectDescription = "Klanfede (Zug):\n\nIn 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils bis zu 2 Einheiten (die Felder dürfen dannach nicht leer sein)";
 	}
 	
 	@Override

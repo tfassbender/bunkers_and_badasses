@@ -124,7 +124,7 @@ build_date=${timestamp}</echo>
 		<antcall target="build_jar_server" />
 	</target>
 	
-	<target name="build_release" depends="build_jars, generate_run_scripts">
+	<target name="build_release" depends="clean,build_jars, generate_run_scripts">
 		<mkdir dir="${release_dir}"/>
 		<mkdir dir="${release}"/>
 		<mkdir dir="${release}/data"/>

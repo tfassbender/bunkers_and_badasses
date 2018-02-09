@@ -1,6 +1,5 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 
 public class Modecai extends Hero {
@@ -14,17 +13,11 @@ public class Modecai extends Hero {
 		imagePath = "heros/modecai_1.png";
 		cardImagePath = "hero_cards/card_modecai.png";
 		loadImage();
-		effectDescription = "Sniper:\n\nZwei beliebige (normale) Einheiten dürfen irgentwo vom Feld genommen werden (auch aus mehreren Feldern; die Felder dürfen dannach nicht leer sein)";
-	}
-	
-	@Override
-	public void executeFight(Fight fight) {
-		
+		effectDescription = "Sniper (Zug):\n\nBis zu 3 beliebige (normale) Einheiten dürfen irgentwo vom Feld genommen werden (auch mehrere Felder; die Felder dürfen dannach nicht leer sein)";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//Sniper: Zwei beliebige (normale) Einheiten d�rfen irgentwo vom Feld genommen werden (auch mehrere Felder; die Felder d�rfen dannach nicht leer sein)
 	}
 }

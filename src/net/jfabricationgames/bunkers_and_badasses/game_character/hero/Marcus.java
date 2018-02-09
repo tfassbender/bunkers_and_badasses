@@ -13,7 +13,7 @@ public class Marcus extends Hero {
 		imagePath = "heros/marcus_1.png";
 		cardImagePath = "hero_cards/card_marcus.png";
 		loadImage();
-		effectDescription = "Nachladen:\n\nDu erhällst gratis Munition";
+		effectDescription = "Nachladen:\n\nDu darfst (gratis) einen Unterstützungsbefehl auf eines deiner Felder (ohne Befehl) platzieren";
 	}
 	
 	@Override

@@ -1,7 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
-import net.jfabricationgames.bunkers_and_badasses.game.Game;
 
 public class Claptrap extends Hero {
 	
@@ -14,17 +13,11 @@ public class Claptrap extends Hero {
 		imagePath = "heros/claptrap_1.png";
 		cardImagePath = "hero_cards/card_claptrap.png";
 		loadImage();
-		effectDescription = "Downgrade:\n\nBis zu 3 gegnerischen Badasses werden sofort gedowngraded (zu normalen Truppen)";
+		effectDescription = "Downgrade (Kampf):\n\nBis zu 3 gegnerische (Badass-) Truppen werden gedowngraded (vor dem Kampf)";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
+	public void execute(Fight fight) {
 		//TODO
-	}
-	
-	@Override
-	public void executeTurn(Game game) {
-		//TODO
-		//Downgrade: Alle (begrenzt ?) gegnerischen (aufger�steten) Truppen werden sofort gedowngraded
 	}
 }

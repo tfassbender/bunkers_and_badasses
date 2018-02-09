@@ -13,7 +13,7 @@ public class Lilith extends Hero {
 		imagePath = "heros/lilith_1.png";
 		cardImagePath = "hero_cards/card_lilith.png";
 		loadImage();
-		effectDescription = "Phasewalk:\n\nBis zu 5 Truppen (Normale oder Badasses) können ein feindliches Feld überspringen und hinter der feindlichen Linie angreifen";
+		effectDescription = "Phasewalk (Zug):\n\nEine kleine Infiltrationseinheit (Kampfstärke von bis zu 5) darf ein Feld Überspringen um hinter der Feindlichen Linie anzugreifen";
 	}
 	
 	@Override

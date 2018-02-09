@@ -13,12 +13,11 @@ public class Arschgaul extends Hero {
 		imagePath = "heros/arschgaul_2.png";
 		cardImagePath = "hero_cards/card_prinzessin_arschgaul.png";
 		loadImage();
-		effectDescription = "Wunderschöne Anführerin:\n\nWähle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf";
+		effectDescription = "Wunderschöne Anführerin (Zug):\n\nWähle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf";
 	}
 	
 	@Override
 	public void executeTurn(Game game) {
 		//TODO
-		//Wundersch�ne Anf�hrerin: W�hle ein Gebiet aus, dass in der gesammten Runde nicht angegriffen werden darf
 	}
 }

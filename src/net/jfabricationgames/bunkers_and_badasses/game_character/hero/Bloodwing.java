@@ -13,12 +13,11 @@ public class Bloodwing extends Hero {
 		imagePath = "heros/bloodwing_1.png";
 		cardImagePath = "hero_cards/card_bloodwing.png";
 		loadImage();
-		effectDescription = "Luftunterstützung:\n\nDie Kampfstärke der gegnerischen Karte wird um 3 gesenkt (Angriff und Verteidigung; Der wert kann nicht unter 0 fallen)";
+		effectDescription = "Luftunterstützung (Kampf):\n\nDie Kampfstärke der gegnerischen Karte wird um 3 gesenkt (Angriff und Verteidigung; Der wert kann nicht unter 0 fallen)";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
+	public void execute(Fight fight) {
 		//TODO
-		//Luftunterst�tzung: Die Kampfst�rke der gegnerischen Karte wird um 4 gesenkt (Angriff und Verteidigung; Der wert kann nicht unter 0 fallen)
 	}
 }

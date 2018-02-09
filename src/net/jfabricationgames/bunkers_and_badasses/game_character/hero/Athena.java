@@ -13,12 +13,11 @@ public class Athena extends Hero {
 		imagePath = "heros/athena_1.png";
 		cardImagePath = "hero_cards/card_athena.png";
 		loadImage();
-		effectDescription = "Aspis:\n\nBei einer Niederlage können keine deiner Truppen getötet werden";
+		effectDescription = "Aspis (Kampf):\n\nBei Niederlage können keine deiner Truppen getötet werden";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
-		//TODO
-		//Aspis: Bei Niederlage fallen keine Truppen 
+	public void execute(Fight fight) {
+		
 	}
 }

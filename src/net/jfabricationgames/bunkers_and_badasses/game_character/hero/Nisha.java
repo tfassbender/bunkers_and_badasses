@@ -13,12 +13,11 @@ public class Nisha extends Hero {
 		imagePath = "heros/nisha_1.png";
 		cardImagePath = "hero_cards/card_nisha.png";
 		loadImage();
-		effectDescription = "Blitzangriff:\n\nVerteidigt der Spieler der diese Karte einsetzt, tauschen Angreifer und Verteidiger wodurch Effekte und das Kräfteverhältniss beeinflusst werden; Nach dem Kampf darf daher keine Bewegung stattfinden (egal wer gewinnt)";
+		effectDescription = "Blitzangriff (Kampf):\n\nIm Kampf kann keine der beiden Seiten unterstützt werden";
 	}
 	
 	@Override
-	public void executeFight(Fight fight) {
+	public void execute(Fight fight) {
 		//TODO
-		//Blitzangriff: Bei Verteidigung tauschen Angreifer und Verteidiger (�ndert Punkteverh�ltniss); Nach dem Kampf darf daher keine Bewegung stattfinden (egal wer gewinnt)
 	}
 }
