@@ -6,9 +6,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
+
+import javax.swing.SpinnerNumberModel;
 
 import com.jfabricationgames.toolbox.graphic.ImageLoader;
 
@@ -22,6 +26,8 @@ public abstract class Hero implements Serializable {
 	private static final long serialVersionUID = 4244972938699657617L;
 
 	protected HeroEffectTime time;
+	
+	protected Game game;
 	
 	protected int attack;
 	protected int defence;
@@ -44,7 +50,14 @@ public abstract class Hero implements Serializable {
 	
 	protected static ImageLoader imageLoader;
 	
-	protected enum ExecutionType {
+	protected final Predicate<Field> localPlayersField = field -> field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser());
+	protected final Predicate<Field> normalTroopsOnField = field -> field.getNormalTroops() > 0;
+	protected final Predicate<Field> badassTroopsOnField = field -> field.getBadassTroops() > 0;
+	protected final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField);
+	protected final Predicate<Field> hasCommand = field -> field.getCommand() != null;
+	protected final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1;
+	
+	public enum ExecutionType {
 		TURN_EFFECT,
 		BEFORE_FIGHT,
 		DURING_FIGHT,
@@ -54,10 +67,11 @@ public abstract class Hero implements Serializable {
 	/**
 	 * The components of the HeroEffectExecutionFrame that are needed for the execution of the hero's effect
 	 */
-	protected enum ExecutionComponent {
+	public enum ExecutionComponent {
 		FIELD_START,
 		FIELD_TARGET,
-		SPINNER_NUMBER_PER_FIELD,
+		SPINNER_NUMBER_PER_FIELD_NORMAL,
+		SPINNER_NUMBER_PER_FIELD_BADASS,
 		SPINNER_NUMBER_NORMAL,
 		SPINNER_NUMBER_BADASS,
 		SELECTION_COMMAND,
@@ -69,7 +83,16 @@ public abstract class Hero implements Serializable {
 	public class ExecutionData {
 		
 		public ExecutionData() {
-			
+			//add some default values
+			startFieldNormalTroopsModel = new SpinnerNumberModel(0, 0, 20, 1);
+			startFieldBadassTroopsModel = new SpinnerNumberModel(0, 0, 20, 1);
+			targetFieldNormalTroopsModel = new SpinnerNumberModel(0, 0, 20, 1);
+			targetFieldBadassTroopsModel = new SpinnerNumberModel(0, 0, 20, 1);
+			possibleStartFields = new ArrayList<Field>();
+			possibleTargetFields = new ArrayList<Field>();
+			targetFieldsNormalTroops = new HashMap<Field, Integer>();
+			targetFieldsBadassTroops = new HashMap<Field, Integer>();
+			possibleCommands = new ArrayList<Command>();
 		}
 		
 		private List<Field> possibleStartFields;
@@ -83,6 +106,12 @@ public abstract class Hero implements Serializable {
 		
 		private int startFieldNormalTroops;
 		private int startFieldBadassTroops;
+		
+		private SpinnerNumberModel startFieldNormalTroopsModel;
+		private SpinnerNumberModel startFieldBadassTroopsModel;
+		
+		private SpinnerNumberModel targetFieldNormalTroopsModel;
+		private SpinnerNumberModel targetFieldBadassTroopsModel;
 		
 		private Command command;
 		private List<Command> possibleCommands;
@@ -143,6 +172,34 @@ public abstract class Hero implements Serializable {
 			this.startFieldBadassTroops = startFieldBadassTroops;
 		}
 		
+		public SpinnerNumberModel getStartFieldNormalTroopsModel() {
+			return startFieldNormalTroopsModel;
+		}
+		public void setStartFieldNormalTroopsModel(SpinnerNumberModel startFieldNormalTroopsModel) {
+			this.startFieldNormalTroopsModel = startFieldNormalTroopsModel;
+		}
+		
+		public SpinnerNumberModel getStartFieldBadassTroopsModel() {
+			return startFieldBadassTroopsModel;
+		}
+		public void setStartFieldBadassTroopsModel(SpinnerNumberModel startFieldBadassTroopsModel) {
+			this.startFieldBadassTroopsModel = startFieldBadassTroopsModel;
+		}
+		
+		public SpinnerNumberModel getTargetFieldNormalTroopsModel() {
+			return targetFieldNormalTroopsModel;
+		}
+		public void setTargetFieldNormalTroopsModel(SpinnerNumberModel targetFieldNormalTroopsModel) {
+			this.targetFieldNormalTroopsModel = targetFieldNormalTroopsModel;
+		}
+		
+		public SpinnerNumberModel getTargetFieldBadassTroopsModel() {
+			return targetFieldBadassTroopsModel;
+		}
+		public void setTargetFieldBadassTroopsModel(SpinnerNumberModel targetFieldBadassTroopsModel) {
+			this.targetFieldBadassTroopsModel = targetFieldBadassTroopsModel;
+		}
+		
 		public Command getCommand() {
 			return command;
 		}
@@ -163,7 +220,7 @@ public abstract class Hero implements Serializable {
 		imageLoader.setDefaultPathPrefix("net/jfabricationgames/bunkers_and_badasses/images/");
 	}
 	
-	public Hero() {
+	protected Hero() {
 		attack = 0;
 		defence = 0;
 		usedAttack = 0;
@@ -199,17 +256,9 @@ public abstract class Hero implements Serializable {
 	}
 	
 	/**
-	 * Execute the hero's special effect as a game turn.
-	 * The default implementation only updates the statistics because not all hero's special effects can be used as turn.
-	 */
-	public void executeTurn(Game game) {
-		//TODO add to the statistics
-	}
-	/**
 	 * Generate the ExecutionData for the ExecuteHeroEffectFrame based on the data the user has already selected.
 	 */
 	public ExecutionData getExecutionData(ExecutionData selected) {
-		//TODO
 		return null;
 	}
 	/**
@@ -219,7 +268,6 @@ public abstract class Hero implements Serializable {
 	 * 		Returns true if the execution of this move is successful. False otherwise.
 	 */
 	public boolean execute(ExecutionData data) {
-		//TODO
 		return false;
 	}
 	
@@ -227,6 +275,12 @@ public abstract class Hero implements Serializable {
 	 * Execute the hero's effect before, during or after a fight (depending on the ExecutionType).
 	 */
 	public void execute(Fight fight) {
+		
+	}
+	/**
+	 * Adds the execution to the statistics. This method should be called after the turn was successfully executed.
+	 */
+	protected void addHeroEffectExecutionToStatistics(ExecutionData executionData) {
 		//TODO
 	}
 	
@@ -247,6 +301,10 @@ public abstract class Hero implements Serializable {
 	 */
 	protected void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
+	}
+	
+	public List<ExecutionComponent> getExecutionComponentsNeeded() {
+		return componentsNeeded;
 	}
 	
 	public int getAttack() {
@@ -274,5 +332,12 @@ public abstract class Hero implements Serializable {
 	}
 	public void setCardImage(BufferedImage cardImage) {
 		this.cardImage = cardImage;
+	}
+	
+	public Game getGame() {
+		return game;
+	}
+	public void setGame(Game game) {
+		this.game = game;
 	}
 }

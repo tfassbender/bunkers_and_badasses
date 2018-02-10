@@ -62,7 +62,7 @@ public class Game implements Serializable {
 		gameTurnGoalManager.setGameTurnManager(turnManager);
 		gameTurnGoalManager.chooseTurnGoals();
 		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager, this);
-		heroCardManager = new HeroCardManager();
+		heroCardManager = new HeroCardManager(this);
 		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseColors(players);

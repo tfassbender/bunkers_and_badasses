@@ -1,7 +1,5 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Game;
-
 public class MrTorgue extends Hero {
 	
 	private static final long serialVersionUID = 2488254569700119667L;
@@ -17,7 +15,13 @@ public class MrTorgue extends Hero {
 	}
 	
 	@Override
-	public void executeTurn(Game game) {
-		//TODO
+	public ExecutionData getExecutionData(ExecutionData executionData) {
+		
+		return null;
+	}
+	@Override
+	public boolean execute(ExecutionData executionData) {
+		
+		return false;
 	}
 }

@@ -60,7 +60,10 @@ public class HeroCardManager implements Serializable {
 	
 	private final int maxCardsPerPlayer;
 	
-	public HeroCardManager() {
+	private Game game;
+	
+	public HeroCardManager(Game game) {
+		this.game = game;
 		maxCardsPerPlayer = Game.getGameVariableStorage().getMaxHerosCards();
 		heroCards = new HashMap<User, List<Hero>>();
 		heroCardsTaken = new HashMap<User, Boolean>();
@@ -159,7 +162,9 @@ public class HeroCardManager implements Serializable {
 		while (heroCardStack.size() < maxCardsPerPlayer * players.size()) {
 			for (Class<? extends Hero> hero : HERO_CLASSES) {
 				try {
-					heroCardStack.add(hero.newInstance());
+					Hero h = hero.newInstance();
+					h.setGame(game);
+					heroCardStack.add(h);
 				}
 				catch (InstantiationException | IllegalAccessException e) {
 					e.printStackTrace();

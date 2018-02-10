@@ -1,7 +1,5 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Game;
-
 public class Marcus extends Hero {
 	
 	private static final long serialVersionUID = -2964770085479731401L;
@@ -17,8 +15,13 @@ public class Marcus extends Hero {
 	}
 	
 	@Override
-	public void executeTurn(Game game) {
-		//TODO
-		//Nachladen: Gratis Munition erhalten
+	public ExecutionData getExecutionData(ExecutionData executionData) {
+		
+		return null;
+	}
+	@Override
+	public boolean execute(ExecutionData executionData) {
+		
+		return false;
 	}
 }

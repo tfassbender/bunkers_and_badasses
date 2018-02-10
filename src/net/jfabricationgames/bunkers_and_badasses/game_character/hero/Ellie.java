@@ -1,7 +1,5 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Game;
-
 public class Ellie extends Hero {
 	
 	private static final long serialVersionUID = 8110478891996236498L;
@@ -17,8 +15,13 @@ public class Ellie extends Hero {
 	}
 	
 	@Override
-	public void executeTurn(Game game) {
-		//TODO
-		//Klanfede: In 2 aneinander grenzenden, gegnerischen Gebieten sterben jeweils 2 Einheiten (nur Banditen)
+	public ExecutionData getExecutionData(ExecutionData executionData) {
+		
+		return null;
+	}
+	@Override
+	public boolean execute(ExecutionData executionData) {
+		
+		return false;
 	}
 }

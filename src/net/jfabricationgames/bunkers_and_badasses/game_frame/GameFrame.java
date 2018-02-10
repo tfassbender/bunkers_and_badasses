@@ -81,6 +81,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	//private SupportRequestFrame supportRequestDialog;
 	private TroopInfoFrame troopInfoFrame;
 	private TurnExecutionFrame turnExecutionFrame;
+	private HeroEffectExecutionFrame heroEffectExecutionFrame;
 	private TurnGoalTurnBonusDialog turnGoalTurnBonusDialog;
 	private TurnPlaningFrame turnPlaningFrame;
 	private BoardOverviewFrame boardOverviewFrame;
@@ -636,6 +637,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		boardOverviewFrame = new BoardOverviewFrame(game.getBoard());
 		chatDialog = new ChatDialog(chatClient, this);
 		helpMenuFrame = MainMenuFrame.getHelpMenu();
+		heroEffectExecutionFrame = new HeroEffectExecutionFrame(game);
 		SupportRequestFrame.setLocalPlayer(game.getLocalUser());
 		game.getFightManager().setFightExecutionFrame(fightExecutionFrame);
 	}
@@ -662,7 +664,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	
 	@Override
 	public void receiveSelectedHero(Hero hero) {
-		//TODO receive the selected hero card (play hero card)
+		heroEffectExecutionFrame.startHeroEffectExecution(hero);
 	}
 	
 	@Override

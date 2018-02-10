@@ -1,7 +1,5 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
-import net.jfabricationgames.bunkers_and_badasses.game.Game;
-
 public class Angel extends Hero {
 	
 	private static final long serialVersionUID = -7693149616225773067L;
@@ -17,7 +15,13 @@ public class Angel extends Hero {
 	}
 	
 	@Override
-	public void executeTurn(Game game) {
+	public ExecutionData getExecutionData(ExecutionData executionData) {
 		
+		return null;
+	}
+	@Override
+	public boolean execute(ExecutionData executionData) {
+		
+		return false;
 	}
 }
