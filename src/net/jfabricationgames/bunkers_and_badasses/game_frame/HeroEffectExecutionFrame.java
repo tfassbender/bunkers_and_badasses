@@ -29,6 +29,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionComponent;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionData;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionType;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextArea;
@@ -313,7 +314,7 @@ public class HeroEffectExecutionFrame extends JFrame {
 			if (components.contains(ExecutionComponent.SELECTION_COMMAND)) {
 				comboBoxCommands.setEnabled(true);
 			}
-			if (!components.isEmpty()) {
+			if (currentHero.getExecutionType() == ExecutionType.TURN_EFFECT) {
 				btnAuswahlZurcksetsen.setEnabled(true);
 				btnBefehlAusfhren.setEnabled(true);
 			}			
@@ -346,6 +347,7 @@ public class HeroEffectExecutionFrame extends JFrame {
 			if (currentHero.execute(executionData)) {
 				//remove the hero from the players hand
 				game.getHeroCardManager().heroCardUsed(currentHero, game.getLocalUser());
+				game.getGameFrame().update();
 				//remove the current hero
 				currentHero = null;
 				executionData = null;

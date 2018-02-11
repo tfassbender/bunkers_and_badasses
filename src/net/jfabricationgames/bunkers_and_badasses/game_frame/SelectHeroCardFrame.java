@@ -72,6 +72,7 @@ public class SelectHeroCardFrame extends JFrame {
 	private PropertiesFile propsFile = new PropertiesFile(this);
 	
 	public SelectHeroCardFrame(Game game, boolean cardPlayable) {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
@@ -218,6 +219,7 @@ public class SelectHeroCardFrame extends JFrame {
 			JButton btnAbbrechen = new JButton("Abbrechen");
 			btnAbbrechen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					setCardSelectionEnabled(false, null);
 					setVisible(false);
 				}
 			});

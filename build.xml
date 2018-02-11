@@ -124,7 +124,7 @@ build_date=${timestamp}</echo>
 		<antcall target="build_jar_server" />
 	</target>
 	
-	<target name="build_release" depends="clean,build_jars, generate_run_scripts">
+	<target name="build_release" depends="clean,build_jars,generate_run_scripts">
 		<mkdir dir="${release_dir}"/>
 		<mkdir dir="${release}"/>
 		<mkdir dir="${release}/data"/>
@@ -173,14 +173,14 @@ build_date=${timestamp}</echo>
 		</jar>
 	</target>
 
-	<target name="build_test_jars">
+	<target name="build_test_jars" depends="test">
 		<!--build the normal jars but mark them as test-->
 		<antcall target="generate_timestamp" />
 		<antcall target="build_test_jar_client" />
 		<antcall target="build_test_jar_server" />
 	</target>
 
-	<target name="build_test_jar_client" depends="compile_src,test">
+	<target name="build_test_jar_client" depends="compile_src">
 		<mkdir dir="${dist}/lib" />
 		<jar jarfile="${dist}/lib/${project_name_client}_${version}_test.jar" basedir="${build}">
 			<manifest>
@@ -194,7 +194,7 @@ build_date=${timestamp}</echo>
 		</jar>
 	</target>
 
-	<target name="build_test_jar_server" depends="compile_src,test">
+	<target name="build_test_jar_server" depends="compile_src">
 		<mkdir dir="${dist}/lib" />
 		<jar jarfile="${dist}/lib/${project_name_server}_${version}_test.jar" basedir="${build}">
 			<manifest>

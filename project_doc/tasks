@@ -4,6 +4,10 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
+	- implement the hero functions of Angel and Arschgaul
+	- heros should be only usable in the players turn
+	- the game reference in all heros seems to be wrong (has no board, game-frame or turn manager)
+	- some heros seem to have a old reference to the game (no board or game frame; seems to be non-starting players)
 
 - Next versions:
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)

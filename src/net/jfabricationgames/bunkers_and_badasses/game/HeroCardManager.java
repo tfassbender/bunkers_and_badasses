@@ -216,6 +216,12 @@ public class HeroCardManager implements Serializable {
 		}
 	}
 	
+	protected void updateGame(Game game) {
+		this.game = game;
+		heroCardStack.forEach(hero -> hero.setGame(game));
+		heroCards.entrySet().stream().flatMap(entry -> entry.getValue().stream()).forEach(hero -> hero.setGame(game));
+	}
+	
 	public List<Hero> getHeroCards(User user) {
 		return heroCards.get(user);
 	}

@@ -61,9 +61,9 @@ public class HeroPanel extends JPanel {
 		add(btnbersicht, "cell 0 3,alignx center");
 		
 		btnEinsetzen = new JButton("Einsetzen");
-		btnEinsetzen.setEnabled(false);
 		btnEinsetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				gameFrame.getSelectHeroCardFrame().update();
 				gameFrame.getSelectHeroCardFrame().setVisible(true);
 				gameFrame.getSelectHeroCardFrame().requestFocus();
 				gameFrame.getSelectHeroCardFrame().setCardSelectionEnabled(true, gameFrame);

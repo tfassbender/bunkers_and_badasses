@@ -51,20 +51,20 @@ public abstract class Hero implements Serializable {
 	
 	protected static ImageLoader imageLoader;
 	
-	protected final Predicate<Field> localPlayersField = field -> field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser());
-	protected final Predicate<Field> neutralField = field -> field.getAffiliation() == null;
-	protected final Predicate<Field> neutralTroopField = field -> field.getAffiliation() == null && field.getNormalTroops() > 0;
-	protected final Predicate<Field> nextToLocalPlayersField = field -> field.getAffiliation() != null && field.getNeighbours().stream().
+	protected transient final Predicate<Field> localPlayersField = field -> field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser());
+	protected transient final Predicate<Field> neutralField = field -> field.getAffiliation() == null;
+	protected transient final Predicate<Field> neutralTroopField = field -> field.getAffiliation() == null && field.getNormalTroops() > 0;
+	protected transient final Predicate<Field> nextToLocalPlayersField = field -> field.getAffiliation() != null && field.getNeighbours().stream().
 			anyMatch(f -> f.getAffiliation() != null && f.getAffiliation().equals(game.getLocalUser()));
-	protected final Predicate<Field> nextToOtherEnemiesField = field -> field.getNeighbours().stream().
+	protected transient final Predicate<Field> nextToOtherEnemiesField = field -> field.getNeighbours().stream().
 			anyMatch(f -> f.getAffiliation() != null && !f.getAffiliation().equals(game.getLocalUser()) && !f.getAffiliation().equals(field.getAffiliation()));
-	protected final Predicate<Field> normalTroopsOnField = field -> field.getNormalTroops() > 0;
-	protected final Predicate<Field> badassTroopsOnField = field -> field.getBadassTroops() > 0;
-	protected final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField);
-	protected final Predicate<Field> hasCommand = field -> field.getCommand() != null;
-	protected final Predicate<Field> hasBuilding = field -> !(field.getBuilding() instanceof EmptyBuilding);
-	protected final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1 || (field.getNormalTroops() == 1 && field.getBadassTroops() > 0);
-	protected final Predicate<Field> moreThanTwoBandits = field -> field.getNormalTroops() > 2 || (field.getNormalTroops() == 2 && field.getBadassTroops() > 0);
+	protected transient final Predicate<Field> normalTroopsOnField = field -> field.getNormalTroops() > 0;
+	protected transient final Predicate<Field> badassTroopsOnField = field -> field.getBadassTroops() > 0;
+	protected transient final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField);
+	protected transient final Predicate<Field> hasCommand = field -> field.getCommand() != null;
+	protected transient final Predicate<Field> hasBuilding = field -> !(field.getBuilding() instanceof EmptyBuilding);
+	protected transient final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1 || (field.getNormalTroops() == 1 && field.getBadassTroops() > 0);
+	protected transient final Predicate<Field> moreThanTwoBandits = field -> field.getNormalTroops() > 2 || (field.getNormalTroops() == 2 && field.getBadassTroops() > 0);
 	
 	public enum ExecutionType {
 		TURN_EFFECT,
@@ -99,6 +99,7 @@ public abstract class Hero implements Serializable {
 			targetFieldBadassTroopsModel = new SpinnerNumberModel(0, 0, 20, 1);
 			possibleStartFields = new ArrayList<Field>();
 			possibleTargetFields = new ArrayList<Field>();
+			targetFields = new ArrayList<Field>();
 			targetFieldsNormalTroops = new HashMap<Field, Integer>();
 			targetFieldsBadassTroops = new HashMap<Field, Integer>();
 			possibleCommands = new ArrayList<Command>();
@@ -366,5 +367,12 @@ public abstract class Hero implements Serializable {
 	}
 	public void setGame(Game game) {
 		this.game = game;
+	}
+	
+	public ExecutionType getExecutionType() {
+		return executionType;
+	}
+	public int getExecutionPriority() {
+		return executionPriority;
 	}
 }

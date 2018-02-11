@@ -43,6 +43,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.BoardPanelListener;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionType;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonus;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnBonusCardPanel;
 import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
@@ -212,7 +213,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 			}
 		});
 		
-		JMenuItem mntmkamfAusfhrung = new JMenuItem("Kamf Ausf\u00FChrung");
+		JMenuItem mntmkamfAusfhrung = new JMenuItem("Kampf Ausf\u00FChrung");
 		mntmkamfAusfhrung.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmkamfAusfhrung.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -664,7 +665,12 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	
 	@Override
 	public void receiveSelectedHero(Hero hero) {
-		heroEffectExecutionFrame.startHeroEffectExecution(hero);
+		if (hero.getExecutionType() == ExecutionType.TURN_EFFECT) {
+			heroEffectExecutionFrame.startHeroEffectExecution(hero);			
+		}
+		else {
+			new ErrorDialog("Der Effekt dieses Helden kann nicht als Zug sondern nur in einem Kampf eingesetzt werden.").setVisible(true);
+		}
 	}
 	
 	@Override

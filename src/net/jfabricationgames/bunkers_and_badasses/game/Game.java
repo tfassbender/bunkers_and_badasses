@@ -62,14 +62,14 @@ public class Game implements Serializable {
 		gameTurnGoalManager.setGameTurnManager(turnManager);
 		gameTurnGoalManager.chooseTurnGoals();
 		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager, this);
-		heroCardManager = new HeroCardManager(this);
-		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseColors(players);
 		fightManager = new FightManager(client, this, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
 		statisticManager = new GameStatisticManager();
 		statisticManager.initialize(players);
 		skillProfileManager = new SkillProfileManager();
+		heroCardManager = new HeroCardManager(this);
+		heroCardManager.intitialize(players);
 		gameStore = ((BunkersAndBadassesClientInterpreter) client.getClientInterpreter()).getGameStore();
 		//initialize the GameFrame when the board is added.
 		//gameFrame = new GameFrame(this);
@@ -138,6 +138,8 @@ public class Game implements Serializable {
 		//prepare the turn start
 		planManager.countCommands();
 		gameFrame.getBoardOverviewFrame().setBoard(board);
+		//update the game reference in the HeroCardManager and the hero cards
+		heroCardManager.updateGame(this);
 	}
 	
 	/**
@@ -160,6 +162,8 @@ public class Game implements Serializable {
 			//not sure if it's created by the addBoard method
 			gameFrame = new GameFrame(this);			
 		}
+		//update the game reference in the HeroCardManager and the hero cards
+		heroCardManager.updateGame(this);
 		gameFrame.setVisible(true);
 	}
 	
