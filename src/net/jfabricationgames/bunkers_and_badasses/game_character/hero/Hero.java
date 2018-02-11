@@ -19,13 +19,14 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 
 public abstract class Hero implements Serializable {
 	
 	private static final long serialVersionUID = 4244972938699657617L;
 
-	protected HeroEffectTime time;
+	//protected HeroEffectTime time;
 	
 	protected Game game;
 	
@@ -51,11 +52,19 @@ public abstract class Hero implements Serializable {
 	protected static ImageLoader imageLoader;
 	
 	protected final Predicate<Field> localPlayersField = field -> field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser());
+	protected final Predicate<Field> neutralField = field -> field.getAffiliation() == null;
+	protected final Predicate<Field> neutralTroopField = field -> field.getAffiliation() == null && field.getNormalTroops() > 0;
+	protected final Predicate<Field> nextToLocalPlayersField = field -> field.getAffiliation() != null && field.getNeighbours().stream().
+			anyMatch(f -> f.getAffiliation() != null && f.getAffiliation().equals(game.getLocalUser()));
+	protected final Predicate<Field> nextToOtherEnemiesField = field -> field.getNeighbours().stream().
+			anyMatch(f -> f.getAffiliation() != null && !f.getAffiliation().equals(game.getLocalUser()) && !f.getAffiliation().equals(field.getAffiliation()));
 	protected final Predicate<Field> normalTroopsOnField = field -> field.getNormalTroops() > 0;
 	protected final Predicate<Field> badassTroopsOnField = field -> field.getBadassTroops() > 0;
 	protected final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField);
 	protected final Predicate<Field> hasCommand = field -> field.getCommand() != null;
-	protected final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1;
+	protected final Predicate<Field> hasBuilding = field -> !(field.getBuilding() instanceof EmptyBuilding);
+	protected final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1 || (field.getNormalTroops() == 1 && field.getBadassTroops() > 0);
+	protected final Predicate<Field> moreThanTwoBandits = field -> field.getNormalTroops() > 2 || (field.getNormalTroops() == 2 && field.getBadassTroops() > 0);
 	
 	public enum ExecutionType {
 		TURN_EFFECT,
@@ -120,6 +129,9 @@ public abstract class Hero implements Serializable {
 			return possibleStartFields;
 		}
 		public void setPossibleStartFields(List<Field> possibleStartFields) {
+			if (possibleStartFields == null) {
+				possibleStartFields = new ArrayList<Field>();
+			}
 			this.possibleStartFields = possibleStartFields;
 		}
 		
@@ -134,6 +146,9 @@ public abstract class Hero implements Serializable {
 			return possibleTargetFields;
 		}
 		public void setPossibleTargetFields(List<Field> possibleTargetFields) {
+			if (possibleTargetFields == null) {
+				possibleTargetFields = new ArrayList<Field>();
+			}
 			this.possibleTargetFields = possibleTargetFields;
 		}
 		
@@ -141,6 +156,9 @@ public abstract class Hero implements Serializable {
 			return targetFields;
 		}
 		public void setTargetFields(List<Field> targetFields) {
+			if (targetFields == null) {
+				targetFields = new ArrayList<Field>();
+			}
 			this.targetFields = targetFields;
 		}
 		
@@ -148,6 +166,9 @@ public abstract class Hero implements Serializable {
 			return targetFieldsNormalTroops;
 		}
 		public void setTargetFieldsNormalTroops(Map<Field, Integer> targetFieldsNormalTroops) {
+			if (targetFieldsNormalTroops == null) {
+				targetFieldsNormalTroops = new HashMap<Field, Integer>();
+			}
 			this.targetFieldsNormalTroops = targetFieldsNormalTroops;
 		}
 		
@@ -155,6 +176,9 @@ public abstract class Hero implements Serializable {
 			return targetFieldsBadassTroops;
 		}
 		public void setTargetFieldsBadassTroops(Map<Field, Integer> targetFieldsBadassTroops) {
+			if (targetFieldsBadassTroops == null) {
+				targetFieldsBadassTroops = new HashMap<Field, Integer>();
+			}
 			this.targetFieldsBadassTroops = targetFieldsBadassTroops;
 		}
 		
@@ -211,6 +235,9 @@ public abstract class Hero implements Serializable {
 			return possibleCommands;
 		}
 		public void setPossibleCommands(List<Command> possibleCommands) {
+			if (possibleCommands == null) {
+				possibleCommands = new ArrayList<Command>();
+			}
 			this.possibleCommands = possibleCommands;
 		}
 	}

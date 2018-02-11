@@ -22,6 +22,7 @@ public class Lilith extends Hero {
 		effectDescription = "Phasewalk (Zug):\n\nEine kleine Infiltrationseinheit (Kampfstärke von bis zu 5) darf ein Feld Überspringen um hinter der Feindlichen Linie anzugreifen";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.FIELD_TARGET, 
 				ExecutionComponent.SPINNER_NUMBER_NORMAL, ExecutionComponent.SPINNER_NUMBER_BADASS);
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override

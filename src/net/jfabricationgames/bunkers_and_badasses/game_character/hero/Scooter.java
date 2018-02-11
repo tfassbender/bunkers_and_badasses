@@ -25,6 +25,7 @@ public class Scooter extends Hero {
 		effectDescription = "Catch-A-Ride (Zug):\n\nBeliebig viele Truppen (aus einem Feld) dürfen bis zu 3 Felder weit vorrücken (und die Feindliche Linie durchbrechen, wenn sie ein eigenes Feld erreichen)";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.FIELD_TARGET, 
 				ExecutionComponent.SPINNER_NUMBER_PER_FIELD_NORMAL, ExecutionComponent.SPINNER_NUMBER_PER_FIELD_BADASS);
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override
@@ -48,7 +49,7 @@ public class Scooter extends Hero {
 			}
 			if (!executionData.getTargetFields().isEmpty()) {
 				if (executionData.getTargetFields().size() > 1) {
-					//limit the selection to 1
+					//limit the selection to 1 (only one selection at a time, multiple fields at the end)
 					executionData.setTargetFields(executionData.getTargetFields().stream().limit(1).collect(Collectors.toList()));
 					return executionData;
 				}
@@ -96,6 +97,6 @@ public class Scooter extends Hero {
 		game.getPlayerOrder().nextMove();
 		game.getTurnExecutionManager().commit();
 		game.getGameFrame().updateAllFrames();
-		return false;
+		return true;
 	}
 }

@@ -12,16 +12,26 @@ public class Angel extends Hero {
 		cardImagePath = "hero_cards/card_angel.png";
 		loadImage();
 		effectDescription = "Perfekte Aufklährung (Zug):\n\nIn der gesammten Runde dürfen im Kampf keine Karten gegen dich eingesetzt werden";
+		//no execution components needed
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override
 	public ExecutionData getExecutionData(ExecutionData executionData) {
-		
-		return null;
+		if (executionData == null) {
+			return new ExecutionData();
+		}
+		else {
+			return executionData;
+		}
 	}
 	@Override
 	public boolean execute(ExecutionData executionData) {
-		
-		return false;
+		//TODO implement that the player can't be attacked with heros in this turn
+		addHeroEffectExecutionToStatistics(executionData);
+		game.getPlayerOrder().nextMove();
+		game.getTurnExecutionManager().commit();
+		game.getGameFrame().updateAllFrames();
+		return true;
 	}
 }

@@ -26,6 +26,7 @@ public class Zero extends Hero {
 		loadImage();
 		effectDescription = "Doppelgänger (Zug):\n\nEin beliebiger Befehlsmarker kann nachträglich (kostenlos, beliebig) verändert werden";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.SELECTION_COMMAND);
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override

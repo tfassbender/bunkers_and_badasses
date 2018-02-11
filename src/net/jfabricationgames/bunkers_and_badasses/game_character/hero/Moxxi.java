@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.swing.SpinnerNumberModel;
@@ -22,6 +23,7 @@ public class Moxxi extends Hero {
 		loadImage();
 		effectDescription = "Anwerbung (Zug):\n\n3 normale Truppen beliebig auf deine Felder verteilen";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_TARGET, ExecutionComponent.SPINNER_NUMBER_PER_FIELD_NORMAL);
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override
@@ -38,11 +40,8 @@ public class Moxxi extends Hero {
 					Field selected = executionData.getTargetFields().get(0);
 					int min = 0;
 					int max = 3;
-					Integer value = executionData.getTargetFieldsNormalTroops().get(selected);
-					if (value == null) {
-						value = new Integer(0);
-					}
-					int val = Math.max(min, Math.min(max, value.intValue()));
+					Optional<Integer> value = Optional.of(executionData.getTargetFieldsNormalTroops().get(selected));
+					int val = Math.max(min, Math.min(max, value.orElse(0)));
 					executionData.getTargetFieldsNormalTroops().put(selected, val);
 					executionData.setTargetFieldNormalTroopsModel(new SpinnerNumberModel(val, min, max, 1));
 				}

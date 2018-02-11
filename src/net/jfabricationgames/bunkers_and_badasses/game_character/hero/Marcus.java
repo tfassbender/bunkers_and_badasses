@@ -20,6 +20,7 @@ public class Marcus extends Hero {
 		loadImage();
 		effectDescription = "Nachladen:\n\nDu darfst (gratis) einen Unterstützungsbefehl auf eines deiner Felder (ohne Befehl) platzieren";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.SELECTION_COMMAND);
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override

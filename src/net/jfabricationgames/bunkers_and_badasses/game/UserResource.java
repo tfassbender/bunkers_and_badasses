@@ -336,9 +336,9 @@ public class UserResource implements Serializable, Cloneable {
 	protected void setCredits(int credits) {
 		this.credits = credits;
 	}
-	/*public void addCredits(int credits) {
+	public void addCredits(int credits) {
 		this.credits += credits;
-	}*/
+	}
 	
 	public int getAmmo() {
 		return ammo;
@@ -346,9 +346,9 @@ public class UserResource implements Serializable, Cloneable {
 	protected void setAmmo(int ammo) {
 		this.ammo = ammo;
 	}
-	/*public void addAmmo(int ammo) {
+	public void addAmmo(int ammo) {
 		this.ammo += ammo;
-	}*/
+	}
 	
 	public int getEridium() {
 		return eridium;
@@ -356,9 +356,9 @@ public class UserResource implements Serializable, Cloneable {
 	protected void setEridium(int eridium) {
 		this.eridium = eridium;
 	}
-	/*public void addEridium(int eridium) {
+	public void addEridium(int eridium) {
 		this.eridium += eridium;
-	}*/
+	}
 	
 	/*public int getEridiumBuilding() {
 		return eridiumBuilding;

@@ -18,6 +18,7 @@ public class Maya extends Hero {
 		loadImage();
 		effectDescription = "Phaselock (Zug):\n\nEin Gegner wird in einem seiner Felder Festgehalten (Der Befehlsmarker wird entfernt; Der Gegner kann sich aber verteidigen)";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_TARGET);
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override
