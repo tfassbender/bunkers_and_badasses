@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionComponent;
@@ -46,6 +47,8 @@ public class HeroEffectExecutionFrame extends JFrame {
 	
 	private Hero currentHero;
 	private ExecutionData executionData;
+	
+	private boolean updatingComponents = false;
 	
 	private Game game;
 	
@@ -96,8 +99,10 @@ public class HeroEffectExecutionFrame extends JFrame {
 		listStartField = new JList<Field>(startFieldListModel);
 		listStartField.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				executionData.setStartField(listStartField.getSelectedValue());
-				requestExecutionData();
+				if (!updatingComponents) {
+					executionData.setStartField(listStartField.getSelectedValue());
+					requestExecutionData();					
+				}
 			}
 		});
 		listStartField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -110,10 +115,12 @@ public class HeroEffectExecutionFrame extends JFrame {
 		listTargetField = new JList<Field>(targetFieldsListModel);
 		listTargetField.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				executionData.setTargetFields(listTargetField.getSelectedValuesList());
-				executionData.getTargetFields().forEach(field -> createEntry(field));
-				updateTargetFieldsText();
-				requestExecutionData();
+				if (!updatingComponents) {
+					executionData.setTargetFields(listTargetField.getSelectedValuesList());
+					executionData.getTargetFields().forEach(field -> createEntry(field));
+					updateTargetFieldsText();
+					requestExecutionData();
+				}
 			}
 		});
 		listTargetField.setBackground(Color.LIGHT_GRAY);
@@ -137,8 +144,10 @@ public class HeroEffectExecutionFrame extends JFrame {
 		spinnerStartFieldNormalTroops = new JSpinner();
 		spinnerStartFieldNormalTroops.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				executionData.setStartFieldNormalTroops((Integer) spinnerStartFieldNormalTroops.getValue());
-				requestExecutionData();
+				if (!updatingComponents) {
+					executionData.setStartFieldNormalTroops((Integer) spinnerStartFieldNormalTroops.getValue());
+					requestExecutionData();
+				}
 			}
 		});
 		panel_selection.add(spinnerStartFieldNormalTroops, "cell 1 1,growx");
@@ -150,8 +159,10 @@ public class HeroEffectExecutionFrame extends JFrame {
 		spinnerStartFieldBadassTroops = new JSpinner();
 		spinnerStartFieldBadassTroops.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				executionData.setStartFieldBadassTroops((Integer) spinnerStartFieldBadassTroops.getValue());
-				requestExecutionData();
+				if (!updatingComponents) {
+					executionData.setStartFieldBadassTroops((Integer) spinnerStartFieldBadassTroops.getValue());
+					requestExecutionData();
+				}
 			}
 		});
 		panel_selection.add(spinnerStartFieldBadassTroops, "cell 1 2,growx");
@@ -163,10 +174,12 @@ public class HeroEffectExecutionFrame extends JFrame {
 		spinnerTargetFieldNormalTroops = new JSpinner();
 		spinnerTargetFieldNormalTroops.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				int value = (Integer) spinnerTargetFieldNormalTroops.getValue();
-				listTargetField.getSelectedValuesList().forEach(field -> executionData.getTargetFieldsNormalTroops().put(field, value));
-				updateTargetFieldsText();
-				requestExecutionData();
+				if (!updatingComponents) {
+					int value = (Integer) spinnerTargetFieldNormalTroops.getValue();
+					listTargetField.getSelectedValuesList().forEach(field -> executionData.getTargetFieldsNormalTroops().put(field, value));
+					updateTargetFieldsText();
+					requestExecutionData();
+				}
 			}
 		});
 		panel_selection.add(spinnerTargetFieldNormalTroops, "cell 1 4,growx");
@@ -178,10 +191,12 @@ public class HeroEffectExecutionFrame extends JFrame {
 		spinnerTargetFieldBadassTroops = new JSpinner();
 		spinnerTargetFieldBadassTroops.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				int value = (Integer) spinnerTargetFieldBadassTroops.getValue();
-				listTargetField.getSelectedValuesList().forEach(field -> executionData.getTargetFieldsBadassTroops().put(field, value));
-				updateTargetFieldsText();
-				requestExecutionData();
+				if (!updatingComponents) {
+					int value = (Integer) spinnerTargetFieldBadassTroops.getValue();
+					listTargetField.getSelectedValuesList().forEach(field -> executionData.getTargetFieldsBadassTroops().put(field, value));
+					updateTargetFieldsText();
+					requestExecutionData();
+				}
 			}
 		});
 		panel_selection.add(spinnerTargetFieldBadassTroops, "cell 1 5,growx");
@@ -193,8 +208,10 @@ public class HeroEffectExecutionFrame extends JFrame {
 		comboBoxCommands = new JComboBox<Command>(commandComboBoxModel);
 		comboBoxCommands.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				executionData.setCommand((Command) comboBoxCommands.getSelectedItem());
-				requestExecutionData();
+				if (!updatingComponents) {
+					executionData.setCommand((Command) comboBoxCommands.getSelectedItem());
+					requestExecutionData();
+				}
 			}
 		});
 		panel_selection.add(comboBoxCommands, "cell 0 8,growx");
@@ -216,8 +233,10 @@ public class HeroEffectExecutionFrame extends JFrame {
 		btnAuswahlZurcksetsen = new JButton("Auswahl Zur\u00FCcksetsen");
 		btnAuswahlZurcksetsen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				executionData = null;
-				requestExecutionData();
+				if (!updatingComponents) {
+					executionData = null;
+					requestExecutionData();
+				}
 			}
 		});
 		btnAuswahlZurcksetsen.setBackground(Color.GRAY);
@@ -289,6 +308,7 @@ public class HeroEffectExecutionFrame extends JFrame {
 		comboBoxCommands.setEnabled(false);
 		btnAuswahlZurcksetsen.setEnabled(false);
 		btnBefehlAusfhren.setEnabled(false);
+		textAreaTargetFields.setText("");
 	}
 	public void initializeComponents(List<ExecutionComponent> components) {
 		disableAll();
@@ -321,16 +341,21 @@ public class HeroEffectExecutionFrame extends JFrame {
 		}
 	}
 	public void requestExecutionData() {
-		if (currentHero != null) {
+		if (currentHero != null && !updatingComponents) {
+			updatingComponents = true;//prevents stack overflow by recursion
 			executionData = currentHero.getExecutionData(executionData);
 			//update the lists
+			int[] selectedIndicesTargets = listTargetField.getSelectedIndices();
+			int selectedIndexStart = listStartField.getSelectedIndex();
 			startFieldListModel.removeAllElements();
 			targetFieldsListModel.removeAllElements();
 			executionData.getPossibleStartFields().forEach(field -> startFieldListModel.addElement(field));
 			executionData.getPossibleTargetFields().forEach(field -> targetFieldsListModel.addElement(field));
-			listStartField.setSelectedValue(executionData.getStartField(), true);
+			/*listStartField.setSelectedValue(executionData.getStartField(), true);
 			int[] selectedIndices = executionData.getTargetFields().stream().map(targetFieldsListModel::indexOf).mapToInt(i->i).toArray();
-			listTargetField.setSelectedIndices(selectedIndices);
+			listTargetField.setSelectedIndices(selectedIndices);*/
+			listStartField.setSelectedIndex(selectedIndexStart);
+			listTargetField.setSelectedIndices(selectedIndicesTargets);
 			//update the spinners
 			spinnerStartFieldNormalTroops.setModel(executionData.getStartFieldNormalTroopsModel());
 			spinnerStartFieldBadassTroops.setModel(executionData.getStartFieldBadassTroopsModel());
@@ -340,21 +365,37 @@ public class HeroEffectExecutionFrame extends JFrame {
 			commandComboBoxModel.removeAllElements();
 			executionData.getPossibleCommands().forEach(command -> commandComboBoxModel.addElement(command));
 			commandComboBoxModel.setSelectedItem(executionData.getCommand());
+			updatingComponents = false;
 		}
 	}
 	private void execute() {
 		if (currentHero != null) {
-			if (currentHero.execute(executionData)) {
-				//remove the hero from the players hand
-				game.getHeroCardManager().heroCardUsed(currentHero, game.getLocalUser());
-				game.getGameFrame().update();
-				//remove the current hero
-				currentHero = null;
-				executionData = null;
-				disableAll();
-				dispose();
+			if (game.getGameState() == GameState.ACT && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && 
+					game.getFightManager().getCurrentFight() == null) {
+				if (currentHero.execute(executionData)) {
+					//remove the hero from the players hand
+					game.getHeroCardManager().heroCardUsed(currentHero, game.getLocalUser());
+					game.getGameFrame().update();
+					//remove the current hero
+					currentHero = null;
+					executionData = null;
+					disableAll();
+					dispose();
+				}
+				//if the execution fails the specific error message is shown by the heros
 			}
-			//if the execution fails the specific error message is shown by the heros
+			else if (!game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+				new ErrorDialog("Du bist nicht an der reihe.\n\n"
+						+ "Die anderen wollen auch noch ihre Selbstmordkandidaten verheizen.").setVisible(true);
+			}
+			else if (game.getFightManager().getCurrentFight() != null) {
+				new ErrorDialog("Du solltest erst deine Kämpfe zu Ende führen bevor du neue anzettelst.\n\n"
+						+ "Es bleibt schon noch genug Zeit sie alle umzubringen.\nNur keine Sorge.").setVisible(true);
+			}
+			else if (game.getGameState() != GameState.ACT) {
+				new ErrorDialog("Die Ausführungsphase hat noch nicht begonnen.\n\n"
+						+ "Noch etwas gedult. Du willst doch nicht zu früh kommen.").setVisible(true);
+			}
 		}
 	}
 	

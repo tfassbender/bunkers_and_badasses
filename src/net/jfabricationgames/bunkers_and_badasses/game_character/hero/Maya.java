@@ -27,7 +27,7 @@ public class Maya extends Hero {
 			executionData = new ExecutionData();
 		}
 		//the possible targets are always all enemy fields with commands
-		executionData.setPossibleTargetFields(game.getBoard().getFields().stream().filter(localPlayersField.negate()).filter(hasCommand).collect(Collectors.toList()));
+		executionData.setPossibleTargetFields(game.getBoard().getFields().stream().filter(enemyPlayersField).filter(hasCommand).collect(Collectors.toList()));
 		return executionData;
 	}
 	@Override

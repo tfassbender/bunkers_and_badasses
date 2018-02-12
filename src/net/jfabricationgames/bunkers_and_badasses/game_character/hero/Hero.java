@@ -28,7 +28,7 @@ public abstract class Hero implements Serializable {
 
 	//protected HeroEffectTime time;
 	
-	protected Game game;
+	protected static Game game;
 	
 	protected int attack;
 	protected int defence;
@@ -51,20 +51,21 @@ public abstract class Hero implements Serializable {
 	
 	protected static ImageLoader imageLoader;
 	
-	protected transient final Predicate<Field> localPlayersField = field -> field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser());
-	protected transient final Predicate<Field> neutralField = field -> field.getAffiliation() == null;
-	protected transient final Predicate<Field> neutralTroopField = field -> field.getAffiliation() == null && field.getNormalTroops() > 0;
-	protected transient final Predicate<Field> nextToLocalPlayersField = field -> field.getAffiliation() != null && field.getNeighbours().stream().
+	protected transient static final Predicate<Field> localPlayersField = field -> field.getAffiliation() != null && field.getAffiliation().equals(game.getLocalUser());
+	protected transient static final Predicate<Field> neutralField = field -> field.getAffiliation() == null;
+	protected transient static final Predicate<Field> enemyPlayersField = localPlayersField.negate().and(neutralField.negate());
+	protected transient static final Predicate<Field> neutralTroopField = field -> field.getAffiliation() == null && field.getNormalTroops() > 0;
+	protected transient static final Predicate<Field> nextToLocalPlayersField = field -> field.getAffiliation() != null && field.getNeighbours().stream().
 			anyMatch(f -> f.getAffiliation() != null && f.getAffiliation().equals(game.getLocalUser()));
-	protected transient final Predicate<Field> nextToOtherEnemiesField = field -> field.getNeighbours().stream().
+	protected transient static final Predicate<Field> nextToOtherEnemiesField = field -> field.getNeighbours().stream().
 			anyMatch(f -> f.getAffiliation() != null && !f.getAffiliation().equals(game.getLocalUser()) && !f.getAffiliation().equals(field.getAffiliation()));
-	protected transient final Predicate<Field> normalTroopsOnField = field -> field.getNormalTroops() > 0;
-	protected transient final Predicate<Field> badassTroopsOnField = field -> field.getBadassTroops() > 0;
-	protected transient final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField);
-	protected transient final Predicate<Field> hasCommand = field -> field.getCommand() != null;
-	protected transient final Predicate<Field> hasBuilding = field -> !(field.getBuilding() instanceof EmptyBuilding);
-	protected transient final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1 || (field.getNormalTroops() == 1 && field.getBadassTroops() > 0);
-	protected transient final Predicate<Field> moreThanTwoBandits = field -> field.getNormalTroops() > 2 || (field.getNormalTroops() == 2 && field.getBadassTroops() > 0);
+	protected transient static final Predicate<Field> normalTroopsOnField = field -> field.getNormalTroops() > 0;
+	protected transient static final Predicate<Field> badassTroopsOnField = field -> field.getBadassTroops() > 0;
+	protected transient static final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField);
+	protected transient static final Predicate<Field> hasCommand = field -> field.getCommand() != null;
+	protected transient static final Predicate<Field> hasBuilding = field -> !(field.getBuilding() instanceof EmptyBuilding);
+	protected transient static final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1 || (field.getNormalTroops() == 1 && field.getBadassTroops() > 0);
+	protected transient static final Predicate<Field> moreThanTwoBandits = field -> field.getNormalTroops() > 2 || (field.getNormalTroops() == 2 && field.getBadassTroops() > 0);
 	
 	public enum ExecutionType {
 		TURN_EFFECT,
@@ -365,8 +366,8 @@ public abstract class Hero implements Serializable {
 	public Game getGame() {
 		return game;
 	}
-	public void setGame(Game game) {
-		this.game = game;
+	public void setGame(Game g) {
+		game = g;
 	}
 	
 	public ExecutionType getExecutionType() {

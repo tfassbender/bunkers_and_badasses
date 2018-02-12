@@ -2,6 +2,7 @@ package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,8 @@ public class SirHammerlock extends Hero {
 	public ExecutionData getExecutionData(ExecutionData executionData) {
 		if (executionData == null) {
 			ExecutionData data = new ExecutionData();
-			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(neutralTroopField).collect(Collectors.toList()));
+			List<Field> possibleTargets = game.getBoard().getFields().stream().filter(neutralTroopField).collect(Collectors.toList());
+			data.setPossibleTargetFields(possibleTargets);
 			data.setTargetFieldNormalTroopsModel(new SpinnerNumberModel(0, 0, 3, 1));
 			return data;
 		}

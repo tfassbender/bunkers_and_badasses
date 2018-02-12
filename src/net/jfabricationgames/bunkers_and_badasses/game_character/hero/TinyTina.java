@@ -29,7 +29,7 @@ public class TinyTina extends Hero {
 		if (executionData == null) {
 			//send the start execution data with only the possible start fields
 			ExecutionData data = new ExecutionData();
-			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(localPlayersField.negate()).filter(hasBuilding).
+			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(enemyPlayersField).filter(hasBuilding).
 					filter(nextToLocalPlayersField).collect(Collectors.toList()));
 			return data;
 		}

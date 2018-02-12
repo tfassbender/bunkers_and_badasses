@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
+import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.miginfocom.swing.MigLayout;
 
@@ -63,10 +64,26 @@ public class HeroPanel extends JPanel {
 		btnEinsetzen = new JButton("Einsetzen");
 		btnEinsetzen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				gameFrame.getSelectHeroCardFrame().update();
-				gameFrame.getSelectHeroCardFrame().setVisible(true);
-				gameFrame.getSelectHeroCardFrame().requestFocus();
-				gameFrame.getSelectHeroCardFrame().setCardSelectionEnabled(true, gameFrame);
+				Game game = gameFrame.getGame();
+				if (game.getGameState() == GameState.ACT && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && 
+						game.getFightManager().getCurrentFight() == null) {
+					gameFrame.getSelectHeroCardFrame().update();
+					gameFrame.getSelectHeroCardFrame().setVisible(true);
+					gameFrame.getSelectHeroCardFrame().requestFocus();
+					gameFrame.getSelectHeroCardFrame().setCardSelectionEnabled(true, gameFrame);
+				}
+				else if (!game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
+					new ErrorDialog("Du bist nicht an der reihe.\n\n"
+							+ "Die anderen wollen auch noch ihre Selbstmordkandidaten verheizen.").setVisible(true);
+				}
+				else if (game.getFightManager().getCurrentFight() != null) {
+					new ErrorDialog("Du solltest erst deine Kämpfe zu Ende führen bevor du neue anzettelst.\n\n"
+							+ "Es bleibt schon noch genug Zeit sie alle umzubringen.\nNur keine Sorge.").setVisible(true);
+				}
+				else if (game.getGameState() != GameState.ACT) {
+					new ErrorDialog("Die Ausführungsphase hat noch nicht begonnen.\n\n"
+							+ "Noch etwas gedult. Du willst doch nicht zu früh kommen.").setVisible(true);
+				}
 			}
 		});
 		btnEinsetzen.setToolTipText("<html>\r\nEine der vorhandenen Helden Karten<br>\r\n(deren Spezialfunktion) einsetzen\r\n</html>");
@@ -76,9 +93,6 @@ public class HeroPanel extends JPanel {
 	
 	public JButton getBtnEinsetzen() {
 		return btnEinsetzen;
-	}
-	public void setBtnEinsetzen(JButton btnEinsetzen) {
-		this.btnEinsetzen = btnEinsetzen;
 	}
 	
 	public void updateHeroCards(Game game) {

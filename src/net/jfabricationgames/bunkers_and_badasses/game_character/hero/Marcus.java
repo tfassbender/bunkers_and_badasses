@@ -29,7 +29,8 @@ public class Marcus extends Hero {
 			ExecutionData data = new ExecutionData();
 			Command command = new SupportCommand();
 			data.setPossibleCommands(Arrays.asList(command));
-			data.setPossibleStartFields(game.getBoard().getFields().stream().filter(localPlayersField).filter(hasCommand.negate()).collect(Collectors.toList()));
+			data.setPossibleStartFields(game.getBoard().getFields().stream().filter(localPlayersField).
+					filter(hasCommand.negate()).collect(Collectors.toList()));
 			data.setCommand(command);
 			return data;
 		}

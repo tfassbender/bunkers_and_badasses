@@ -48,6 +48,7 @@ public class BoardPanel extends JPanel {
 		scrollPane_board = new JScrollPane();
 		panel_scroll_board_capture.add(scrollPane_board, "cell 0 0,grow");
 		scrollPane_board.getVerticalScrollBar().setUnitIncrement(20);
+		scrollPane_board.getHorizontalScrollBar().setUnitIncrement(20);
 		
 		panel_scroll_board = new ImagePanel();
 		panel_scroll_board.setBackground(Color.GRAY);

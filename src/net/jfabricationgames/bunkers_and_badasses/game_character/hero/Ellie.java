@@ -26,7 +26,7 @@ public class Ellie extends Hero {
 	public ExecutionData getExecutionData(ExecutionData executionData) {
 		if (executionData == null) {
 			ExecutionData data = new ExecutionData();
-			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(localPlayersField.negate()).
+			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(enemyPlayersField).
 					filter(moreThanTwoBandits).filter(nextToOtherEnemiesField).collect(Collectors.toList()));
 			return data;
 		}

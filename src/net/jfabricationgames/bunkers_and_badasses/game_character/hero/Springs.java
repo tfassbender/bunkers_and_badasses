@@ -20,6 +20,7 @@ public class Springs extends Hero {
 		cardImagePath = "hero_cards/card_springs.png";
 		loadImage();
 		effectDescription = "Raketentechnickerin (Zug):\n\nBeliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte gebiete verschoben werden";
+		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
 	@Override

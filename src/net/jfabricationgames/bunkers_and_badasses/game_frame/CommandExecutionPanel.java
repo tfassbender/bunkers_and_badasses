@@ -271,7 +271,8 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_3.add(lblMarschBefehl, "cell 1 0 2 1,alignx center");
 		
 		JLabel lblTruppennormal_1 = new JLabel("Truppen (Normal):");
-		lblTruppennormal_1.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nNormale Truppen die bei diesem <br>\r\nMarsch bewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nNormale Truppen die neu Rekrutiert<br>\r\nwerden sollen.\r\n</html>");
+		lblTruppennormal_1.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nNormale Truppen die bei diesem <br>\r\nMarsch bewegt werden sollen.<br>"
+				+ "\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nNormale Truppen die neu Rekrutiert<br>\r\nwerden sollen.\r\n</html>");
 		lblTruppennormal_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_3.add(lblTruppennormal_1, "cell 1 2");
 		
@@ -281,7 +282,8 @@ public class CommandExecutionPanel extends JPanel {
 				updateKosts();
 			}
 		});
-		spinnerNormalTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nNormale Truppen die bei diesem <br>\r\nMarsch bewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nNormale Truppen die neu Rekrutiert<br>\r\nwerden sollen.\r\n</html>");
+		spinnerNormalTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nNormale Truppen die bei diesem <br>\r\nMarsch bewegt werden sollen.<br>"
+				+ "\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nNormale Truppen die neu Rekrutiert<br>\r\nwerden sollen.\r\n</html>");
 		spinnerNormalTroops.setEnabled(false);
 		spinnerNormalTroops.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		spinnerNormalTroops.setForeground(Color.LIGHT_GRAY);
@@ -289,7 +291,8 @@ public class CommandExecutionPanel extends JPanel {
 		panel_command_3.add(spinnerNormalTroops, "cell 2 2,growx");
 		
 		JLabel lblTruppenbadass_1 = new JLabel("Truppen (Badass):");
-		lblTruppenbadass_1.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nBadasses die bei diesem Marsch<br>\r\nbewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nTruppen die von normalen Truppen<br>\r\nzu Badasses aufger\u00FCstet werden sollen.\r\n</html>");
+		lblTruppenbadass_1.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nBadasses die bei diesem Marsch<br>\r\nbewegt werden sollen.<br>"
+				+ "\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nTruppen die von normalen Truppen<br>\r\nzu Badasses aufger\u00FCstet werden sollen.\r\n</html>");
 		lblTruppenbadass_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_command_3.add(lblTruppenbadass_1, "cell 1 3");
 		
@@ -299,7 +302,8 @@ public class CommandExecutionPanel extends JPanel {
 				updateKosts();
 			}
 		});
-		spinnerBadassTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nBadasses die bei diesem Marsch<br>\r\nbewegt werden sollen.<br>\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nTruppen die von normalen Truppen<br>\r\nzu Badasses aufger\u00FCstet werden sollen.\r\n</html>");
+		spinnerBadassTroops.setToolTipText("<html>\r\nMarschbefehl:<br>\r\nBadasses die bei diesem Marsch<br>\r\nbewegt werden sollen.<br>"
+				+ "\r\n<br>\r\nRekrutierungsbefehl:<br>\r\nTruppen die von normalen Truppen<br>\r\nzu Badasses aufger\u00FCstet werden sollen.\r\n</html>");
 		spinnerBadassTroops.setEnabled(false);
 		spinnerBadassTroops.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		spinnerBadassTroops.setBackground(Color.LIGHT_GRAY);
@@ -460,7 +464,8 @@ public class CommandExecutionPanel extends JPanel {
 				spinnerNormalTroops.setModel(new SpinnerNumberModel(normalTroops, 0, selectedField.getBuilding().getRecruitableTroops(), 1));
 				boolean badassesRecruitable = false;
 				for (Field boardField : game.getBoard().getFields()) {
-					badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation() != null && boardField.getAffiliation().equals(game.getLocalUser());
+					badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation() != null && 
+							boardField.getAffiliation().equals(game.getLocalUser());
 				}
 				if (badassesRecruitable) {
 					spinnerBadassTroops.setEnabled(true);
@@ -657,7 +662,8 @@ public class CommandExecutionPanel extends JPanel {
 					spinnerNormalTroops.setModel(new SpinnerNumberModel(0, 0, field.getBuilding().getRecruitableTroops(), 1));
 					boolean badassesRecruitable = false;
 					for (Field boardField : game.getBoard().getFields()) {
-						badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation() != null && boardField.getAffiliation().equals(game.getLocalUser());
+						badassesRecruitable |= boardField.getBuilding().isBadassTroopsRecruitable() && boardField.getAffiliation() != null && 
+								boardField.getAffiliation().equals(game.getLocalUser());
 					}
 					if (badassesRecruitable) {
 						spinnerBadassTroops.setEnabled(true);
@@ -733,7 +739,10 @@ public class CommandExecutionPanel extends JPanel {
 	protected void executeCommand() {
 		Field selectedField = turnExecutionFrame.getSelectedField();
 		boolean commandExecuted = false;
-		if (game.getGameState() == GameState.ACT && selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser()) && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && game.getFightManager().getCurrentFight() == null) {
+		if (game.getGameState() == GameState.ACT && selectedField.getAffiliation() != null && 
+				selectedField.getAffiliation().equals(game.getLocalUser()) && 
+				game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && 
+				game.getFightManager().getCurrentFight() == null) {
 			Command command = selectedField.getCommand();
 			UserResourceManager resourceManager = game.getResourceManager();
 			if (command.isExecutable()) {
@@ -750,15 +759,18 @@ public class CommandExecutionPanel extends JPanel {
 									commandExecuted = true;
 								}
 								catch (ResourceException re) {
-									new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+									new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\n"
+											+ "Anschreiben lassen geht hier leider nicht.").setVisible(true);
 								}
 							}
 							else {
-								new ErrorDialog("Du musst ein Gebäude auswählen um es aufzubauen.\n\nOder glaubst du etwa, dass deine Truppen aus Architekten bestehen?!\nDas würde die Existenz von Gehirnzellen bedingen!").setVisible(true);
+								new ErrorDialog("Du musst ein Gebäude auswählen um es aufzubauen.\n\n"
+										+ "Oder glaubst du etwa, dass deine Truppen aus Architekten bestehen?!\nDas würde die Existenz von Gehirnzellen bedingen!").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Du kannst nicht zwei Gebäude auf ein Feld bauen.\n\nAußer du willst versuchen sie zu stapeln...\nIch muss zugeben das würde ich gerne sehen.").setVisible(true);
+							new ErrorDialog("Du kannst nicht zwei Gebäude auf ein Feld bauen.\n\n"
+									+ "Außer du willst versuchen sie zu stapeln...\nIch muss zugeben das würde ich gerne sehen.").setVisible(true);
 						}
 					}
 					else if (rdbtnAufrsten.isSelected()) {
@@ -772,20 +784,23 @@ public class CommandExecutionPanel extends JPanel {
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
-								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\n"
+										+ "Anschreiben lassen geht hier leider nicht.").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Dieses Gebäude kann man nicht aufrüsten.\n\nBau einfach ein paar mehr davon. Ist doch genug Platz da.\nAußer Du spielst zu schlecht...").setVisible(true);
+							new ErrorDialog("Dieses Gebäude kann man nicht aufrüsten.\n\n"
+									+ "Bau einfach ein paar mehr davon. Ist doch genug Platz da.\nAußer Du spielst zu schlecht...").setVisible(true);
 						}
 					}
 					else if (rdbtnAbreien.isSelected()) {
 						Building building = selectedField.getBuilding();
 						if (building == null || building instanceof EmptyBuilding) {
-							new ErrorDialog("Du musst ein Gebäude aufbauen bevor Du es einreißen kannst.\n\nErst die Arbeit, dann das Vergnügen...").setVisible(true);
+							new ErrorDialog("Du musst ein Gebäude aufbauen bevor Du es einreißen kannst.\n\n"
+									+ "Erst die Arbeit, dann das Vergnügen...").setVisible(true);
 						}
 						else if (building instanceof ArschgaulsPalace) {
-							new ErrorDialog("Du kannst doch nicht Arschgauls Palast abreißen!!!\nWas soll der Scheiß?!");
+							new ErrorDialog("Du kannst doch nicht Arschgauls Palast abreißen!!!\nWas soll der Scheiß?!").setVisible(true);
 						}
 						else {
 							try {
@@ -796,7 +811,8 @@ public class CommandExecutionPanel extends JPanel {
 								commandExecuted = true;								
 							}
 							catch (ResourceException re) {
-								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\n"
+										+ "Anschreiben lassen geht hier leider nicht.").setVisible(true);
 							}
 						}
 					}
@@ -813,7 +829,8 @@ public class CommandExecutionPanel extends JPanel {
 						collectionType = 3;
 					}
 					if (collectionType == 0) {
-						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
+						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\n"
+								+ "Oder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
 					}
 					else {
 						resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
@@ -835,13 +852,16 @@ public class CommandExecutionPanel extends JPanel {
 							}
 						}
 						if (enemyFields > 1) {
-							new ErrorDialog("Du kannst nicht in einem Zug zwei Gegner angreifen.\n\nLass den armen Schweinen doch auch mal ne Chance.").setVisible(true);
+							new ErrorDialog("Du kannst nicht in einem Zug zwei Gegner angreifen.\n\n"
+									+ "Lass den armen Schweinen doch auch mal ne Chance.").setVisible(true);
 						}
 						else if (troops <= 0) {
-							new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\nDas ist keine freiwillige Aktion hier.").setVisible(true);
+							new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\n"
+									+ "Das ist keine freiwillige Aktion hier.").setVisible(true);
 						}
 						/*else if (troops < targets.length) {
-							new ErrorDialog("Das sind mehr Felder als du Truppen hast.\n\nDeine Truppen können sich nicht Zweiteilen.\nNaja können sie schon aber dannach sind sie meistens ein wenig... tot...").setVisible(true);
+							new ErrorDialog("Das sind mehr Felder als du Truppen hast.\n\n"
+									+ "Deine Truppen können sich nicht Zweiteilen.\nNaja können sie schon aber dannach sind sie meistens ein wenig... tot...").setVisible(true);
 						}*/
 						else {
 							List<Field> targetFields = new ArrayList<Field>(targets.length);
@@ -858,13 +878,17 @@ public class CommandExecutionPanel extends JPanel {
 					else if (targets.length == 1) {
 						Field targetField = fieldTargetModel.getElementAt(targets[0]);
 						if (troops > 0) {
-							if (targetField.getBuilding() instanceof ArschgaulsPalace && game.getTurnManager().getTurn() == 0 && targetField.getAffiliation() != null && !targetField.getAffiliation().equals(game.getLocalUser())) {
-								new ErrorDialog("Du kannst in der ersten Runde keine Basis angreifen.\n\nLass den anderen doch auch mal ne Chance.").setVisible(true);
+							if (targetField.getBuilding() instanceof ArschgaulsPalace && game.getTurnManager().getTurn() == 0 && 
+									targetField.getAffiliation() != null && !targetField.getAffiliation().equals(game.getLocalUser())) {
+								new ErrorDialog("Du kannst in der ersten Runde keine Basis angreifen.\n\n"
+										+ "Lass den anderen doch auch mal ne Chance.").setVisible(true);
 							}
-							else if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || targetField.getDefenceStrength() == 0) {
+							else if (targetField.getAffiliation() != null && targetField.getAffiliation().equals(game.getLocalUser()) || 
+									targetField.getDefenceStrength() == 0) {
 								//give out points for movement and conquering (empty) fields
 								if (targetField.getAffiliation() == null || !targetField.getAffiliation().equals(game.getLocalUser())) {
-									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints(), getClass(), "field conquered", PointManager.PointType.FIGHT);
+									game.getPointManager().addPoints(game.getLocalUser(), Game.getGameVariableStorage().getFieldConquerPoints(), 
+											getClass(), "field conquered", PointManager.PointType.FIGHT);
 								}
 								game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), selectedField, targetField.getAffiliation() == null);
 								game.getBoard().moveTroops(selectedField, targetField, normalTroops, badassTroops);
@@ -878,29 +902,35 @@ public class CommandExecutionPanel extends JPanel {
 							}
 						}
 						else {
-							new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\nDas ist keine freiwillige Aktion hier.").setVisible(true);
+							new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\n"
+									+ "Das ist keine freiwillige Aktion hier.").setVisible(true);
 						}
 					}
 					else {
-						new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\nOder Du lässt sie einfach im Kreis rennen. Das kann auch lustig sein.\nNicht unbedingt zielführend... aber lustig.").setVisible(true);
+						new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\n"
+								+ "Oder Du lässt sie einfach im Kreis rennen. Das kann auch lustig sein.\nNicht unbedingt zielführend... aber lustig.").setVisible(true);
 					}
 				}
 				else if (command instanceof RaidCommand) {
 					int[] targets = list_target_field.getSelectedIndices();
 					if (targets.length > 1) {
-						new ErrorDialog("Du kannst nicht in einem Zug mehrere Felder überfallen.\n\nLass den Anderen auch noch was übrig.").setVisible(true);
+						new ErrorDialog("Du kannst nicht in einem Zug mehrere Felder überfallen.\n\n"
+								+ "Lass den Anderen auch noch was übrig.").setVisible(true);
 					}
 					else if (targets.length == 0) {
-						new ErrorDialog("Du musst schon ein Ziel aussuchen das deine Leute überfallen können.\n\nOder Du überfällst dich einfach selbst.\nDas schlägt auch die Zeit tot.").setVisible(true);
+						new ErrorDialog("Du musst schon ein Ziel aussuchen das deine Leute überfallen können.\n\n"
+								+ "Oder Du überfällst dich einfach selbst.\nDas schlägt auch die Zeit tot.").setVisible(true);
 					}
 					else {
 						Field target = fieldTargetModel.getElementAt(targets[0]);
 						Command selectedCommand = target.getCommand();
 						if (selectedCommand == null) {
-							new ErrorDialog("Du kannst keinen Befehl entfernen wo garkein Befehl ist.\n\nDu könntest sie aber nur so zum Spaß überfallen...").setVisible(true);
+							new ErrorDialog("Du kannst keinen Befehl entfernen wo garkein Befehl ist.\n\n"
+									+ "Du könntest sie aber nur so zum Spaß überfallen...").setVisible(true);
 						}
 						else if (!selectedCommand.isRemovable()) {
-							new ErrorDialog("Diesen Befehl kannst Du nicht entferenen.\n\nDie Anderen sollen doch auch noch ihren Spaß haben.").setVisible(true);
+							new ErrorDialog("Diesen Befehl kannst Du nicht entferenen.\n\n"
+									+ "Die Anderen sollen doch auch noch ihren Spaß haben.").setVisible(true);
 						}
 						else {
 							if (target.getCommand() instanceof CollectCommand) {
@@ -915,7 +945,8 @@ public class CommandExecutionPanel extends JPanel {
 									collectionType = 3;
 								}
 								if (collectionType == 0) {
-									new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\nOder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
+									new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\n"
+											+ "Oder Du lässt sie einfach ein paar hübsche Steine suchen. Ist ja Dein Geld...").setVisible(true);
 								}
 								else {
 									resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
@@ -934,13 +965,16 @@ public class CommandExecutionPanel extends JPanel {
 					int upgrades = (Integer) spinnerAufrstungen.getValue();
 					int troops = normalTroops + badassTroops*2 + upgrades;
 					if (troops <= 0) {
-						new ErrorDialog("Du willst also 0 Truppen Rekrutieren?!\n\nBist Du sicher, dass du das Spielprinzip verstanden hast?").setVisible(true);
+						new ErrorDialog("Du willst also 0 Truppen Rekrutieren?!\n\n"
+								+ "Bist Du sicher, dass du das Spielprinzip verstanden hast?").setVisible(true);
 					}
 					else if (troops > selectedField.getBuilding().getRecruitableTroops()) {
-						new ErrorDialog("Du kannst nicht so viele Truppen auf einmal rekrutieren.\n\nDiese Selbstmordkandidaten wachsen nunmal nicht an Bäumen.").setVisible(true);
+						new ErrorDialog("Du kannst nicht so viele Truppen auf einmal rekrutieren.\n\n"
+								+ "Diese Selbstmordkandidaten wachsen nunmal nicht an Bäumen.").setVisible(true);
 					}
 					else if (targets.length > 1) {
-						new ErrorDialog("Du kannst deine Truppen nur in ein Feld rekrutieren.\n\nFür die ist es schon schwer genug sich ein Ziel zu merken.").setVisible(true);
+						new ErrorDialog("Du kannst deine Truppen nur in ein Feld rekrutieren.\n\n"
+								+ "Für die ist es schon schwer genug sich ein Ziel zu merken.").setVisible(true);
 					}
 					else {
 						Field target;
@@ -962,24 +996,29 @@ public class CommandExecutionPanel extends JPanel {
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
-								new ErrorDialog("Du hast nicht genug Resourcen um die Truppen zu bezahlen.\n\nAnschreiben lassen geht hier leider nicht.").setVisible(true);
+								new ErrorDialog("Du hast nicht genug Resourcen um die Truppen zu bezahlen.\n\n"
+										+ "Anschreiben lassen geht hier leider nicht.").setVisible(true);
 							}
 						}
 						else {
-							new ErrorDialog("Du hast nicht genug Truppen in diesem Feld um sie aufzurüsten.\n\nAber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rüstest die Truppen deiner Gegner auf...").setVisible(true);
+							new ErrorDialog("Du hast nicht genug Truppen in diesem Feld um sie aufzurüsten.\n\n"
+									+ "Aber vielleicht gibst du die Waffen einfach ein paar Skags...\nOder rüstest die Truppen deiner Gegner auf...").setVisible(true);
 						}
 					}
 				}
 			}
 		}
 		else if (!game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
-			new ErrorDialog("Du bist nicht an der reihe.\n\nDie anderen wollen auch noch ihre Selbstmordkandidaten verheizen.").setVisible(true);
+			new ErrorDialog("Du bist nicht an der reihe.\n\n"
+					+ "Die anderen wollen auch noch ihre Selbstmordkandidaten verheizen.").setVisible(true);
 		}
 		else if (game.getFightManager().getCurrentFight() != null) {
-			new ErrorDialog("Du solltest erst deine Kämpfe zu Ende führen bevor du neue anzettelst.\n\nEs bleibt schon noch genug Zeit sie alle umzubringen.\nNur keine Sorge.").setVisible(true);
+			new ErrorDialog("Du solltest erst deine Kämpfe zu Ende führen bevor du neue anzettelst.\n\n"
+					+ "Es bleibt schon noch genug Zeit sie alle umzubringen.\nNur keine Sorge.").setVisible(true);
 		}
 		else if (game.getGameState() != GameState.ACT) {
-			new ErrorDialog("Die Ausführungsphase hat noch nicht begonnen.\n\nNoch etwas gedult. Du willst doch nicht zu früh kommen.").setVisible(true);
+			new ErrorDialog("Die Ausführungsphase hat noch nicht begonnen.\n\n"
+					+ "Noch etwas gedult. Du willst doch nicht zu früh kommen.").setVisible(true);
 		}
 		if (commandExecuted) {
 			selectedField.setCommand(null);

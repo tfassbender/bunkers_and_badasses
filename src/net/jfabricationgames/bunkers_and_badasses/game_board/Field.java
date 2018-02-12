@@ -188,6 +188,9 @@ public class Field implements Serializable {
 	public int getNormalTroops() {
 		int normalTroops = 0;
 		//count the troops with odd strength (only strength 1 and 2 possible)
+		if (troops == null) {
+			return 0;
+		}
 		for (int i = 0; i < troops.size(); i++) {
 			normalTroops += (troops.get(i).getStrength() & 1);//if (strength % 2 == 1) {n++}
 		}
@@ -202,6 +205,9 @@ public class Field implements Serializable {
 	public int getBadassTroops() {
 		int badassTroops = 0;
 		//count the troops with even strength (only strength 1 and 2 possible)
+		if (troops == null) {
+			return 0;
+		}
 		for (int i = 0; i < troops.size(); i++) {
 			badassTroops += (troops.get(i).getStrength() & 2);//if (strength % 2 == 0) {n += 2}
 		}

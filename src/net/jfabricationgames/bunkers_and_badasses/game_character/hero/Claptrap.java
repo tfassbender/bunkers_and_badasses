@@ -30,7 +30,7 @@ public class Claptrap extends Hero {
 	public ExecutionData getExecutionData(ExecutionData executionData) {
 		if (executionData == null) {
 			ExecutionData data = new ExecutionData();
-			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(localPlayersField.negate()).
+			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(enemyPlayersField).
 					filter(badassTroopsOnField).collect(Collectors.toList()));
 			data.setTargetFieldBadassTroopsModel(new SpinnerNumberModel(0, 0, 3, 1));
 			return data;

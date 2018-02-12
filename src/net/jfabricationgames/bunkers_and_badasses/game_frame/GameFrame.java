@@ -777,13 +777,19 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		else {
 			txtCommand.setText("");
 		}
-		if (game.getGameState() == GameState.ACT && selectedField != null && selectedField.getAffiliation() != null && selectedField.getAffiliation().equals(game.getLocalUser())) {
+		if (game.getGameState() == GameState.ACT && selectedField != null && selectedField.getAffiliation() != null && 
+				selectedField.getAffiliation().equals(game.getLocalUser())) {
 			btnSpielzugAusfhren.setEnabled(true);
+		}
+		else {
+			btnSpielzugAusfhren.setEnabled(false);
+		}
+		if (game.getGameState() == GameState.ACT && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && 
+				game.getFightManager().getCurrentFight() == null) {
 			panel_heroes.getBtnEinsetzen().setEnabled(true);
 			panel_heroes_2.getBtnEinsetzen().setEnabled(true);
 		}
 		else {
-			btnSpielzugAusfhren.setEnabled(false);
 			panel_heroes.getBtnEinsetzen().setEnabled(false);
 			panel_heroes_2.getBtnEinsetzen().setEnabled(false);
 		}
@@ -817,6 +823,10 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private void updatePoints() {
 		pointPanel.updatePoints(game);
 		pointPanel_2.updatePoints(game);
+	}
+	
+	protected Game getGame() {
+		return game;
 	}
 	
 	public FieldOverviewFrame getFieldOverviewFrame() {
