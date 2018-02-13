@@ -5,7 +5,6 @@ Bunkers and Badasses - Tasks
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
 	- implement the hero functions of Angel and Arschgaul
-	- commands can no longer be added or removed correctly (CommandException: No command found)
 	- the spinners in Modecai seem to have a wrong maximum...
 
 - Next versions:

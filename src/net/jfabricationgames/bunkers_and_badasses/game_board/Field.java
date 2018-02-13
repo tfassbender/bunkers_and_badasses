@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import net.jfabricationgames.bunkers_and_badasses.game.TroopTexture;
 import net.jfabricationgames.bunkers_and_badasses.game.UserColor;
@@ -104,10 +103,11 @@ public class Field implements Serializable {
 			return super.equals(obj);
 		}
 	}
-	@Override
+	/*@Override
 	public int hashCode() {
+		//DONT USE this hash code method because it causes strange behavior (can't remove a command from a field anymore and the commands cannot be committed)
 		return Objects.hash(name, affiliation, building, command, troops);
-	}
+	}*/
 	
 	/**
 	 * Draw the fields components to the graphics object.

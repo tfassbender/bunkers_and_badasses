@@ -56,14 +56,14 @@ public class Game implements Serializable {
 		pointManager.initialize(players);
 		gameTurnBonusManager = new GameTurnBonusManager(this);
 		gameTurnBonusManager.chooseTurnBonusForGame(players.size());
-		heroCardManager = new HeroCardManager();
-		heroCardManager.intitialize(players);
 		planManager = new UserPlanManager(this);
 		gameTurnGoalManager = new GameTurnGoalManager(this);
 		turnManager = new GameTurnManager(this);
 		gameTurnGoalManager.setGameTurnManager(turnManager);
 		gameTurnGoalManager.chooseTurnGoals();
 		turnExecutionManager = new TurnExecutionManager(localUser, resourceManager, gameTurnBonusManager, gameTurnGoalManager, pointManager, this);
+		heroCardManager = new HeroCardManager();
+		heroCardManager.intitialize(players);
 		colorManager = new UserColorManager();
 		colorManager.chooseColors(players);
 		fightManager = new FightManager(client, this, players, gameTurnBonusManager, gameTurnGoalManager, pointManager, turnExecutionManager, board);
