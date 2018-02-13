@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.swing.SpinnerNumberModel;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.ErrorDialog;
 
 public class Lilith extends Hero {
@@ -30,14 +31,16 @@ public class Lilith extends Hero {
 		if (executionData == null) {
 			//send the start execution data with only the possible start fields
 			ExecutionData data = new ExecutionData();
-			data.setPossibleStartFields(game.getBoard().getFields().stream().filter(localPlayersField).filter(fieldEmpty.negate()).collect(Collectors.toList()));
+			data.setPossibleStartFields(game.getBoard().getFields().stream().filter(localPlayersField).
+					filter(fieldEmpty.negate()).collect(Collectors.toList()));
 			return data;
 		}
 		else {
 			if (executionData.getStartField() != null) {
 				//start field is chosen -> calculate the possible target fields
 				executionData.setPossibleTargetFields(executionData.getStartField().getNeighbours().parallelStream().
-						flatMap(f2 -> f2.getNeighbours().parallelStream()).collect(Collectors.toList()));
+						flatMap(f2 -> f2.getNeighbours().parallelStream()).distinct().filter(localPlayersField.negate()).
+						filter(hasArschgaulsPalace.negate()).collect(Collectors.toList()));
 				//remove all selected target fields that are not possible anymore
 				executionData.setTargetFields(executionData.getTargetFields().stream().
 						filter(field -> executionData.getPossibleTargetFields().contains(field)).collect(Collectors.toList()));
@@ -58,31 +61,43 @@ public class Lilith extends Hero {
 	@Override
 	public boolean execute(ExecutionData executionData) {
 		if (executionData.getStartField() == null) {
-			new ErrorDialog("Du musst schon ein Feld aussuchen aus dem Deine Truppen sich Bewegen sollen.\n\nDas ist keine freiwillige Aktion hier.").setVisible(true);
+			new ErrorDialog("Du musst schon ein Feld aussuchen aus dem Deine Truppen sich Bewegen sollen.\n\n"
+					+ "Das ist keine freiwillige Aktion hier.").setVisible(true);
 			return false;
 		}
 		if (executionData.getTargetFields().isEmpty()) {
-			new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\nOder Du lässt sie einfach im Kreis rennen. Das kann auch lustig sein.\nNicht unbedingt zielführend... aber lustig.").setVisible(true);
+			new ErrorDialog("Du solltest ein Ziel aussuchen wenn du willst das deine Truppen sich bewegen.\n\n"
+					+ "Oder Du lässt sie einfach im Kreis rennen. Das kann auch lustig sein.\n"
+					+ "Nicht unbedingt zielführend... aber lustig.").setVisible(true);
 			return false;
 		}
 		if (executionData.getTargetFields().size() > 1) {
-			new ErrorDialog("Du kannst nicht in einem Zug zwei Gegner angreifen.\n\nLass den armen Schweinen doch auch mal ne Chance.").setVisible(true);
+			new ErrorDialog("Du kannst nicht in einem Zug zwei Gegner angreifen.\n\n"
+					+ "Lass den armen Schweinen doch auch mal ne Chance.").setVisible(true);
 			return false;
 		}
 		if (executionData.getStartFieldNormalTroops() + 2* executionData.getStartFieldBadassTroops() > 5) {
-			new ErrorDialog("Du kannst in diesem Angriff maximal Truppen der Stärke 5 mitnehmen.\n\nSchwertransport-Phasen ist nicht im Budget.").setVisible(true);
+			new ErrorDialog("Du kannst in diesem Angriff maximal Truppen der Stärke 5 mitnehmen.\n\n"
+					+ "Schwertransport-Phasen ist nicht im Budget.").setVisible(true);
+			return false;
+		}
+		if (executionData.getTargetFields().get(0).getBuilding() instanceof ArschgaulsPalace) {
+			new ErrorDialog("Du kannst nicht Arschgauls Palast angreifen.\n\n"
+					+ "Was soll der Scheiß?!\nDu erschreckst noch die Prinzessin!").setVisible(true);
 			return false;
 		}
 		if (executionData.getStartFieldNormalTroops() + 2* executionData.getStartFieldBadassTroops() <= 0) {
-			new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\nDas ist keine freiwillige Aktion hier.").setVisible(true);
+			new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\n"
+					+ "Das ist keine freiwillige Aktion hier.").setVisible(true);
 			return false;
 		}
 		Field start = executionData.getStartField();
 		Field target = executionData.getTargetFields().get(0);
 		int normalTroops = executionData.getStartFieldNormalTroops();
 		int badassTroops = executionData.getStartFieldBadassTroops();
-		addHeroEffectExecutionToStatistics(executionData);
 		game.getFightManager().startFight(start, target, normalTroops, badassTroops);
+		//choose the retreat field (as the start field) but keep to boolean to not chosen so it only works when the player selects no other retreat field
+		game.getFightManager().getCurrentFight().setRetreatField(start);
 		return true;
 	}
 }

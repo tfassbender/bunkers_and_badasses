@@ -5,8 +5,8 @@ Bunkers and Badasses - Tasks
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
 	- implement the hero functions of Angel and Arschgaul
-	- heros should be only usable in the players turn (test implementation)
-	- heros seem to be removed from the players hand first but come back after the turn of another player
+	- commands can no longer be added or removed correctly (CommandException: No command found)
+	- the spinners in Modecai seem to have a wrong maximum...
 
 - Next versions:
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)

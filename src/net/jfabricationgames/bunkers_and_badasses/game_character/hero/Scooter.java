@@ -93,10 +93,6 @@ public class Scooter extends Hero {
 		}
 		executionData.getTargetFieldsNormalTroops().forEach((target, val) -> game.getBoard().moveTroops(executionData.getStartField(), target, val.intValue(), 0));
 		executionData.getTargetFieldsBadassTroops().forEach((target, val) -> game.getBoard().moveTroops(executionData.getStartField(), target, 0, val.intValue()));
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

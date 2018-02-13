@@ -19,8 +19,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
@@ -31,13 +36,9 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionComponent;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionData;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionType;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Lilith;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextArea;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class HeroEffectExecutionFrame extends JFrame {
 	
@@ -375,7 +376,13 @@ public class HeroEffectExecutionFrame extends JFrame {
 				if (currentHero.execute(executionData)) {
 					//remove the hero from the players hand
 					game.getHeroCardManager().heroCardUsed(currentHero, game.getLocalUser());
-					game.getGameFrame().update();
+					if (!(currentHero instanceof Lilith)) {
+						//end the users turn and send the update (except for lilith because she starts a fight)
+						currentHero.addHeroEffectExecutionToStatistics(executionData);
+						game.getPlayerOrder().nextMove();
+						game.getTurnExecutionManager().commit();
+					}
+					game.getGameFrame().updateAllFrames();
 					//remove the current hero
 					currentHero = null;
 					executionData = null;

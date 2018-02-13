@@ -78,10 +78,6 @@ public class Modecai extends Hero {
 			return false;
 		}
 		executionData.getTargetFieldsNormalTroops().forEach((field, value) -> field.removeNormalTroops(value));
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

@@ -41,10 +41,6 @@ public class Maya extends Hero {
 			return false;
 		}
 		executionData.getTargetFields().get(0).setCommand(null);
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

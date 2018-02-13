@@ -71,10 +71,6 @@ public class Moxxi extends Hero {
 			return false;
 		}
 		executionData.getTargetFieldsNormalTroops().forEach((field, value) -> field.addNormalTroops(value));
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

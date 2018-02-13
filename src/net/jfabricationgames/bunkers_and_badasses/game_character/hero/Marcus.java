@@ -50,10 +50,6 @@ public class Marcus extends Hero {
 			executionData.setCommand(new SupportCommand());
 		}
 		executionData.getStartField().setCommand(executionData.getCommand());
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

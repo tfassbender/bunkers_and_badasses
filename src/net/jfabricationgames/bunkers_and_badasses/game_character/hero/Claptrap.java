@@ -81,10 +81,6 @@ public class Claptrap extends Hero {
 		}
 		executionData.getTargetFieldsBadassTroops().forEach((field, value) -> field.removeBadassTroops(value));
 		executionData.getTargetFieldsBadassTroops().forEach((field, value) -> field.addNormalTroops(value));
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

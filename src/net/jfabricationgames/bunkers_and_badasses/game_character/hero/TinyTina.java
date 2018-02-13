@@ -30,7 +30,7 @@ public class TinyTina extends Hero {
 			//send the start execution data with only the possible start fields
 			ExecutionData data = new ExecutionData();
 			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(enemyPlayersField).filter(hasBuilding).
-					filter(nextToLocalPlayersField).collect(Collectors.toList()));
+					filter(hasArschgaulsPalace.negate()).filter(nextToLocalPlayersField).collect(Collectors.toList()));
 			return data;
 		}
 		else {
@@ -61,10 +61,6 @@ public class TinyTina extends Hero {
 			return false;
 		}
 		target.setBuilding(new EmptyBuilding());
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

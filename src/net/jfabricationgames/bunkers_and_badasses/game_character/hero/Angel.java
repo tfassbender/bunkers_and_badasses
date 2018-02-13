@@ -28,10 +28,6 @@ public class Angel extends Hero {
 	@Override
 	public boolean execute(ExecutionData executionData) {
 		//TODO implement that the player can't be attacked with heros in this turn
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

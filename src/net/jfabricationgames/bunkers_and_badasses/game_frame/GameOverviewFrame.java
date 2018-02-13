@@ -394,7 +394,7 @@ public class GameOverviewFrame extends JFrame {
 		for (Field field : game.getBoard().getFields()) {
 			if (field.getAffiliation() != null && field.getAffiliation().equals(selectedUser)) {
 				for (Field neighbour : field.getNeighbours()) {
-					if (neighbour.getAffiliation().equals(player)) {
+					if (neighbour.getAffiliation() != null && neighbour.getAffiliation().equals(player)) {
 						borders++;
 					}
 				}

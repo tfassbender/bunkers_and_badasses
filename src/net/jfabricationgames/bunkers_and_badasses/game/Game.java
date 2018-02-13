@@ -56,6 +56,8 @@ public class Game implements Serializable {
 		pointManager.initialize(players);
 		gameTurnBonusManager = new GameTurnBonusManager(this);
 		gameTurnBonusManager.chooseTurnBonusForGame(players.size());
+		heroCardManager = new HeroCardManager();
+		heroCardManager.intitialize(players);
 		planManager = new UserPlanManager(this);
 		gameTurnGoalManager = new GameTurnGoalManager(this);
 		turnManager = new GameTurnManager(this);
@@ -68,8 +70,6 @@ public class Game implements Serializable {
 		statisticManager = new GameStatisticManager();
 		statisticManager.initialize(players);
 		skillProfileManager = new SkillProfileManager();
-		heroCardManager = new HeroCardManager(this);
-		heroCardManager.intitialize(players);
 		gameStore = ((BunkersAndBadassesClientInterpreter) client.getClientInterpreter()).getGameStore();
 		//initialize the GameFrame when the board is added.
 		//gameFrame = new GameFrame(this);

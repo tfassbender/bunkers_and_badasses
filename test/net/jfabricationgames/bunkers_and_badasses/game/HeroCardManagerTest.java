@@ -28,7 +28,7 @@ public class HeroCardManagerTest {
 	
 	@Before
 	public void initHeroCardManager() {
-		manager = new HeroCardManager(null);
+		manager = new HeroCardManager();
 		user1 = new User("user1");
 		user2 = new User("user2");
 		user3 = new User("user3");

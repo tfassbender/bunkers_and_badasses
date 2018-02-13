@@ -32,10 +32,6 @@ public class CrazyEarl extends Hero {
 		UserResource resource = game.getResourceManager().getResources().get(game.getLocalUser());
 		resource.addCredits(50);
 		resource.addEridium(15);
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

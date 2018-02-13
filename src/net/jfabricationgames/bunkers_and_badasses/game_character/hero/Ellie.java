@@ -68,10 +68,6 @@ public class Ellie extends Hero {
 		}
 		target1.removeNormalTroops(2);
 		target2.removeNormalTroops(2);
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

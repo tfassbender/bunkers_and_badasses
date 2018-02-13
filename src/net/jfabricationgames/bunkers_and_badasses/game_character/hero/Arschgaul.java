@@ -49,10 +49,6 @@ public class Arschgaul extends Hero {
 			return false;
 		}
 		//TODO make the field untouchable for one turn
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

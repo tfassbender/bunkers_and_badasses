@@ -81,10 +81,6 @@ public class MrTorgue extends Hero {
 		}
 		executionData.getTargetFieldsNormalTroops().forEach((field, value) -> field.removeNormalTroops(value));
 		executionData.getTargetFieldsNormalTroops().forEach((field, value) -> field.addBadassTroops(value));
-		addHeroEffectExecutionToStatistics(executionData);
-		game.getPlayerOrder().nextMove();
-		game.getTurnExecutionManager().commit();
-		game.getGameFrame().updateAllFrames();
 		return true;
 	}
 }

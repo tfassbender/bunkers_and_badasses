@@ -887,7 +887,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		}
 		else {
 			if (fieldRetreadModel.isEmpty()) {
-				fight.setRetreatField(null);
+				//fight.setRetreatField(null);//the value should already be null so don't change it because some heros (e.g. Lilith can change it)
 				fight.setRetreatFieldChosen(true);
 				game.getFightManager().update();
 			}

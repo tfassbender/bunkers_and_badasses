@@ -19,6 +19,7 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 
@@ -61,9 +62,10 @@ public abstract class Hero implements Serializable {
 			anyMatch(f -> f.getAffiliation() != null && !f.getAffiliation().equals(game.getLocalUser()) && !f.getAffiliation().equals(field.getAffiliation()));
 	protected transient static final Predicate<Field> normalTroopsOnField = field -> field.getNormalTroops() > 0;
 	protected transient static final Predicate<Field> badassTroopsOnField = field -> field.getBadassTroops() > 0;
-	protected transient static final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField);
+	protected transient static final Predicate<Field> fieldEmpty = normalTroopsOnField.or(badassTroopsOnField).negate();
 	protected transient static final Predicate<Field> hasCommand = field -> field.getCommand() != null;
 	protected transient static final Predicate<Field> hasBuilding = field -> !(field.getBuilding() instanceof EmptyBuilding);
+	protected transient static final Predicate<Field> hasArschgaulsPalace = field -> field.getBuilding() instanceof ArschgaulsPalace;
 	protected transient static final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1 || (field.getNormalTroops() == 1 && field.getBadassTroops() > 0);
 	protected transient static final Predicate<Field> moreThanTwoBandits = field -> field.getNormalTroops() > 2 || (field.getNormalTroops() == 2 && field.getBadassTroops() > 0);
 	
@@ -309,7 +311,7 @@ public abstract class Hero implements Serializable {
 	/**
 	 * Adds the execution to the statistics. This method should be called after the turn was successfully executed.
 	 */
-	protected void addHeroEffectExecutionToStatistics(ExecutionData executionData) {
+	public void addHeroEffectExecutionToStatistics(ExecutionData executionData) {
 		//TODO
 	}
 	
