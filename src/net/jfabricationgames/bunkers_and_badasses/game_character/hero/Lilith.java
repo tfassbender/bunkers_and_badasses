@@ -20,7 +20,8 @@ public class Lilith extends Hero {
 		imagePath = "heros/lilith_1.png";
 		cardImagePath = "hero_cards/card_lilith.png";
 		loadImage();
-		effectDescription = "Phasewalk (Zug):\n\nEine kleine Infiltrationseinheit (Kampfstärke von bis zu 5) darf ein Feld Überspringen um hinter der Feindlichen Linie anzugreifen";
+		effectDescription = "Phasewalk (Zug):\n\nEine kleine Infiltrationseinheit (Kampfstärke von bis zu 5) darf ein Feld Überspringen "
+				+ "um hinter der Feindlichen Linie anzugreifen (Außer Arschgauls Palast)";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.FIELD_TARGET, 
 				ExecutionComponent.SPINNER_NUMBER_NORMAL, ExecutionComponent.SPINNER_NUMBER_BADASS);
 		executionType = ExecutionType.TURN_EFFECT;
@@ -39,7 +40,7 @@ public class Lilith extends Hero {
 			if (executionData.getStartField() != null) {
 				//start field is chosen -> calculate the possible target fields
 				executionData.setPossibleTargetFields(executionData.getStartField().getNeighbours().parallelStream().
-						flatMap(f2 -> f2.getNeighbours().parallelStream()).distinct().filter(localPlayersField.negate()).
+						flatMap(f2 -> f2.getNeighbours().parallelStream()).distinct().filter(enemyPlayersField).
 						filter(hasArschgaulsPalace.negate()).collect(Collectors.toList()));
 				//remove all selected target fields that are not possible anymore
 				executionData.setTargetFields(executionData.getTargetFields().stream().

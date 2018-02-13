@@ -236,6 +236,7 @@ public class HeroEffectExecutionFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!updatingComponents) {
 					executionData = null;
+					textAreaTargetFields.setText("");
 					requestExecutionData();
 				}
 			}

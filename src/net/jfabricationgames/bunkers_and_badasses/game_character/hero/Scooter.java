@@ -22,7 +22,8 @@ public class Scooter extends Hero {
 		imagePath = "heros/scooter_3.png";
 		cardImagePath = "hero_cards/card_scooter.png";
 		loadImage();
-		effectDescription = "Catch-A-Ride (Zug):\n\nBeliebig viele Truppen (aus einem Feld) dürfen bis zu 3 Felder weit vorrücken (und die Feindliche Linie durchbrechen, wenn sie ein eigenes Feld erreichen)";
+		effectDescription = "Catch-A-Ride (Zug):\n\nDeine Truppen dürfen bis zu 3 Felder weit vorrücken und die Feindliche Linie durchbrechen "
+				+ "(wenn sie ein eigenes oder leeres Feld erreichen)";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.FIELD_TARGET, 
 				ExecutionComponent.SPINNER_NUMBER_PER_FIELD_NORMAL, ExecutionComponent.SPINNER_NUMBER_PER_FIELD_BADASS);
 		executionType = ExecutionType.TURN_EFFECT;
@@ -33,19 +34,22 @@ public class Scooter extends Hero {
 		if (executionData == null) {
 			//send the start execution data with only the possible start fields
 			ExecutionData data = new ExecutionData();
-			data.setPossibleStartFields(game.getBoard().getFields().stream().filter(localPlayersField).filter(fieldEmpty.negate()).collect(Collectors.toList()));
+			data.setPossibleStartFields(game.getBoard().getFields().stream().filter(localPlayersField).
+					filter(fieldEmpty.negate()).collect(Collectors.toList()));
 			return data;
 		}
 		else {
 			if (executionData.getStartField() != null) {
 				executionData.setPossibleTargetFields(executionData.getStartField().getNeighbours().parallelStream().
-						flatMap(f2 -> f2.getNeighbours().parallelStream()).flatMap(f3 -> f3.getNeighbours().parallelStream()).
-						collect(Collectors.toList()));
+						flatMap(f2 -> f2.getNeighbours().parallelStream()).flatMap(f3 -> f3.getNeighbours().parallelStream()).distinct().
+						filter(localPlayersField.or(fieldEmpty).and(enemyPlayersField.negate())).collect(Collectors.toList()));
 				//remove all selected target fields that are not possible anymore
 				executionData.setTargetFields(executionData.getTargetFields().stream().
 						filter(field -> executionData.getPossibleTargetFields().contains(field)).collect(Collectors.toList()));
-				executionData.getTargetFieldsNormalTroops().entrySet().removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));
-				executionData.getTargetFieldsBadassTroops().entrySet().removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));
+				executionData.getTargetFieldsNormalTroops().entrySet().
+				removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));
+				executionData.getTargetFieldsBadassTroops().entrySet().
+				removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));
 			}
 			if (!executionData.getTargetFields().isEmpty()) {
 				if (executionData.getTargetFields().size() > 1) {
