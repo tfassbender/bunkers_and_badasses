@@ -43,6 +43,7 @@ public class GameTurnManager implements Serializable {
 		giveOutPoints();
 		game.getBoard().moveNeutralTroops();
 		game.getBoard().removeAllCommands();
+		game.getGameLockManager().removeLocks();
 		game.getPlanManager().turnEnded();
 		game.setState(GameState.PLAN);
 		playerOrder.nextTurn();

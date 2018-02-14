@@ -37,6 +37,7 @@ public class Game implements Serializable {
 	private SkillProfileManager skillProfileManager;
 	private FightManager fightManager;
 	private GameStatisticManager statisticManager;
+	private GameLockManager gameLockManager;
 	private transient GameFrame gameFrame;
 	private static transient GameStore gameStore;
 	private static transient GameVariableStorage gameVariableStorage;
@@ -70,6 +71,7 @@ public class Game implements Serializable {
 		statisticManager = new GameStatisticManager();
 		statisticManager.initialize(players);
 		skillProfileManager = new SkillProfileManager();
+		gameLockManager = new GameLockManager();
 		gameStore = ((BunkersAndBadassesClientInterpreter) client.getClientInterpreter()).getGameStore();
 		//initialize the GameFrame when the board is added.
 		//gameFrame = new GameFrame(this);
@@ -103,6 +105,7 @@ public class Game implements Serializable {
 		colorManager.merge(newData.getColorManager());
 		skillProfileManager.merge(newData.getSkillProfileManager());
 		fightManager.merge(newData.getFightManager());
+		gameLockManager.merge(newData.getGameLockManager());
 		//update the frames
 		if (gameFrame != null) {
 			gameFrame.updateAllFrames();
@@ -348,6 +351,13 @@ public class Game implements Serializable {
 	}
 	public void setStatisticManager(GameStatisticManager statisticManager) {
 		this.statisticManager = statisticManager;
+	}
+	
+	public GameLockManager getGameLockManager() {
+		return gameLockManager;
+	}
+	public void setGameLockManager(GameLockManager gameLockManager) {
+		this.gameLockManager = gameLockManager;
 	}
 	
 	public static String getVersion() {

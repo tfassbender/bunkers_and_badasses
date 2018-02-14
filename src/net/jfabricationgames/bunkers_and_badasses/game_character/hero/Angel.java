@@ -1,5 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import net.jfabricationgames.bunkers_and_badasses.game.GameLock;
+
 public class Angel extends Hero {
 	
 	private static final long serialVersionUID = -7693149616225773067L;
@@ -27,7 +29,9 @@ public class Angel extends Hero {
 	}
 	@Override
 	public boolean execute(ExecutionData executionData) {
-		//TODO implement that the player can't be attacked with heros in this turn
+		GameLock gameLock = new GameLock("Du kannst in dieser Runde keine Helden gegen diesen Spieler einsetzen, "
+				+ "da Angel's Effekt das verhindert.", 1, null);
+		game.getGameLockManager().addLock(game.getLocalUser(), gameLock);
 		return true;
 	}
 }
