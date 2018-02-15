@@ -1,6 +1,7 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
 import net.jfabricationgames.bunkers_and_badasses.game.GameLock;
+import net.jfabricationgames.bunkers_and_badasses.game.GameLock.LockType;
 
 public class Angel extends Hero {
 	
@@ -30,7 +31,7 @@ public class Angel extends Hero {
 	@Override
 	public boolean execute(ExecutionData executionData) {
 		GameLock gameLock = new GameLock("Du kannst in dieser Runde keine Helden gegen diesen Spieler einsetzen, "
-				+ "da Angel's Effekt das verhindert.", 1, null);
+				+ "da Angel's Effekt das verhindert.", 1, LockType.ANGELS_HERO_LOCK, null);
 		game.getGameLockManager().addLock(game.getLocalUser(), gameLock);
 		return true;
 	}

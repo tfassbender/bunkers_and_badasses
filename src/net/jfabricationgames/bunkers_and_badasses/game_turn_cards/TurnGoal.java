@@ -8,6 +8,7 @@ import com.jfabricationgames.toolbox.graphic.ImageLoader;
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
 /**
@@ -58,6 +59,9 @@ public abstract class TurnGoal implements Serializable {
 		
 	}
 	public void receivePointsMoving(User user, Field startField, boolean fieldConquered) {
+		
+	}
+	public void receivePointsHeroUsage(User user, Hero hero) {
 		
 	}
 	

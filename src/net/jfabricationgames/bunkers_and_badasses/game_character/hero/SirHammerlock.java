@@ -42,7 +42,7 @@ public class SirHammerlock extends Hero {
 					Field selected = executionData.getTargetFields().get(0);
 					int min = 0;
 					int max = Math.max(0, Math.min(3, selected.getNormalTroops()));
-					Optional<Integer> value = Optional.of(executionData.getTargetFieldsNormalTroops().get(selected));
+					Optional<Integer> value = Optional.ofNullable(executionData.getTargetFieldsNormalTroops().get(selected));
 					int val = Math.max(min, Math.min(max, value.orElse(0)));
 					executionData.getTargetFieldsNormalTroops().put(selected, val);
 					executionData.setTargetFieldNormalTroopsModel(new SpinnerNumberModel(val, min, max, 1));

@@ -1,5 +1,6 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,10 @@ public class Springs extends Hero {
 		imagePath = "heros/springs_1.png";
 		cardImagePath = "hero_cards/card_springs.png";
 		loadImage();
-		effectDescription = "Raketentechnickerin (Zug):\n\nBeliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte gebiete verschoben werden";
+		effectDescription = "Raketentechnickerin (Zug):\n\nBeliebig viele Einheiten aus einem Gebiet können in andere schon kontrollierte "
+				+ "gebiete verschoben werden";
+		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.FIELD_TARGET, 
+				ExecutionComponent.SPINNER_NUMBER_PER_FIELD_NORMAL, ExecutionComponent.SPINNER_NUMBER_PER_FIELD_BADASS);
 		executionType = ExecutionType.TURN_EFFECT;
 	}
 	
@@ -44,8 +48,8 @@ public class Springs extends Hero {
 					int min = 0;
 					int maxNormal = executionData.getStartField().getNormalTroops();
 					int maxBadass = executionData.getStartField().getBadassTroops();
-					Optional<Integer> valueNormal = Optional.of(executionData.getTargetFieldsNormalTroops().get(selectedField));
-					Optional<Integer> valueBadass = Optional.of(executionData.getTargetFieldsBadassTroops().get(selectedField));
+					Optional<Integer> valueNormal = Optional.ofNullable(executionData.getTargetFieldsNormalTroops().get(selectedField));
+					Optional<Integer> valueBadass = Optional.ofNullable(executionData.getTargetFieldsBadassTroops().get(selectedField));
 					int valNormal = valueNormal.orElse(0);
 					int valBadass = valueBadass.orElse(0);
 					executionData.setTargetFieldNormalTroopsModel(new SpinnerNumberModel(valNormal, min, maxNormal, 1));

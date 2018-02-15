@@ -62,8 +62,8 @@ public class Scooter extends Hero {
 					int min = 0;
 					int maxNormal = executionData.getStartField().getNormalTroops();
 					int maxBadass = executionData.getStartField().getBadassTroops();
-					Optional<Integer> valueNormal = Optional.of(executionData.getTargetFieldsNormalTroops().get(selectedField));
-					Optional<Integer> valueBadass = Optional.of(executionData.getTargetFieldsBadassTroops().get(selectedField));
+					Optional<Integer> valueNormal = Optional.ofNullable(executionData.getTargetFieldsNormalTroops().get(selectedField));
+					Optional<Integer> valueBadass = Optional.ofNullable(executionData.getTargetFieldsBadassTroops().get(selectedField));
 					int valNormal = valueNormal.orElse(0);
 					int valBadass = valueBadass.orElse(0);
 					executionData.setTargetFieldNormalTroopsModel(new SpinnerNumberModel(valNormal, min, maxNormal, 1));
@@ -77,8 +77,9 @@ public class Scooter extends Hero {
 	public boolean execute(ExecutionData executionData) {
 		int totalNormalTroopsMoved = executionData.getTargetFieldsNormalTroops().entrySet().stream().mapToInt(entry -> entry.getValue().intValue()).sum();
 		int totalBadassTroopsMoved = executionData.getTargetFieldsBadassTroops().entrySet().stream().mapToInt(entry -> entry.getValue().intValue()).sum();
-		List<Field> possibleTargets = executionData.getStartField().getNeighbours().parallelStream().flatMap(f2 -> f2.getNeighbours().parallelStream()).
-				flatMap(f3 -> f3.getNeighbours().parallelStream()).collect(Collectors.toList());
+		List<Field> possibleTargets = executionData.getStartField().getNeighbours().parallelStream().
+				flatMap(f2 -> f2.getNeighbours().parallelStream()).flatMap(f3 -> f3.getNeighbours().parallelStream()).distinct().
+				filter(localPlayersField.or(fieldEmpty).and(enemyPlayersField.negate())).collect(Collectors.toList());
 		boolean unreachableFields = Stream.concat(executionData.getTargetFieldsNormalTroops().entrySet().stream(), executionData.getTargetFieldsBadassTroops().entrySet().stream()).
 				anyMatch(entry -> !possibleTargets.contains(entry.getKey()));
 		if (totalNormalTroopsMoved + totalBadassTroopsMoved <= 0) {

@@ -207,7 +207,7 @@ public class HeroCardManager implements Serializable {
 		Collections.shuffle(heroCardStack);
 	}
 	
-	public void heroCardUsed(Hero heroCard, User user) {
+	public void heroCardUsed(Hero heroCard, User user) throws BunkersAndBadassesException {
 		if (heroCards.get(user).remove(heroCard)) {
 			putBackCards(heroCard);			
 		}

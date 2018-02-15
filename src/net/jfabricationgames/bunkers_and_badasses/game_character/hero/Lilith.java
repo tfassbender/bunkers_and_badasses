@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.SpinnerNumberModel;
 
+import net.jfabricationgames.bunkers_and_badasses.error.GameLockException;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.ErrorDialog;
@@ -96,9 +97,27 @@ public class Lilith extends Hero {
 		Field target = executionData.getTargetFields().get(0);
 		int normalTroops = executionData.getStartFieldNormalTroops();
 		int badassTroops = executionData.getStartFieldBadassTroops();
-		game.getFightManager().startFight(start, target, normalTroops, badassTroops);
-		//choose the retreat field (as the start field) but keep to boolean to not chosen so it only works when the player selects no other retreat field
-		game.getFightManager().getCurrentFight().setRetreatField(start);
-		return true;
+		if (target.getTroops().isEmpty()) {
+			//no enemy troops but an enemy field -> just conquer the field
+			game.getBoard().moveTroops(start, target, normalTroops, badassTroops);
+			//only do this in the implementation of Lilith (because it's not executed when she starts a fight)
+			game.getHeroCardManager().heroCardUsed(this, game.getLocalUser());
+			addHeroEffectExecutionToStatistics(executionData);
+			game.getPlayerOrder().nextMove();
+			game.getTurnExecutionManager().commit();
+			return true;
+		}
+		else {
+			try {
+				game.getFightManager().startFight(start, target, normalTroops, badassTroops);
+				//choose the retreat field (as the start field) but keep to boolean to not chosen so it only works when the player selects no other retreat field
+				game.getFightManager().getCurrentFight().setRetreatField(start);
+				return true;
+			}
+			catch (GameLockException gle) {
+				new ErrorDialog(gle.getErrorText()).setVisible(true);
+				return false;
+			}
+		}
 	}
 }

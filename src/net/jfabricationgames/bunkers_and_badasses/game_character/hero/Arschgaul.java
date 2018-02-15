@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import net.jfabricationgames.bunkers_and_badasses.game.GameLock;
+import net.jfabricationgames.bunkers_and_badasses.game.GameLock.LockType;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.ErrorDialog;
 
@@ -50,7 +51,7 @@ public class Arschgaul extends Hero {
 			return false;
 		}
 		GameLock gameLock = new GameLock("Du kannst dieses Feld in dieser Runde nicht angreifen!\n\n"
-				+ "Prinzessin Arschgaul beschützt dieses Feld!", 1, target);
+				+ "Prinzessin Arschgaul beschützt dieses Feld!", 1, LockType.ARSCHGAULS_FIELD_LOCK, target);
 		game.getGameLockManager().addLock(game.getLocalUser(), target, gameLock);
 		return true;
 	}

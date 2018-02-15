@@ -29,6 +29,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jfabricationgames.toolbox.graphic.ImagePanel;
 
+import net.jfabricationgames.bunkers_and_badasses.error.BunkersAndBadassesException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
@@ -38,6 +39,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.Execu
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionType;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Lilith;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
+import net.jfabricationgames.bunkers_and_badasses.game_turn_cards.TurnGoal;
 import net.miginfocom.swing.MigLayout;
 
 public class HeroEffectExecutionFrame extends JFrame {
@@ -375,10 +377,18 @@ public class HeroEffectExecutionFrame extends JFrame {
 			if (game.getGameState() == GameState.ACT && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && 
 					game.getFightManager().getCurrentFight() == null) {
 				if (currentHero.execute(executionData)) {
+					//give out points for hero usage
+					TurnGoal goal = game.getGameTurnGoalManager().getTurnGoal();
+					goal.receivePointsHeroUsage(game.getLocalUser(), currentHero);
 					//remove the hero from the players hand
-					game.getHeroCardManager().heroCardUsed(currentHero, game.getLocalUser());
+					try {
+						game.getHeroCardManager().heroCardUsed(currentHero, game.getLocalUser());						
+					}
+					catch (BunkersAndBadassesException babe) {
+						//do nothing here because this exception can occur when a player uses Lilith's effect (because she executes it herself)
+					}
 					if (!(currentHero instanceof Lilith)) {
-						//end the users turn and send the update (except for lilith because she starts a fight)
+						//end the users turn and send the update (except for lilith because she starts a fight or ends the turn herself)
 						currentHero.addHeroEffectExecutionToStatistics(executionData);
 						game.getPlayerOrder().nextMove();
 						game.getTurnExecutionManager().commit();

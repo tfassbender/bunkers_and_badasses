@@ -15,11 +15,11 @@ public class GameLockManager implements Serializable {
 	private static final long serialVersionUID = 6313341869519093199L;
 	
 	public Map<User, List<GameLock>> userLocks;
-	public Map<User, Map<Field, List<GameLock>>> fieldLocks;
+	public Map<User, Map<String, List<GameLock>>> fieldLocks;//use the field name because the Field class has no correct hash and can't be changed...
 	
 	public GameLockManager() {
 		userLocks = new HashMap<User, List<GameLock>>();
-		fieldLocks = new HashMap<User, Map<Field, List<GameLock>>>();
+		fieldLocks = new HashMap<User, Map<String, List<GameLock>>>();
 	}
 	
 	public void merge(GameLockManager lockManager) {
@@ -38,7 +38,7 @@ public class GameLockManager implements Serializable {
 	}
 	
 	public void addLock(User user, GameLock lock) {
-		List<GameLock> locks = Optional.of(userLocks.get(user)).orElse(new ArrayList<GameLock>(2));
+		List<GameLock> locks = Optional.ofNullable(userLocks.get(user)).orElse(new ArrayList<GameLock>(2));
 		locks.add(lock);
 		userLocks.put(user, locks);
 	}
@@ -47,31 +47,32 @@ public class GameLockManager implements Serializable {
 			addLock(user, lock);
 		}
 		else {
-			Map<Field, List<GameLock>> usersFieldLocks = Optional.of(fieldLocks.get(user)).orElse(new HashMap<Field, List<GameLock>>(2));
-			List<GameLock> locks = Optional.of(usersFieldLocks.get(field)).orElse(new ArrayList<GameLock>(2));
+			Map<String, List<GameLock>> usersFieldLocks = Optional.ofNullable(fieldLocks.get(user)).orElse(new HashMap<String, List<GameLock>>(2));
+			List<GameLock> locks = Optional.ofNullable(usersFieldLocks.get(field.getName())).orElse(new ArrayList<GameLock>(2));
 			locks.add(lock);
-			usersFieldLocks.put(field, locks);
+			usersFieldLocks.put(field.getName(), locks);
 			fieldLocks.put(user, usersFieldLocks);
 		}
 	}
 	
 	public List<GameLock> getGameLocks(User user) {
-		return Optional.of(userLocks.get(user)).orElse(new ArrayList<GameLock>(0));
+		return Optional.ofNullable(userLocks.get(user)).orElse(new ArrayList<GameLock>(0));
 	}
 	public List<GameLock> getGameLocks(User user, Field field) {
 		if (field == null) {
 			return getGameLocks(user);
 		}
 		else {
-			Map<Field, List<GameLock>> usersFieldLocks = Optional.of(fieldLocks.get(user)).orElse(new HashMap<Field, List<GameLock>>());
-			return Optional.of(usersFieldLocks.get(field)).orElse(new ArrayList<GameLock>(0));
+			Map<String, List<GameLock>> usersFieldLocks = Optional.ofNullable(fieldLocks.get(user)).orElse(new HashMap<String, List<GameLock>>());
+			List<GameLock> locks = Optional.ofNullable(usersFieldLocks.get(field.getName())).orElse(new ArrayList<GameLock>(0));
+			return locks;
 		}
 	}
 	
 	private Map<User, List<GameLock>> getUserLocks() {
 		return userLocks;
 	}
-	private Map<User, Map<Field, List<GameLock>>> getFieldLocks() {
+	private Map<User, Map<String, List<GameLock>>> getFieldLocks() {
 		return fieldLocks;
 	}
 }

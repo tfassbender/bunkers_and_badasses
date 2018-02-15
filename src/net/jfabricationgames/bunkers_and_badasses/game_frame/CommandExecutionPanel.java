@@ -27,6 +27,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.jfabricationgames.bunkers_and_badasses.error.GameLockException;
 import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
@@ -895,10 +896,15 @@ public class CommandExecutionPanel extends JPanel {
 								commandExecuted = true;
 							}
 							else {
-								game.getFightManager().startFight(selectedField, targetField, normalTroops, badassTroops);
-								//commandExecuted = true;
-								//the command is executed when the fight is over (however set the command to null but don't commit)
-								selectedField.setCommand(null);
+								try {
+									game.getFightManager().startFight(selectedField, targetField, normalTroops, badassTroops);
+									//commandExecuted = true;
+									//the command is executed when the fight is over (however set the command to null but don't commit)
+									selectedField.setCommand(null);									
+								}
+								catch (GameLockException gle) {
+									new ErrorDialog(gle.getErrorText()).setVisible(true);
+								}
 							}
 						}
 						else {

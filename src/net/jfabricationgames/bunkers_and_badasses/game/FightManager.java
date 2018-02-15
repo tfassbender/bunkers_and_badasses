@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jfabricationgames.bunkers_and_badasses.error.GameLockException;
+import net.jfabricationgames.bunkers_and_badasses.game.GameLock.LockType;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
@@ -82,7 +84,17 @@ public class FightManager implements Serializable {
 	 * @param badassTroops
 	 * 		The badass troops the attacking player wants to use.
 	 */
-	public void startFight(Field startField, Field targetField, int normalTroops, int badassTroops) {
+	public void startFight(Field startField, Field targetField, int normalTroops, int badassTroops) throws GameLockException {
+		//check whether the target field is locked by Arschgaul's effect
+		User defender = targetField.getAffiliation();
+		List<GameLock> locks = game.getGameLockManager().getGameLocks(defender, targetField);
+		if (!locks.isEmpty()) {
+			GameLock searchedLock = new GameLock(null, 0, LockType.ARSCHGAULS_FIELD_LOCK, targetField);
+			int lockId = locks.indexOf(searchedLock);
+			if (lockId != -1) {
+				throw new GameLockException("The field is locked by Arschgauls effect and can not be attacked.", locks.get(lockId).getErrorMessage());
+			}			
+		}
 		currentFight = new Fight();
 		currentFight.setAttackingField(startField);
 		currentFight.setDefendingField(targetField);
@@ -113,6 +125,22 @@ public class FightManager implements Serializable {
 			if (targetField.getAffiliation() == null) {
 				currentFight.setDefendingHeroChosen(true);//skags can't chose heros
 				currentFight.setAttackingHeroChosen(true);
+			}
+			else {
+				//check if one of the players has a hero lock (Angels effect)
+				List<GameLock> attackersLocks = game.getGameLockManager().getGameLocks(currentFight.getAttackingPlayer());
+				List<GameLock> defendersLocks = game.getGameLockManager().getGameLocks(currentFight.getDefendingPlayer());
+				GameLock searchedLock = new GameLock(null, 0, LockType.ANGELS_HERO_LOCK, null);//error message and counter are not checked in equals
+				if (attackersLocks.contains(searchedLock)) {
+					//defender can't use heros against this attacker
+					currentFight.setDefendingHero(null);
+					currentFight.setDefendingHeroChosen(true);
+				}
+				if (defendersLocks.contains(searchedLock)) {
+					//attacker can't use heros against this defender
+					currentFight.setAttackingHero(null);
+					currentFight.setAttackingHeroChosen(true);
+				}
 			}
 			addPossibleSupportFields();
 			if (currentFight.getPossibleSupporters().isEmpty()) {

@@ -41,7 +41,7 @@ public class Claptrap extends Hero {
 					Field selected = executionData.getTargetFields().get(0);
 					int min = 0;
 					int max = Math.max(0, Math.min(3, selected.getBadassTroops()));
-					Optional<Integer> value = Optional.of(executionData.getTargetFieldsBadassTroops().get(selected));
+					Optional<Integer> value = Optional.ofNullable(executionData.getTargetFieldsBadassTroops().get(selected));
 					int val = Math.max(min, Math.min(max, value.orElse(0)));
 					executionData.getTargetFieldsBadassTroops().put(selected, val);
 					executionData.setTargetFieldBadassTroopsModel(new SpinnerNumberModel(val, min, max, 1));

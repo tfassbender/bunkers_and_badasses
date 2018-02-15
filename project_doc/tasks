@@ -4,8 +4,8 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
-	- implement the hero functions of Angel and Arschgaul
 	- the spinners in Modecai seem to have a wrong maximum...
+	- fights against neutrals need further debugging (to many neutrals fall when the player looses; troops fall although there was support)
 
 - Next versions:
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)
