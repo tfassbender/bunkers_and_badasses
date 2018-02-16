@@ -2,12 +2,17 @@ package net.jfabricationgames.bunkers_and_badasses.game;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Athena;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.DrZed;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionType;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.user.User;
 
@@ -47,6 +52,8 @@ public class Fight implements Serializable {
 	private boolean attackingHeroChosen;
 	private boolean defendingHeroChosen;
 	
+	private boolean blockHeroExecution;
+	
 	private Field retreatField;
 	private boolean retreatFieldChosen;
 	
@@ -77,6 +84,7 @@ public class Fight implements Serializable {
 		fallingTroopsSupport = new HashMap<Field, Integer>();
 		fallenTroops = new HashMap<Field, int[]>();
 		battleState = STATE_SUPPORT;
+		blockHeroExecution = false;
 	}
 	
 	/**
@@ -120,10 +128,6 @@ public class Fight implements Serializable {
 		fallenTroopsChosen = fight.fallenTroopsChosen;
 	}
 	
-	public void executeHerosEffect(Hero hero) {
-		//TODO
-	}
-	
 	public int getAttackingStrength() {
 		return currentAttackingStrength;
 	}
@@ -136,6 +140,26 @@ public class Fight implements Serializable {
 	}
 	public int getDefendingTroopStrength() {
 		return defendingField.getTroopStrength();
+	}
+	
+	protected void executeHeroEffects(ExecutionType executionType) {
+		List<Hero> heros = new ArrayList<Hero>(2);
+		if (attackingHero != null && useAttackingHeroEffect && attackingHero.getExecutionType() == executionType) {
+			heros.add(attackingHero);
+		}
+		if (defendingHero != null && useDefendingHeroEffect && defendingHero.getExecutionType() == executionType) {
+			heros.add(defendingHero);
+		}
+		if (!heros.isEmpty()) {
+			Comparator<Hero> byPriority = (h1, h2) -> -Integer.compare(h1.getExecutionPriority(), h2.getExecutionPriority());//reversed order
+			Collections.sort(heros, byPriority);
+			for (Hero hero : heros) {
+				if (!blockHeroExecution) {
+					//execute if not Axton blocks the execution
+					hero.execute(this);					
+				}
+			}			
+		}
 	}
 	
 	public int[] calculateFallingTroops() {
@@ -356,7 +380,9 @@ public class Fight implements Serializable {
 	}
 	public int[] calculateFallingTroopsSkagFightLost() {
 		int[] fallingTroops = new int[] {attackingNormalTroops + 2*attackingBadassTroops, attackingNormalTroops + 2*attackingBadassTroops};
-		fallingTroops[1] = Math.min(fallingTroops[1], getDefendingStrength() - 1);//one skag survives
+		if (getDefendingStrength() - fallingTroops[1] <= 0) {
+			fallingTroops[1] = getDefendingStrength()-1;//one skag survives			
+		}
 		return fallingTroops;
 	}
 	
@@ -433,6 +459,9 @@ public class Fight implements Serializable {
 		if (defendingHero != null && !useDefendingHeroEffect && battleState >= STATE_HEROS) {
 			currentDefendingStrength += defendingHero.getDefence();
 		}
+		
+		//hero effects (Bloodwing)
+		executeHeroEffects(ExecutionType.DURING_FIGHT);
 	}
 	
 	public void calculateWinner() {
@@ -692,6 +721,13 @@ public class Fight implements Serializable {
 		this.defendingHeroChosen = defendingHeroChosen;
 	}
 	
+	public boolean isBlockHeroExecution() {
+		return blockHeroExecution;
+	}
+	public void setBlockHeroExecution(boolean blockHeroExecution) {
+		this.blockHeroExecution = blockHeroExecution;
+	}
+	
 	public Field getRetreatField() {
 		return retreatField;
 	}
@@ -714,7 +750,14 @@ public class Fight implements Serializable {
 	}
 	
 	public int getFallingTroopsLooser() {
-		return fallingTroopsLooser;
+		int falling = fallingTroopsLooser;
+		if (getWinner() == ATTACKERS && getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof Athena) {
+			falling = 0;
+		}
+		else if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed) {
+			falling = fallingTroopsLooser / 2 + (fallingTroopsLooser % 2 == 0 ? 0 : 1);
+		}
+		return falling;
 	}
 	public void setFallingTroopsLooser(int fallingTroopsLooser) {
 		this.fallingTroopsLooser = fallingTroopsLooser;
@@ -727,8 +770,30 @@ public class Fight implements Serializable {
 		this.fallingTroopsWinner = fallingTroopsWinner;
 	}
 	
+	/**
+	 * Return a (maybe changed, by hero effects) copy of the falling troop support map.
+	 * 
+	 * WARNING: if you want to change the values in the fight you need to use the set method after applying changes to the map
+	 */
 	public Map<Field, Integer> getFallingTroopsSupport() {
-		return fallingTroopsSupport;
+		Map<Field, Integer> fallingTroops = new HashMap<Field, Integer>();
+		fallingTroops.putAll(fallingTroopsSupport);
+		if (getWinner() == ATTACKERS && getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof Athena) {
+			for (Field field : fallingTroops.keySet()) {
+				if (field.getAffiliation() != null && field.getAffiliation().equals(getDefendingPlayer())) {
+					fallingTroops.put(field, 0);
+				}
+			}
+		}
+		else if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed) {
+			for (Field field : fallingTroops.keySet()) {
+				if (field.getAffiliation() != null && field.getAffiliation().equals(getDefendingPlayer())) {
+					int fallingSupport = fallingTroops.get(field);
+					fallingTroops.put(field, fallingSupport / 2 + (fallingSupport % 2 == 0 ? 0 : 1));
+				}
+			}
+		}
+		return fallingTroops;
 	}
 	public void setFallingTroopsSupport(Map<Field, Integer> fallingTroopsSupport) {
 		this.fallingTroopsSupport = fallingTroopsSupport;

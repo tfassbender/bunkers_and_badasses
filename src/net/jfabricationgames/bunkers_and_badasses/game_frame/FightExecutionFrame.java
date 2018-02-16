@@ -910,7 +910,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			new ErrorDialog("Du kannst nicht mehr Truppen töten als du insgesammt ausgewählt hast.\n\nWenn alle auf einmal draufgehn wird Dein nächster Zug doch total langweilig.").setVisible(true);
 		}
 		else if (chooseFallingTroopsWinnerSupporters) {
-			fight.getFallingTroopsSupport().putAll(fallingSupportTroops);
+			Map<Field, Integer> fallingTroopsMap = fight.getFallingTroopsSupport();
+			fallingTroopsMap.putAll(fallingSupportTroops);
+			fight.setFallingTroopsSupport(fallingTroopsMap);
+			//fight.getFallingTroopsSupport().putAll(fallingSupportTroops);
 			fallingTroopsChosen = true;
 		}
 		else {
@@ -925,7 +928,9 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 				List<Field> supporters = fight.getWinningSupporters();
 				if (supporters.size() == 1) {
 					//only one support field that must take the falling troops (automatically calculated)
-					fight.getFallingTroopsSupport().put(supporters.get(0), fallingTroops - fallingTroopsWinner);
+					Map<Field, Integer> fallingTroopsMap = fight.getFallingTroopsSupport();
+					fallingTroopsMap.put(supporters.get(0), fallingTroops - fallingTroopsWinner);
+					fight.setFallingTroopsSupport(fallingTroopsMap);
 				}
 				else {
 					//more supporters that need to take the falling troops -> let the user choose

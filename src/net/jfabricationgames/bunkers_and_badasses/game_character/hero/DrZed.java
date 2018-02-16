@@ -14,10 +14,11 @@ public class DrZed extends Hero {
 		cardImagePath = "hero_cards/card_dr_zed.png";
 		loadImage();
 		effectDescription = "Feld Metzger (Kampf):\n\nZed kann die Hälfte deiner Truppen (aufgerundet) die sterben würden wieder zusammenflicken";
+		executionType = ExecutionType.DURING_FIGHT;
 	}
 	
 	@Override
 	public void execute(Fight fight) {
-		//TODO
+		//implemented in Fight.getFallingTroopsLooser and Fight.getFallingTroopsSupport because the values are not changed but their return values
 	}
 }

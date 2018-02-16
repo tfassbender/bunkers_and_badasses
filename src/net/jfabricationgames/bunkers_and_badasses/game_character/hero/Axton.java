@@ -14,10 +14,18 @@ public class Axton extends Hero {
 		cardImagePath = "hero_cards/card_axton.png";
 		loadImage();
 		effectDescription = "Stratege (Kampf):\n\nDie gegnerische Karte kann nicht eingesetzt werden";
+		executionType = ExecutionType.BEFORE_FIGHT;
+		executionPriority = 1;
 	}
 	
 	@Override
 	public void execute(Fight fight) {
-		//TODO
+		if (fight.getAttackingHero() != null && fight.getAttackingHero().equals(this)) {
+			fight.setDefendingHero(null);
+		}
+		else if (fight.getDefendingHero() != null && fight.getDefendingHero().equals(this)) {
+			fight.setAttackingHero(null);
+		}
+		fight.setBlockHeroExecution(true);
 	}
 }

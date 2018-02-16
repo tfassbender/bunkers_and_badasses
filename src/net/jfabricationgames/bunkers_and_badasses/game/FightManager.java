@@ -12,6 +12,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.TinyTinasMine;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionType;
 import net.jfabricationgames.bunkers_and_badasses.game_command.RetreatCommand;
 import net.jfabricationgames.bunkers_and_badasses.game_communication.FightTransfereMessage;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.FightExecutionFrame;
@@ -177,7 +178,7 @@ public class FightManager implements Serializable {
 				localField = game.getBoard().getFieldByName(field.getName());
 				//System.out.println("Removing troops from " + localField.getName() + ": " + fallenTroops[0] + ", " + fallenTroops[1]);
 				try {
-					localField.removeNormalTroops(fallenTroops[0]);//TODO not enough troops to remove exception here (trying to remove troops in retreat field?)
+					localField.removeNormalTroops(fallenTroops[0]);
 					localField.removeBadassTroops(fallenTroops[1]);
 					if (localField.getAffiliation() != null && !localField.getAffiliation().equals(currentFight.getAttackingPlayer())) {
 						totalKilledTroops[0] += fallenTroops[0];
@@ -237,27 +238,6 @@ public class FightManager implements Serializable {
 			GameStatistic statsRejection = game.getStatisticManager().getStatistics(field.getAffiliation());
 			statsRejection.setSupport_rejected(statsRejection.getSupport_rejected() + 1);
 		}
-		//remove the used heros from the players hands
-		if (currentFight.getAttackingHero() != null) {
-			game.getHeroCardManager().heroCardUsed(currentFight.getAttackingHero(), currentFight.getAttackingPlayer());
-			if (currentFight.isUseAttackingHeroEffect()) {
-				stats.setHeros_used_effect(stats.getHeros_used_effect() + 1);
-			}
-			else {
-				stats.setHeros_used_battle(stats.getHeros_used_battle() + 1);
-			}
-		}
-		if (currentFight.getDefendingHero() != null) {
-			game.getHeroCardManager().heroCardUsed(currentFight.getDefendingHero(), currentFight.getDefendingPlayer());
-			if (statsDefender != null) {
-				if (currentFight.isUseDefendingHeroEffect()) {
-					statsDefender.setHeros_used_effect(statsDefender.getHeros_used_effect() + 1);
-				}
-				else {
-					statsDefender.setHeros_used_battle(statsDefender.getHeros_used_battle() + 1);
-				}
-			}
-		}
 		//move the attacking troops to the new field and the loosing troops to the retreat field 
 		if (currentFight.getWinner() == Fight.ATTACKERS) {
 			//give out points for movements
@@ -315,6 +295,29 @@ public class FightManager implements Serializable {
 			int normalTroopsRetreat = currentFight.getAttackingNormalTroops() - fallen[0];
 			int badassTroopsRetreat = currentFight.getAttackingBadassTroops() - fallen[1];
 			game.getBoard().moveTroops(currentFight.getAttackingField(), currentFight.getRetreatField(), normalTroopsRetreat, badassTroopsRetreat);
+		}
+		//hero effects
+		currentFight.executeHeroEffects(ExecutionType.AFTER_FIGHT);
+		//remove the used heros from the players hands
+		if (currentFight.getAttackingHero() != null) {
+			game.getHeroCardManager().heroCardUsed(currentFight.getAttackingHero(), currentFight.getAttackingPlayer());
+			if (currentFight.isUseAttackingHeroEffect()) {
+				stats.setHeros_used_effect(stats.getHeros_used_effect() + 1);
+			}
+			else {
+				stats.setHeros_used_battle(stats.getHeros_used_battle() + 1);
+			}
+		}
+		if (currentFight.getDefendingHero() != null) {
+			game.getHeroCardManager().heroCardUsed(currentFight.getDefendingHero(), currentFight.getDefendingPlayer());
+			if (statsDefender != null) {
+				if (currentFight.isUseDefendingHeroEffect()) {
+					statsDefender.setHeros_used_effect(statsDefender.getHeros_used_effect() + 1);
+				}
+				else {
+					statsDefender.setHeros_used_battle(statsDefender.getHeros_used_battle() + 1);
+				}
+			}
 		}
 		game.setState(GameState.ACT);
 		//update the statistics
@@ -375,6 +378,9 @@ public class FightManager implements Serializable {
 				currentFight.setBattleState(Fight.STATE_HEROS);
 			}
 			if (currentFight.isAttackingHeroChosen() && currentFight.isDefendingHeroChosen() && currentFight.getBattleState() < Fight.STATE_RETREAT_FIELD && currentFight.getBattleState() > Fight.STATE_SUPPORT) {
+				//hero effects (Axton, Nisha)
+				currentFight.executeHeroEffects(ExecutionType.BEFORE_FIGHT);
+				currentFight.calculateCurrentStrength();
 				currentFight.calculateWinner();
 				currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
 				//auto-set the values for fight against skags
