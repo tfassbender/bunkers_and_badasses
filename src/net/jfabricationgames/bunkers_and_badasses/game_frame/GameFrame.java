@@ -268,7 +268,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 			public void actionPerformed(ActionEvent e) {
 				selectHeroCardFrame.setVisible(true);
 				selectHeroCardFrame.requestFocus();
-				selectHeroCardFrame.setCardSelectionEnabled(false, null);
+				selectHeroCardFrame.setCardSelectionEnabled(false, false, null);
 			}
 		});
 		mnDialog.add(mntmHeldenInfoDialog);
@@ -664,7 +664,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	}
 	
 	@Override
-	public void receiveSelectedHero(Hero hero) {
+	public void receiveSelectedHero(Hero hero, boolean effect) {
 		if (hero.getExecutionType() == ExecutionType.TURN_EFFECT) {
 			heroEffectExecutionFrame.startHeroEffectExecution(hero);			
 		}

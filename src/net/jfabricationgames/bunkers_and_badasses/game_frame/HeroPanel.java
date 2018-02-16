@@ -53,7 +53,7 @@ public class HeroPanel extends JPanel {
 				gameFrame.getSelectHeroCardFrame().update();
 				gameFrame.getSelectHeroCardFrame().setVisible(true);
 				gameFrame.getSelectHeroCardFrame().requestFocus();
-				gameFrame.getSelectHeroCardFrame().setCardSelectionEnabled(false, null);
+				gameFrame.getSelectHeroCardFrame().setCardSelectionEnabled(false, false, null);
 			}
 		});
 		btnbersicht.setToolTipText("<html>\r\n\u00DCbersicht \u00FCber die vorhandenen <br>\r\nHelden Karten\r\n</html>");
@@ -70,7 +70,7 @@ public class HeroPanel extends JPanel {
 					gameFrame.getSelectHeroCardFrame().update();
 					gameFrame.getSelectHeroCardFrame().setVisible(true);
 					gameFrame.getSelectHeroCardFrame().requestFocus();
-					gameFrame.getSelectHeroCardFrame().setCardSelectionEnabled(true, gameFrame);
+					gameFrame.getSelectHeroCardFrame().setCardSelectionEnabled(true, false, gameFrame);
 				}
 				else if (!game.getPlayerOrder().isPlayersTurn(game.getLocalUser())) {
 					new ErrorDialog("Du bist nicht an der reihe.\n\n"

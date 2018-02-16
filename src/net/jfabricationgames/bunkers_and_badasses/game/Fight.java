@@ -743,7 +743,11 @@ public class Fight implements Serializable {
 	}
 	
 	public int getFallingTroopsTotal() {
-		return fallingTroopsTotal;
+		int falling = fallingTroopsTotal;
+		if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed) {
+			falling = fallingTroopsTotal / 2 + (fallingTroopsTotal % 2 == 0 ? 0 : 1);
+		}
+		return falling;
 	}
 	public void setFallingTroopsTotal(int fallingTroopsTotal) {
 		this.fallingTroopsTotal = fallingTroopsTotal;
@@ -785,9 +789,17 @@ public class Fight implements Serializable {
 				}
 			}
 		}
-		else if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed) {
+		else if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed ||
+				getAttackingHero() != null && isUseAttackingHeroEffect() && getAttackingHero() instanceof DrZed) {
+			User user;
+			if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed) {
+				user = getDefendingPlayer();
+			}
+			else {
+				user = getAttackingPlayer();
+			}
 			for (Field field : fallingTroops.keySet()) {
-				if (field.getAffiliation() != null && field.getAffiliation().equals(getDefendingPlayer())) {
+				if (field.getAffiliation() != null && field.getAffiliation().equals(user)) {
 					int fallingSupport = fallingTroops.get(field);
 					fallingTroops.put(field, fallingSupport / 2 + (fallingSupport % 2 == 0 ? 0 : 1));
 				}

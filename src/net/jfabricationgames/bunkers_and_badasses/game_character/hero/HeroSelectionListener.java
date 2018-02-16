@@ -8,5 +8,5 @@ public interface HeroSelectionListener {
 	 * @param hero
 	 * 		The selected hero card.
 	 */
-	public void receiveSelectedHero(Hero hero);
+	public void receiveSelectedHero(Hero hero, boolean effect);
 }

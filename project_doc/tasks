@@ -5,6 +5,7 @@ Bunkers and Badasses - Tasks
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
 	- the spinners in Modecai seem to have a wrong maximum...
+	- the selected fields in scooter's effect seem to not work correctly (empty fields are not selected but displayed as selected)
 
 - Next versions:
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)

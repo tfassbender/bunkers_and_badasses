@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,6 +43,7 @@ import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JRadioButton;
 
 public class SelectHeroCardFrame extends JFrame {
 	
@@ -70,9 +72,11 @@ public class SelectHeroCardFrame extends JFrame {
 	private JButton btnRekrutieren;
 	
 	private PropertiesFile propsFile = new PropertiesFile(this);
+	private JRadioButton rdbtnEffekt;
+	private JRadioButton rdbtnStrke;
 	
 	public SelectHeroCardFrame(Game game, boolean cardPlayable) {
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
 		addFocusListener(new FocusAdapter() {
 			@Override
@@ -148,7 +152,7 @@ public class SelectHeroCardFrame extends JFrame {
 			panel_selected.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			panel_selected.setBackground(Color.GRAY);
 			panel.add(panel_selected, "cell 0 1 1 2,grow");
-			panel_selected.setLayout(new MigLayout("", "[][][50px][30px][grow]", "[][5px][][][5px][][grow][]"));
+			panel_selected.setLayout(new MigLayout("", "[][grow][50px][30px][grow]", "[][5px][][][5px][][grow][]"));
 			
 			JLabel lblHeld = new JLabel("Held:");
 			lblHeld.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -204,7 +208,7 @@ public class SelectHeroCardFrame extends JFrame {
 			JPanel panel_buttons = new JPanel();
 			panel_buttons.setBackground(Color.GRAY);
 			panel_selected.add(panel_buttons, "cell 0 7 5 1,grow");
-			panel_buttons.setLayout(new MigLayout("", "[grow][][][grow]", "[]"));
+			panel_buttons.setLayout(new MigLayout("", "[grow][][][grow]", "[][]"));
 			
 			btnAuswhlen = new JButton("Ausw\u00E4hlen");
 			btnAuswhlen.addActionListener(new ActionListener() {
@@ -212,19 +216,34 @@ public class SelectHeroCardFrame extends JFrame {
 					selectHero();
 				}
 			});
+			
+			rdbtnEffekt = new JRadioButton("Effekt");
+			rdbtnEffekt.setEnabled(false);
+			rdbtnEffekt.setSelected(true);
+			panel_buttons.add(rdbtnEffekt, "cell 1 0,alignx right");
+			rdbtnEffekt.setBackground(Color.GRAY);
+			
+			rdbtnStrke = new JRadioButton("St\u00E4rke");
+			rdbtnStrke.setEnabled(false);
+			panel_buttons.add(rdbtnStrke, "cell 2 0");
+			rdbtnStrke.setBackground(Color.GRAY);
 			btnAuswhlen.setEnabled(cardPlayable);
 			btnAuswhlen.setBackground(Color.GRAY);
-			panel_buttons.add(btnAuswhlen, "cell 1 0");
+			panel_buttons.add(btnAuswhlen, "cell 1 1");
+			
+			ButtonGroup heroEffectGroup = new ButtonGroup();
+			heroEffectGroup.add(rdbtnEffekt);
+			heroEffectGroup.add(rdbtnStrke);
 			
 			JButton btnAbbrechen = new JButton("Abbrechen");
 			btnAbbrechen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					setCardSelectionEnabled(false, null);
+					setCardSelectionEnabled(false, false, null);
 					setVisible(false);
 				}
 			});
 			btnAbbrechen.setBackground(Color.GRAY);
-			panel_buttons.add(btnAbbrechen, "cell 2 0");
+			panel_buttons.add(btnAbbrechen, "cell 2 1");
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -276,6 +295,12 @@ public class SelectHeroCardFrame extends JFrame {
 			panel.add(panel_resources, "cell 1 2,grow");
 			panel_resources.setBackground(Color.GRAY);
 		}
+	}
+	
+	@Override
+	public void dispose() {
+		setCardSelectionEnabled(false, false, null);
+		super.dispose();
 	}
 	
 	private void recruitHeros() {
@@ -361,7 +386,7 @@ public class SelectHeroCardFrame extends JFrame {
 			}
 			Hero hero = list_heroes.getSelectedValue();
 			//game.getHeroCardManager().putBackCards(hero);
-			selectionListener.receiveSelectedHero(hero);
+			selectionListener.receiveSelectedHero(hero, rdbtnEffekt.isSelected());
 			panel_hero_image.setImage(null);
 			setVisible(false);
 		}
@@ -379,11 +404,16 @@ public class SelectHeroCardFrame extends JFrame {
 	 * @throws IllegalArgumentException
 	 * 		An IllegalArgumentException is thrown when the selection is enabled and the listener is null.
 	 */
-	public void setCardSelectionEnabled(boolean enabled, HeroSelectionListener listener) throws IllegalArgumentException {
+	public void setCardSelectionEnabled(boolean enabled, boolean effectSelectionEnabled, HeroSelectionListener listener) throws IllegalArgumentException {
 		if (enabled && listener == null) {
 			throw new IllegalArgumentException("Can't enable the selection without a listener.");
 		}
 		this.selectionListener = listener;
 		btnAuswhlen.setEnabled(enabled);
+		rdbtnEffekt.setEnabled(effectSelectionEnabled);
+		rdbtnStrke.setEnabled(effectSelectionEnabled);
+		if (!effectSelectionEnabled) {
+			rdbtnEffekt.setSelected(true);
+		}
 	}
 }

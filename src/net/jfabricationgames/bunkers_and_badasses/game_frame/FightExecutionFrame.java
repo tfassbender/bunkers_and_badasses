@@ -116,7 +116,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	private JList<Field> list_rueckzug;
 	private JRadioButton rdbtnEffektAttacker;
 	private JRadioButton rdbtnStrkeAttacker;
-	private JRadioButton rdbtnEffectDefender;
+	private JRadioButton rdbtnEffektDefender;
 	private JRadioButton rdbtnStrkeDefender;
 	private JButton btnAuswahlZurcksetzen;
 	private JList<Field> list_field_fallen_troops;
@@ -446,11 +446,11 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		txtHeroDefenderDef.setBackground(Color.LIGHT_GRAY);
 		panel_hero_defender.add(txtHeroDefenderDef, "cell 3 2,growx");
 		
-		rdbtnEffectDefender = new JRadioButton("Effekt");
-		rdbtnEffectDefender.setEnabled(false);
-		rdbtnEffectDefender.setForeground(Color.BLACK);
-		rdbtnEffectDefender.setBackground(Color.GRAY);
-		panel_hero_defender.add(rdbtnEffectDefender, "cell 0 4 2 1,alignx center");
+		rdbtnEffektDefender = new JRadioButton("Effekt");
+		rdbtnEffektDefender.setEnabled(false);
+		rdbtnEffektDefender.setForeground(Color.BLACK);
+		rdbtnEffektDefender.setBackground(Color.GRAY);
+		panel_hero_defender.add(rdbtnEffektDefender, "cell 0 4 2 1,alignx center");
 		
 		rdbtnStrkeDefender = new JRadioButton("St\u00E4rke");
 		rdbtnStrkeDefender.setSelected(true);
@@ -823,20 +823,32 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 	}
 	
 	@Override
-	public void receiveSelectedHero(Hero hero) {
+	public void receiveSelectedHero(Hero hero, boolean effect) {
 		if (hero != null) {
 			Fight fight = game.getFightManager().getCurrentFight();
 			if (fight.getAttackingPlayer().equals(game.getLocalUser())) {
 				fight.setAttackingHero(hero);
 				fight.setAttackingHeroChosen(true);
-				fight.setUseAttackingHeroEffect(rdbtnEffektAttacker.isSelected());
+				fight.setUseAttackingHeroEffect(effect);
+				if (effect) {
+					rdbtnEffektAttacker.setSelected(true);
+				}
+				else {
+					rdbtnStrkeAttacker.setSelected(true);
+				}
 				btnHeldAuswhlen.setEnabled(false);
 				btnKeinenHeldenVerwenden.setEnabled(false);
 			}
 			else if (fight.getDefendingPlayer() != null && fight.getDefendingPlayer().equals(game.getLocalUser())) {
 				fight.setDefendingHero(hero);
 				fight.setDefendingHeroChosen(true);
-				fight.setUseDefendingHeroEffect(rdbtnEffectDefender.isSelected());
+				fight.setUseDefendingHeroEffect(effect);
+				if (effect) {
+					rdbtnEffektDefender.setSelected(true);
+				}
+				else {
+					rdbtnStrkeDefender.setSelected(true);
+				}
 				btnHeldAuswhlen_1.setEnabled(false);
 				btnKeinenHeldenVerwenden_1.setEnabled(false);
 			}
@@ -853,7 +865,7 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			SelectHeroCardFrame frame = game.getGameFrame().getSelectHeroCardFrame();
 			frame.setVisible(true);
 			frame.requestFocus();
-			frame.setCardSelectionEnabled(true, this);			
+			frame.setCardSelectionEnabled(true, true, this);			
 		}
 	}
 	private void selectEmptyHero() {
