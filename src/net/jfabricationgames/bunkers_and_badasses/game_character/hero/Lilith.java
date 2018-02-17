@@ -8,6 +8,7 @@ import javax.swing.SpinnerNumberModel;
 import net.jfabricationgames.bunkers_and_badasses.error.GameLockException;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisTavern;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.ErrorDialog;
 
 public class Lilith extends Hero {
@@ -21,8 +22,8 @@ public class Lilith extends Hero {
 		imagePath = "heros/lilith_1.png";
 		cardImagePath = "hero_cards/card_lilith.png";
 		loadImage();
-		effectDescription = "Phasewalk (Zug):\n\nEine kleine Infiltrationseinheit (Kampfstärke von bis zu 5) darf ein Feld Überspringen "
-				+ "um hinter der Feindlichen Linie anzugreifen (Außer Arschgauls Palast)";
+		effectDescription = "Phasewalk (Zug):\n\nEine kleine Einheit (bis zu 5 Kampfstärke) darf ein Feld Überspringen um hinter der "
+				+ "feindlichen Linie anzugreifen (Außer Arschgauls Palast und Moxxi's Taverne)";
 		componentsNeeded = Arrays.asList(ExecutionComponent.FIELD_START, ExecutionComponent.FIELD_TARGET, 
 				ExecutionComponent.SPINNER_NUMBER_NORMAL, ExecutionComponent.SPINNER_NUMBER_BADASS);
 		executionType = ExecutionType.TURN_EFFECT;
@@ -42,7 +43,7 @@ public class Lilith extends Hero {
 				//start field is chosen -> calculate the possible target fields
 				executionData.setPossibleTargetFields(executionData.getStartField().getNeighbours().parallelStream().
 						flatMap(f2 -> f2.getNeighbours().parallelStream()).distinct().filter(enemyPlayersField).
-						filter(hasArschgaulsPalace.negate()).collect(Collectors.toList()));
+						filter(hasArschgaulsPalace.negate()).filter(hasMoxxisTavern.negate()).collect(Collectors.toList()));
 				//remove all selected target fields that are not possible anymore
 				executionData.setTargetFields(executionData.getTargetFields().stream().
 						filter(field -> executionData.getPossibleTargetFields().contains(field)).collect(Collectors.toList()));
@@ -87,6 +88,10 @@ public class Lilith extends Hero {
 			new ErrorDialog("Du kannst nicht Arschgauls Palast angreifen.\n\n"
 					+ "Was soll der Scheiß?!\nDu erschreckst noch die Prinzessin!").setVisible(true);
 			return false;
+		}
+		if (executionData.getTargetFields().get(0).getBuilding() instanceof MoxxisTavern) {
+			new ErrorDialog("Du kannst nicht Moxxis Taverne angreifen.\n\n"
+					+ "Die Gefahr, dass dabei Alkohol zu schaden kommt ist einfach zu hoch!").setVisible(true);
 		}
 		if (executionData.getStartFieldNormalTroops() + 2* executionData.getStartFieldBadassTroops() <= 0) {
 			new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\n"

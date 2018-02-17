@@ -101,6 +101,7 @@ public class FightManager implements Serializable {
 		currentFight.setDefendingField(targetField);
 		currentFight.setAttackingNormalTroops(normalTroops);
 		currentFight.setAttackingBadassTroops(badassTroops);
+		currentFight.setDefendingFieldTroops(new int[] {targetField.getNormalTroops(), targetField.getBadassTroops()});
 		currentFight.setAttackingPlayer(startField.getAffiliation());
 		currentFight.setDefendingPlayer(targetField.getAffiliation());
 		currentFight.calculateCurrentStrength();
@@ -296,7 +297,7 @@ public class FightManager implements Serializable {
 			int badassTroopsRetreat = currentFight.getAttackingBadassTroops() - fallen[1];
 			game.getBoard().moveTroops(currentFight.getAttackingField(), currentFight.getRetreatField(), normalTroopsRetreat, badassTroopsRetreat);
 		}
-		//hero effects
+		//hero effects (Brick, Roland, Salvadore, Wilhelm)
 		currentFight.executeHeroEffects(ExecutionType.AFTER_FIGHT);
 		//remove the used heros from the players hands
 		if (currentFight.getAttackingHero() != null) {
@@ -494,6 +495,9 @@ public class FightManager implements Serializable {
 				currentFight.setDefendingHero(fight.getDefendingHero());
 				currentFight.setUseDefendingHeroEffect(fight.isUseDefendingHeroEffect());
 				if (currentFight.isAttackingHeroChosen()) {
+					//execute the hero effects
+					currentFight.executeHeroEffects(ExecutionType.BEFORE_FIGHT);
+					currentFight.calculateCurrentStrength();
 					currentFight.calculateWinner();
 					currentFight.setBattleState(Fight.STATE_RETREAT_FIELD);
 					if (currentFight.getDefendingPlayer() == null) {

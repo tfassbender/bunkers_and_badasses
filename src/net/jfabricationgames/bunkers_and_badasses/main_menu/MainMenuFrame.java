@@ -429,6 +429,7 @@ public class MainMenuFrame extends JFrame {
 			gameLoadingDialog.setVisible(true);
 		}
 		else {
+			gameLoadingDialog.setVisible(true);
 			gameLoadingDialog.requestFocus();
 		}
 	}

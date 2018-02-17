@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -372,6 +373,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		rdbtnStrkeAttacker.setEnabled(false);
 		panel_hero_attacker.add(rdbtnStrkeAttacker, "cell 2 4 2 1,alignx center");
 		
+		ButtonGroup attackerHeroButtonGroup = new ButtonGroup();
+		attackerHeroButtonGroup.add(rdbtnEffektAttacker);
+		attackerHeroButtonGroup.add(rdbtnStrkeAttacker);
+		
 		JScrollPane scrollPane_hero_effect_atk = new JScrollPane();
 		panel_hero_attacker.add(scrollPane_hero_effect_atk, "cell 0 6 4 1,grow");
 		
@@ -458,6 +463,10 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 		rdbtnStrkeDefender.setEnabled(false);
 		rdbtnStrkeDefender.setBackground(Color.GRAY);
 		panel_hero_defender.add(rdbtnStrkeDefender, "cell 2 4 2 1,alignx center");
+		
+		ButtonGroup defenderHeroButtonGroup = new ButtonGroup();
+		defenderHeroButtonGroup.add(rdbtnEffektDefender);
+		defenderHeroButtonGroup.add(rdbtnStrkeDefender);
 		
 		JScrollPane scrollPane_hero_effect_def = new JScrollPane();
 		panel_hero_defender.add(scrollPane_hero_effect_def, "cell 0 6 4 1,grow");
@@ -1194,13 +1203,19 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 			}
 			Hero attackingHero = fight.getAttackingHero();
 			Hero defendingHero = fight.getDefendingHero();
-			//only show the players own choice
+			//only show the players own choice till the fight-state is > Fight.STATE_HEROS 
 			if (attackingHero != null) {
 				if (fight.getBattleState() > Fight.STATE_HEROS || fight.getAttackingPlayer().equals(game.getLocalUser())) {
 					txtHeroAttacker.setText(attackingHero.getName());
 					txtHeroAttackerAtk.setText(Integer.toString(attackingHero.getAttack()));
 					txtHeroAttackerDef.setText(Integer.toString(attackingHero.getDefence()));
-					txtrHeroEffectAttacker.setText(attackingHero.getEffectDescription());					
+					txtrHeroEffectAttacker.setText(attackingHero.getEffectDescription());
+					if (fight.isUseAttackingHeroEffect()) {
+						rdbtnEffektAttacker.setSelected(true);
+					}
+					else {
+						rdbtnStrkeAttacker.setSelected(true);
+					}
 				}
 			}
 			if (defendingHero != null) {
@@ -1208,7 +1223,13 @@ public class FightExecutionFrame extends JFrame implements HeroSelectionListener
 					txtHerodefender.setText(fight.getDefendingHero().getName());
 					txtHeroDefenderAtk.setText(Integer.toString(defendingHero.getAttack()));
 					txtHeroDefenderDef.setText(Integer.toString(defendingHero.getDefence()));
-					txtrHeroEffectDefender.setText(defendingHero.getEffectDescription());					
+					txtrHeroEffectDefender.setText(defendingHero.getEffectDescription());
+					if (fight.isUseDefendingHeroEffect()) {
+						rdbtnEffektDefender.setSelected(true);
+					}
+					else {
+						rdbtnStrkeDefender.setSelected(true);
+					}
 				}
 			}
 		}

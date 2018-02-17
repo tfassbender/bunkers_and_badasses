@@ -40,6 +40,7 @@ import net.jfabricationgames.bunkers_and_badasses.error.ResourceException;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game.GameState;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero;
+import net.jfabricationgames.bunkers_and_badasses.game_character.hero.Hero.ExecutionType;
 import net.jfabricationgames.bunkers_and_badasses.game_character.hero.HeroSelectionListener;
 import net.jfabricationgames.bunkers_and_badasses.help.HelpMenuFrame;
 import net.miginfocom.swing.MigLayout;
@@ -386,7 +387,13 @@ public class SelectHeroCardFrame extends JFrame {
 			}
 			Hero hero = list_heroes.getSelectedValue();
 			//game.getHeroCardManager().putBackCards(hero);
-			selectionListener.receiveSelectedHero(hero, rdbtnEffekt.isSelected());
+			boolean effect = rdbtnEffekt.isSelected();
+			boolean fight = rdbtnEffekt.isEnabled();
+			if (fight && effect && hero.getExecutionType() == ExecutionType.TURN_EFFECT) {
+				new ErrorDialog("Der Effekt dieses Helden kann nicht in einem Kampf, sondern nur als Zug eingesetzt werden.").setVisible(true);
+				return;
+			}
+			selectionListener.receiveSelectedHero(hero, effect);
 			panel_hero_image.setImage(null);
 			setVisible(false);
 		}

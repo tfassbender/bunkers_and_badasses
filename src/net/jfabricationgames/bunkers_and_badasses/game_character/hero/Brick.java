@@ -1,5 +1,8 @@
 package net.jfabricationgames.bunkers_and_badasses.game_character.hero;
 
+import java.util.Map.Entry;
+import java.util.Optional;
+
 import net.jfabricationgames.bunkers_and_badasses.game.Fight;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 
@@ -23,7 +26,11 @@ public class Brick extends Hero {
 		boolean attacker = fight.getAttackingHero() != null && fight.getAttackingHero().equals(this);
 		if ((attacker && fight.getWinner() == Fight.ATTACKERS) || (!attacker && fight.getWinner() == Fight.DEFENDERS)) {
 			//remove up to three troops from the retreat field
-			Field retreat = fight.getRetreatField();
+			Field retreat = null;
+			//get the right reference to the retreat field
+			if (fight.getRetreatField() != null) {
+				retreat = game.getBoard().getFieldByName(fight.getRetreatField().getName());//right retreat field reference
+			}
 			if (retreat != null) {
 				Field fallenTroopsField = null;
 				if (attacker) {
@@ -32,10 +39,17 @@ public class Brick extends Hero {
 				else {
 					fallenTroopsField = fight.getAttackingField();
 				}
-				int[] fallen = fight.getFallenTroops().get(fallenTroopsField);
-				int badasses = Math.min(1, fight.getAttackingBadassTroops() - fallen[1]);
+				String fieldName = fallenTroopsField.getName();
+				int[] fallen = new int[2];
+				//check all entries in the map by name because the hash is bad implemented...
+				Optional<Entry<Field, int[]>> fallenTroopsEntry = fight.getFallenTroops().entrySet().stream().
+						filter(entry -> entry.getKey().getName().equals(fieldName)).findFirst();
+				if (fallenTroopsEntry.isPresent()) {
+					fallen = fallenTroopsEntry.get().getValue();
+				}
+				int badasses = Math.min(1, fight.getDefendingFieldTroops()[1] - fallen[1]);
 				int normal = 3 - 2*badasses;
-				normal = Math.min(normal, fight.getAttackingNormalTroops() - fallen[0]);
+				normal = Math.min(normal, fight.getDefendingFieldTroops()[0] - fallen[0]);
 				retreat.removeNormalTroops(normal);
 				retreat.removeBadassTroops(badasses);
 			}

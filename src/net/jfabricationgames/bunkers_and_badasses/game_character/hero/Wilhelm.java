@@ -26,9 +26,9 @@ public class Wilhelm extends Hero {
 			int movingTroopsStrength = movingTroops[0] + 2*movingTroops[1];
 			movingTroopsStrength = movingTroopsStrength / 2;
 			//move half of the troops back to their starting field
-			int movingBadasses = Math.min(movingTroopsStrength / 2, movingTroops[2]);
+			int movingBadasses = Math.min(movingTroopsStrength / 2, movingTroops[1]);
 			movingTroopsStrength -= 2*movingBadasses;
-			int movingNormals = Math.min(movingTroopsStrength, movingTroops[1]);
+			int movingNormals = Math.min(movingTroopsStrength, movingTroops[0]);
 			game.getBoard().moveTroops(fight.getDefendingField(), fight.getAttackingField(), movingNormals, movingBadasses);
 			fight.getDefendingField().setCommand(new MarchCommand());
 		}

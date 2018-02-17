@@ -24,7 +24,7 @@ public class Nisha extends Hero {
 	public void execute(Fight fight) {
 		fight.getSupportRejections().addAll(fight.getAttackSupporters());
 		fight.getSupportRejections().addAll(fight.getDefenceSupporters());
-		fight.setAttackSupporters(new ArrayList<Field>());
-		fight.setDefenceSupporters(new ArrayList<Field>());
+		fight.setAttackSupporters(new ArrayList<Field>(0));
+		fight.setDefenceSupporters(new ArrayList<Field>(0));
 	}
 }

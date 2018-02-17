@@ -21,6 +21,7 @@ import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.EmptyBuilding;
+import net.jfabricationgames.bunkers_and_badasses.game_character.building.MoxxisTavern;
 import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 
 public abstract class Hero implements Serializable {
@@ -66,6 +67,7 @@ public abstract class Hero implements Serializable {
 	protected transient static final Predicate<Field> hasCommand = field -> field.getCommand() != null;
 	protected transient static final Predicate<Field> hasBuilding = field -> !(field.getBuilding() instanceof EmptyBuilding);
 	protected transient static final Predicate<Field> hasArschgaulsPalace = field -> field.getBuilding() instanceof ArschgaulsPalace;
+	protected transient static final Predicate<Field> hasMoxxisTavern = field -> field.getBuilding() instanceof MoxxisTavern;
 	protected transient static final Predicate<Field> moreThanOneBandit = field -> field.getNormalTroops() > 1 || (field.getNormalTroops() == 1 && field.getBadassTroops() > 0);
 	protected transient static final Predicate<Field> moreThanTwoBandits = field -> field.getNormalTroops() > 2 || (field.getNormalTroops() == 2 && field.getBadassTroops() > 0);
 	

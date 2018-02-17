@@ -44,12 +44,12 @@ public class Scooter extends Hero {
 						flatMap(f2 -> f2.getNeighbours().parallelStream()).flatMap(f3 -> f3.getNeighbours().parallelStream()).distinct().
 						filter(localPlayersField.or(fieldEmpty).and(enemyPlayersField.negate())).collect(Collectors.toList()));
 				//remove all selected target fields that are not possible anymore
-				executionData.setTargetFields(executionData.getTargetFields().stream().
+				/*executionData.setTargetFields(executionData.getTargetFields().stream().
 						filter(field -> executionData.getPossibleTargetFields().contains(field)).collect(Collectors.toList()));
 				executionData.getTargetFieldsNormalTroops().entrySet().
-				removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));
+						removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));
 				executionData.getTargetFieldsBadassTroops().entrySet().
-				removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));
+						removeIf(entry -> !executionData.getPossibleTargetFields().contains(entry.getKey()));*/
 			}
 			if (!executionData.getTargetFields().isEmpty()) {
 				if (executionData.getTargetFields().size() > 1) {
@@ -80,8 +80,9 @@ public class Scooter extends Hero {
 		List<Field> possibleTargets = executionData.getStartField().getNeighbours().parallelStream().
 				flatMap(f2 -> f2.getNeighbours().parallelStream()).flatMap(f3 -> f3.getNeighbours().parallelStream()).distinct().
 				filter(localPlayersField.or(fieldEmpty).and(enemyPlayersField.negate())).collect(Collectors.toList());
-		boolean unreachableFields = Stream.concat(executionData.getTargetFieldsNormalTroops().entrySet().stream(), executionData.getTargetFieldsBadassTroops().entrySet().stream()).
-				anyMatch(entry -> !possibleTargets.contains(entry.getKey()));
+		boolean unreachableFields = Stream.concat(executionData.getTargetFieldsNormalTroops().entrySet().stream(), 
+				executionData.getTargetFieldsBadassTroops().entrySet().stream()).map(entry -> entry.getKey().getName()).
+				anyMatch(fieldName -> !possibleTargets.stream().map(field -> field.getName()).anyMatch(name -> name.equals(fieldName)));
 		if (totalNormalTroopsMoved + totalBadassTroopsMoved <= 0) {
 			new ErrorDialog("Du solltest auch Truppen aussuchen wenn du willst dass die sich bewegen.\n\n"
 					+ "Das ist keine freiwillige Aktion hier.").setVisible(true);

@@ -37,6 +37,8 @@ public class Fight implements Serializable {
 	private int attackingNormalTroops;
 	private int attackingBadassTroops;
 	
+	private int[] defendingFieldTroops;//only used for Brick
+	
 	private int attackingSupportStrength;
 	private int defendingSupportStrength;
 	
@@ -440,7 +442,7 @@ public class Fight implements Serializable {
 		}
 		currentAttackingStrength += attackingSupportStrength;
 		//attacking hero
-		if (attackingHero != null && !useAttackingHeroEffect && battleState >= STATE_HEROS) {
+		if (!blockHeroExecution && attackingHero != null && !useAttackingHeroEffect && battleState >= STATE_HEROS) {
 			currentAttackingStrength += attackingHero.getAttack();
 		}
 		//defending troops and building
@@ -456,7 +458,7 @@ public class Fight implements Serializable {
 			currentDefendingStrength++;
 		}*/
 		//defending hero
-		if (defendingHero != null && !useDefendingHeroEffect && battleState >= STATE_HEROS) {
+		if (!blockHeroExecution && defendingHero != null && !useDefendingHeroEffect && battleState >= STATE_HEROS) {
 			currentDefendingStrength += defendingHero.getDefence();
 		}
 		
@@ -651,6 +653,13 @@ public class Fight implements Serializable {
 		this.attackingBadassTroops = attackingBadassTroops;
 	}
 	
+	public int[] getDefendingFieldTroops() {
+		return defendingFieldTroops;
+	}
+	public void setDefendingFieldTroops(int[] defendingFieldTroops) {
+		this.defendingFieldTroops = defendingFieldTroops;
+	}
+	
 	public int getAttackingSupportStrength() {
 		return attackingSupportStrength;
 	}
@@ -744,8 +753,9 @@ public class Fight implements Serializable {
 	
 	public int getFallingTroopsTotal() {
 		int falling = fallingTroopsTotal;
-		if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed) {
-			falling = fallingTroopsTotal / 2 + (fallingTroopsTotal % 2 == 0 ? 0 : 1);
+		if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed ||
+				getAttackingHero() != null && isUseAttackingHeroEffect() && getAttackingHero() instanceof DrZed) {
+			falling = fallingTroopsTotal / 2;
 		}
 		return falling;
 	}
@@ -755,11 +765,13 @@ public class Fight implements Serializable {
 	
 	public int getFallingTroopsLooser() {
 		int falling = fallingTroopsLooser;
-		if (getWinner() == ATTACKERS && getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof Athena) {
+		if (getWinner() == ATTACKERS && getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof Athena ||
+				getWinner() == DEFENDERS && getAttackingHero() != null && isUseAttackingHeroEffect() && getAttackingHero() instanceof Athena) {
 			falling = 0;
 		}
-		else if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed) {
-			falling = fallingTroopsLooser / 2 + (fallingTroopsLooser % 2 == 0 ? 0 : 1);
+		else if (getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof DrZed ||
+				getAttackingHero() != null && isUseAttackingHeroEffect() && getAttackingHero() instanceof DrZed) {
+			falling = fallingTroopsLooser / 2;
 		}
 		return falling;
 	}
@@ -782,9 +794,17 @@ public class Fight implements Serializable {
 	public Map<Field, Integer> getFallingTroopsSupport() {
 		Map<Field, Integer> fallingTroops = new HashMap<Field, Integer>();
 		fallingTroops.putAll(fallingTroopsSupport);
-		if (getWinner() == ATTACKERS && getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof Athena) {
+		if (getWinner() == ATTACKERS && getDefendingHero() != null && isUseDefendingHeroEffect() && getDefendingHero() instanceof Athena ||
+				getWinner() == DEFENDERS && getAttackingHero() != null && isUseAttackingHeroEffect() && getAttackingHero() instanceof Athena) {
+			User player;
+			if (getWinner() == ATTACKERS) {
+				player = getDefendingPlayer();
+			}
+			else {
+				player = getAttackingPlayer();
+			}
 			for (Field field : fallingTroops.keySet()) {
-				if (field.getAffiliation() != null && field.getAffiliation().equals(getDefendingPlayer())) {
+				if (field.getAffiliation() != null && field.getAffiliation().equals(player)) {
 					fallingTroops.put(field, 0);
 				}
 			}

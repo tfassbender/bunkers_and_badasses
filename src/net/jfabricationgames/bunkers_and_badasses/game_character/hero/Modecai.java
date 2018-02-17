@@ -40,7 +40,12 @@ public class Modecai extends Hero {
 				if (executionData.getTargetFields().size() == 1) {
 					Field selected = executionData.getTargetFields().get(0);
 					int min = 0;
-					int max = Math.max(0, Math.min(3, selected.getNormalTroops()-1));
+					int max = selected.getNormalTroops();
+					//if there are badasses left on the field all normal troops can be killed
+					if (selected.getBadassTroops() <= 0) {
+						max--;
+					}
+					max = Math.max(0, Math.min(3, max));
 					Optional<Integer> value = Optional.ofNullable(executionData.getTargetFieldsNormalTroops().get(selected));
 					int val = Math.max(min, Math.min(max, value.orElse(0)));
 					executionData.getTargetFieldsNormalTroops().put(selected, val);
