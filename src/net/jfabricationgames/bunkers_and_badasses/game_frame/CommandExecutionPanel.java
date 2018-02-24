@@ -757,6 +757,7 @@ public class CommandExecutionPanel extends JPanel {
 									selectedField.setBuilding(building.newInstance());
 									GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
 									stats.setBuildings_created(stats.getBuildings_created() + 1);
+									game.getGameTurnBonusManager().receivePointsBuild(game.getLocalUser());
 									commandExecuted = true;
 								}
 								catch (ResourceException re) {
@@ -782,6 +783,7 @@ public class CommandExecutionPanel extends JPanel {
 								building.extend();
 								GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
 								stats.setBuildings_upgraded(stats.getBuildings_upgraded() + 1);
+								game.getGameTurnBonusManager().receivePointsBuild(game.getLocalUser());
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {

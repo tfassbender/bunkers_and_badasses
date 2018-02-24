@@ -27,13 +27,17 @@ public class Bloodwing extends Hero {
 		if (fight.getAttackingHero() != null && fight.getAttackingHero().equals(this)) {
 			other = fight.getDefendingHero();
 			effectUsed = fight.isUseDefendingHeroEffect();
-			strength = other.getDefence();
+			if (other != null) {
+				strength = other.getDefence();
+			}
 			attack = false;
 		}
 		else if (fight.getDefendingHero() != null && fight.getDefendingHero().equals(this)) {
 			other = fight.getAttackingHero();
 			effectUsed = fight.isUseAttackingHeroEffect();
-			strength = other.getAttack();
+			if (other != null) {
+				strength = other.getAttack();
+			}
 			attack = true;
 		}
 		if (other != null && !effectUsed) {

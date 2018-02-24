@@ -119,7 +119,7 @@ public class GameLoadingAnswerDialog extends JFrame {
 					lblSpielRunde.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				}
 				{
-					txtTurn = new JTextField(overview.getTurn());
+					txtTurn = new JTextField(Integer.toString(overview.getTurn()+1));
 					txtTurn.setFont(new Font("Tahoma", Font.PLAIN, 12));
 					panel_1.add(txtTurn, "cell 1 2,growx");
 					txtTurn.setBackground(Color.LIGHT_GRAY);

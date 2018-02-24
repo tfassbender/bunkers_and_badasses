@@ -4,6 +4,7 @@ Bunkers and Badasses - Tasks
 - Current Bugs:
 	- sometimes two or more pre-game dialogs start
 	- used resources are sometimes calculated wrong (?)
+	- statistics have no points or positions (maybe also some other bugs)
 
 - Next versions:
 	- some games can't be loaded for unknown reasons (exception says server timeout when saving; logs say game is loaded two times)

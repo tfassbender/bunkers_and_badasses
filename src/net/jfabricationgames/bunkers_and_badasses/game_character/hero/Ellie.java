@@ -27,7 +27,7 @@ public class Ellie extends Hero {
 		if (executionData == null) {
 			ExecutionData data = new ExecutionData();
 			data.setPossibleTargetFields(game.getBoard().getFields().stream().filter(enemyPlayersField).
-					filter(moreThanTwoBandits).filter(nextToOtherEnemiesField).collect(Collectors.toList()));
+					filter(moreThanOneBandit).filter(nextToOtherEnemiesField).collect(Collectors.toList()));
 			return data;
 		}
 		else {
@@ -48,13 +48,13 @@ public class Ellie extends Hero {
 		}
 		Field target1 = executionData.getTargetFields().get(0);
 		Field target2 = executionData.getTargetFields().get(1);
-		if (!target1.getNeighbours().contains(target2)) {
+		if (!target1.getNeighbours().stream().map(field -> field.getName()).anyMatch(name -> name.equals(target2.getName()))) {
 			new ErrorDialog("Die ausgewählten Felder müssen nebeneinander liegen, damit die eine Klanfede anfangen können.\n\n"
 					+ "Fernbeziehungen zählen hier nichts.").setVisible(true);
 			return false;
 		}
-		if (!Arrays.asList(target1, target2).stream().allMatch(moreThanTwoBandits)) {
-			new ErrorDialog("Die ausgewählten Felder müssen beide mehr als zwei Banditen enthalten.\n\n"
+		if (!Arrays.asList(target1, target2).stream().allMatch(moreThanOneBandit)) {
+			new ErrorDialog("Die ausgewählten Felder müssen beide mehr als einen Banditen enthalten.\n\n"
 					+ "Wie sollen die sonst ihre Klanfede fortführen, wenn keiner mehr übrig ist?!").setVisible(true);
 			return false;
 		}
@@ -64,6 +64,11 @@ public class Ellie extends Hero {
 		}
 		if (target1.getAffiliation().equals(target2.getAffiliation())) {
 			new ErrorDialog("Du kannst keine Klanfede zwischen zwei Feldern des selben Spielers anzetteln.").setVisible(true);
+			return false;
+		}
+		if (target1.getAffiliation().equals(game.getLocalUser()) || target2.getAffiliation().equals(game.getLocalUser())) {
+			new ErrorDialog("Wenn Du willst, dass deine Leute eine Klanfede anfangen, dann greif einfach irgentwen an.\n\n"
+					+ "So schwer ist das doch nicht...").setVisible(true);
 			return false;
 		}
 		target1.removeNormalTroops(2);
