@@ -71,8 +71,8 @@ public class Ellie extends Hero {
 					+ "So schwer ist das doch nicht...").setVisible(true);
 			return false;
 		}
-		target1.removeNormalTroops(2);
-		target2.removeNormalTroops(2);
+		target1.removeNormalTroops(Math.min(2, target1.getNormalTroops()));
+		target2.removeNormalTroops(Math.min(2, target2.getNormalTroops()));
 		return true;
 	}
 }
