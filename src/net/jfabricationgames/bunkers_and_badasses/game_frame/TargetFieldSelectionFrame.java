@@ -32,6 +32,7 @@ import com.jfabricationgames.toolbox.properties.event.PropertiesWindowListener;
 import net.jfabricationgames.bunkers_and_badasses.game.Game;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
 import net.jfabricationgames.bunkers_and_badasses.game_character.building.ArschgaulsPalace;
+import net.jfabricationgames.bunkers_and_badasses.game_command.MarchCommand;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
 
@@ -243,6 +244,7 @@ public class TargetFieldSelectionFrame extends JFrame {
 				}
 				else {
 					Field fight = null;
+					StringBuilder sb = new StringBuilder();
 					for (Field field : targets) {
 						int[] movedTroops = troops.get(field);
 						if (movedTroops[0] + movedTroops[1] > 0) {
@@ -251,12 +253,17 @@ public class TargetFieldSelectionFrame extends JFrame {
 							}
 							else {
 								game.getBoard().moveTroops(startField, field, movedTroops[0], movedTroops[1]);
+								sb.append(movedTroops[0] + " Bandit(en) und " + movedTroops[1] + " Badass(es) von " + startField.getName() + 
+										" nach " + field.getName() + " bewegt\n");
 							}
 						}
 					}
 					if (fight != null) {
 						int[] attackingTroops = troops.get(fight);
 						game.getFightManager().startFight(startField, fight, attackingTroops[0], attackingTroops[1]);
+						sb.append(attackingTroops[0] + " Bandit(en) und " + attackingTroops[1] + " Badass(es) von " + startField.getName() + 
+								" nach " + fight.getName() + " bewegt (Kampf begonnen)\n");
+						game.setLastMove(new MarchCommand(), "Bewegungen:\n" + sb.toString());
 						startField.setCommand(null);
 					}
 					else {
@@ -266,6 +273,7 @@ public class TargetFieldSelectionFrame extends JFrame {
 						game.getPlayerOrder().nextMove();
 						game.getTurnExecutionManager().commit();
 						game.getGameFrame().updateAllFrames();
+						game.setLastMove(new MarchCommand(), "Bewegungen:\n" + sb.toString());
 					}
 					turnExecutionFrame.setFieldSelectionSucessfull(true);
 					dispose();

@@ -311,6 +311,7 @@ public class SelectHeroCardFrame extends JFrame {
 			try {
 				game.getHeroCardManager().takeCards(game.getLocalUser(), cards);
 				game.getHeroCardManager().setHeroCardsTaken(game.getLocalUser());
+				game.setLastMove(game.getLocalUser().getUsername() + " [Heldenkarten gekauft]: " + cards + " Karten gekauft");
 				game.getPlayerOrder().nextMove();
 				game.getTurnExecutionManager().commit();
 				game.getGameFrame().update();

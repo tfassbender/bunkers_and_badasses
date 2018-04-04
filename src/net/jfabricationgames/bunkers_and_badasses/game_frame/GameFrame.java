@@ -57,6 +57,8 @@ import java.awt.event.MouseAdapter;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class GameFrame extends JFrame implements BoardPanelListener, HeroSelectionListener, ConfirmDialogListener {
 	
@@ -125,6 +127,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private JPanel panel_game_type;
 	
 	private PropertiesFile propsFile = new PropertiesFile(this);
+	private JTextArea txtrLastMove;
 	
 	public GameFrame(Game game) {
 		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
@@ -561,7 +564,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		JPanel panel_controlls = new JPanel();
 		panel_controlls.setBackground(Color.GRAY);
 		panel_side_bar_2.add(panel_controlls, "cell 0 3 2 1,grow");
-		panel_controlls.setLayout(new MigLayout("", "[][grow][]", "[][]"));
+		panel_controlls.setLayout(new MigLayout("", "[][grow][]", "[][][:70px:100px,grow]"));
 		
 		JLabel lblAktiverSpieler_1 = new JLabel("Aktiver Spieler:");
 		lblAktiverSpieler_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -601,6 +604,21 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		});
 		btnMehrInformationenEinblenden.setBackground(Color.GRAY);
 		panel_controlls.add(btnMehrInformationenEinblenden, "cell 2 1,growx");
+		
+		JLabel lblLetzterZug = new JLabel("Letzter Zug:");
+		lblLetzterZug.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_controlls.add(lblLetzterZug, "cell 0 2,alignx trailing");
+		
+		JScrollPane scrollPane = new JScrollPane();
+		panel_controlls.add(scrollPane, "cell 1 2 2 1,grow");
+		
+		txtrLastMove = new JTextArea();
+		txtrLastMove.setBackground(Color.LIGHT_GRAY);
+		txtrLastMove.setEditable(false);
+		txtrLastMove.setWrapStyleWord(true);
+		txtrLastMove.setLineWrap(true);
+		txtrLastMove.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrollPane.setViewportView(txtrLastMove);
 		
 		JPanel panel_image_wrapper = new JPanel();
 		panel_image_wrapper.setBackground(Color.GRAY);
@@ -717,6 +735,7 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 		updateTurnOrder();
 		updateResources();
 		updatePoints();
+		updateLastMoveText();
 		repaint();
 	}
 	
@@ -823,6 +842,16 @@ public class GameFrame extends JFrame implements BoardPanelListener, HeroSelecti
 	private void updatePoints() {
 		pointPanel.updatePoints(game);
 		pointPanel_2.updatePoints(game);
+	}
+	
+	private void updateLastMoveText() {
+		String lastMove = game.getLastMove();
+		if (lastMove != null) {
+			txtrLastMove.setText(lastMove);
+		}
+		else {
+			txtrLastMove.setText("");
+		}
 	}
 	
 	protected Game getGame() {

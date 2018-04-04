@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -58,6 +59,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import javax.swing.JRadioButton;
 
 public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelectionListener, BoardPanelListener, ConfirmDialogListener {
 	
@@ -79,6 +81,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	private BoardOverviewFrame boardOverview;
 	
 	private int selectionType = 0;
+	private int fieldSelectionIndex = 0;
 	
 	private Field selectedBaseField;
 	private final Field[] selectedStartFields = new Field[3];
@@ -119,6 +122,10 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 	private JButton btnSpielStarten;
 	
 	private PropertiesFile propsFile = new PropertiesFile(this);
+	
+	private JRadioButton rdbtnPosition1;
+	private JRadioButton rdbtnPosition2;
+	private JRadioButton rdbtnPosition3;
 	
 	public PreGameSelectionFrame(Game game) {
 		addWindowListener(new PropertiesWindowListener(propsFile, PropertiesWindowListener.WINDOW_CLOSING_EVENT));
@@ -202,32 +209,32 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.GRAY);
 		panel_troop_positioning.add(panel, "cell 1 0,grow");
-		panel.setLayout(new MigLayout("", "[][][10px][30px][30px,grow][grow]", "[][30px][][][30px][][][][30px][][5px][][5px][][][][][10px][][grow][]"));
+		panel.setLayout(new MigLayout("", "[][][10px][30px][30px,grow][grow][][grow]", "[][30px][][][30px][][][][30px][][5px][][5px][][][][][10px][][grow][]"));
 		
 		JLabel lblStartpositionen = new JLabel("Startpositionen:");
 		lblStartpositionen.setFont(new Font("Tahoma", Font.BOLD, 20));
-		panel.add(lblStartpositionen, "cell 0 0 6 1,alignx center");
+		panel.add(lblStartpositionen, "cell 0 0 8 1,alignx center");
 		
 		JLabel lblAktuellerSpieler = new JLabel("Am Zug:");
 		lblAktuellerSpieler.setFont(new Font("Tahoma", Font.BOLD, 16));
-		panel.add(lblAktuellerSpieler, "cell 0 2 6 1");
+		panel.add(lblAktuellerSpieler, "cell 0 2 8 1");
 		
 		txtPlayerturn = new JTextField();
 		txtPlayerturn.setBackground(Color.LIGHT_GRAY);
 		txtPlayerturn.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtPlayerturn.setEditable(false);
-		panel.add(txtPlayerturn, "cell 0 3 6 1,growx");
+		panel.add(txtPlayerturn, "cell 0 3 8 1,growx");
 		txtPlayerturn.setColumns(10);
 		
 		JLabel lblBasisPosition = new JLabel("Basis Position:");
 		lblBasisPosition.setFont(new Font("Tahoma", Font.BOLD, 16));
-		panel.add(lblBasisPosition, "cell 0 5 6 1");
+		panel.add(lblBasisPosition, "cell 0 5 8 1");
 		
 		txtBase = new JTextField();
 		txtBase.setBackground(Color.LIGHT_GRAY);
 		txtBase.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtBase.setEditable(false);
-		panel.add(txtBase, "cell 0 6 6 1,growx");
+		panel.add(txtBase, "cell 0 6 8 1,growx");
 		txtBase.setColumns(10);
 		
 		btnBasisBesttigen = new JButton("Basis Best\u00E4tigen");
@@ -238,11 +245,11 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		});
 		btnBasisBesttigen.setEnabled(false);
 		btnBasisBesttigen.setBackground(Color.GRAY);
-		panel.add(btnBasisBesttigen, "cell 0 7 6 1");
+		panel.add(btnBasisBesttigen, "cell 0 7 8 1");
 		
 		JLabel lblStartTruppen = new JLabel("Start Truppen:");
 		lblStartTruppen.setFont(new Font("Tahoma", Font.BOLD, 16));
-		panel.add(lblStartTruppen, "cell 0 9 6 1");
+		panel.add(lblStartTruppen, "cell 0 9 8 1");
 		
 		JLabel lblTruppenbrig = new JLabel("Truppen \u00DCbrig:");
 		lblTruppenbrig.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -280,6 +287,20 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		spinner_troops.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel.add(spinner_troops, "cell 5 13,growx");
 		
+		ButtonGroup groupFields = new ButtonGroup();
+		
+		rdbtnPosition1 = new JRadioButton("");
+		rdbtnPosition1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (rdbtnPosition1.isSelected()) {
+					fieldSelectionIndex = 0;
+				}
+			}
+		});
+		groupFields.add(rdbtnPosition1);
+		rdbtnPosition1.setBackground(Color.GRAY);
+		panel.add(rdbtnPosition1, "cell 6 13");
+		
 		JLabel lblPosition_1 = new JLabel("Position 2:");
 		lblPosition_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblPosition_1, "cell 0 14");
@@ -300,6 +321,18 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		spinner_troops_1.setModel(new SpinnerNumberModel(1, 1, startingTroops, 1));
 		spinner_troops_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel.add(spinner_troops_1, "cell 5 14,growx");
+		
+		rdbtnPosition2 = new JRadioButton("");
+		rdbtnPosition2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (rdbtnPosition2.isSelected()) {
+					fieldSelectionIndex = 1;
+				}
+			}
+		});
+		groupFields.add(rdbtnPosition2);
+		rdbtnPosition2.setBackground(Color.GRAY);
+		panel.add(rdbtnPosition2, "cell 6 14");
 		
 		JLabel lblPosition_2 = new JLabel("Position 3:");
 		lblPosition_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -328,6 +361,18 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 				confirmStartTroops();
 			}
 		});
+		
+		rdbtnPosition3 = new JRadioButton("");
+		rdbtnPosition3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (rdbtnPosition3.isSelected()) {
+					fieldSelectionIndex = 2;
+				}
+			}
+		});
+		groupFields.add(rdbtnPosition3);
+		rdbtnPosition3.setBackground(Color.GRAY);
+		panel.add(rdbtnPosition3, "cell 6 15");
 		btnStartTruppenBesttigen.setEnabled(false);
 		btnStartTruppenBesttigen.setBackground(Color.GRAY);
 		panel.add(btnStartTruppenBesttigen, "cell 0 16 5 1");
@@ -346,7 +391,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			}
 		});
 		btnSpielrundenAnzeigen.setBackground(Color.GRAY);
-		panel.add(btnSpielrundenAnzeigen, "cell 0 18 6 1");
+		panel.add(btnSpielrundenAnzeigen, "cell 0 18 8 1");
 		btnSpielfeldbersicht.setBackground(Color.GRAY);
 		panel.add(btnSpielfeldbersicht, "flowx,cell 0 20 4 1");
 		
@@ -358,7 +403,7 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 			}
 		});
 		btnWeiter_1.setBackground(Color.GRAY);
-		panel.add(btnWeiter_1, "cell 4 20 2 1,alignx right");
+		panel.add(btnWeiter_1, "cell 4 20 4 1,alignx right");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.GRAY);
@@ -810,14 +855,21 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 						fieldSelectable |= field.getName().equals(neighbour.getName());
 					}
 					if (fieldSelectable) {
-						selectedStartFields[2] = selectedStartFields[1];
+						/*selectedStartFields[2] = selectedStartFields[1];
 						selectedStartFields[1] = selectedStartFields[0];
 						selectedStartFields[0] = field;
 						troopsLeft += startTroops[2];
 						startTroops[2] = startTroops[1];
 						startTroops[1] = startTroops[0];
-						startTroops[0] = 1;
+						startTroops[0] = 1;*/
+
+						selectedStartFields[fieldSelectionIndex] = field;
+						startTroops[fieldSelectionIndex] = 1;
+						fieldSelectionIndex++;
+						fieldSelectionIndex %= 3;
+						
 						updateStartTroops();
+						updateFieldSelectionButtons();
 					}
 				}
 			}
@@ -841,6 +893,18 @@ public class PreGameSelectionFrame extends JFrame implements TurnBonusCardSelect
 		spinner_troops_2.setValue(startTroops[2]);
 		troopsLeft = startingTroops - (startTroops[0] + startTroops[1] + startTroops[2]);
 		txtTroopsLeft.setText(Integer.toString(troopsLeft));
+	}
+	
+	private void updateFieldSelectionButtons() {
+		if (fieldSelectionIndex == 0) {
+			rdbtnPosition1.setSelected(true);
+		}
+		else if (fieldSelectionIndex == 1) {
+			rdbtnPosition2.setSelected(true);
+		}
+		else if (fieldSelectionIndex == 2) {
+			rdbtnPosition3.setSelected(true);
+		}
 	}
 	
 	/**

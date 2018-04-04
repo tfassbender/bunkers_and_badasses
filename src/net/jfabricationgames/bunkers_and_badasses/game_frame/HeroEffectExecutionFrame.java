@@ -377,6 +377,7 @@ public class HeroEffectExecutionFrame extends JFrame {
 			if (game.getGameState() == GameState.ACT && game.getPlayerOrder().isPlayersTurn(game.getLocalUser()) && 
 					game.getFightManager().getCurrentFight() == null) {
 				if (currentHero.execute(executionData)) {
+					game.setLastMove(game.getLocalUser().getUsername() + " [Heldeneffekt ausgeführt]: " + currentHero.getName());
 					//give out points for hero usage
 					TurnGoal goal = game.getGameTurnGoalManager().getTurnGoal();
 					goal.receivePointsHeroUsage(game.getLocalUser(), currentHero);

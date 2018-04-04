@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.jfabricationgames.bunkers_and_badasses.game_board.Board;
 import net.jfabricationgames.bunkers_and_badasses.game_board.Field;
+import net.jfabricationgames.bunkers_and_badasses.game_command.Command;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.GameFrame;
 import net.jfabricationgames.bunkers_and_badasses.game_frame.InfoDialog;
 import net.jfabricationgames.bunkers_and_badasses.game_storage.GameStore;
@@ -42,6 +43,7 @@ public class Game implements Serializable {
 	private static transient GameStore gameStore;
 	private static transient GameVariableStorage gameVariableStorage;
 	private static String version;
+	private String lastMove;
 	
 	private int id;//the game id in the database
 	
@@ -106,6 +108,7 @@ public class Game implements Serializable {
 		skillProfileManager.merge(newData.getSkillProfileManager());
 		fightManager.merge(newData.getFightManager());
 		gameLockManager.merge(newData.getGameLockManager());
+		lastMove = newData.getLastMove();
 		//update the frames
 		if (gameFrame != null) {
 			gameFrame.updateAllFrames();
@@ -365,5 +368,15 @@ public class Game implements Serializable {
 	}
 	public static void setVersion(String version) {
 		Game.version = version;
+	}
+	
+	public String getLastMove() {
+		return lastMove;
+	}
+	public void setLastMove(String lastMove) {
+		this.lastMove = lastMove;
+	}
+	public void setLastMove(Command command, String text) {
+		setLastMove(localUser.getUsername() + " [" + command.getName() + "]: " + text);
 	}
 }

@@ -758,6 +758,7 @@ public class CommandExecutionPanel extends JPanel {
 									GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
 									stats.setBuildings_created(stats.getBuildings_created() + 1);
 									game.getGameTurnBonusManager().receivePointsBuild(game.getLocalUser());
+									game.setLastMove(command, building.getName() + " aufgebaut auf " + selectedField.getName());
 									commandExecuted = true;
 								}
 								catch (ResourceException re) {
@@ -784,6 +785,7 @@ public class CommandExecutionPanel extends JPanel {
 								GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
 								stats.setBuildings_upgraded(stats.getBuildings_upgraded() + 1);
 								game.getGameTurnBonusManager().receivePointsBuild(game.getLocalUser());
+								game.setLastMove(command, building.getName() + " aufgerüstet auf " + selectedField.getName());
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
@@ -811,7 +813,8 @@ public class CommandExecutionPanel extends JPanel {
 								selectedField.setBuilding(new EmptyBuilding());
 								GameStatistic stats = game.getStatisticManager().getStatistics(game.getLocalUser());
 								stats.setBuildings_destroyed(stats.getBuildings_destroyed() + 1);
-								commandExecuted = true;								
+								game.setLastMove(command, building.getName() + " abgerissen auf " + selectedField.getName());
+								commandExecuted = true;
 							}
 							catch (ResourceException re) {
 								new ErrorDialog("Du hast nicht genug Resourcen um das Gebäude zu bezahlen.\n\n"
@@ -822,14 +825,18 @@ public class CommandExecutionPanel extends JPanel {
 				}
 				else if (command instanceof CollectCommand) {
 					int collectionType = 0;
+					String type = null;
 					if (rdbtnCredits.isSelected()) {
 						collectionType = 1;
+						type = "Credits";
 					}
 					else if (rdbtnMunition.isSelected()) {
 						collectionType = 2;
+						type = "Munition";
 					}
 					else if (rdbtnEridium.isSelected()) {
 						collectionType = 3;
+						type = "Eridium";
 					}
 					if (collectionType == 0) {
 						new ErrorDialog("Du musst schon aussuchen was deine Truppen suchen sollen.\n\n"
@@ -837,6 +844,7 @@ public class CommandExecutionPanel extends JPanel {
 					}
 					else {
 						resourceManager.collectCommandResources(game.getLocalUser(), collectionType);
+						game.setLastMove(command, type + " gesammelt auf " + selectedField.getName());
 						commandExecuted = true;
 					}
 				}
@@ -895,6 +903,8 @@ public class CommandExecutionPanel extends JPanel {
 								}
 								game.getGameTurnGoalManager().receivePointsMoving(game.getLocalUser(), selectedField, targetField.getAffiliation() == null);
 								game.getBoard().moveTroops(selectedField, targetField, normalTroops, badassTroops);
+								game.setLastMove(command, normalTroops + " Bandit(en) und " + badassTroops + " Badass(es) von " + selectedField.getName() + 
+										" nach " + targetField.getName() + " bewegt");
 								commandExecuted = true;
 							}
 							else {
@@ -902,6 +912,8 @@ public class CommandExecutionPanel extends JPanel {
 									game.getFightManager().startFight(selectedField, targetField, normalTroops, badassTroops);
 									//commandExecuted = true;
 									//the command is executed when the fight is over (however set the command to null but don't commit)
+									game.setLastMove(command, normalTroops + " Bandit(en) und " + badassTroops + " Badass(es) von " + selectedField.getName() + 
+											" nach " + targetField.getName() + " bewegt (Kampf begonnen)");
 									selectedField.setCommand(null);									
 								}
 								catch (GameLockException gle) {
@@ -961,6 +973,7 @@ public class CommandExecutionPanel extends JPanel {
 									commandExecuted = true;
 								}
 							}
+							game.setLastMove(command, target.getName() + " von " + selectedField.getName() + " aus überfallen");
 							target.setCommand(null);
 							commandExecuted = true;
 						}
@@ -1001,6 +1014,8 @@ public class CommandExecutionPanel extends JPanel {
 								target.addBadassTroops(upgrades);
 								//give out the points for the recruitment
 								game.getGameTurnGoalManager().receivePointsRecruitment(game.getLocalUser(), normalTroops+2*badassTroops+upgrades);
+								game.setLastMove(command, normalTroops + " Bandit(en), " + badassTroops + " Badass(es) und " + upgrades +
+										" Aufgerüstungen nach " + target.getName() + " rekrutiert");
 								commandExecuted = true;
 							}
 							catch (ResourceException re) {
